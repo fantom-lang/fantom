@@ -12,7 +12,7 @@
 ** if installed.  In browser JavaScript environments this APIs uses
 ** the JS debugging window.
 **
-//@Js
+@Js
 native const final class Console
 {
   ** Get the default console for the virtual machine

@@ -9,15 +9,15 @@
 **
 ** ConsoleTest isn't an actual test, just a program to run to see results
 **
-//@Js
+@Js
 class ConsoleTest : Test
 {
-  Void main()
+  static Void main()
   {
     c := Console.cur
-    c.info("Console $c [$c.typeof]")
-    c.info("width  = $c.width")
-    c.info("height = $c.height")
+    echo("Console $c [$c.typeof]")
+    echo("width  = $c.width")
+    echo("height = $c.height")
 
     // basic logging
     c.debug("Debug message!")
@@ -28,7 +28,7 @@ class ConsoleTest : Test
     // tables
     c.table("scalar")
 
-    // indent/unindent
+    // group
     c.group("indent 0")
     c.info("line 1")
     c.warn("line 2")
@@ -39,6 +39,13 @@ class ConsoleTest : Test
     c.err("line 4")
     c.groupEnd
     c.info("line 5 back to zero")
+
+    // group collapsed
+    c.group("Collapsed", true)
+    c.info("alpha")
+    c.info("beta")
+    c.info("gamma")
+    c.groupEnd
 
     // prompt
     c.info("Prompt 1>")
