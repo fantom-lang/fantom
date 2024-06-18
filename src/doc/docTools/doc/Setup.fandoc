@@ -150,9 +150,10 @@ be unpleasant in Unix and OS X environments because control keys such as the
 arrow keys are not handled.  You can add [JLine]`https://github.com/jline/jline3`
 to your system classpath to fix this.  The built-in bash launcher scripts will
 automatically add "lib/java/jline.jar" into the classpath.  Both JLine3 LineReader
-and JLine2 ConsoleReader are supported. If JLine is not found, then 'java.lang.Console'
-is used as a fallback.  To integrate command line support into your application
-use `sys::Env.prompt`.
+and JLine2 ConsoleReader are supported.  Although more features are supported
+if using JLine3. If JLine is not found, then 'java.io.Console' is used as a
+fallback.  To integrate command line support into your application use the
+`util::Console` API.
 
 Newer versions of Java do not support adding jars to '{java-home}/lib/ext'.
 Instead if you would like jline to be globally available across all installations

@@ -153,30 +153,35 @@ public class BootEnv
   public File tempDir() { return tempDir; }
 
 //////////////////////////////////////////////////////////////////////////
-// Prompt JLine
+// Console
 //////////////////////////////////////////////////////////////////////////
 
   public String prompt(String msg)
   {
-    return console().prompt(msg);
+    return (String)console("prompt", new Object[] { msg });
   }
 
   public String promptPassword(String msg)
   {
-    return console().promptPassword(msg);
+    return (String)console("promptPassword", new Object[] { msg });
   }
 
-  public EnvConsole console()
+  public Object console(String method, Object[] args)
   {
-    if (consoleRef == null)
+    try
     {
-      consoleRef = EnvConsole.init();
-      //System.out.println("BootEnv.console = " + consoleRef.getClass().getName());
+      // we need to force native class to load before use
+      Pod pod = Pod.find("util");
+      Class cls = pod.classLoader.loadClass("fan.util.Console");
+      Type type = pod.type("Console");
+      FanObj c = (FanObj)type.method("cur").call();
+      return c.typeof().method(method).callOn(c, new List(Sys.ObjType, args));
     }
-    return consoleRef;
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
-
-  private EnvConsole consoleRef;
 
 //////////////////////////////////////////////////////////////////////////
 // Exit and Shutdown Hooks

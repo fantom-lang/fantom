@@ -168,17 +168,13 @@ abstract const class Env
 
   **
   ** Prompt the user to enter a command line from standard input.
-  ** See [Setup]`docTools::Setup#jline` for JLine integration.
-  ** Return null if end of stream has been reached.  Default
-  ** implementation delegates to `parent`.
+  ** This method routes to `util::Console.prompt`.
   **
   virtual Str? prompt(Str msg := "")
 
   **
   ** Prompt the user to enter a password from standard input with echo
-  ** disabled.  Return null if end of stream has been reached.
-  ** See [Setup]`docTools::Setup#jline` for JLine integration.
-  ** Default implementation delegates to `parent`.
+  ** disabled.  This method routes to `util::Console.promptPassword`.
   **
   virtual Str? promptPassword(Str msg := "")
 
