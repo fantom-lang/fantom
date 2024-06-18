@@ -61,7 +61,7 @@ class EnvTest : Test
   {
     // valid known list of os and arch constants
     os := ["win32", "macosx", "linux", "aix", "solaris", "hpux", "qnx"]
-    arch := ["x86", "x86_64", "ppc", "sparc", "ia64", "ia64_32"]
+    arch := ["x86", "x86_64", "ppc", "sparc", "ia64", "ia64_32", "aarch64"]
     runtime := ["java", "dotnet", "js"]
 
     verify(os.contains(Env.cur.os))
@@ -483,3 +483,4 @@ public class EnvShutdownHookTest
     if (Env.cur.removeShutdownHook(f5) != false) echo("f5 error!")
   }
 }
+

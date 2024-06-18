@@ -65,6 +65,7 @@ abstract const class Env
   **   - "sparc"
   **   - "ia64"
   **   - "ia64_32"
+  **   - "aarch64"
   **
   Str arch()
 
