@@ -25,8 +25,35 @@ class ConsoleTest : Test
     c.warn("Warn message!")
     c.err("Error message!")
 
-    // tables
-    c.table("scalar")
+    // table - null
+    c.info("")
+    c.table(null)
+
+    // table - scalar
+    c.info("")
+    c.table(123)
+
+    // table - list of scalars
+    c.info("")
+    c.table(["a", "b", "c"])
+
+    // table - list of maps
+    c.info("")
+    c.table([
+      ["First Name":"Bob", "Last Name":"Smith"],
+      ["First Name":"John", "Last Name":"Apple", "Approx Age":52],
+      ["First Name":"Alice", "Last Name":"Bobby", "Job":"Programmer"],
+      ])
+
+    // table - 2d grid
+    c.info("")
+    c.table([
+      ["Name",    "Age", "Hire Month"],
+      ["Alpha",   "30",  "Jan-2020"],
+      ["Beta",    "40",  "Feb-1996"],
+      ["Charlie", "50",  "Mar-2024"]
+      ])
+    c.info("")
 
     // group
     c.group("indent 0")

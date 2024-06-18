@@ -89,15 +89,15 @@ public abstract class Console extends FanObj
 
   public Console table(Object obj)
   {
-    info("TODO: " + obj);
+    ConsoleTable.make(obj).dump(this);
     return this;
   }
 
   public Console group(Object obj) { return group(obj, false); }
   public Console group(Object obj, boolean collapse)
   {
-    indent++;
     info(obj);
+    indent++;
     return this;
   }
   private int indent;

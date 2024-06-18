@@ -31,7 +31,25 @@ class Console extends sys.Obj {
 
   err(msg) { console.error(msg); return this; }
 
-  table(obj) { console.table(obj); return this; }
+  table(obj)
+  {
+    var grid = []
+    var t = fan.util.ConsoleTable.make(obj);
+    for (var r=0; r<t.rows().size(); ++r)
+    {
+      var row = t.rows().get(r);
+      var obj = {};
+      for (var c=0; c<t.headers().size(); ++c)
+      {
+        var key = t.headers().get(c);
+        var val = row.get(c);
+        obj[key] = val;
+      }
+      grid.push(obj);
+    }
+    console.table(grid)
+    return this;
+  }
 
   group(msg, collapsed)
   {
