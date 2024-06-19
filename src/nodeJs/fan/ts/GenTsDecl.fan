@@ -200,6 +200,11 @@ class GenTsDecl
       if (p.hasDefault)
         paramName += "?"
       paramType := getJsType(p.paramType, pod, isStatic ? type : null)
+
+      // methods with the @Js facet treat Obj parameters as any
+      if (paramType == "sys.JsObj" && method.hasFacet("sys::Js"))
+        paramType = "any"
+
       return "${paramName}: ${paramType}"
     }
     if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
