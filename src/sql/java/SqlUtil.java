@@ -62,7 +62,7 @@ public class SqlUtil
     }
     else if (value instanceof MemBuf)
     {
-      jobj = ((MemBuf)value).buf;
+      jobj = ((MemBuf)value).bytes();
     }
     // Support for Postgres text[] <--> Fantom Str[]
     else if ((value instanceof List) && (((List) value).of().equals(Sys.StrType)))
