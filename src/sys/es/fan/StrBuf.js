@@ -42,6 +42,11 @@ class StrBuf extends Obj {
     return this;
   }
 
+  addRange(str, range) {
+    this.#str += Str.getRange(str, range);
+    return this;
+  }
+
   capacity(it=undefined) {
     if (it === undefined) {
       if (this.#capacity == null) return this.#str.length;
@@ -130,3 +135,4 @@ class StrBuf extends Obj {
   out() { return new StrBufOutStream(this); }
 
 }
+

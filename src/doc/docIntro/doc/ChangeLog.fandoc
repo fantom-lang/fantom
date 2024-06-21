@@ -12,6 +12,7 @@
 - Add dom::Storage.keys to iterate all keys
 - Add new SqlConnPool API
 - Support for static once methods
+- StrBuf.addRange
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design

@@ -102,6 +102,14 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf addRange(String str, Range r)
+  {
+    int s = r.startIndex(str.length());
+    int e = r.endIndex(str.length());
+    sb.append(str, s, e+1);
+    return this;
+  }
+
   public StrBuf join(Object x) { return join(x, " "); }
   public StrBuf join(Object x, String sep)
   {
@@ -183,3 +191,4 @@ public class StrBuf
   StringBuilder sb;
 
 }
+

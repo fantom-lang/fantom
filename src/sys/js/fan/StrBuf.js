@@ -42,6 +42,12 @@ fan.sys.StrBuf.prototype.addChar = function(ch)
   return this;
 }
 
+fan.sys.StrBuf.prototype.addRange = function(str, range)
+{
+  this.m_str += fan.sys.Str.getRange(str, range);
+  return this;
+}
+
 fan.sys.StrBuf.prototype.capacity = function()
 {
   if (this.m_capacity == null) return this.m_str.length;
@@ -157,3 +163,4 @@ fan.sys.StrBuf.prototype.out = function()
 //////////////////////////////////////////////////////////////////////////
 
 fan.sys.StrBuf.make = function() { return new fan.sys.StrBuf(); }
+
