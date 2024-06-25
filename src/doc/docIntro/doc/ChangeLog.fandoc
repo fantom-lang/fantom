@@ -13,6 +13,7 @@
 - Add new SqlConnPool API
 - Support for static once methods
 - StrBuf.addRange
+- Add double checked locking into ClassType.java reflect and finish
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design

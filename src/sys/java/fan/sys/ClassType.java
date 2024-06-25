@@ -271,6 +271,9 @@ public class ClassType
 
   protected final ClassType reflect()
   {
+    // short circuit if already reflected using double-checked locking
+    if (slotsByName != null) return this;
+
     synchronized(lock())
     {
       // short circuit if already reflected
@@ -279,14 +282,14 @@ public class ClassType
       if (Debug) System.out.println("-- reflect: " + qname + " " + slotsByName);
 
       // do it
-      doReflect();
+      slotsByName = doReflect();
 
       // return this
       return this;
     }
   }
 
-  protected void doReflect()
+  private HashMap doReflect()
   {
     // if the ftype is non-null, that means it was passed in non-hollow
     // ftype (in-memory compile), otherwise we need to read it from the pod
@@ -341,11 +344,11 @@ public class ClassType
     this.slots       = slots.trim();
     this.fields      = fields.trim();
     this.methods     = methods.trim();
-    this.slotsByName = nameToSlot;
     this.myFacets    = Facets.mapFacets(pod, ftype.attrs.facets);
+    this.lineNum     = ftype.attrs.lineNum;
+    this.sourceFile  = ftype.attrs.sourceFile;
 
-    this.lineNum    = ftype.attrs.lineNum;
-    this.sourceFile = ftype.attrs.sourceFile;
+    return nameToSlot;
   }
 
   /**
@@ -537,6 +540,7 @@ public class ClassType
    */
   public void finish()
   {
+    if (finished) return;
     synchronized (lock())
     {
       if (finished) return;
@@ -545,13 +549,14 @@ public class ClassType
         // ensure reflected and emitted
         reflect();
         emit();
-        finished = true;
 
         // map Java members to my slots for reflection; if
         // mixin then we do this for both the interface and
         // the static methods only of the implementation class
         finishSlots(cls, false);
         if (isMixin()) finishSlots(auxCls, true);
+
+        finished = true;
 
 /*
 System.out.println("---- Finish " + qname() + " cls=" + cls);
@@ -721,7 +726,7 @@ catch (Exception e) { e.printStackTrace(); }
   List fields;
   List methods;
   List slots;
-  HashMap slotsByName;  // String:Slot
+  volatile HashMap slotsByName;  // String:Slot
   Facets myFacets;
   Facets inheritedFacets;  // handled in loadFacets
 
@@ -730,10 +735,11 @@ catch (Exception e) { e.printStackTrace(); }
   Class auxCls;      // implementation Java class if mixin
 
   // flags to ensure we finish only once
-  boolean finished;
+  volatile boolean finished;
   String finishing;
 
   // misc
   boolean javaRepr;   // if representation a Java type, such as java.lang.Long
 
 }
+
