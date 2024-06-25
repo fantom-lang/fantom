@@ -65,12 +65,14 @@ class JsPod : JsNode
     js.wl("const sys = fantom ? fantom.sys : __require('sys.js');")
 
     // we need to require full dependency chain
-    pods := (Pod[])pod.depends.mapNotNull |p->Pod?|
+    pods := (CPod[])pod.depends.mapNotNull |p->CPod?|
     {
       if (p.name.startsWith("[java]")) return null
-      return Pod.find(p.name)
+      return c.ns.resolvePod(p.name, null)
     }
-    pods = Pod.orderByDepends(Pod.flattenDepends(pods))
+    // jacked this implementation straight from Pod.java.
+    // see https://fantom.org/forum/topic/2922 for reason
+    pods = orderByDepends(flattenDepends(pods))
     pods.each |depend|
     {
       if (depend.name == "sys") return
@@ -84,41 +86,55 @@ class JsPod : JsNode
     js.wl("const js = (typeof window !== 'undefined') ? window : global;")
   }
 
-  // private Void writeImports()
-  // {
-  //   // special handling for dom
-  //   if (pod.name == "dom")
-  //   {
-  //     js.wl("import * as es6 from './es6.js'")
-  //   }
+  ** Use CNamespace to flatten depends (they are not ordered)
+  private CPod[] flattenDepends(CPod[] pods)
+  {
+    acc := Str:CPod[:]
+    pods.each |pod| { doFlattenDepends(acc, pod) }
+    return acc.vals
+  }
 
-  //   pod.depends.each |depend|
-  //   {
-  //     // NOTE if we change sys to fan we need to update JNode.qnameToJs
-  //     // js.wl("import * as ${depend.name} from './${depend.name}.js';")
-  //     if (Pod.find(depend.name).file(`/esm/${depend.name}.js`, false) != null)
-  //       js.wl("import * as ${depend.name} from './${depend.name}.js';")
-  //     else
-  //     {
-  //       // TODO: FIXIT - non-js dependencies that will only be there in node env
-  //       // but not the browser. Maybe the browser should return empty export in
-  //       // this case? or we could put a comment on the same line that we
-  //       // could search for and strip out before serving the js in the browser.
-  //       // js.wl("let ${depend.name};")
-  //       // await import('./esm/testSys.js').then(obj => testSys = obj).catch(err => {});
-  //       // js.wl("await import('./${depend.name}.js').then(obj => ${depend.name}=obj).catch(err => {});")
+  private Void doFlattenDepends([Str:CPod] acc, CPod pod)
+  {
+    if (acc.containsKey(pod.name)) return
+    acc[pod.name] = pod
+    pod.depends.each |CDepend depend|
+    {
+      doFlattenDepends(acc, c.ns.resolvePod(depend.name, null))
+    }
+  }
 
-  //       js.wl("import * as ${depend.name} from './${depend.name}.js';")
-  //     }
+  ** Order depends using namespace
+  private CPod[] orderByDepends(CPod[] pods)
+  {
+    left := pods.dup.sort
+    ordered := CPod[,]
+    while (!left.isEmpty)
+    {
+      i := 0
+      for (i = 0; i<left.size; ++i)
+      {
+        if (noDependsInLeft(left, left[i])) break
+      }
+      ordered.add(left.removeAt(i))
+    }
+    return ordered
+  }
 
-
-  //     // if (depend.name == "sys")
-  //     //   js.wl("import * as fan from './sys.js';")
-  //     // else
-  //     //   js.wl("import * as ${depend.name} from './${depend.name}.js")
-  //   }
-  //   js.nl
-  // }
+  private static Bool noDependsInLeft(CPod[] left, CPod p)
+  {
+    depends := p.depends
+    for (i := 0; i<depends.size; ++i)
+    {
+      d := depends[i]
+      for (j := 0; j<left.size; ++j)
+      {
+        if (d.name == left[j].name)
+          return false
+      }
+    }
+    return true
+  }
 
   private Void writeTypes()
   {
