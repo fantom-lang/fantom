@@ -70,7 +70,7 @@ class JsPod : JsNode
       if (p.name.startsWith("[java]")) return null
       return c.ns.resolvePod(p.name, null)
     }
-    CPod.orderByDepends(CPod.flattenDepends(pods)).each |depend|
+    c.ns.flattenAndOrderByDepends(pods).each |depend|
     {
       if (depend.name == "sys") return
       if (!c.ns.resolvePod(depend.name, null).hasJs) return
