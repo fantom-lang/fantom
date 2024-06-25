@@ -97,5 +97,62 @@ mixin CPod
     return name
   }
 
+  **
+  ** Expand a set of pods to include all their recursive dependencies.
+  ** This method does not order them; see `orderByDepends`.
+  **
+  static CPod[] flattenDepends(CPod[] pods)
+  {
+    acc := Str:CPod[:]
+    pods.each |pod| { doFlattenDepends(acc, pod) }
+    return acc.vals
+  }
+
+  private static Void doFlattenDepends([Str:CPod] acc, CPod pod)
+  {
+    if (acc.containsKey(pod.name)) return
+    acc[pod.name] = pod
+    pod.depends.each |CDepend depend|
+    {
+      doFlattenDepends(acc, pod.ns.resolvePod(depend.name, null))
+    }
+  }
+
+  **
+  ** Order a list of pods by their dependencies.
+  ** This method does not flatten dependencies - see `flattenDepends`.
+  **
+  static CPod[] orderByDepends(CPod[] pods)
+  {
+    left := pods.dup.sort
+    ordered := CPod[,]
+    while (!left.isEmpty)
+    {
+      i := 0
+      for (i = 0; i<left.size; ++i)
+      {
+        if (noDependsInLeft(left, left[i])) break
+      }
+      ordered.add(left.removeAt(i))
+    }
+    return ordered
+  }
+
+  private static Bool noDependsInLeft(CPod[] left, CPod p)
+  {
+    depends := p.depends
+    for (i := 0; i<depends.size; ++i)
+    {
+      d := depends[i]
+      for (j := 0; j<left.size; ++j)
+      {
+        if (d.name == left[j].name)
+          return false
+      }
+    }
+    return true
+  }
+
+
 }
 

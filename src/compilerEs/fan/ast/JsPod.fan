@@ -70,10 +70,7 @@ class JsPod : JsNode
       if (p.name.startsWith("[java]")) return null
       return c.ns.resolvePod(p.name, null)
     }
-    // jacked this implementation straight from Pod.java.
-    // see https://fantom.org/forum/topic/2922 for reason
-    pods = orderByDepends(flattenDepends(pods))
-    pods.each |depend|
+    CPod.orderByDepends(CPod.flattenDepends(pods)).each |depend|
     {
       if (depend.name == "sys") return
       if (!c.ns.resolvePod(depend.name, null).hasJs) return
@@ -84,56 +81,6 @@ class JsPod : JsNode
 
     js.wl("// cjs require end")
     js.wl("const js = (typeof window !== 'undefined') ? window : global;")
-  }
-
-  ** Use CNamespace to flatten depends (they are not ordered)
-  private CPod[] flattenDepends(CPod[] pods)
-  {
-    acc := Str:CPod[:]
-    pods.each |pod| { doFlattenDepends(acc, pod) }
-    return acc.vals
-  }
-
-  private Void doFlattenDepends([Str:CPod] acc, CPod pod)
-  {
-    if (acc.containsKey(pod.name)) return
-    acc[pod.name] = pod
-    pod.depends.each |CDepend depend|
-    {
-      doFlattenDepends(acc, c.ns.resolvePod(depend.name, null))
-    }
-  }
-
-  ** Order depends using namespace
-  private CPod[] orderByDepends(CPod[] pods)
-  {
-    left := pods.dup.sort
-    ordered := CPod[,]
-    while (!left.isEmpty)
-    {
-      i := 0
-      for (i = 0; i<left.size; ++i)
-      {
-        if (noDependsInLeft(left, left[i])) break
-      }
-      ordered.add(left.removeAt(i))
-    }
-    return ordered
-  }
-
-  private static Bool noDependsInLeft(CPod[] left, CPod p)
-  {
-    depends := p.depends
-    for (i := 0; i<depends.size; ++i)
-    {
-      d := depends[i]
-      for (j := 0; j<left.size; ++j)
-      {
-        if (d.name == left[j].name)
-          return false
-      }
-    }
-    return true
   }
 
   private Void writeTypes()
