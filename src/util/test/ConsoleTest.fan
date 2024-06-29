@@ -15,6 +15,7 @@ class ConsoleTest : Test
   static Void main()
   {
     c := Console.cur
+    // c = Console.wrap(Env.cur.out)
     echo("Console $c [$c.typeof]")
     echo("width  = $c.width")
     echo("height = $c.height")

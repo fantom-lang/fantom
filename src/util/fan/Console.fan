@@ -6,6 +6,8 @@
 //   17 Jun 24  Brian Frank  Creation
 //
 
+using concurrent
+
 **
 ** Console provides utilities to interact with the terminal console.
 ** For Java this API is designed to use [jline]`docTools::Setup#jline`
@@ -18,8 +20,9 @@ abstract const class Console
   ** Get the default console for the virtual machine
   static Console cur() { NativeConsole.curNative }
 
-  ** Construct a console that wraps an output stream
-  static Console wrap(OutStream  out) { throw Err("TODO") }
+  ** Construct a console that wraps an output stream.
+  ** The returned console instance is **not** thread safe.
+  static Console wrap(OutStream  out) { OutStreamConsole(out) }
 
   ** Number of chars that fit horizontally in console or null if unknown
   abstract Int? width()
@@ -76,52 +79,58 @@ abstract const class Console
 @NoDoc @Js
 native const class NativeConsole : Console
 {
-  ** Get the default console for the virtual machine
   static NativeConsole curNative()
-
-  ** Number of chars that fit horizontally in console or null if unknown
   override Int? width()
-
-  ** Number of lines that fit vertically in console or null if unknown
   override Int? height()
-
-  ** Print a message to the console at the debug level
   override This debug(Obj? msg)
-
-  ** Print a message to the console at the informational level
   override This info(Obj? msg)
-
-  ** Print a message to the console at the warning level
   override This warn(Obj? msg)
-
-  ** Print a message to the console at the error level
   override This err(Obj? msg)
-
-  ** Print tabular data to the console:
-  **  - List of list is two dimensional data where first row is header names
-  **  - List of items with an each method will create column per key
-  **  - List of items without each will map to a column of "val"
-  **  - Anything else will be table of one cell table
   override This table(Obj? obj)
-
-  ** Clear the console of all text if supported
   override This clear()
-
-  ** Enter an indented group level in the console.  The JS debug
-  ** window can specify the group to default in a collapsed state (this
-  ** flag is ignored in a standard terminal).
   override This group(Obj? msg, Bool collapsed := false)
-
-  ** Exit an indented, collapsable group level
   override This groupEnd()
-
-  ** Prompt the user to enter a string from standard input.
-  ** Return null if end of stream has been reached.
   override Str? prompt(Str msg := "")
-
-  ** Prompt the user to enter a password string from standard input
-  ** with echo disabled.  Return null if end of stream has been reached.
   override Str? promptPassword(Str msg := "")
+}
+
+**************************************************************************
+** OutStreamConsole
+**************************************************************************
+
+**
+** OutStreamConsole writes to an output stream (not thread safe)
+**
+@NoDoc @Js
+const class OutStreamConsole : Console
+{
+  new make(OutStream out) { this.outRef = Unsafe(out) }
+
+  override Int? width() { null }
+  override Int? height() { null }
+  override This debug(Obj? msg) { log("DEBUG", msg) }
+  override This info(Obj? msg) { log(null, msg) }
+  override This warn(Obj? msg) { log("WARN", msg) }
+  override This err(Obj? msg) { log("ERR", msg) }
+  override This table(Obj? obj) { ConsoleTable(obj).dump(this); return this }
+  override This clear() { this }
+  override This group(Obj? msg, Bool collapsed := false) { info(msg); indent.increment; return this }
+  override This groupEnd() { indent.decrement; return this }
+  override Str? prompt(Str msg := "") { throw UnsupportedErr() }
+  override Str? promptPassword(Str msg := "") { throw UnsupportedErr() }
+
+  virtual This log(Str? level, Str msg)
+  {
+    out.print(Str.spaces(indent.val * 2))
+    if (level != null) out.print(level).print(": ")
+    out.printLine(msg)
+    return this
+  }
+
+  OutStream out() { outRef.val }
+  const Unsafe outRef
+
+  const AtomicInt indent := AtomicInt()
 }
 
 **************************************************************************
