@@ -7,17 +7,17 @@
 //
 
 /**
- * Console
+ * NativeConsole
  */
-class Console extends sys.Obj {
+class NativeConsole extends Console {
 
-  static cur() { return Console.#cur; }
+  static curNative() { return NativeConsole.#curNative; }
 
-  static #cur = new Console();
+  static #curNative = new NativeConsole();
 
   constructor() { super(); }
 
-  typeof() { return Console.type$; }
+  typeof() { return NativeConsole.type$; }
 
   width() { return null; }
 

@@ -13,54 +13,115 @@
 ** the JS debugging window.
 **
 @Js
-native const final class Console
+abstract const class Console
 {
   ** Get the default console for the virtual machine
-  static Console cur()
+  static Console cur() { NativeConsole.curNative }
+
+  ** Construct a console that wraps an output stream
+  static Console wrap(OutStream  out) { throw Err("TODO") }
 
   ** Number of chars that fit horizontally in console or null if unknown
-  Int? width()
+  abstract Int? width()
 
   ** Number of lines that fit vertically in console or null if unknown
-  Int? height()
+  abstract Int? height()
 
   ** Print a message to the console at the debug level
-  This debug(Obj? msg)
+  abstract This debug(Obj? msg)
 
   ** Print a message to the console at the informational level
-  This info(Obj? msg)
+  abstract This info(Obj? msg)
 
   ** Print a message to the console at the warning level
-  This warn(Obj? msg)
+  abstract This warn(Obj? msg)
 
   ** Print a message to the console at the error level
-  This err(Obj? msg)
+  abstract This err(Obj? msg)
 
   ** Print tabular data to the console:
   **  - List of list is two dimensional data where first row is header names
   **  - List of items with an each method will create column per key
   **  - List of items without each will map to a column of "val"
   **  - Anything else will be table of one cell table
-  This table(Obj? obj)
+  abstract This table(Obj? obj)
 
   ** Clear the console of all text if supported
-  This clear()
+  abstract This clear()
 
   ** Enter an indented group level in the console.  The JS debug
   ** window can specify the group to default in a collapsed state (this
   ** flag is ignored in a standard terminal).
-  This group(Obj? msg, Bool collapsed := false)
+  abstract This group(Obj? msg, Bool collapsed := false)
 
   ** Exit an indented, collapsable group level
-  This groupEnd()
+  abstract This groupEnd()
 
   ** Prompt the user to enter a string from standard input.
   ** Return null if end of stream has been reached.
-  Str? prompt(Str msg := "")
+  abstract Str? prompt(Str msg := "")
 
   ** Prompt the user to enter a password string from standard input
   ** with echo disabled.  Return null if end of stream has been reached.
-  Str? promptPassword(Str msg := "")
+  abstract Str? promptPassword(Str msg := "")
+}
+
+**************************************************************************
+** NativeConsole
+**************************************************************************
+
+**
+** NativeConsole binds to VM console facilities
+**
+@NoDoc @Js
+native const class NativeConsole : Console
+{
+  ** Get the default console for the virtual machine
+  static NativeConsole curNative()
+
+  ** Number of chars that fit horizontally in console or null if unknown
+  override Int? width()
+
+  ** Number of lines that fit vertically in console or null if unknown
+  override Int? height()
+
+  ** Print a message to the console at the debug level
+  override This debug(Obj? msg)
+
+  ** Print a message to the console at the informational level
+  override This info(Obj? msg)
+
+  ** Print a message to the console at the warning level
+  override This warn(Obj? msg)
+
+  ** Print a message to the console at the error level
+  override This err(Obj? msg)
+
+  ** Print tabular data to the console:
+  **  - List of list is two dimensional data where first row is header names
+  **  - List of items with an each method will create column per key
+  **  - List of items without each will map to a column of "val"
+  **  - Anything else will be table of one cell table
+  override This table(Obj? obj)
+
+  ** Clear the console of all text if supported
+  override This clear()
+
+  ** Enter an indented group level in the console.  The JS debug
+  ** window can specify the group to default in a collapsed state (this
+  ** flag is ignored in a standard terminal).
+  override This group(Obj? msg, Bool collapsed := false)
+
+  ** Exit an indented, collapsable group level
+  override This groupEnd()
+
+  ** Prompt the user to enter a string from standard input.
+  ** Return null if end of stream has been reached.
+  override Str? prompt(Str msg := "")
+
+  ** Prompt the user to enter a password string from standard input
+  ** with echo disabled.  Return null if end of stream has been reached.
+  override Str? promptPassword(Str msg := "")
 }
 
 **************************************************************************

@@ -11,26 +11,26 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import fan.sys.*;
 
-public abstract class Console extends FanObj
+public abstract class NativeConsole extends Console
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Factory
 //////////////////////////////////////////////////////////////////////////
 
-  public static Console cur()
+  public static NativeConsole curNative()
   {
     if (cur == null) cur = create();
     return cur;
   }
-  private static Console cur;
+  private static NativeConsole cur;
 
   /*
    * To test jline2:
    * java -Dfan.home=/work/fan -cp /work/fan/lib/java/sys.jar:/work/stuff/jline/jline-2.9.jar fanx.tools.Fan util::ConsoleTest
    */
 
-  private static Console create()
+  private static NativeConsole create()
   {
     try { return new Jline3Console(); } catch (Exception e) {}
     try { return new Jline2Console(); } catch (Exception e) {}
@@ -122,7 +122,7 @@ public abstract class Console extends FanObj
 
   public Type typeof()
   {
-    if (type == null) type = Type.find("util::Console");
+    if (type == null) type = Type.find("util::NativeConsole");
     return type;
   }
   private static Type type;
@@ -141,7 +141,7 @@ public abstract class Console extends FanObj
 // StdinConsole
 //////////////////////////////////////////////////////////////////////////
 
-  static class StdinConsole extends Console
+  static class StdinConsole extends NativeConsole
   {
     public String prompt(String msg)
     {
@@ -167,7 +167,7 @@ public abstract class Console extends FanObj
 // JavaConsole
 //////////////////////////////////////////////////////////////////////////
 
-  static class JavaConsole extends Console
+  static class JavaConsole extends NativeConsole
   {
     JavaConsole(java.io.Console c) { this.console = c; }
 
@@ -188,7 +188,7 @@ public abstract class Console extends FanObj
 // Jline3Console
 //////////////////////////////////////////////////////////////////////////
 
-  static class Jline3Console extends Console
+  static class Jline3Console extends NativeConsole
   {
     Jline3Console() throws Exception
     {
@@ -277,7 +277,7 @@ public abstract class Console extends FanObj
 // Jline3Console
 //////////////////////////////////////////////////////////////////////////
 
-  static class Jline2Console extends Console
+  static class Jline2Console extends NativeConsole
   {
     Jline2Console() throws Exception
     {
