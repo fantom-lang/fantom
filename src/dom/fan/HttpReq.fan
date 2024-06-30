@@ -33,8 +33,9 @@ class HttpReq
 
   ** The type of data contained in the response. It also lets the
   ** author change the response type. If an empty string is set as
-  ** the value, the default value of '"text"' is used.
-  @NoDoc Str resType := ""
+  ** the value, the default value of '"text"' is used.  Set this
+  ** field to "arraybuffer" to access response as Buf.
+  Str resType := ""
 
   **
   ** Indicates whether or not cross-site 'Access-Control' requests
@@ -101,3 +102,4 @@ class HttpReq
   **
   native Void postFormMultipart(Str:Obj form, |HttpRes res| c)
 }
+

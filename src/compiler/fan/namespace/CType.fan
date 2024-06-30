@@ -12,17 +12,12 @@
 ** the compilation units themsevles as TypeDef and TypeRef or to
 ** precompiled types in imported pods via ReflectType or FType.
 **
-mixin CType
+mixin CType : CNode
 {
 
 //////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Associated namespace for this type representation
-  **
-  abstract CNamespace ns()
 
   **
   ** Parent pod which defines this type.
@@ -550,22 +545,5 @@ mixin CType
   **
   abstract COperators operators()
 
-//////////////////////////////////////////////////////////////////////////
-// Facets
-//////////////////////////////////////////////////////////////////////////
-
-  **
-  ** Get the facet keyed by given type, or null if not defined.
-  **
-  abstract CFacet? facet(Str qname)
-
-  **
-  ** Return if the given facet is defined.
-  **
-  Bool hasFacet(Str qname) { facet(qname) != null }
-
-  **
-  ** Return if type has NoDoc facet
-  **
-  Bool isNoDoc() { hasFacet("sys::NoDoc") }
 }
+

@@ -36,7 +36,7 @@ class MimeType extends Obj {
       if (mime != null) return mime;
 
       // for some reason this one is not in ext2mime and we need to cache it
-      if (s == "x-directory/normal") 
+      if (s == "x-directory/normal")
       {
         const dir = MimeType.#parseStr(s);
         MimeType.#byMime[s] = dir;
@@ -235,6 +235,12 @@ class MimeType extends Obj {
     return MimeType.fromStr(`${this.mediaType()}/${this.subType()}`);
   }
 
+
+  isText() {
+    return (this.#mediaType == "text") ||
+           (this.#mediaType == "application" && this.#subType == "json");
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Lazy Load
 //////////////////////////////////////////////////////////////////////////
@@ -286,3 +292,4 @@ fan.sys.MimeType.predefined = function(media, sub, params)
 }
 */
 }
+

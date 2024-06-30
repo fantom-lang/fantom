@@ -153,87 +153,29 @@ public class BootEnv
   public File tempDir() { return tempDir; }
 
 //////////////////////////////////////////////////////////////////////////
-// Prompt JLine
+// Console
 //////////////////////////////////////////////////////////////////////////
 
   public String prompt(String msg)
   {
-    // attempt to initilize JLine and if we can't fallback to Java API
-    if (!jlineInit())
-    {
-      java.io.Console console = System.console();
-      if (console == null) return promptStdIn(msg);
-      return console.readLine(msg);
-    }
-
-    // use reflection to call JLine ConsoleReader.readLine
-    try
-    {
-      return (String)jline.getClass()
-        .getMethod("readLine", new Class[] { String.class })
-        .invoke(jline, new Object[] { msg });
-    }
-    catch (InvocationTargetException e)
-    {
-      throw Err.make(e.getCause());
-    }
-    catch (Exception e)
-    {
-      throw Err.make(e);
-    }
+    return (String)console("prompt", new Object[] { msg });
   }
 
   public String promptPassword(String msg)
   {
-    // attempt to initilize JLine and if we can't fallback to Java API
-    if (!jlineInit())
-    {
-      java.io.Console console = System.console();
-      if (console == null) return promptStdIn(msg);
-      char[] pass = console.readPassword(msg);
-      if (pass == null) return null;
-      return new String(pass);
-    }
-
-    // use reflection to call JLine ConsoleReader.readLine
-    try
-    {
-      return (String)jline.getClass()
-        .getMethod("readLine", new Class[] { String.class, Character.class })
-        .invoke(jline, new Object[] { msg, Character.valueOf('#') });
-    }
-    catch (Exception e)
-    {
-      throw Err.make(e);
-    }
+    return (String)console("promptPassword", new Object[] { msg });
   }
 
-  private boolean jlineInit()
-  {
-    if (jline == null)
-    {
-      // use reflection to see if jline.console.ConsoleReader
-      // is available in classpath
-      try
-      {
-        // jline = new ConsoleReader()
-        Class cls  = Class.forName("jline.console.ConsoleReader");
-        jline = cls.getConstructor(new Class[] {}).newInstance();
-      }
-      catch (Throwable e)
-      {
-        jline = e;
-      }
-    }
-    return !(jline instanceof Throwable);
-  }
-
-  private String promptStdIn(String msg)
+  public Object console(String method, Object[] args)
   {
     try
     {
-      out().print(msg).flush();
-      return new java.io.BufferedReader(new java.io.InputStreamReader(System.in)).readLine();
+      // we need to force native class to load before use
+      Pod pod = Pod.find("util");
+      Class cls = pod.classLoader.loadClass("fan.util.Console");
+      Type type = pod.type("Console");
+      FanObj c = (FanObj)type.method("cur").call();
+      return c.typeof().method(method).callOn(c, new List(Sys.ObjType, args));
     }
     catch (Exception e)
     {

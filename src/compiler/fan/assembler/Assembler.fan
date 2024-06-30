@@ -48,6 +48,7 @@ class Assembler : CompilerSupport, FConst
   {
     meta := pod.meta
     meta["pod.fcode"] = (!types.isEmpty).toStr
+    meta["pod.js"]    = (compiler.cjs != null || compiler.isSys).toStr
     return meta
   }
 
@@ -170,3 +171,4 @@ class Assembler : CompilerSupport, FConst
 
   FPod? fpod
 }
+

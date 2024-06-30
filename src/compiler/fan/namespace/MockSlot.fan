@@ -24,6 +24,7 @@ abstract class MockSlot : CSlot
   override Int flags
   override Str qname() { parent.qname + "." + name }
   override Str signature() { qname }
+  override CDoc? doc() { null }
   override CFacet? facet(Str qname) { null }
 }
 
@@ -80,3 +81,4 @@ class MockParam : CParam
   override CType paramType
   override Bool hasDefault() { false }
 }
+

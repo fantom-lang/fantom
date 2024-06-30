@@ -6,6 +6,7 @@
 //   19 Sep 06  Brian Frank  Creation
 //
 
+using concurrent
 using compiler
 
 **
@@ -600,6 +601,8 @@ class MiscTest : CompilerTest
       {
         virtual once DateTime x() { return DateTime.now(null) }
         once DateTime bad() { throw Err.make }
+
+        static once DateTime s() { DateTime.now(null)  }
       }
 
       class B : A
@@ -610,7 +613,14 @@ class MiscTest : CompilerTest
 
      a := pod.type("A").make
      b := pod.type("B").make
-     verifySame(a->x, a->x)
+     s := a.typeof.method("s")
+     x1 := a->x
+     s1 := s.callOn(null, [,])
+     verifySame(a->x, x1)
+     verifySame(s.call, s1)
+     Actor.sleep(10ms)
+     verifySame(a->x, x1)
+     verifySame(s.call, s1)
      verifyNotSame(b->x, b->x)
      verifyErr(Err#) { a->bad }
      verifyErr(Err#) { a->bad }
@@ -1125,6 +1135,26 @@ class MiscTest : CompilerTest
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Trap on generic
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTrapOnError()
+  {
+    verifyErrors(
+     """class C
+        {
+          Str test()
+          {
+            Obj x := [300]
+            return x.last->toHex
+          }
+        }""",
+       [
+          6, 14,  "Unknown slot 'sys::Obj.last'",
+       ])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Mixin Set Operator
 //////////////////////////////////////////////////////////////////////////
 
@@ -1162,3 +1192,4 @@ class MiscTest : CompilerTest
     verifyEq(m.callOn(obj, null), ["a":"Alpha", "b":"Beta"])
   }
 }
+

@@ -64,6 +64,7 @@ wav=audio/wav
 woff=font/woff
 woff2=font/woff2
 xhtml=application/xhtml+xml
+xeto=text/xeto; charset=utf-8
 xls=application/vnd.ms-excel
 xlsx=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 xml=text/xml; charset=utf-8

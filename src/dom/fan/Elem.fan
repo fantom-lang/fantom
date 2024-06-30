@@ -35,7 +35,7 @@ class Elem
   ** to Fantom, the existing instance is returned and 'type' will
   ** have no effect.
   **
-  static native Elem fromNative(Obj elem, Type type := Elem#)
+  @Js static native Elem fromNative(Obj elem, Type type := Elem#)
 
   ** Create an `Elem` instance from a HTML string.
   ** This is equivlaent

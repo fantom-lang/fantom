@@ -49,4 +49,15 @@ const class JCrypto : Crypto
   {
     PemReader(in, algorithm).next
   }
+
+  override Jwk? loadJwk(Str:Obj map)
+  {
+    JJwk(map)
+  }
+
+  override Jwk[] loadJwksForUri(Uri uri, Int maxJwKeys := 10)
+  {
+    JJwk.importJwksUri(uri, maxJwKeys)
+  }
+
 }

@@ -133,7 +133,7 @@ class InitEnum : CompilerStep
     m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
     m.ret = TypeRef(loc, curType.toNullable)
     m.code = Block(loc)
-    m.doc  = DocDef(loc,
+    m.docDef = DocDef(loc,
               ["Return the $curType.name instance for the specified name.  If not a",
                "valid name and checked is false return null, otherwise throw ParseErr."])
     curType.addSlot(m)
@@ -176,7 +176,7 @@ class InitEnum : CompilerStep
 
     // static field
     f := FieldDef(loc, curType)
-    f.doc       = def.doc
+    f.docDef    = def.doc
     f.facets    = def.facets
     f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage + FConst.Enum
     f.name      = def.name
@@ -218,8 +218,9 @@ class InitEnum : CompilerStep
     f.name      = "vals"
     f.fieldType = listType
     f.init      = init
-    f.doc       = DocDef(loc, ["List of $curType.name values indexed by ordinal"])
+    f.docDef    = DocDef(loc, ["List of $curType.name values indexed by ordinal"])
     return f
   }
 
 }
+

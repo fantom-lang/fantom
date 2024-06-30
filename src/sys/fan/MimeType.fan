@@ -109,4 +109,10 @@ const final class MimeType
   **
   MimeType noParams()
 
+  **
+  ** Return if this mime type is known to be text.  This includes all "text/*"
+  ** mime types along with special cases like "application/json".
+  **
+  Bool isText()
+
 }

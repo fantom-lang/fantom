@@ -17,11 +17,14 @@ class Test extends Obj {
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  constructor() { 
-    super(); 
+  constructor() {
+    super();
+    this.#verbose = false;
     this.#verifyCount = 0;
   }
 
+  #curTestMethod;
+  #verbose;
   #verifyCount;
   #tempDir;
 
@@ -32,6 +35,10 @@ class Test extends Obj {
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
+
+  curTestMethod() {
+    return this.#curTestMethod;
+  }
 
   verify(cond, msg=null) {
     if (!cond) this.fail(msg);
@@ -165,7 +172,22 @@ class Test extends Obj {
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-//fan.sys.Test.prototype.trap(String name, List args)
+  trap(name, args=null) {
+    // private undocumented access
+    switch (name)
+    {
+      case "verifyCount":
+        return this.#verifyCount;
+      case "verbose":
+        if (args != null && args.size() == 1) this.#verbose = args.get(0);
+        return this.#verbose
+        return null;
+      case "curTestMethod":
+        if (args != null && args.size() == 1) this.#curTestMethod = args.get(0);
+        return this.curTestMethod();
+    }
+    return super.trap(name, args);
+  }
 
   tempDir() {
     if (this.#tempDir == null && Env.__isNode()) {
@@ -177,20 +199,5 @@ class Test extends Obj {
     return this.#tempDir;
   }
 
-//////////////////////////////////////////////////////////////////////////
-// TestException: TODO:FIXIT can i remove this code 
-//////////////////////////////////////////////////////////////////////////
-
-/*
-function TestException(msg)
-{
-  this.mge = msg;
-  this.name = "TestException";
 }
 
-TestException.prototype.toString = function()
-{
-  return this.name + ": " + this.msg;
-}
-*/
-}

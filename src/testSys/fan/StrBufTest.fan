@@ -117,6 +117,37 @@ class StrBufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// AddRange
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAddRange()
+  {
+    s := StrBuf.make
+    verifyAddRange("a", 0..0, "a")
+
+    verifyAddRange("ab", 0..0, "a")
+    verifyAddRange("ab", 0..1, "ab")
+    verifyAddRange("ab", 1..1, "b")
+    verifyAddRange("ab", 0..<1, "a")
+    verifyAddRange("ab", 0..-1, "ab")
+    verifyAddRange("ab", 0..-2, "a")
+
+    verifyAddRange("abcd", 1..1, "b")
+    verifyAddRange("abcd", 1..2, "bc")
+    verifyAddRange("abcd", -2..-1, "cd")
+    verifyAddRange("abcd", -3..-1, "bcd")
+    verifyAddRange("abcd", -3..<-1, "bc")
+  }
+
+  Void verifyAddRange(Str s, Range r, Str expect)
+  {
+    b := StrBuf()
+    b.add("|").addRange(s, r).add("|")
+    // echo("## $s $r => $b.toStr")
+    verifyEq(b.toStr, "|$expect|")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Join
 //////////////////////////////////////////////////////////////////////////
 
@@ -329,3 +360,4 @@ internal class StrBufWrapOutStream : OutStream
 {
   new make(OutStream out) : super(out) {}
 }
+

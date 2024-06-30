@@ -33,6 +33,7 @@ public class SqlConnImplPeer
     try
     {
       SqlConnImpl self = SqlConnImpl.make();
+      if (uri.equals("test")) return TestSqlConn.make();
       self.peer.jconn = DriverManager.getConnection(uri, user, pass);
       self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
       return self;
@@ -229,3 +230,4 @@ public class SqlConnImplPeer
   Map meta;
   boolean supportsGetGenKeys;
 }
+

@@ -101,7 +101,10 @@ class HttpReqPeer extends sys.Obj {
     const res = HttpRes.make();
     res.__xhr = xhr;
     res.status(xhr.status);
-    res.content(isText ? xhr.responseText : "");
+    if (isText)
+      res.content(xhr.responseText);
+    else if (xhr.responseType == "arraybuffer")
+      res.contentBuf(sys.MemBuf.__makeBytes(xhr.response));
 
     const all = xhr.getAllResponseHeaders().split("\n");
     for (let i=0; i<all.length; i++)
@@ -150,3 +153,4 @@ class HttpReqPeer extends sys.Obj {
     self.send("POST", data, f);
   }
 }
+

@@ -83,6 +83,11 @@ final class StrBuf
   This addChar(Int ch)
 
   **
+  ** Add a substring of the given string to the buffer.  Return this.
+  **
+  This addRange(Str s, Range r)
+
+  **
   ** Add x.toStr to the end of the buffer.  If the buffer is not
   ** empty, then first add the specified separator which defaults
   ** to a space if not specified.  Return this.
@@ -147,3 +152,4 @@ final class StrBuf
   OutStream out()
 
 }
+

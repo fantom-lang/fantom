@@ -6,9 +6,19 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.80 (working)*
+*Build 1.0.81 (working)*
+- New util::Console API
+- Rewrite fant in Fantom as new util::TestRunner class
+- Add dom::Storage.keys to iterate all keys
+- Add new SqlConnPool API
+- Support for static once methods
+- StrBuf.addRange
+- Add double checked locking into ClassType.java reflect and finish
+
+*Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design
 - Move fwt pods into separate repo
+- Crypto JWT and JWK APIs
 - Actor queue overflow limits
 - Add Doc.elemFromPos, elemsFromPos
 - Add Event.keyChar
@@ -19,7 +29,14 @@
 - Fixes for Crypto EC keypair support
 - Fix Time.minus 24hr boundary checks
 - Allow mixins to have non-abstract fields if no storage required
-- Fix Color HSL implementation to match browser behavoir
+- Fix Color HSL implementation to match browser behavior
+- Add MimeType.isText
+- Add util::LockFile
+- Redesign ES compiler to not generate code for every pod
+- Include TypeScript decl file in pods with JS code
+- Prompt support for jline 3
+- #2909 RGB to HSL conversion
+- #2912 remove Future.state
 
 *Build 1.0.79 (17 Jul 2023)*
 - New yaml API
@@ -1590,3 +1607,4 @@
 - Compiler emits straight to Java bytecode or .NET IL
 - Basic expr compilation
 - Basic class, method support
+

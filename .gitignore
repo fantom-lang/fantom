@@ -43,9 +43,6 @@ obj/Release/
 # doc/
 /doc/
 
-# flux
-/etc/flux/session/
-
 # src/
 /src/sys/java/temp/
 /src/testEs/
@@ -55,3 +52,4 @@ obj/Release/
 /temp/
 temp-java/
 temp-es/
+

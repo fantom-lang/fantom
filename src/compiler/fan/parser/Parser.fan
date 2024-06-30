@@ -181,7 +181,7 @@ public class Parser : CompilerSupport
     if (def == null) throw err("Invalid class definition", cur)
 
     // populate it's doc, facets, and flags
-    def.doc    = doc
+    def.docDef = doc
     def.facets = facets
     def.flags  = flags
     if (def.isFacet) def.mixins.add(ns.facetType)
@@ -464,7 +464,7 @@ public class Parser : CompilerSupport
   {
     // define field itself
     field := FieldDef(loc, parent)
-    field.doc    = doc
+    field.docDef = doc
     field.facets = facets
     field.flags  = flags
     field.name   = name
@@ -649,7 +649,7 @@ public class Parser : CompilerSupport
   private MethodDef methodDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef(loc, parent)
-    method.doc    = doc
+    method.docDef = doc
     method.facets = facets
     method.flags  = flags
     method.ret    = ret
@@ -2439,3 +2439,4 @@ public class Parser : CompilerSupport
   private ClosureExpr[] closures  // list of all closures parsed
 
 }
+

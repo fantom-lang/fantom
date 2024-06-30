@@ -26,6 +26,12 @@ class StoragePeer extends sys.Obj {
     return this.$instance.length;
   }
 
+  keys = function(self)
+  {
+    var keys = Object.keys(this.$instance);
+    return sys.List.make(sys.Str.type$, keys);
+  }
+
   key = function(self, index)
   {
     return this.$instance.key(index);

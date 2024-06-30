@@ -47,8 +47,6 @@ public abstract class Future
 // Future
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract FutureState state();
-
   public abstract FutureStatus status();
 
   public final boolean isDone() { return status().isComplete(); }
@@ -101,3 +99,4 @@ public abstract class Future
   public Future wraps() { return null; }
 
 }
+

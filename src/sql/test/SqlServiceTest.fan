@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2008, John Sublett
+// Copyright (c) 2008, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
@@ -12,7 +12,12 @@
 class SqlServiceTest : Test
 {
 
-  SqlConn? db
+  internal SqlConn? db
+  internal DbType? dbType
+
+  internal Str? uri
+  internal Str? user
+  internal Str? pass
 
 //////////////////////////////////////////////////////////////////////////
 // Top
@@ -31,6 +36,7 @@ class SqlServiceTest : Test
       transactions
       preparedStmts
       executeStmts
+      pool
     }
     catch (Err e)
     {
@@ -50,11 +56,24 @@ class SqlServiceTest : Test
   Void open()
   {
     pod  := typeof.pod
-    uri  := pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
-    user := pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
-    pass := pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
+    uri  = pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
+    user = pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
+    pass = pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
     db = SqlConn.open(uri, user, pass)
     verifyEq(db.isClosed, false)
+
+    if (uri.contains("mysql"))
+    {
+      dbType = DbType.mysql
+    }
+    else if (uri.contains("postgresql"))
+    {
+      dbType = DbType.postgres
+    }
+    else
+    {
+      throw Err("Uri '$uri' connects to unknown database type")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,7 +81,7 @@ class SqlServiceTest : Test
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Drop all tables in the database
+  ** Verify the metadata
   **
   Void verifyMeta()
   {
@@ -90,28 +109,46 @@ class SqlServiceTest : Test
   Void dropTables()
   {
     verifyEq(db.meta.tableExists("foo_bar_should_not_exist"), false)
-    Str[] tables := db.meta.tables.dup
-    while (tables.size != 0)
-    {
-      Int dropped := 0
-      tables.each |Str tableName|
-      {
-        verifyEq(db.meta.tableExists(tableName), true)
-        try
-        {
-          db.sql("drop table $tableName").execute
-          tables.remove(tableName)
-          dropped++
-        }
-        catch (Err e)
-        {
-          e.trace
-        }
-      }
 
-      if (dropped == 0)
-        throw SqlErr("All tables could not be dropped.")
-    }
+    // TODO Currently, db.meta.tables fetches every single table from every
+    // schema.  In both Postgres and MySQL, this means it ends up fetching all
+    // the various system tables as well.  We should probably fix SqlMeta so it
+    // can fetch tables for a specific schema.  In our test case here, that
+    // schema would be 'fantest'.
+    //
+    // In the original version of this test, it tried to drop every single one
+    // of these system tables, which fails spectacularly.  I'm not sure how
+    // this test ever worked before.
+    //
+    // I've modified this test so that it just tries to drop the one table that
+    // actually gets created in the 'fantest' schema, namely 'farmers'.
+
+    if (db.meta.tableExists("farmers"))
+      db.sql("drop table farmers").execute
+
+    // OLD VERSION
+    //Str[] tables := db.meta.tables.dup
+    //while (tables.size != 0)
+    //{
+    //  Int dropped := 0
+    //  tables.each |Str tableName|
+    //  {
+    //    verifyEq(db.meta.tableExists(tableName), true)
+    //    try
+    //    {
+    //      db.sql("drop table $tableName").execute
+    //      tables.remove(tableName)
+    //      dropped++
+    //    }
+    //    catch (Err e)
+    //    {
+    //      e.trace
+    //    }
+    //  }
+    //
+    //  if (dropped == 0)
+    //    throw SqlErr("All tables could not be dropped.")
+    //}
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -120,25 +157,48 @@ class SqlServiceTest : Test
 
   Void createTable()
   {
-    db.sql(
-     "create table farmers(
-      farmer_id int auto_increment not null,
-      name      varchar(255) not null,
-      married   bit,
-      pet       varchar(255),
-      ss        char(4),
-      age       tinyint,
-      pigs      smallint,
-      cows      int,
-      ducks     bigint,
-      height    float,
-      weight    double,
-      bigdec    decimal(2,1),
-      dt        datetime,
-      d         date,
-      t         time,
-      primary key (farmer_id))
-      ").execute
+    if (dbType == DbType.postgres)
+    {
+      db.sql(
+       "create table farmers(
+        farmer_id serial,
+        name      varchar(255) not null,
+        married   bool,
+        pet       varchar(255),
+        ss        char(4),
+        age       int,
+        pigs      smallint,
+        cows      int,
+        ducks     bigint,
+        height    float,
+        weight    real,
+        bigdec    decimal(2,1),
+        dt        timestamptz,
+        d         date,
+        t         time)").execute
+    }
+    else
+    {
+      db.sql(
+       "create table farmers(
+        farmer_id int auto_increment not null,
+        name      varchar(255) not null,
+        married   bit,
+        pet       varchar(255),
+        ss        char(4),
+        age       tinyint,
+        pigs      smallint,
+        cows      int,
+        ducks     bigint,
+        height    float,
+        weight    double,
+        bigdec    decimal(2,1),
+        dt        datetime,
+        d         date,
+        t         time,
+        primary key (farmer_id))
+        ").execute
+    }
 
     row := db.meta.tableRow("farmers")
     cols := row.cols
@@ -213,25 +273,36 @@ class SqlServiceTest : Test
 
   Void insertFarmer(Obj[] row)
   {
-    s := "insert farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight, bigdec, dt, d, t) values ("
-    s += row.join(", ") |Obj? o->Str|
-    {
-      if (o == null)     return "null"
-      if (o is Str)      return "'$o'"
-      if (o is DateTime) return "'" + o->toLocale("YYYY-MM-DD hh:mm:ss") + "'"
-      if (o is Date)     return "'" + o->toLocale("YYYY-MM-DD") + "'"
-      if (o is Time)     return "'" + o->toLocale("hh:mm:ss") + "'"
-      return o.toStr
-    }
-    s += ")"
+    s :=
+      "insert into farmers (name, married, pet, ss, age, pigs, cows, ducks, height, weight, bigdec, dt, d, t)
+       values (@name, @married, @pet, @ss, @age, @pigs, @cows, @ducks, @height, @weight, @bigdec, @dt, @d, @t)"
+    stmt := db.sql(s).prepare
+    Int[] keys := stmt.execute([
+      "name":    row[0],
+      "married": row[1],
+      "pet":     row[2],
+      "ss":      row[3],
+      "age":     row[4],
+      "pigs":    row[5],
+      "cows":    row[6],
+      "ducks":   row[7],
+      "height":  row[8],
+      "weight":  row[9],
+      "bigdec":  row[10],
+      "dt":      row[11],
+      "d":       row[12],
+      "t":       row[13]
+    ])
+    stmt.close
 
     // verify we got key back
-    Int[] keys := execute(s)
     verifyEq(keys.size, 1)
     verifyEq(keys.typeof, Int[]#)
 
     // read with key and verify it is what we just wrote
-    farmer := db.sql("select * from farmers where farmer_id = $keys.first").query.first
+    stmt = db.sql("select * from farmers where farmer_id = @farmerId").prepare
+    farmer := stmt.query(["farmerId":keys.first]).first
+    stmt.close
     verifyEq(farmer->name, row[0])
   }
 
@@ -239,21 +310,43 @@ class SqlServiceTest : Test
   {
     verifyEq(r.cols.size, 15)
     verifyEq(r.cols.isRO, true)
-    verifyCol(r.cols[0],  0,  "farmer_id", Int#,   "INT")
-    verifyCol(r.cols[1],  1,  "name",      Str#,   "VARCHAR")
-    verifyCol(r.cols[2],  2,  "married",   Bool#,  "BIT")
-    verifyCol(r.cols[3],  3,  "pet",       Str#,   "VARCHAR")
-    verifyCol(r.cols[4],  4,  "ss",        Str#,   "CHAR")
-    verifyCol(r.cols[5],  5,  "age",       Int#,   "TINYINT")
-    verifyCol(r.cols[6],  6,  "pigs",      Int#,   "SMALLINT")
-    verifyCol(r.cols[7],  7,  "cows",      Int#,   "INT")
-    verifyCol(r.cols[8],  8,  "ducks",     Int#,   "BIGINT")
-    verifyCol(r.cols[9],  9,  "height",    Float#, "FLOAT")
-    verifyCol(r.cols[10], 10, "weight",    Float#, "DOUBLE")
-    verifyCol(r.cols[11], 11, "bigdec",    Decimal#, "DECIMAL")
-    verifyCol(r.cols[12], 12, "dt",        DateTime#, "DATETIME")
-    verifyCol(r.cols[13], 13, "d",         Date#,  "DATE")
-    verifyCol(r.cols[14], 14, "t",         Time#,  "TIME")
+
+    if (dbType == DbType.postgres)
+    {
+      verifyCol(r.cols[0],  0,  "farmer_id", Int#,      "SERIAL")
+      verifyCol(r.cols[1],  1,  "name",      Str#,      "VARCHAR")
+      verifyCol(r.cols[2],  2,  "married",   Bool#,     "BOOL")
+      verifyCol(r.cols[3],  3,  "pet",       Str#,      "VARCHAR")
+      verifyCol(r.cols[4],  4,  "ss",        Str#,      "BPCHAR")
+      verifyCol(r.cols[5],  5,  "age",       Int#,      "int4")
+      verifyCol(r.cols[6],  6,  "pigs",      Int#,      "INT2")
+      verifyCol(r.cols[7],  7,  "cows",      Int#,      "int4")
+      verifyCol(r.cols[8],  8,  "ducks",     Int#,      "INT8")
+      verifyCol(r.cols[9],  9,  "height",    Float#,    "FLOAT8")
+      verifyCol(r.cols[10], 10, "weight",    Float#,    "FLOAT4")
+      verifyCol(r.cols[11], 11, "bigdec",    Decimal#,  "NUMERIC")
+      verifyCol(r.cols[12], 12, "dt",        DateTime#, "TIMESTAMPTZ")
+      verifyCol(r.cols[13], 13, "d",         Date#,     "DATE")
+      verifyCol(r.cols[14], 14, "t",         Time#,     "TIME")
+    }
+    else
+    {
+      verifyCol(r.cols[0],  0,  "farmer_id", Int#,      "INT")
+      verifyCol(r.cols[1],  1,  "name",      Str#,      "VARCHAR")
+      verifyCol(r.cols[2],  2,  "married",   Bool#,     "BIT")
+      verifyCol(r.cols[3],  3,  "pet",       Str#,      "VARCHAR")
+      verifyCol(r.cols[4],  4,  "ss",        Str#,      "CHAR")
+      verifyCol(r.cols[5],  5,  "age",       Int#,      "TINYINT")
+      verifyCol(r.cols[6],  6,  "pigs",      Int#,      "SMALLINT")
+      verifyCol(r.cols[7],  7,  "cows",      Int#,      "INT")
+      verifyCol(r.cols[8],  8,  "ducks",     Int#,      "BIGINT")
+      verifyCol(r.cols[9],  9,  "height",    Float#,    "FLOAT")
+      verifyCol(r.cols[10], 10, "weight",    Float#,    "DOUBLE")
+      verifyCol(r.cols[11], 11, "bigdec",    Decimal#,  "DECIMAL")
+      verifyCol(r.cols[12], 12, "dt",        DateTime#, "DATETIME")
+      verifyCol(r.cols[13], 13, "d",         Date#,     "DATE")
+      verifyCol(r.cols[14], 14, "t",         Time#,     "TIME")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -312,6 +405,16 @@ class SqlServiceTest : Test
       }
       i++
     }
+
+    // queryEachWhile
+    verifyEq(
+      db.sql("select * from farmers").queryEachWhile(null) |row->Obj?|
+        { return (row->age == 40) ? row->name : null },
+      "Donny")
+    verifyEq(
+      db.sql("select * from farmers").queryEachWhile(null) |row->Obj?|
+        { return (row->name == "Frodo") ? row->age : null },
+      null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -399,7 +502,7 @@ class SqlServiceTest : Test
 
   Void executeStmts()
   {
-    r := db.sql(Str<|update farmers set pet="Pepper" where ducks=8|>).execute
+    r := db.sql(Str<|update farmers set pet='Pepper' where ducks=8|>).execute
     verifyEq(r, 2)
 
     r = db.sql("select name, pet from farmers").execute
@@ -408,6 +511,22 @@ class SqlServiceTest : Test
     rows.sort |a, b| { a->name <=> b->name }
     verifyEq(rows[3]->name, "Donny"); verifyEq(rows[3]->pet, "Pepper")
     verifyEq(rows[4]->name, "John");  verifyEq(rows[4]->pet, "Pepper")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Pool
+//////////////////////////////////////////////////////////////////////////
+
+  Void pool()
+  {
+    pool := TestPool
+    {
+      it.uri      = this.uri
+      it.username = this.user
+      it.password = this.pass
+    }
+    pool.execute(|SqlConn c| {})
+    pool.close
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -477,3 +596,32 @@ internal class Farmer
   Time? t
 }
 
+**************************************************************************
+** DbType
+**************************************************************************
+
+internal enum class DbType
+{
+  mysql,
+  postgres
+}
+
+**************************************************************************
+** TestPool
+**************************************************************************
+
+const internal class TestPool : SqlConnPool
+{
+  new make(|This|? f) : super(f) {}
+
+  protected override Void onOpen(SqlConn c)
+  {
+    if (!c.stash.isEmpty) throw Err("test failure")
+    c.stash["foo"] = 42
+  }
+
+  protected override Void onClose(SqlConn c)
+  {
+    if (c.stash["foo"] != 42) throw Err("test failure")
+  }
+}

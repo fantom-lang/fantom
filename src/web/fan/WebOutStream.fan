@@ -244,7 +244,6 @@ class WebOutStream : OutStream
       if (WebJsMode.cur.isEs)
       {
         w("window.addEventListener('load', function() {
-             fan.sys.Env.cur().__loadVars(fan\$env);
              fan.sys.Env.__invokeMain('${main}');
            }, false);").nl
       }

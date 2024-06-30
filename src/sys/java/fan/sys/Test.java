@@ -181,13 +181,13 @@ public class Test
     }
     catch (Err e)
     {
-      if (verbose) System.out.println("  verifyErr: " + e);
+      if (verbose) System.out.println("   verifyErr: " + e);
       if (e.typeof() == errType || errType == null) { verifyCount++; return; }
       fail(e.typeof() + " thrown, expected " + errType);
     }
     catch (Throwable e)
     {
-      if (verbose) System.out.println("  verifyErr: " + e);
+      if (verbose) System.out.println("   verifyErr: " + e);
       Err err = Err.make(e);
       if (err.typeof() == errType || errType == null) { verifyCount++; return; }
       fail(e.toString() + " thrown, expected " + errType);
@@ -254,7 +254,14 @@ public class Test
   public Object trap(String name, List args)
   {
     if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
-    if (name.equals("verbose")) return Boolean.valueOf(verbose);
+    if (name.equals("verbose"))
+    {
+      if (args != null && args.size() == 1)
+      {
+        verbose = ((Boolean)args.get(0)).booleanValue();
+      }
+      return Boolean.valueOf(verbose);
+    }
 
     if (name.equals("curTestMethod") && args != null && args.size() == 1)
       this.curTestMethod = (Method) args.get(0);
@@ -283,3 +290,4 @@ public class Test
   File tempDir;
 
 }
+

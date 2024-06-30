@@ -1,4 +1,4 @@
-#! /usr/bin/env fan
+#! /usr/bin/env fansubstitute
 //
 // Copyright (c) 2008, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
@@ -33,3 +33,4 @@ class Build : BuildPod
     index      = ["compiler.bridge.java": "compilerJava::JavaBridge"]
   }
 }
+

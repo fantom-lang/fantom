@@ -29,6 +29,9 @@ class Storage
   ** Return the number of items in storage.
   native Int size()
 
+  ** Return a list of all keys for this index.
+  native Str[] keys()
+
   ** Return the key value for this index. If the index is greater
   ** than or equal to 'size' returns null.
   native Str? key(Int index)

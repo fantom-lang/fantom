@@ -65,11 +65,12 @@ class PodDef : Node, CPod
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  override CNamespace ns            // compiler's namespace
-  override const Str name           // simple pod name
-  Str:Str meta := Str:Str[:]        // pod meta-data props
-  Str:Obj index := Str:Obj[:]       // pod index props (vals are Str or Str[])
-  CompilationUnit[] units           // Tokenize
-  [Str:TypeDef]? typeDefs           // ScanForUsingsAndTypes
+  override CNamespace ns                // compiler's namespace
+  override const Str name               // simple pod name
+  override Str:Str meta := Str:Str[:]   // pod meta-data props
+  Str:Obj index := Str:Obj[:]           // pod index props (vals are Str or Str[])
+  CompilationUnit[] units               // Tokenize
+  [Str:TypeDef]? typeDefs               // ScanForUsingsAndTypes
 
 }
+

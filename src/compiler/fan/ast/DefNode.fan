@@ -12,7 +12,7 @@
 ** MethodDef, and FieldDef.  All definitions may be documented using a
 ** Javadoc style FanDoc comment.
 **
-abstract class DefNode : Node
+abstract class DefNode : Node, CNode
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ abstract class DefNode : Node
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  abstract CNamespace ns()
+  override CDoc? doc() { docDef }
 
   Void walkFacets(Visitor v, VisitDepth depth)
   {
@@ -38,7 +38,7 @@ abstract class DefNode : Node
     }
   }
 
-  CFacet? facet(Str qname)
+  override CFacet? facet(Str qname)
   {
     if (facets == null) return null
     return facets.find |f| { f.type.qname == qname }
@@ -99,9 +99,9 @@ abstract class DefNode : Node
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  DocDef? doc         // lines of fandoc comment or null
-  Int flags := 0      // type/slot flags
-  FacetDef[]? facets  // facet declarations or null
+  DocDef? docDef           // lines of fandoc comment or null
+  Int flags := 0           // type/slot flags
+  FacetDef[]? facets       // facet declarations or null
 
 }
 
@@ -112,12 +112,17 @@ abstract class DefNode : Node
 **
 ** Type or slot documentation in plain text fandoc format
 **
-class DocDef : Node
+class DocDef : Node, CDoc
 {
   new make(Loc loc, Str[] lines)
     : super(loc)
   {
     this.lines = lines
+  }
+
+  override Str text()
+  {
+    lines.join("\n")
   }
 
   override Void print(AstWriter out)
@@ -127,3 +132,4 @@ class DocDef : Node
 
   Str[] lines
 }
+

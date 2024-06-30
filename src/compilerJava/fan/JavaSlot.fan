@@ -21,6 +21,7 @@ abstract class JavaSlot : CSlot
   }
 
   override CNamespace ns() { return parent.ns }
+  override CDoc? doc() { null }
   override CType parent
   override Str name
   override once Str qname() { return parent.qname + "." + name }
@@ -130,3 +131,4 @@ class JavaParam : CParam
   override CType paramType
   override Str toStr() { return "$paramType $name" }
 }
+

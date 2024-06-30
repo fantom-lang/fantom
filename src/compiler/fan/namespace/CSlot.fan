@@ -11,9 +11,9 @@
 ** compiler.  CSlots unifies slots being compiled as SlotDefs
 ** with slots imported as ReflectSlot or FSlot.
 **
-mixin CSlot
+mixin CSlot : CNode
 {
-  virtual CNamespace ns() { parent.ns }
+  override CNamespace ns() { parent.ns }
   abstract CType parent()
   abstract Str name()
   abstract Str qname()
@@ -43,16 +43,6 @@ mixin CSlot
 
   Bool isInstanceCtor() { isCtor && !isStatic }
   Bool isStaticCtor() { isCtor && isStatic }
-
-  **
-  ** Get the facet keyed by given type, or null if not defined.
-  **
-  abstract CFacet? facet(Str qname)
-
-  **
-  ** Return if the given facet is defined.
-  **
-  Bool hasFacet(Str qname) { facet(qname) != null }
 
   **
   ** If this a foreign function interface slot.  A FFI slot is one
@@ -276,3 +266,4 @@ const class MarkerFacet : CFacet
   override Obj? get(Str name) { null }
 
 }
+

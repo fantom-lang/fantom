@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2007, John Sublett
+// Copyright (c) 2007, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
@@ -41,10 +41,17 @@ class Statement
 
   **
   ** Execute the statement.  For each row in the result, invoke
-  ** the specified function 'each'.  The 'Obj' passed to the
-  ** 'each' function will be of type 'Row'.
+  ** the specified function 'eachFunc'.
   **
   native Void queryEach([Str:Obj]? params, |Row row| eachFunc)
+
+  **
+  ** Execute the statement.  For each row in the result, invoke the specified
+  ** function 'eachFunc'. If the function returns non-null, then break the
+  ** iteration and return the resulting object.  Return null if the function
+  ** returns null for every item.
+  **
+  native Obj? queryEachWhile([Str:Obj]? params, |Row row->Obj?| eachFunc)
 
   **
   ** Execute a SQL statement and if applicable return a result:
@@ -91,3 +98,4 @@ class Statement
   native Int? limit
 
 }
+
