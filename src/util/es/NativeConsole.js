@@ -34,7 +34,7 @@ class NativeConsole extends Console {
   table(obj)
   {
     var grid = []
-    var t = fan.util.ConsoleTable.make(obj);
+    var t = ConsoleTable.make(obj);
     for (var r=0; r<t.rows().size(); ++r)
     {
       var row = t.rows().get(r);
