@@ -22,6 +22,13 @@ class CookieTest : Test
        "VERSION-foo%2Fbar": "unspecified",
        "__u": "1303429918|un=(referral)|ud=referral"])
 
+    // test key=(no val)
+    s = "mm_testcookie_storage=; foobar=123; _ga_DGW3P9MPX4=GS1.2.1720526761"
+    verifyEq(MimeType.parseParams(s),
+      ["mm_testcookie_storage": "",
+       "foobar": "123",
+       "_ga_DGW3P9MPX4": "GS1.2.1720526761"])
+
     verifyCookie(Cookie("foo=bar"), Cookie("foo", "bar"))
     verifyCookie(Cookie("foo=\"bar baz\""), Cookie("foo", "\"bar baz\""))
     verifyCookie(Cookie("foo=\"_\\\"quot\\\"_\""), Cookie("foo", "\"_\\\"quot\\\"_\""))
@@ -69,3 +76,4 @@ class CookieTest : Test
   }
 
 }
+

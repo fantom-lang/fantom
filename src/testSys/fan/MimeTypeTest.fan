@@ -92,7 +92,6 @@ class MimeTypeTest : Test
     verifyFromStr("a/b; charset=foo (comment)", "a", "b", ["charset":"foo (comment)"])
 
     verifyFromStrBad("foo")
-    verifyFromStrBad("a/b; x=")
   }
 
   Void verifyFromStr(Str s, Str media, Str sub, [Str:Str]? params)
@@ -141,6 +140,17 @@ class MimeTypeTest : Test
     verifyParseParams("a=b; c", ["a":"b", "c":""])
     verifyParseParams("a=b; cx", ["a":"b", "cx":""])
 
+    // not sure this is valid to have empty string; but have seen
+    // Safari send cookies like this
+    verifyParseParams("a=",     ["a":""])
+    verifyParseParams("a =",    ["a":""])
+    verifyParseParams("a= ",    ["a":""])
+    verifyParseParams("a  =  ", ["a":""])
+    verifyParseParams("a=; b=foo", ["a":"", "b":"foo"])
+    verifyParseParams("a=foo; b=", ["a":"foo", "b":""])
+    verifyParseParams("a=foo; b=; c=bar",          ["a":"foo", "b":"", "c":"bar"])
+    verifyParseParams("a = foo; b   = ; c =bar  ", ["a":"foo", "b":"", "c":"bar"])
+
     // not sure this is actually correctly formatted to have equals
     // in unquoted values, but have seen Chrome send cookies like this
     verifyParseParams("""a=sdecbc682; tz=America/New_York; b="05df13cc-9ef1"; c=MDI1MzE=; d=ABC=""",
@@ -149,15 +159,12 @@ class MimeTypeTest : Test
        "b":  "05df13cc-9ef1",
        "c":  "MDI1MzE=",
        "d":  "ABC="])
-
-    verifyEq(MimeType.parseParams("n=", false), null)
-    verifyErr(ParseErr#) { MimeType.parseParams("x=f;y=") }
   }
 
-  Void verifyParseParams(Str s, Str:Str params)
+  Void verifyParseParams(Str s, Str:Str expect)
   {
     p := MimeType.parseParams(s)
-    verifyEq(p, params)
+    verifyEq(p, expect)
     verifyEq(p.caseInsensitive, true)
   }
 
@@ -219,3 +226,4 @@ class MimeTypeTest : Test
     verifyEq(x.isText, expect)
   }
 }
+
