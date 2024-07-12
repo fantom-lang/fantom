@@ -38,6 +38,12 @@ abstract class Stmt : Node
   **
   abstract Bool isDefiniteAssign(|Expr lhs->Bool| f)
 
+  **
+  ** Is this statement a field initialization for a once storage field.
+  ** This is used in compilerEs to skip initializing fields to "_once_"
+  **
+  virtual Bool isOnceFieldInit() { false }
+
 //////////////////////////////////////////////////////////////////////////
 // Tree
 //////////////////////////////////////////////////////////////////////////
@@ -111,6 +117,14 @@ class ExprStmt : Stmt
   override Bool isExit() { false }
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f) { expr.isDefiniteAssign(f) }
+
+  override Bool isOnceFieldInit()
+  {
+    if (expr.id !== ExprId.assign) return false
+    x := ((BinaryExpr)expr).lhs as FieldExpr
+    if (x === null) return false
+    return x.field.isOnce
+  }
 
   override Void walkChildren(Visitor v, VisitDepth depth)
   {
@@ -658,3 +672,4 @@ enum class StmtId
   tryStmt,
   switchStmt
 }
+
