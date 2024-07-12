@@ -235,9 +235,6 @@ class JsType : JsNode
 
   private static Str fieldDefVal(FieldDef f)
   {
-    // initialize once fields to undefined
-    if (f.isOnce) return "undefined"
-
     defVal    := "null"
     fieldType := f.fieldType
     if (!fieldType.isNullable)
