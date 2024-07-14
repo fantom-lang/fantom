@@ -36,7 +36,26 @@ internal const class PreparedSql
 }
 
 **************************************************************************
+**
 ** Tokenizer transforms a parameterized SQL string into PreparedSQL
+**
+** This tokenizer works according to the following algorithm:
+**
+**   "foo" means one or more valid identifier characters: [a-z,A-Z,0-9,_]
+**
+**   (1) Anything between single quotes is translated as is.
+**
+**   (2) Otherwise:
+**
+**       (a) "@foo" is a named parameter.
+**           A new parameter named "foo" is created.
+**           The sql is translated to "?".
+**
+**       (b) "@@foo" is an escaped mysql user variable.
+**           The sql is translated to "@foo".
+**
+**       (c) Anything else is translated as is.
+**
 **************************************************************************
 
 internal class Tokenizer
