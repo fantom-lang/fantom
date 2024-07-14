@@ -64,7 +64,7 @@ internal class Tokenizer
   ** Process a text token.
   private Token text()
   {
-    Int start := cur++
+    start := cur++
     tok := nextToken()
     while (tok == Token.text)
     {
@@ -79,7 +79,7 @@ internal class Tokenizer
   ** Process a parameter token: @foo
   private Token param()
   {
-    Int start := cur++
+    start := cur++
     while (cur < sql.size && isIdent(sql[cur]))
       cur++
 
@@ -99,7 +99,7 @@ internal class Tokenizer
   ** Process a escaped mysql variable token: @@foo
   private Token escapedVar()
   {
-    Int start := cur
+    start := cur
     cur += 2
     while (cur < sql.size && isIdent(sql[cur]))
       cur++
@@ -113,7 +113,7 @@ internal class Tokenizer
   ** Process a quoted token
   private Token quoted()
   {
-    Int start := cur++
+    start := cur++
     while (cur < sql.size)
     {
       if (sql[cur] == '\'')
