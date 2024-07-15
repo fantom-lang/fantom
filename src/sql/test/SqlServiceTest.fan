@@ -37,6 +37,7 @@ class SqlServiceTest : Test
       preparedStmts
       executeStmts
       pool
+      mysqlVariable
     }
     catch (Err e)
     {
@@ -527,6 +528,30 @@ class SqlServiceTest : Test
     }
     pool.execute(|SqlConn c| {})
     pool.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// escaped mysql variable in prepared statement
+//////////////////////////////////////////////////////////////////////////
+
+  Void mysqlVariable()
+  {
+    if (dbType != DbType.mysql) return;
+
+    // We aren't preparing the statement,
+    // so we must not escape the user variable.
+    db.sql("set @v1 = 42").execute
+
+    // We are preparing the statement,
+    // so we must escape the user variable.
+    stmt := db.sql("select name, @@v1 from farmers where farmer_id = @farmerId")
+    stmt.prepare
+
+    rows := stmt.query(["farmerId":1])
+    verifyEq(rows.size, 1)
+    r := rows[0]
+    verifyEq(r.get(r.col("name")), "Alice")
+    verifyEq(r.get(r.col("@v1")),  42)
   }
 
 //////////////////////////////////////////////////////////////////////////
