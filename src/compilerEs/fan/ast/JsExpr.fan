@@ -267,6 +267,20 @@ class JsExpr : JsNode
     leave    := x.leave
     isAssign := x.assignTarget != null
 
+    // convert binary expressions testing for equivalence to
+    // synthetic str "_once_" to undefined
+    if (lhs.expr is FieldExpr)
+    {
+      fe := (FieldExpr)lhs.expr
+      if (rhs.expr.id === ExprId.strLiteral &&
+          symbol == "===" && rhs.expr->val == "_once_")
+      {
+        lhs.write
+        js.w(" ${symbol} undefined", loc)
+        return
+      }
+    }
+
     if (isAssign && lhs.expr is FieldExpr)
     {
       fe := (FieldExpr)lhs.expr
