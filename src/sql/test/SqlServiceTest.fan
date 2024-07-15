@@ -60,6 +60,8 @@ class SqlServiceTest : Test
     uri  = pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
     user = pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
     pass = pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
+
+    Log.get("sql").info("SqlServiceTest.open " + uri);
     db = SqlConn.open(uri, user, pass)
     verifyEq(db.isClosed, false)
 
@@ -539,19 +541,36 @@ class SqlServiceTest : Test
     if (dbType != DbType.mysql) return;
 
     // We aren't preparing the statement,
-    // so we must not escape the user variable.
+    // so we cannot escape the user variable.
     db.sql("set @v1 = 42").execute
 
-    // We are preparing the statement,
-    // so we must escape the user variable.
-    stmt := db.sql("select name, @@v1 from farmers where farmer_id = @farmerId")
-    stmt.prepare
+    if (typeof.pod.config("deprecatedEscape") == "true")
+    {
+      // We are preparing the statement,
+      // so we must escape the user variable.
+      stmt := db.sql("select name, @@v1 from farmers where farmer_id = @farmerId")
+      stmt.prepare
 
-    rows := stmt.query(["farmerId":1])
-    verifyEq(rows.size, 1)
-    r := rows[0]
-    verifyEq(r.get(r.col("name")), "Alice")
-    verifyEq(r.get(r.col("@v1")),  42)
+      rows := stmt.query(["farmerId":1])
+      verifyEq(rows.size, 1)
+      r := rows[0]
+      verifyEq(r.get(r.col("name")), "Alice")
+      verifyEq(r.get(r.col("@v1")),  42)
+    }
+    else
+    {
+      // We are preparing the statement,
+      // so we must escape the user variable.
+      stmt := db.sql("select name, \\@v1 from farmers where farmer_id = @farmerId")
+      stmt.prepare
+
+      rows := stmt.query(["farmerId":1])
+      verifyEq(rows.size, 1)
+      r := rows[0]
+      verifyEq(r.get(r.col("name")), "Alice")
+      verifyEq(r.get(r.col("@v1")),  42)
+
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -39,14 +39,26 @@ public class StatementPeer
     // replace though because we need to keep the key/value
     // map.
 
-    // If there is an @, then there might be a parameter
-    if (self.sql.contains("@"))
+    // Maybe there is a parameter or an escape.
+    if ((self.sql.indexOf('@') != -1) || (self.sql.indexOf('\\') != -1))
     {
-      DeprecatedTokenizer t = DeprecatedTokenizer.make(self.sql);
-      this.translated = t.sql;
-      this.paramMap = t.params;
+      // Check for deprecated escape: "@@foo"
+      String depEsc = self.typeof().pod().config("deprecatedEscape");
+
+      if ((depEsc != null) && depEsc.equals("true"))
+      {
+        DeprecatedTokenizer t = DeprecatedTokenizer.make(self.sql);
+        this.translated = t.sql;
+        this.paramMap = t.params;
+      }
+      else
+      {
+        Tokenizer t = Tokenizer.make(self.sql);
+        this.translated = t.sql;
+        this.paramMap = t.params;
+      }
     }
-    // No parameters, so we don't need to tokenize.
+    // No parameters or escapes, so we don't need to tokenize.
     else
     {
       this.translated = self.sql;
