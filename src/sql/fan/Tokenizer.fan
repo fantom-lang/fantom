@@ -9,7 +9,7 @@
 **************************************************************************
 **
 ** Tokenizer transforms a parameterized SQL string into JDBC SQL, using escape
-** syntax to transform "\@" and "\\" into "\@" and "\" respectively.
+** syntax to transform "\@" and "\\" into "@" and "\" respectively.
 **
 **************************************************************************
 
