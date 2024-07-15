@@ -38,9 +38,22 @@ public class StatementPeer
     // syntax must be replaced with ?.  It's not a simple
     // replace though because we need to keep the key/value
     // map.
-    PreparedSql prep = PreparedSql.make(self.sql);
-    translated = prep.sql;
-    paramMap = prep.params;
+
+    // If there is an @, then there might be a parameter
+    if (self.sql.contains("@"))
+    {
+      DeprecatedTokenizer t = DeprecatedTokenizer.make(self.sql);
+      this.translated = t.sql;
+      this.paramMap = t.params;
+    }
+    // No parameters, so we don't need to tokenize.
+    else
+    {
+      this.translated = self.sql;
+      this.paramMap = new Map(
+        Sys.StrType,
+        Sys.IntType.toListOf());
+    }
 
     try
     {

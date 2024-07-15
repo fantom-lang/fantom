@@ -7,22 +7,19 @@
 //
 
 **
-** PreparedSqlTest
+** DeprecatedTokenizerTest
 **
-class PreparedSqlTest : Test
+class DeprecatedTokenizerTest : Test
 {
   Void test()
   {
     //---------------------------------------------------------------
-    // The Transformer doesn't know anything about real SQL syntax, so lets
-    // test against all kinds of cases that it can process successfully even
-    // if the SQL is dubious or obviously bogus.
+    // DeprecatedTokenizer doesn't know anything about real SQL syntax, so lets
+    // test against all kinds of cases that it can process successfully even if
+    // the SQL is dubious or obviously bogus.
 
-    // Any sql will transform if there is no '@', even unterminated quoted
-    // text, since the Transformer skips over it.
     doVerify("", "", Str:Int[][:])
     doVerify("x", "x", Str:Int[][:])
-    doVerify("'", "'", Str:Int[][:])
 
     // params
     doVerify("@a", "?", Str:Int[]["a": [1]])
@@ -49,8 +46,8 @@ class PreparedSqlTest : Test
     doVerify("x@@b'123'@a", "x@b'123'?", Str:Int[]["a": [1]])
 
     // unterminated
-    verifyErr(SqlErr#) { p := PreparedSql("@a'") }
-    verifyErr(SqlErr#) { p := PreparedSql("'x'@a'y") }
+    verifyErr(SqlErr#) { p := DeprecatedTokenizer("@a'") }
+    verifyErr(SqlErr#) { p := DeprecatedTokenizer("'x'@a'y") }
 
     //--------------------------------------------------------
     // Now lets go ahead and do some syntactically correct sql
@@ -107,8 +104,8 @@ class PreparedSqlTest : Test
   {
     //echo("------------------------------------------")
     //echo(sql)
-    p := PreparedSql(sql)
-    verifyEq(p.sql, expected)
-    verifyEq(p.params, params)
+    t := DeprecatedTokenizer(sql)
+    verifyEq(t.sql, expected)
+    verifyEq(t.params, params)
   }
 }

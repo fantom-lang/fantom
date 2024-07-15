@@ -6,38 +6,10 @@
 //   12 July 2024  Mike Jarmy   Creation
 //
 
-**
-** PreparedSql transforms a parameterized SQL string into JDBC format.
-**
-internal const class PreparedSql
-{
-  internal new make(Str paramSql)
-  {
-    // There might be a parameter
-    if (paramSql.contains("@"))
-    {
-      t := Tokenizer(paramSql)
-      this.sql = t.sqlBuf.toStr
-      this.params = t.params
-    }
-    // No parameters, so we don't need to tokenize.
-    else
-    {
-      this.sql = paramSql
-      this.params = Str:Int[][:]
-    }
-  }
-
-  ** The transformed sql string. The named parameters are replaced with '?'.
-  internal const Str sql
-
-  ** The parameter mapping: <name,list-of-locations>
-  internal const Str:Int[] params
-}
-
 **************************************************************************
 **
-** Tokenizer transforms a parameterized SQL string into PreparedSQL
+** DeprecatedTokenizer transforms a parameterized SQL string into JDBC SQL,
+** using the deprecated '@@foo' syntax for escaped MySql variables.
 **
 ** This tokenizer works according to the following algorithm:
 **
@@ -58,22 +30,25 @@ internal const class PreparedSql
 **
 **************************************************************************
 
-internal class Tokenizer
+internal class DeprecatedTokenizer
 {
-  internal new make(Str sql)
+  internal new make(Str origSql)
   {
-    this.sql = sql
+    this.origSql = origSql
 
     next := nextToken()
     while (true)
     {
       switch (next)
       {
-        case Token.text:       next = text()
-        case Token.param:      next = param()
-        case Token.escapedVar: next = escapedVar()
-        case Token.quoted:     next = quoted()
-        case Token.end:        return
+        case DeprecatedToken.text:       next = text()
+        case DeprecatedToken.param:      next = param()
+        case DeprecatedToken.escapedVar: next = escapedVar()
+        case DeprecatedToken.quoted:     next = quoted()
+
+        case DeprecatedToken.end:
+          this.sql = sqlBuf.toStr
+          return
 
         default: throw Err("unreachable")
       }
@@ -81,32 +56,32 @@ internal class Tokenizer
   }
 
   ** Process a text token.
-  private Token text()
+  private DeprecatedToken text()
   {
     start := cur++
     tok := nextToken()
-    while (tok == Token.text)
+    while (tok == DeprecatedToken.text)
     {
       cur++
       tok = nextToken()
     }
 
-    sqlBuf.add(sql[start..<cur])
+    sqlBuf.add(origSql[start..<cur])
     return tok
   }
 
   ** Process a parameter token: @foo
-  private Token param()
+  private DeprecatedToken param()
   {
     start := cur++
-    while (cur < sql.size && isIdent(sql[cur]))
+    while (cur < origSql.size && isIdent(origSql[cur]))
       cur++
 
     // add the JDBC placeholder
     sqlBuf.add("?")
 
     // remove the leading '@' from the param name
-    name := sql[(start+1)..<cur]
+    name := origSql[(start+1)..<cur]
 
     // save the parameter's location
     locs := params.getOrAdd(name, |k->Int[]| {Int[,]})
@@ -116,28 +91,28 @@ internal class Tokenizer
   }
 
   ** Process a escaped mysql variable token: @@foo
-  private Token escapedVar()
+  private DeprecatedToken escapedVar()
   {
     start := cur
     cur += 2
-    while (cur < sql.size && isIdent(sql[cur]))
+    while (cur < origSql.size && isIdent(origSql[cur]))
       cur++
 
     // remove the leading '@' from the escaped variable
-    sqlBuf.add(sql[(start+1)..<cur])
+    sqlBuf.add(origSql[(start+1)..<cur])
 
     return nextToken()
   }
 
   ** Process a quoted token
-  private Token quoted()
+  private DeprecatedToken quoted()
   {
     start := cur++
-    while (cur < sql.size)
+    while (cur < origSql.size)
     {
-      if (sql[cur] == '\'')
+      if (origSql[cur] == '\'')
       {
-        sqlBuf.add(sql[start..(cur++)])
+        sqlBuf.add(origSql[start..(cur++)])
         return nextToken()
       }
       cur++
@@ -146,30 +121,30 @@ internal class Tokenizer
   }
 
   ** Figure out the next token
-  private Token nextToken()
+  private DeprecatedToken nextToken()
   {
-    if (cur >= sql.size)
-      return Token.end
+    if (cur >= origSql.size)
+      return DeprecatedToken.end
 
-    switch(sql[cur])
+    switch(origSql[cur])
     {
       case '@':
         look := lookahead(1)
 
         if (isIdent(look))
-          return Token.param // @foo
+          return DeprecatedToken.param // @foo
 
         else if ((look == '@') && isIdent(lookahead(2)))
-          return Token.escapedVar // @@foo
+          return DeprecatedToken.escapedVar // @@foo
 
         else
-          return Token.text
+          return DeprecatedToken.text
 
       case '\'':
-          return Token.quoted
+          return DeprecatedToken.quoted
 
       default:
-          return Token.text
+          return DeprecatedToken.text
     }
   }
 
@@ -185,18 +160,19 @@ internal class Tokenizer
   ** Look ahead by n chars, or return -1 if past the end.
   private Int lookahead(Int n)
   {
-    return ((cur+n) < sql.size) ? sql[cur+n] : -1;
+    return ((cur+n) < origSql.size) ? origSql[cur+n] : -1;
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private Str sql
+  private Str origSql
   private Int cur := 0
   private Int numParams := 0
+  private StrBuf sqlBuf := StrBuf()
 
-  internal StrBuf sqlBuf := StrBuf()
+  internal Str? sql
   internal Str:Int[] params := Str:Int[][:]
 }
 
@@ -204,7 +180,7 @@ internal class Tokenizer
 ** Fields
 **************************************************************************
 
-internal enum class Token
+internal enum class DeprecatedToken
 {
   text,
   param,
