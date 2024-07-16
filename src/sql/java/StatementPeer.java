@@ -331,6 +331,44 @@ public class StatementPeer
     return Long.valueOf(-1);
   }
 
+  public List executeBatch(Statement self, List paramsList)
+  {
+    if (!prepared)
+      throw SqlErr.make("Statement has not been prepared.");
+    PreparedStatement pstmt = (PreparedStatement)stmt;
+
+    try
+    {
+      // add batch
+      for (int i = 0; i < paramsList.size(); i++)
+      {
+        setParameters((Map) paramsList.get(i));
+        pstmt.addBatch();
+      }
+
+      // execute batch
+      int[] exec = pstmt.executeBatch();
+
+      // process result
+      List result = List.make(Sys.IntType, exec.length);
+      for (int i = 0; i < exec.length; i++)
+      {
+        int n = exec[i];
+
+        // A less-than-zero value here is always
+        // java.sql.Statement.SUCCESS_NO_INFO. We treat that as a null,
+        // indicating that the command was processed successfully but that the
+        // number of rows affected is unknown.
+        result.add(n < 0 ? null : (long)n);
+      }
+      return result;
+    }
+    catch (SQLException ex)
+    {
+      throw SqlConnImplPeer.err(ex);
+    }
+  }
+
   public List more(Statement self)
   {
     try

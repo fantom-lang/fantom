@@ -36,6 +36,7 @@ class SqlServiceTest : Test
       transactions
       preparedStmts
       executeStmts
+      batchExecute
       pool
       mysqlVariable
     }
@@ -514,6 +515,42 @@ class SqlServiceTest : Test
     rows.sort |a, b| { a->name <=> b->name }
     verifyEq(rows[3]->name, "Donny"); verifyEq(rows[3]->pet, "Pepper")
     verifyEq(rows[4]->name, "John");  verifyEq(rows[4]->pet, "Pepper")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Batch execution
+//////////////////////////////////////////////////////////////////////////
+
+  Void batchExecute()
+  {
+    params := [Str:Obj][,]
+    stmt := db.sql("select farmer_id from farmers")
+    stmt.queryEach(null) |r| {
+      params.add(Str:Obj["farmerId": r->farmer_id])
+    }
+
+    stmt = db.sql(
+      "update farmers set age = farmer_id * farmer_id
+       where farmer_id = @farmerId")
+
+    // not prepared
+    verifyErr(SqlErr#) { stmt.executeBatch(params) }
+
+    // executeBatch
+    stmt.prepare
+    res := stmt.executeBatch(params)
+    // The result will be an array filled with '1',
+    // indicating that each row was updated.
+    verifyEq(res, Int[,].fill(1, params.size))
+
+    // double check
+    db.commit
+    stmt = db.sql("select farmer_id, age from farmers")
+    stmt.queryEach(null) |r| {
+      id  := (Int) r->farmer_id
+      age := (Int) r->age
+      verifyEq(id*id, age)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
