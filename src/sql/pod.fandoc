@@ -52,6 +52,10 @@ Connections are managed by the `sql::SqlConn` class.  To open and close connecti
 to the database, simply call the [SqlConn.open]`sql::SqlConn.open` and
 [SqlConn.close]`sql::SqlConn.close` methods.
 
+A pool of Connections is managed by the `sql::SqlConnPool` class.  To use a
+connection created by this pool, use the
+[SqlConnPool.execute]`sql::SqlConnPool.execute` method.
+
 Connections in Java [#java]
 ===========================
 When running in a Java VM, Fantom uses JDBC under the covers.  Using
@@ -62,13 +66,13 @@ the JVM:
 the system class path.  The best place to stick it is in
 the "jre/lib/ext" directory.  You can use 'fan -version' to
 locate your JRE directory.  For MySQL the driver is packaged
-up as something like "mysql-connector-java-5.0.6-bin.jar".
+up as something like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest way
 to preload the class is to ensure the classname is defined in
 "etc/sql/config.props" :
 
-      java.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
+      java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
 3. Open a SqlConn instance using the JDBC URL:
 
@@ -85,8 +89,8 @@ Statements [#statements]
 ************************
 SQL statements are created using the [SqlConn.sql]`sql::SqlConn.sql`
 method.  After a statement has been created, it can be executed immediately
-by calling [execute]`sql::Statement.execute` or it can be prepared for later
-execution by calling [prepare]`sql::Statement.prepare`.
+by calling [Statement.execute]`sql::Statement.execute` or it can be prepared for later
+execution by calling [Statement.prepare]`sql::Statement.prepare`.
 
 For example, to create a table in MySQL:
       db.sql("create table Books (
@@ -107,6 +111,33 @@ parameters.
       addBook.execute(["title":"Hard Times", "author":"Charles Dickens", "year":1854])
       addBook.execute(["title":"The Jungle Book", "author":"Rudyard Kipling", "year":1894])
       addBook.execute(["title":"Captains Courageous", "author":"Rudyard Kipling", "year":1897])
+
+Escape Sequences
+================
+When calling [Statement.prepare]`sql::Statement.prepare`, the strings '\@' and
+'\\' in the Statement's SQL are escaped into '@' and '\' respectively.
+
+Examples:
+
+In mysql, to refer to the user variable @v1 in a prepared Statement:
+
+  select name, \@v1 from foo where id = @id;
+
+In postgres, to use the JSONB operator @> in a prepared Statement:
+
+  select * from foo where data \@> '{"x": 99}'::jsonb;
+
+There is an old, undocumented syntax for referring to mysql user variables,
+using the escape sequence '@@v1', for example:
+
+  select name, @@v1 from foo where id = @id;
+
+This syntax is deprecated and is no longer supported by default. If you have
+existing code that uses this undocumented feature, you must add the following
+entry to "etc/sql/config.props":
+
+  deprecatedEscape=true
+
 
 Queries [#queries]
 ******************
@@ -154,6 +185,7 @@ The following type specifies the mapping of SQL types to Fantom types:
   CHAR           sys::Str
   VARCHAR        sys::Str
   LONGVARCHAR    sys::Str
+  TEXT[]         sys::List of sys::Str
 
   BIT            sys::Bool
 
@@ -176,6 +208,8 @@ The following type specifies the mapping of SQL types to Fantom types:
   TIMESTAMP      sys::DateTime
   DATE           sys::Date
   TIME           sys::Time
+
+  BYTEA          sys::Buf
 
   catch-all      sys::Str
 

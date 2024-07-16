@@ -11,9 +11,12 @@
 - Rewrite fant in Fantom as new util::TestRunner class
 - Add dom::Storage.keys to iterate all keys
 - Add new SqlConnPool API
+- Add support for postgres TEXT[] type
 - Support for static once methods
 - StrBuf.addRange
 - Add double checked locking into ClassType.java reflect and finish
+- Add sql escape syntax for "@" and "\"
+- Deprecate old, undocumented sql escape syntax (This is a breaking change)
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design
