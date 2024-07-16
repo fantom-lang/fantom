@@ -7,17 +7,17 @@
 //
 
 **
-** SqlServiceTest (maybe rename from old test)
+** SqlTest
 **
-class SqlServiceTest : Test
+class SqlTest : Test
 {
 
   internal SqlConn? db
   internal DbType? dbType
 
   internal Str? uri
-  internal Str? user
-  internal Str? pass
+  internal const Str user := "fantest"
+  internal const Str pass := "fantest"
 
 //////////////////////////////////////////////////////////////////////////
 // Top
@@ -25,6 +25,15 @@ class SqlServiceTest : Test
 
   Void test()
   {
+    doTest("jdbc:mysql://localhost:3306/fantest")
+    doTest("jdbc:postgresql://localhost:5432/postgres")
+  }
+
+  private Void doTest(Str testUri)
+  {
+    uri = testUri
+    Log.get("sql").info("SqlTest: testing " + uri)
+
     open
     try
     {
@@ -57,12 +66,6 @@ class SqlServiceTest : Test
 
   Void open()
   {
-    pod  := typeof.pod
-    uri  = pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
-    user = pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
-    pass = pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
-
-    Log.get("sql").info("SqlServiceTest.open " + uri);
     db = SqlConn.open(uri, user, pass)
     verifyEq(db.isClosed, false)
 

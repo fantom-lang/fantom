@@ -16,36 +16,6 @@ with relational databases.  Its basic goals in life:
  - Statements: execute SQL statements
  - Model: model meta-data and relational tables
 
-Test Setup [#testSetup]
-***********************
-The sql tests use the following config props to determine the
-database configuration:
-  - 'test.uri': connection/jdbc url string, defaults
-    to "jdbc:mysql://localhost:3306/fantest"
-  - 'test.username': defaults to "fantest"
-  - 'test.password': defaults to "fantest"
-
-You can change these defaults via "etc/sql/config.props".
-
-We've been testing with MySql 5.0.41 running InnoDB using "fantest"
-for the database name, user name, and password.  You can configure
-InnoDB as the default storage engine with this line in your "my.cfg":
-  default-storage-engine=INNODB
-
-To setup the fantest database and user account via the mysql command line:
-  mysql -u root -p
-  mysql> create user fantest identified by 'fantest';
-  mysql> create database fantest;
-  mysql> grant all privileges on fantest.* to fantest;
-
-To use Postgres as the test database, modify "etc/sql/config.props" so that
-'test.uri' equals "jdbc:postgresql://localhost:5432/postgres", and then setup
-the fantest database and user account via the Postgres command line:
-  sudo -u postgres psql
-  postgres=# create role fantest with login superuser password 'fantest';
-  postgres=# alter role fantest with login;
-  postgres=# create schema authorization fantest;
-
 Connections [#connections]
 **************************
 Connections are managed by the `sql::SqlConn` class.  To open and close connections
@@ -65,7 +35,7 @@ the JVM:
 1.  Ensure your JDBC driver is installed and available via
 the system class path.  The best place to stick it is in
 the "jre/lib/ext" directory.  You can use 'fan -version' to
-locate your JRE directory.  For MySQL the driver is packaged
+locate your JRE directory.  The driver is packaged
 up as something like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest way
@@ -212,4 +182,30 @@ The following type specifies the mapping of SQL types to Fantom types:
   BYTEA          sys::Buf
 
   catch-all      sys::Str
+
+Test Setup [#testSetup]
+***********************
+The unit test 'sql::SqlTest' runs automatically against both mysql and
+postgres. To run this test, both of these DBMS systems must be installed
+locally and running on the default port, and they each must have the following
+one-time configuration applied.
+
+For msyql, setup the fantest database and user account via:
+
+  mysql -u root -p
+  mysql> create user fantest identified by 'fantest';
+  mysql> create database fantest;
+  mysql> grant all privileges on fantest.* to fantest;
+
+For postgres, setup the fantest database and user account via:
+
+  psql -U postgres
+  postgres=# create role fantest with login superuser password 'fantest';
+  postgres=# alter role fantest with login;
+  postgres=# create schema authorization fantest;
+
+In addition, both JDBC drivers must be installed, and "etc/sql/config.props"
+must have a reference to the classpath of both drivers, e.g.
+
+  java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
