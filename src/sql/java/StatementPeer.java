@@ -29,6 +29,9 @@ public class StatementPeer
                        java.sql.Statement.RETURN_GENERATED_KEYS :
                        java.sql.Statement.NO_GENERATED_KEYS;
 
+    // are we using the old deprecated escape "@@foo"
+    String depEsc = self.typeof().pod().config("deprecatedEscape");
+    this.isDeprecatedEscape = ((depEsc != null) && depEsc.equals("true"));
   }
 
   public Statement prepare(Statement self)
@@ -43,9 +46,7 @@ public class StatementPeer
     if ((self.sql.indexOf('@') != -1) || (self.sql.indexOf('\\') != -1))
     {
       // Check for deprecated escape: "@@foo"
-      String depEsc = self.typeof().pod().config("deprecatedEscape");
-
-      if ((depEsc != null) && depEsc.equals("true"))
+      if (isDeprecatedEscape)
       {
         DeprecatedTokenizer t = DeprecatedTokenizer.make(self.sql);
         this.translated = t.sql;
@@ -420,8 +421,11 @@ public class StatementPeer
   private java.sql.Statement stmt;
   private Map paramMap;
   private int limit = 0;              // limit field value
+
+  // These are set during init():
   private boolean isInsert;           // does sql contain insert keyword
   private boolean isAutoKeys;         // isInsert and connector supports auto-gen keys
   private int autoKeyMode;            // JDBC constant for auto-gen keys
+  private boolean isDeprecatedEscape; // are we using the old deprecated escape "@@foo"
 }
 
