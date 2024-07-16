@@ -7,10 +7,13 @@
 
 // Java JDBC drivers; these are java classnames separated by a comma
 // which are loaded into the VM using Class.forName on startup
-// java.drivers=com.mysql.jdbc.Driver
+// java.drivers=com.mysql.cj.jdbc.Driver
 
 // test setup
-test.uri=jdbc:postgresql://localhost:5432/postgres
+test.uri=jdbc:mysql://localhost:3306/fantest
 test.username=fantest
 test.password=fantest
 
+// Uncomment this line to revert old "@@" escape behavior.
+// See https://github.com/fantom-lang/fantom/pull/51
+// deprecatedEscape=true
