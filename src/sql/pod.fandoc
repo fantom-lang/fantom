@@ -66,13 +66,13 @@ the JVM:
 the system class path.  The best place to stick it is in
 the "jre/lib/ext" directory.  You can use 'fan -version' to
 locate your JRE directory.  For MySQL the driver is packaged
-up as something like "mysql-connector-java-5.0.6-bin.jar".
+up as something like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest way
 to preload the class is to ensure the classname is defined in
 "etc/sql/config.props" :
 
-      java.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
+      java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
 3. Open a SqlConn instance using the JDBC URL:
 
