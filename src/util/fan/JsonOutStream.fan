@@ -149,7 +149,11 @@ class JsonOutStream : OutStream
           case '\t': writeChar('\\').writeChar('t')
           case '\\': writeChar('\\').writeChar('\\')
           case '"':  writeChar('\\').writeChar('"')
-          default: writeChar(char)
+          default:
+            if (char < 0x20)
+              writeChar('\\').writeChar('u').print(char.toHex(4))
+            else
+              writeChar(char)
         }
       }
       else
