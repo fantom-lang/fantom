@@ -459,6 +459,21 @@ using graphics
     add(hbar)
     add(vbar)
     onUpdate(0,0)
+
+    // 16-Jul-2024 - Andy Frank
+    // Safari 17.5 introduced a regression where the dom is not rendered
+    // on the initial display; so for now force a repaint by toggling
+    // the display style on the first table cell
+    if (Win.cur.isSafari && cells.size > 0)
+    {
+      x := cells.vals.first
+      Win.cur.setTimeout(10ms) {
+        x.style->display = "none"
+        Win.cur.setTimeout(10ms) {
+          x.style->display = "block"
+        }
+      }
+    }
   }
 
   ** Create scrollbar
@@ -1473,3 +1488,4 @@ internal const class TablePos
   internal Int? sortCol { private set }  // model based index
   internal Dir sortDir := Dir.up { private set }
 }
+
