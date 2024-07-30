@@ -87,10 +87,21 @@ public class SocketConfigPeer
         }
 
         // create the SSLContext for this socket config
-        String[] supported = SSLContext.getDefault().getSupportedSSLParameters().getProtocols();
+        java.util.List<String> supported = Arrays.asList(SSLContext.getDefault().getSupportedSSLParameters().getProtocols());
+        String sslProtocol = (String)self.tlsParams.get("sslProtocol");
         SSLContext sslContext;
-        if (Arrays.asList(supported).contains("TLSv1.3")) { sslContext = SSLContext.getInstance("TLSv1.3"); }
-        else { sslContext = SSLContext.getInstance("TLSv1.2"); }
+
+        // 1. check if socket config tls parameters specified specificl
+        //    ssl protocol to use. If it is supported, use that.
+        // 2. if TLSv1.3 is supported use that
+        // 3. otherwise use TLSv1.2
+        if (sslProtocol != null && supported.contains(sslProtocol))
+          sslContext = SSLContext.getInstance(sslProtocol);
+        else if (supported.contains("TLSv1.3"))
+          sslContext = SSLContext.getInstance("TLSv1.3");
+        else
+          sslContext = SSLContext.getInstance("TLSv1.2");
+
         sslContext.init(keyManagers, trustManagers, new SecureRandom());
         this._sslContext = sslContext;
       }
