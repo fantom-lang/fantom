@@ -31,6 +31,8 @@ class EventPeer extends sys.Obj {
 
   type(self) { return this.event.type; }
 
+  toNative(self) { return this.event; }
+
   #target;
   target(self)
   {
@@ -151,3 +153,4 @@ class EventPeer extends sys.Obj {
     return x;
   }
 }
+

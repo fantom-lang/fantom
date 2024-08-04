@@ -25,6 +25,8 @@ fan.dom.EventPeer.fromNative = function(obj)
   return fan.dom.EventPeer.make(obj);
 }
 
+fan.dom.EventPeer.prototype.toNative = function(self) { return this.event; }
+
 fan.dom.EventPeer.prototype.type = function(self) { return this.event.type; }
 
 fan.dom.EventPeer.prototype.target = function(self)
@@ -140,3 +142,4 @@ fan.dom.EventPeer.make = function(event)
   if (event.key) x.peer.$keyChar = event.key;
   return x;
 }
+
