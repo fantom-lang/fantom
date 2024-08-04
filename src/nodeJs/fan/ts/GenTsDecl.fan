@@ -73,6 +73,10 @@ class GenTsDecl
     if (pod.name == "sys") printObjUtil
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Type
+//////////////////////////////////////////////////////////////////////////
+
   private Void genType(CType type)
   {
     isList := false
@@ -173,6 +177,23 @@ class GenTsDecl
     out.print("}\n\n")
   }
 
+  ** Only used for checking slots on the current type; not inherited
+  private Bool includeSlot(CType type, CSlot slot)
+  {
+    // declared only slots, not inherited
+    if (slot.parent !== type) return false
+
+    // skip @NoDoc
+    if (slot.isNoDoc) return false
+
+    // public only
+    return slot.isPublic
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Field
+//////////////////////////////////////////////////////////////////////////
+
   private Void writeField(CType type, CField field, Bool hasItBlockCtor)
   {
     name := JsNode.methodToJs(field.name)
@@ -188,6 +209,10 @@ class GenTsDecl
       out.print("  ${staticStr}__$name(it: ${typeStr}): void;\n")
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Method
+//////////////////////////////////////////////////////////////////////////
+
   private Void writeMethod(CType type, CMethod method)
   {
     isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
@@ -195,45 +220,41 @@ class GenTsDecl
     name := JsNode.methodToJs(method.name)
     if (type.signature == "sys::Func") name += "<R>"
 
-    inputList := method.params.map |CParam p->Str| {
-      paramName := JsNode.pickleName(p.name, deps)
-      if (p.hasDefault)
-        paramName += "?"
-      paramType := getJsType(p.paramType, pod, isStatic ? type : null)
-
-      // methods with the @Js facet treat Obj parameters as any
-      if (paramType == "sys.JsObj" && method.hasFacet("sys::Js"))
-        paramType = "any"
-
-      return "${paramName}: ${paramType}"
-    }
+    inputList := method.params.map |CParam p->Str| { toMethodParam(type, method, isStatic, p) }
     if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
       inputList.insert(0, "self: ${pmap[type.signature]}")
     if (method.isCtor)
       inputList.add("...args: unknown[]")
     inputs := inputList.join(", ")
 
-    output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
-    if (method.qname == "sys::Obj.toImmutable" ||
-        method.qname == "sys::List.ro" ||
-        method.qname == "sys::Map.ro")
-          output = "Readonly<${output}>"
+    output := toMethodReturn(type, method)
 
     printDoc(method, 2)
     out.print("  ${staticStr}${name}(${inputs}): ${output};\n")
   }
 
-  ** Only used for checking slots on the current type; not inherited
-  private Bool includeSlot(CType type, CSlot slot)
+  private Str toMethodParam(CType type, CMethod method, Bool isStatic, CParam p)
   {
-    // declared only slots, not inherited
-    if (slot.parent !== type) return false
+    paramName := JsNode.pickleName(p.name, deps)
+    if (p.hasDefault)
+      paramName += "?"
+    paramType := getJsType(p.paramType, pod, isStatic ? type : null)
 
-    // skip @NoDoc
-    if (slot.isNoDoc) return false
+    // methods with the @Js facet treat Obj parameters as any
+    if (paramType == "sys.JsObj" && method.hasFacet("sys::Js"))
+      paramType = "any"
 
-    // public only
-    return slot.isPublic
+    return "${paramName}: ${paramType}"
+  }
+
+  private Str toMethodReturn(CType type, CMethod method)
+  {
+    output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
+    if (method.qname == "sys::Obj.toImmutable" ||
+        method.qname == "sys::List.ro" ||
+        method.qname == "sys::Map.ro")
+          output = "Readonly<${output}>"
+    return output
   }
 
 //////////////////////////////////////////////////////////////////////////
