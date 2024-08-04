@@ -238,23 +238,27 @@ class GenTsDecl
     paramName := JsNode.pickleName(p.name, deps)
     if (p.hasDefault)
       paramName += "?"
-    paramType := getJsType(p.paramType,  isStatic ? parent : null)
-
-    // methods with the @Js facet treat Obj parameters as any
-    if (paramType == "sys.JsObj" && method.hasFacet("sys::Js"))
-      paramType = "any"
+    paramType := toMethodSigType(method, p.paramType, isStatic ? parent : null)
 
     return "${paramName}: ${paramType}"
   }
 
   private Str toMethodReturn(CType type, CMethod method)
   {
-    output := method.isCtor ? type.name : getJsType(method.returnType, pmap.containsKey(type.signature) ? type : null)
+    output := method.isCtor ? type.name : toMethodSigType(method, method.returnType, pmap.containsKey(type.signature) ? type : null)
     if (method.qname == "sys::Obj.toImmutable" ||
         method.qname == "sys::List.ro" ||
         method.qname == "sys::Map.ro")
           output = "Readonly<${output}>"
     return output
+  }
+
+  private Str toMethodSigType(CMethod method, CType sigType, CType? self)
+  {
+    // methods with the @Js facet treat Obj parameters as any
+    ts := getJsType(sigType, self)
+    if (ts == "sys.JsObj" && method.hasFacet("sys::Js")) return "any"
+    return ts
   }
 
 //////////////////////////////////////////////////////////////////////////
