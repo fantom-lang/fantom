@@ -79,13 +79,14 @@ fan.sys.MimeType.doParseParams = function(s, offset)
 {
   var params = fan.sys.Map.make(fan.sys.Str.$type, fan.sys.Str.$type);
   params.caseInsensitive$(true);
+  var len      = s.length;
   var inQuotes = false;
   var keyStart = offset;
   var valStart = -1;
   var valEnd   = -1;
   var eq       = -1;
   var hasEsc   = false;
-  for (var i=keyStart; i<s.length; ++i)
+  for (var i=keyStart; i<len; ++i)
   {
     var c = s.charAt(i);
 
@@ -96,10 +97,12 @@ fan.sys.MimeType.doParseParams = function(s, offset)
     if (c == '=' && eq < 0 && !inQuotes)
     {
       eq = i++;
-      while (fan.sys.MimeType.isSpace(s, i)) ++i;
+      while (i<len && fan.sys.MimeType.isSpace(s, i)) ++i;
+      if (i >= len) break;
       if (s.charAt(i) == '"') { inQuotes = true; ++i; c = s.charAt(i); }
       else inQuotes = false;
       valStart = i;
+      c = s.charAt(i);
     }
 
     if (c == ';' && eq < 0 && !inQuotes)
@@ -141,19 +144,20 @@ fan.sys.MimeType.doParseParams = function(s, offset)
     }
   }
 
-  if (keyStart < s.length)
+  if (keyStart < len)
   {
-    if (valEnd < 0) valEnd = s.length-1;
     if (eq < 0)
     {
-      var key = fan.sys.Str.trim(s.substring(keyStart, s.length));
+      var key = fan.sys.Str.trim(s.substring(keyStart, len));
       params.set(key, "");
     }
     else
     {
+      if (valStart < 0) valStart = eq+1;
+      if (valEnd < 0) valEnd = len-1;
       var key = fan.sys.Str.trim(s.substring(keyStart, eq));
       var val = fan.sys.Str.trim(s.substring(valStart, valEnd+1));
-      if (hasEsc) val = fan.sys.MimeType.unscape(val);
+      if (hasEsc) val = fan.sys.MimeType.unescape(val);
       params.set(key, val);
     }
   }
@@ -314,3 +318,4 @@ fan.sys.MimeType.predefined = function(media, sub, params)
 //////////////////////////////////////////////////////////////////////////
 
 // see sysPod.js
+

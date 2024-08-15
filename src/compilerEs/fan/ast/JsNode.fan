@@ -247,10 +247,11 @@ abstract class JsNode
     "sys::Str":     true
   ]
 
-  Void writeBlock(Block? block)
+  Void writeBlock(Block? block, |Stmt->Bool|? filter := null)
   {
     if (block == null) return
     block.stmts.each |stmt| {
+      if (filter?.call(stmt) ?: false) return
       writeStmt(stmt)
       js.wl(";")
     }

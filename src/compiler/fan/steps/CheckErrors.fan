@@ -999,6 +999,19 @@ class CheckErrors : CompilerStep
       err("Incomparable types '$lhs.ctype' and '$rhs.ctype'", lhs.loc)
       return false
     }
+
+    if (lhs.ctype.isVoid)
+    {
+      err("Cannot compare to Void type", lhs.loc)
+      return false
+    }
+
+    if (rhs.ctype.isVoid)
+    {
+      err("Cannot compare to Void type", rhs.loc)
+      return false
+    }
+
     return true
   }
 

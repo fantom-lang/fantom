@@ -110,13 +110,15 @@ public final class MimeType
   {
     Map params = new Map(Sys.StrType, Sys.StrType);
     params.caseInsensitive(true);
+    int len = s.length();
     boolean inQuotes = false;
     int keyStart = offset;
     int valStart = -1;
     int valEnd   = -1;
     int eq       = -1;
     boolean hasEsc = false;
-    for (int i = keyStart; i<s.length(); ++i)
+
+    for (int i = keyStart; i<len; ++i)
     {
       int c = s.charAt(i);
 
@@ -127,10 +129,12 @@ public final class MimeType
       if (c == '=' && !inQuotes && valStart < 0)
       {
         eq = i++;
-        while (FanInt.isSpace(s.charAt(i))) ++i;
+        while (i<len && FanInt.isSpace(s.charAt(i))) ++i;
+        if (i >= len) break;
         if (s.charAt(i) == '"') { inQuotes = true; ++i; c=s.charAt(i); }
         else inQuotes = false;
         valStart = i;
+        c = s.charAt(i);
       }
 
       if (c == ';' && eq < 0 && !inQuotes)
@@ -172,16 +176,17 @@ public final class MimeType
       }
     }
 
-    if (keyStart < s.length())
+    if (keyStart < len)
     {
-      if (valEnd < 0) valEnd = s.length()-1;
       if (eq < 0)
       {
-        String key = s.substring(keyStart, s.length()).trim();
+        String key = s.substring(keyStart, len).trim();
         params.set(key, "");
       }
       else
       {
+        if (valStart < 0) valStart = eq+1;
+        if (valEnd < 0) valEnd = len-1;
         String key = s.substring(keyStart, eq).trim();
         String val = s.substring(valStart, valEnd+1).trim();
         if (hasEsc) val = unescape(val);
@@ -339,3 +344,4 @@ public final class MimeType
   private String str;
 
 }
+

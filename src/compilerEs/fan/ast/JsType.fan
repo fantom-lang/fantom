@@ -146,7 +146,7 @@ class JsType : JsNode
     if (instanceInit != null)
     {
       plugin.curMethod = instanceInit
-      writeBlock(instanceInit.code)
+      writeBlock(instanceInit.code) |stmt| { stmt.isOnceFieldInit ? true : false }
       plugin.curMethod = null
     }
     js.unindent
@@ -235,6 +235,9 @@ class JsType : JsNode
 
   private static Str fieldDefVal(FieldDef f)
   {
+    // once fields are initialized to undefined
+    if (f.isOnce) return "undefined"
+
     defVal    := "null"
     fieldType := f.fieldType
     if (!fieldType.isNullable)
@@ -268,6 +271,13 @@ class JsType : JsNode
 
     // we generate our own special version of this
     if (f.parent.isEnum && accessName == "vals") return
+
+    // special handling for static once fields
+    if (f.isOnce)
+    {
+      js.wl("static ${accessName}(it) { if (it === undefined) return ${target}.${privName}; else ${target}.${privName} = it; }").nl
+      return
+    }
 
     js.wl("static ${accessName}() {").indent
 
@@ -388,7 +398,9 @@ class JsType : JsNode
       }
 
       // method body
-      writeBlock(m.code)
+      |Stmt s->Bool|? filter := null
+      if (m.isStatic) filter = |Stmt s->Bool| { s.isOnceFieldInit ? true : false }
+      writeBlock(m.code, filter)
     }
 
     js.unindent

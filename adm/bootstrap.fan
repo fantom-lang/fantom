@@ -7,6 +7,7 @@
 //   18 Dec 09  Brian Frank  Creation
 //
 
+using concurrent
 using util
 
 **
@@ -240,6 +241,9 @@ class Bootstrap : AbstractMain
     buf := Buf()
     p := Process(cmd) { out = buf.out }
     r := p.run.join
+    // note: i have observed on ubuntu that we need this sleep to
+    // give time for the output to flush to the buf
+    Actor.sleep(500ms)
     return r != 0 ? "" : buf.flip.readAllLines.first
   }
 

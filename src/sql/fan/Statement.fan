@@ -65,6 +65,25 @@ class Statement
   native Obj execute([Str:Obj]? params := null)
 
   **
+  ** Execute a batch of commands on a prepared Statement. If all commands
+  ** execute successfully, returns an array of update counts.
+  **
+  ** For each element in the array, if the element is non-null, then it
+  ** represents an update count giving the number of rows in the database that
+  ** were affected by the command's execution.
+  **
+  ** If a given array element is null, it indicates that the command was
+  ** processed successfully but that the number of rows affected is unknown.
+  **
+  ** If one of the commands in a batch update fails to execute properly, this
+  ** method throws a SqlErr that wraps a java.sql.BatchUpdateException, and a
+  ** JDBC driver may or may not continue to process the remaining commands in
+  ** the batch, consistent with the underlying DBMS -- either always continuing
+  ** to process commands or never continuing to process commands.
+  **
+  native Int?[] executeBatch([Str:Obj]?[] paramsList)
+
+  **
   ** If the last execute has more results from a multi-result stored
   ** procedure, then return the next batch of results as Row[].  Otherwise
   ** if there are no more results then return null.

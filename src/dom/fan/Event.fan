@@ -132,6 +132,9 @@ class Event
   ** Create an `Event` instance from a native JavaScript Event object.
   @Js static native Event fromNative(Obj event)
 
+  ** Get the native JavaScript Event object
+  @Js native Obj toNative()
+
 //////////////////////////////////////////////////////////////////////////
 // Methods
 //////////////////////////////////////////////////////////////////////////
@@ -223,3 +226,4 @@ class Event
     " }"
   }
 }
+

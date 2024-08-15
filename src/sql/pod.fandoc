@@ -16,41 +16,15 @@ with relational databases.  Its basic goals in life:
  - Statements: execute SQL statements
  - Model: model meta-data and relational tables
 
-Test Setup [#testSetup]
-***********************
-The sql tests use the following config props to determine the
-database configuration:
-  - 'test.uri': connection/jdbc url string, defaults
-    to "jdbc:mysql://localhost:3306/fantest"
-  - 'test.username': defaults to "fantest"
-  - 'test.password': defaults to "fantest"
-
-You can change these defaults via "etc/sql/config.props".
-
-We've been testing with MySql 5.0.41 running InnoDB using "fantest"
-for the database name, user name, and password.  You can configure
-InnoDB as the default storage engine with this line in your "my.cfg":
-  default-storage-engine=INNODB
-
-To setup the fantest database and user account via the mysql command line:
-  mysql -u root -p
-  mysql> create user fantest identified by 'fantest';
-  mysql> create database fantest;
-  mysql> grant all privileges on fantest.* to fantest;
-
-To use Postgres as the test database, modify "etc/sql/config.props" so that
-'test.uri' equals "jdbc:postgresql://localhost:5432/postgres", and then setup
-the fantest database and user account via the Postgres command line:
-  sudo -u postgres psql
-  postgres=# create role fantest with login superuser password 'fantest';
-  postgres=# alter role fantest with login;
-  postgres=# create schema authorization fantest;
-
 Connections [#connections]
 **************************
 Connections are managed by the `sql::SqlConn` class.  To open and close connections
 to the database, simply call the [SqlConn.open]`sql::SqlConn.open` and
 [SqlConn.close]`sql::SqlConn.close` methods.
+
+A pool of Connections is managed by the `sql::SqlConnPool` class.  To use a
+connection created by this pool, use the
+[SqlConnPool.execute]`sql::SqlConnPool.execute` method.
 
 Connections in Java [#java]
 ===========================
@@ -61,14 +35,14 @@ the JVM:
 1.  Ensure your JDBC driver is installed and available via
 the system class path.  The best place to stick it is in
 the "jre/lib/ext" directory.  You can use 'fan -version' to
-locate your JRE directory.  For MySQL the driver is packaged
-up as something like "mysql-connector-java-5.0.6-bin.jar".
+locate your JRE directory.  The driver is packaged
+up as something like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
 
 2.  Ensure the JDBC class is loaded into memory.  The simplest way
 to preload the class is to ensure the classname is defined in
 "etc/sql/config.props" :
 
-      java.drivers=com.mysql.jdbc.Driver,oracle.jdbc.driver.OracleDriver
+      java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
 3. Open a SqlConn instance using the JDBC URL:
 
@@ -85,8 +59,8 @@ Statements [#statements]
 ************************
 SQL statements are created using the [SqlConn.sql]`sql::SqlConn.sql`
 method.  After a statement has been created, it can be executed immediately
-by calling [execute]`sql::Statement.execute` or it can be prepared for later
-execution by calling [prepare]`sql::Statement.prepare`.
+by calling [Statement.execute]`sql::Statement.execute` or it can be prepared for later
+execution by calling [Statement.prepare]`sql::Statement.prepare`.
 
 For example, to create a table in MySQL:
       db.sql("create table Books (
@@ -107,6 +81,33 @@ parameters.
       addBook.execute(["title":"Hard Times", "author":"Charles Dickens", "year":1854])
       addBook.execute(["title":"The Jungle Book", "author":"Rudyard Kipling", "year":1894])
       addBook.execute(["title":"Captains Courageous", "author":"Rudyard Kipling", "year":1897])
+
+Escape Sequences
+================
+When calling [Statement.prepare]`sql::Statement.prepare`, the strings '\@' and
+'\\' in the Statement's SQL are escaped into '@' and '\' respectively.
+
+Examples:
+
+In mysql, to refer to the user variable @v1 in a prepared Statement:
+
+  select name, \@v1 from foo where id = @id;
+
+In postgres, to use the JSONB operator @> in a prepared Statement:
+
+  select * from foo where data \@> '{"x": 99}'::jsonb;
+
+There is an old, undocumented syntax for referring to mysql user variables,
+using the escape sequence '@@v1', for example:
+
+  select name, @@v1 from foo where id = @id;
+
+This syntax is deprecated and is no longer supported by default. If you have
+existing code that uses this undocumented feature, you must add the following
+entry to "etc/sql/config.props":
+
+  deprecatedEscape=true
+
 
 Queries [#queries]
 ******************
@@ -154,6 +155,7 @@ The following type specifies the mapping of SQL types to Fantom types:
   CHAR           sys::Str
   VARCHAR        sys::Str
   LONGVARCHAR    sys::Str
+  TEXT[]         sys::List of sys::Str
 
   BIT            sys::Bool
 
@@ -177,5 +179,33 @@ The following type specifies the mapping of SQL types to Fantom types:
   DATE           sys::Date
   TIME           sys::Time
 
+  BYTEA          sys::Buf
+
   catch-all      sys::Str
+
+Test Setup [#testSetup]
+***********************
+The unit test 'sql::SqlTest' runs automatically against both mysql and
+postgres. To run this test, both of these DBMS systems must be installed
+locally and running on the default port, and they each must have the following
+one-time configuration applied.
+
+For msyql, setup the fantest database and user account via:
+
+  mysql -u root -p
+  mysql> create user fantest identified by 'fantest';
+  mysql> create database fantest;
+  mysql> grant all privileges on fantest.* to fantest;
+
+For postgres, setup the fantest database and user account via:
+
+  psql -U postgres
+  postgres=# create role fantest with login superuser password 'fantest';
+  postgres=# alter role fantest with login;
+  postgres=# create schema authorization fantest;
+
+In addition, both JDBC drivers must be installed, and "etc/sql/config.props"
+must have a reference to the classpath of both drivers, e.g.
+
+  java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 

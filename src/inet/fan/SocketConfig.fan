@@ -112,6 +112,7 @@ const class SocketConfig
   **   - 'want': Configure socket to request client authentication
   **   - 'need': Configure socket to require client authentication
   **   - 'none': (Default) socket does not request or require client authentication
+  ** - 'sslProtocol': ('Str') specify the SSL protocol to use (e.g. TLSv1.2, TLSv1.3)
   **
   ** **Experimental - this functionality is subject to change**
   @NoDoc const Str:Obj? tlsParams := [:]

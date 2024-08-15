@@ -73,6 +73,10 @@ class GenTsDecl
     if (pod.name == "sys") printObjUtil
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Type
+//////////////////////////////////////////////////////////////////////////
+
   private Void genType(CType type)
   {
     isList := false
@@ -96,10 +100,10 @@ class GenTsDecl
     abstr := type.isMixin ? "abstract " : ""
     extends := ""
     if (type.base != null)
-      extends = "extends ${getNamespacedType(type.base.name, type.base.pod.name, pod)} "
+      extends = "extends ${getNamespacedType(type.base.name, type.base.pod.name)} "
     if (!type.mixins.isEmpty)
     {
-      implement := type.mixins.map { getNamespacedType(it.name, it.pod.name, this.pod) }.join(", ")
+      implement := type.mixins.map { getNamespacedType(it.name, it.pod.name) }.join(", ")
       extends += "implements $implement "
     }
     else if (isList) extends += "implements Iterable<V> "
@@ -120,7 +124,7 @@ class GenTsDecl
     if (true)
     {
       // write <Class>.type$ field for use in TypeScript
-      t := getNamespacedType("Type", "sys", this.pod)
+      t := getNamespacedType("Type", "sys")
       out.print("  static type\$: ${t}\n")
     }
     type.fields.each |CField field|
@@ -173,56 +177,6 @@ class GenTsDecl
     out.print("}\n\n")
   }
 
-  private Void writeField(CType type, CField field, Bool hasItBlockCtor)
-  {
-    name := JsNode.methodToJs(field.name)
-    staticStr := field.isStatic ? "static " : ""
-    typeStr := getJsType(field.fieldType, pod, field.isStatic ? type : null)
-
-    printDoc(field, 2)
-
-    out.print("  ${staticStr}${name}(): ${typeStr};\n")
-    if (!field.isConst)
-      out.print("  ${staticStr}${name}(it: ${typeStr}): void;\n")
-    else if (hasItBlockCtor)
-      out.print("  ${staticStr}__$name(it: ${typeStr}): void;\n")
-  }
-
-  private Void writeMethod(CType type, CMethod method)
-  {
-    isStatic := method.isStatic || method.isCtor || pmap.containsKey(type.signature)
-    staticStr := isStatic ? "static " : ""
-    name := JsNode.methodToJs(method.name)
-    if (type.signature == "sys::Func") name += "<R>"
-
-    inputList := method.params.map |CParam p->Str| {
-      paramName := JsNode.pickleName(p.name, deps)
-      if (p.hasDefault)
-        paramName += "?"
-      paramType := getJsType(p.paramType, pod, isStatic ? type : null)
-
-      // methods with the @Js facet treat Obj parameters as any
-      if (paramType == "sys.JsObj" && method.hasFacet("sys::Js"))
-        paramType = "any"
-
-      return "${paramName}: ${paramType}"
-    }
-    if (!method.isStatic && !method.isCtor && pmap.containsKey(type.signature))
-      inputList.insert(0, "self: ${pmap[type.signature]}")
-    if (method.isCtor)
-      inputList.add("...args: unknown[]")
-    inputs := inputList.join(", ")
-
-    output := method.isCtor ? type.name : getJsType(method.returnType, pod, pmap.containsKey(type.signature) ? type : null)
-    if (method.qname == "sys::Obj.toImmutable" ||
-        method.qname == "sys::List.ro" ||
-        method.qname == "sys::Map.ro")
-          output = "Readonly<${output}>"
-
-    printDoc(method, 2)
-    out.print("  ${staticStr}${name}(${inputs}): ${output};\n")
-  }
-
   ** Only used for checking slots on the current type; not inherited
   private Bool includeSlot(CType type, CSlot slot)
   {
@@ -234,6 +188,77 @@ class GenTsDecl
 
     // public only
     return slot.isPublic
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Field
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeField(CType parent, CField field, Bool hasItBlockCtor)
+  {
+    name := JsNode.methodToJs(field.name)
+    staticStr := field.isStatic ? "static " : ""
+    typeStr := getJsType(field.fieldType, field.isStatic ? parent : null)
+
+    printDoc(field, 2)
+
+    out.print("  ${staticStr}${name}(): ${typeStr};\n")
+    if (!field.isConst)
+      out.print("  ${staticStr}${name}(it: ${typeStr}): void;\n")
+    else if (hasItBlockCtor)
+      out.print("  ${staticStr}__$name(it: ${typeStr}): void;\n")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Method
+//////////////////////////////////////////////////////////////////////////
+
+  private Void writeMethod(CType parent, CMethod method)
+  {
+    isStatic := method.isStatic || method.isCtor || pmap.containsKey(parent.signature)
+    staticStr := isStatic ? "static " : ""
+    name := JsNode.methodToJs(method.name)
+    if (parent.signature == "sys::Func") name += "<R>"
+
+    inputList := method.params.map |CParam p->Str| { toMethodParam(parent, method, isStatic, p) }
+    if (!method.isStatic && !method.isCtor && pmap.containsKey(parent.signature))
+      inputList.insert(0, "self: ${pmap[parent.signature]}")
+    if (method.isCtor)
+      inputList.add("...args: unknown[]")
+    inputs := inputList.join(", ")
+
+    output := toMethodReturn(parent, method)
+
+    printDoc(method, 2)
+    out.print("  ${staticStr}${name}(${inputs}): ${output};\n")
+  }
+
+  private Str toMethodParam(CType parent, CMethod method, Bool isStatic, CParam p)
+  {
+    paramName := JsNode.pickleName(p.name, deps)
+    if (p.hasDefault)
+      paramName += "?"
+    paramType := toMethodSigType(method, p.paramType, isStatic ? parent : null)
+
+    return "${paramName}: ${paramType}"
+  }
+
+  private Str toMethodReturn(CType type, CMethod method)
+  {
+    output := method.isCtor ? type.name : toMethodSigType(method, method.returnType, pmap.containsKey(type.signature) ? type : null)
+    if (method.qname == "sys::Obj.toImmutable" ||
+        method.qname == "sys::List.ro" ||
+        method.qname == "sys::Map.ro")
+          output = "Readonly<${output}>"
+    return output
+  }
+
+  private Str toMethodSigType(CMethod method, CType sigType, CType? self)
+  {
+    // methods with the @Js facet treat Obj parameters as any
+    ts := getJsType(sigType, self)
+    if (ts == "sys.JsObj" && method.hasFacet("sys::Js")) return "any"
+    return ts
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -251,7 +276,7 @@ class GenTsDecl
   ** be written as that type instead of "this". For example, Int methods
   ** which are non-static in Fantom but static in JS cannot use the "this"
   ** type.
-  private Str getJsType(CType type, CPod thisPod, CType? thisType := null)
+  private Str getJsType(CType type, CType? thisType := null)
   {
     // Built-in type
     if (pmap.containsKey(type.signature) && !type.isFunc)
@@ -259,7 +284,7 @@ class GenTsDecl
 
     // Nullable type
     if (type.isNullable)
-      return "${getJsType(type.toNonNullable, thisPod, thisType)} | null"
+      return getJsType(type.toNonNullable, thisType) + " | null"
 
     // This
     if (type.isThis)
@@ -280,11 +305,11 @@ class GenTsDecl
     {
       if (type is TypeRef) type = type.deref
 
-      res := getNamespacedType(type.name, "sys", thisPod)
+      res := getNamespacedType(type.name, "sys")
       if (!type.isGeneric)
       {
-        k := type is MapType ? "${getJsType(type->k, thisPod, thisType)}, " : ""
-        v := getJsType(type->v, thisPod, thisType)
+        k := type is MapType ? (getJsType(type->k, thisType) + ", ") : ""
+        v := getJsType(type->v, thisType)
         res += "<$k$v>"
       }
       return res
@@ -298,25 +323,25 @@ class GenTsDecl
         return "Function"
 
       CType[] args := type->params->dup
-      inputs := args.map |CType t, Int i->Str| { "arg$i: ${getJsType(t, thisPod, thisType)}" }
+      inputs := args.map |CType t, Int i->Str| { ("arg$i: " + getJsType(t, thisType)) }
                     .join(", ")
-      output := getJsType(type->ret, thisPod, thisType)
+      output := getJsType(type->ret, thisType)
       return "(($inputs) => $output)"
     }
 
     // Obj
     if (type.signature == "sys::Obj")
-      return getNamespacedType("JsObj", "sys", thisPod)
+      return getNamespacedType("JsObj", "sys")
 
     // Regular types
-    return getNamespacedType(type.name, type.pod.name, thisPod)
+    return getNamespacedType(type.name, type.pod.name)
   }
 
   ** Gets the name of the type with, when necessary, the pod name prepended to it.
   ** e.g. could return "TimeZone" or "sys.TimeZone" based on the current pod.
-  private Str getNamespacedType(Str typeName, Str typePod, CPod currentPod)
+  private Str getNamespacedType(Str typeName, Str typePod)
   {
-    if (typePod == currentPod.name)
+    if (typePod == this.pod.name)
       return typeName
     return "${typePod}.${typeName}"
   }

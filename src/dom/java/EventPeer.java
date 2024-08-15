@@ -22,6 +22,7 @@ public class EventPeer
     return DomPeerFactory.factory().eventFromNative(event);
   }
 
+  public Object       toNative    (Event self)                          { throw err(); }
   public String       type        (Event self)                          { throw err(); }
   public Elem         target      (Event self)                          { throw err(); }
   public boolean      alt         (Event self)                          { throw err(); }
@@ -43,3 +44,4 @@ public class EventPeer
 
   private static Err err() { return UnsupportedErr.make(); }
 }
+

@@ -89,13 +89,14 @@ class MimeType extends Obj {
   static #doParseParams(s, offset) {
     const params = Map.make(Str.type$, Str.type$);
     params.caseInsensitive(true);
+    let len      = s.length;
     let inQuotes = false;
     let keyStart = offset;
     let valStart = -1;
     let valEnd   = -1;
     let eq       = -1;
     let hasEsc   = false;
-    for (let i=keyStart; i<s.length; ++i) {
+    for (let i=keyStart; i<len; ++i) {
       let c = s.charAt(i);
 
       // let parens slide since sometimes they occur in cookies
@@ -104,10 +105,12 @@ class MimeType extends Obj {
 
       if (c == '=' && eq < 0 && !inQuotes) {
         eq = i++;
-        while (MimeType.#isSpace(s, i)) ++i;
+        while (i<len && MimeType.#isSpace(s, i)) ++i;
+        if (i >= len) break;
         if (s.charAt(i) == '"') { inQuotes = true; ++i; c = s.charAt(i); }
         else inQuotes = false;
         valStart = i;
+        c = s.charAt(i);
       }
 
       if (c == ';' && eq < 0 && !inQuotes) {
@@ -145,13 +148,14 @@ class MimeType extends Obj {
       }
     }
 
-    if (keyStart < s.length) {
-      if (valEnd < 0) valEnd = s.length-1;
+    if (keyStart < len) {
       if (eq < 0) {
-        var key = Str.trim(s.slice(keyStart, s.length));
+        var key = Str.trim(s.slice(keyStart, len));
         params.set(key, "");
       }
       else {
+        if (valStart < 0) valStart = eq+1;
+        if (valEnd < 0) valEnd = len-1;
         let key = Str.trim(s.slice(keyStart, eq));
         let val = Str.trim(s.slice(valStart, valEnd+1));
         if (hasEsc) val = MimeType.#unescape(val);

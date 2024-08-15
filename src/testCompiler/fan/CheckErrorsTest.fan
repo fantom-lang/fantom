@@ -1884,5 +1884,32 @@ class CheckErrorsTest : CompilerTest
        ])
   }
 
+
+//////////////////////////////////////////////////////////////////////////
+// Void Compares
+//////////////////////////////////////////////////////////////////////////
+
+  Void testVoidCompares()
+  {
+   verifyErrors(
+     """class Foo
+        {
+           Void bar()
+           {
+             if (obj == foo) return  // line 5
+             if (foo != obj) return  // line 6
+             if (obj === foo) return  // line 7
+           }
+
+           Obj? obj() { null }
+
+           Void foo() {}
+         }""",
+       [
+         5, 17, "Cannot compare to Void type",
+         6, 10, "Cannot compare to Void type",
+         7, 18, "Cannot compare to Void type",
+       ])
+  }
 }
 

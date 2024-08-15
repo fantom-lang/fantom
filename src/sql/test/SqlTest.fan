@@ -7,17 +7,17 @@
 //
 
 **
-** SqlServiceTest (maybe rename from old test)
+** SqlTest
 **
-class SqlServiceTest : Test
+class SqlTest : Test
 {
 
   internal SqlConn? db
   internal DbType? dbType
 
   internal Str? uri
-  internal Str? user
-  internal Str? pass
+  internal const Str user := "fantest"
+  internal const Str pass := "fantest"
 
 //////////////////////////////////////////////////////////////////////////
 // Top
@@ -25,6 +25,15 @@ class SqlServiceTest : Test
 
   Void test()
   {
+    doTest("jdbc:mysql://localhost:3306/fantest")
+    doTest("jdbc:postgresql://localhost:5432/postgres")
+  }
+
+  private Void doTest(Str testUri)
+  {
+    uri = testUri
+    Log.get("sql").info("SqlTest: testing " + uri)
+
     open
     try
     {
@@ -36,7 +45,9 @@ class SqlServiceTest : Test
       transactions
       preparedStmts
       executeStmts
+      batchExecute
       pool
+      mysqlVariable
     }
     catch (Err e)
     {
@@ -55,10 +66,6 @@ class SqlServiceTest : Test
 
   Void open()
   {
-    pod  := typeof.pod
-    uri  = pod.config("test.uri")      ?: throw Err("Missing 'sql::test.uri' config prop")
-    user = pod.config("test.username") ?: throw Err("Missing 'sql::test.username' config prop")
-    pass = pod.config("test.password") ?: throw Err("Missing 'sql::test.password' config prop")
     db = SqlConn.open(uri, user, pass)
     verifyEq(db.isClosed, false)
 
@@ -514,6 +521,42 @@ class SqlServiceTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Batch execution
+//////////////////////////////////////////////////////////////////////////
+
+  Void batchExecute()
+  {
+    params := [Str:Obj][,]
+    stmt := db.sql("select farmer_id from farmers")
+    stmt.queryEach(null) |r| {
+      params.add(Str:Obj["farmerId": r->farmer_id])
+    }
+
+    stmt = db.sql(
+      "update farmers set age = farmer_id * farmer_id
+       where farmer_id = @farmerId")
+
+    // not prepared
+    verifyErr(SqlErr#) { stmt.executeBatch(params) }
+
+    // executeBatch
+    stmt.prepare
+    res := stmt.executeBatch(params)
+    // The result will be an array filled with '1',
+    // indicating that each row was updated.
+    verifyEq(res, Int[,].fill(1, params.size))
+
+    // double check
+    db.commit
+    stmt = db.sql("select farmer_id, age from farmers")
+    stmt.queryEach(null) |r| {
+      id  := (Int) r->farmer_id
+      age := (Int) r->age
+      verifyEq(id*id, age)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Pool
 //////////////////////////////////////////////////////////////////////////
 
@@ -527,6 +570,47 @@ class SqlServiceTest : Test
     }
     pool.execute(|SqlConn c| {})
     pool.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// escaped mysql variable in prepared statement
+//////////////////////////////////////////////////////////////////////////
+
+  Void mysqlVariable()
+  {
+    if (dbType != DbType.mysql) return;
+
+    // We aren't preparing the statement,
+    // so we cannot escape the user variable.
+    db.sql("set @v1 = 42").execute
+
+    if (typeof.pod.config("deprecatedEscape") == "true")
+    {
+      // We are preparing the statement,
+      // so we must escape the user variable.
+      stmt := db.sql("select name, @@v1 from farmers where farmer_id = @farmerId")
+      stmt.prepare
+
+      rows := stmt.query(["farmerId":1])
+      verifyEq(rows.size, 1)
+      r := rows[0]
+      verifyEq(r.get(r.col("name")), "Alice")
+      verifyEq(r.get(r.col("@v1")),  42)
+    }
+    else
+    {
+      // We are preparing the statement,
+      // so we must escape the user variable.
+      stmt := db.sql("select name, \\@v1 from farmers where farmer_id = @farmerId")
+      stmt.prepare
+
+      rows := stmt.query(["farmerId":1])
+      verifyEq(rows.size, 1)
+      r := rows[0]
+      verifyEq(r.get(r.col("name")), "Alice")
+      verifyEq(r.get(r.col("@v1")),  42)
+
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
