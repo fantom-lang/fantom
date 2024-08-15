@@ -171,7 +171,7 @@ class DependParser {
 
   #name() {
     let s = ""
-    while (this.cur != 32) {
+    while (this.cur != 32 && this.cur != 9) {
       if (this.cur < 0) throw new Error();
       s += String.fromCharCode(this.cur);
       this.consume();
