@@ -204,7 +204,7 @@ fan.sys.DependParser.prototype.parse = function()
 fan.sys.DependParser.prototype.$name = function()
 {
   var s = ""
-  while (this.m_cur != 32)
+  while (this.m_cur != 32 && this.m_cur != 9)
   {
     if (this.m_cur < 0) throw new Error();
     s += String.fromCharCode(this.m_cur);

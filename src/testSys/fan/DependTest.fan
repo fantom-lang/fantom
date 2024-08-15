@@ -72,6 +72,13 @@ class DependTest : Test
     verifyEq(d.isRange, true)
     verifyEq(d.endVersion, Version.make([3, 4, 5]))
 
+    d = Depend.fromStr("foo\t1.2")
+    verifyEq(d.toStr, "foo 1.2")
+    d = Depend.fromStr("foo\t\t\t1.2")
+    verifyEq(d.toStr, "foo 1.2")
+    d = Depend.fromStr("foo\t1.2\t-\t3.4.5")
+    verifyEq(d.toStr, "foo 1.2-3.4.5")
+
     d = Depend.fromStr("foo 1, 1.1.88-2.3, 5+")
     verifyEq(d.toStr, "foo 1,1.1.88-2.3,5+")
     verifyEq(d.equals(Depend.fromStr("foo 1,1.1.88-2.3,5+")), true)

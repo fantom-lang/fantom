@@ -70,7 +70,7 @@ public final class Depend
     private String name()
     {
       StringBuilder s = new StringBuilder();
-      while (cur != ' ')
+      while (cur != ' ' && cur != '\t')
       {
         if (cur < 0) throw new RuntimeException();
         s.append((char)cur);
