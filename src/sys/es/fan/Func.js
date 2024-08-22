@@ -42,7 +42,10 @@ class Func extends Obj {
     if (f.__method) return f.__method.call(...args);
     return f(...args);
   }
-  static callOn(f, obj, args) { return f.__method.callOn(obj, args); }
+  static callOn(f, obj, args) {
+    if (f.__method) return f.__method.callOn(obj, args);
+    throw UnsupportedErr.make();
+  }
   static callList(f, args) {
     if (f.__method) return f.__method.callList(args);
     return f.apply(null, args);
