@@ -82,8 +82,8 @@ parameters.
       addBook.execute(["title":"The Jungle Book", "author":"Rudyard Kipling", "year":1894])
       addBook.execute(["title":"Captains Courageous", "author":"Rudyard Kipling", "year":1897])
 
-Escape Sequences
-================
+Escape Sequences [#escapes]
+===========================
 When calling [Statement.prepare]`sql::Statement.prepare`, the strings '\@' and
 '\\' in the Statement's SQL are escaped into '@' and '\' respectively.
 
