@@ -938,6 +938,10 @@ class ActorTest : Test
     verifyMsg(ActorMsg("foo", "a", "b", "c", "d"), 4, "a", "b", "c", "d", null)
     verifyMsg(ActorMsg("foo", "a", "b", "c", "d", "e"), 5, "a", "b", "c", "d", "e")
     verifyMsg(ActorMsg("foo", "a", "b", null, "d", "e"), 5, "a", "b", null, "d", "e")
+
+    m := ActorMsg(123, "alpha")
+    verifyEq(m.id, 123)
+    verifyEq(m.a, "alpha")
   }
 
   Void verifyMsg(ActorMsg m, Int count, Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)

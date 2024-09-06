@@ -13,20 +13,20 @@
 const class ActorMsg
 {
   ** Constructor with zero arguments
-  new make0(Str id)
+  new make0(Obj id)
   {
     this.id = id
   }
 
   ** Constructor with one argument
-  new make1(Str id, Obj? a)
+  new make1(Obj id, Obj? a)
   {
     this.id = id
     this.a  = a
   }
 
   ** Constructor with two arguments
-  new make2(Str id, Obj? a, Obj? b)
+  new make2(Obj id, Obj? a, Obj? b)
   {
     this.id = id
     this.a  = a
@@ -34,7 +34,7 @@ const class ActorMsg
   }
 
   ** Constructor with three arguments
-  new make3(Str id, Obj? a, Obj? b, Obj? c)
+  new make3(Obj id, Obj? a, Obj? b, Obj? c)
   {
     this.id = id
     this.a  = a
@@ -43,7 +43,7 @@ const class ActorMsg
   }
 
   ** Constructor with four arguments
-  new make4(Str id, Obj? a, Obj? b, Obj? c, Obj? d)
+  new make4(Obj id, Obj? a, Obj? b, Obj? c, Obj? d)
   {
     this.id = id
     this.a  = a
@@ -53,7 +53,7 @@ const class ActorMsg
   }
 
   ** Constructor with five arguments
-  new make5(Str id, Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
+  new make5(Obj id, Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
   {
     this.id = id
     this.a  = a
@@ -63,8 +63,8 @@ const class ActorMsg
     this.e  = e
   }
 
-  ** Message identifier key
-  const Str id
+  ** Message identifier key, typically string or enum
+  const Obj id
 
   ** Argument a
   const Obj? a
