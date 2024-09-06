@@ -17,7 +17,8 @@
 - Add double checked locking into ClassType.java reflect and finish
 - Add sql escape syntax for "@" and "\"
 - Deprecate old, undocumented sql escape syntax (This is a breaking change)
-- add sql::Statement.executeBatch method
+- Add sql::Statement.executeBatch method
+- Add concurrent::ActorMsg
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design
