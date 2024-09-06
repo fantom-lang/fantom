@@ -9,6 +9,7 @@
 **
 ** ActorMsg provides simple immutable tuple to use for actor messages.
 **
+@Js
 const class ActorMsg
 {
   ** Constructor with zero arguments

@@ -924,6 +924,31 @@ class ActorTest : Test
     diff := Duration((receiveTicks.ticks - a.receiveTicks).abs)
     verify(diff < 50ms)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Msg
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMsg()
+  {
+    verifyMsg(ActorMsg("foo"), 0, null, null, null, null, null)
+    verifyMsg(ActorMsg("foo", "a"), 1, "a", null, null, null, null)
+    verifyMsg(ActorMsg("foo", "a", "b"), 2, "a", "b", null, null, null)
+    verifyMsg(ActorMsg("foo", "a", "b", "c"), 3, "a", "b", "c", null, null)
+    verifyMsg(ActorMsg("foo", "a", "b", "c", "d"), 4, "a", "b", "c", "d", null)
+    verifyMsg(ActorMsg("foo", "a", "b", "c", "d", "e"), 5, "a", "b", "c", "d", "e")
+    verifyMsg(ActorMsg("foo", "a", "b", null, "d", "e"), 5, "a", "b", null, "d", "e")
+  }
+
+  Void verifyMsg(ActorMsg m, Int count, Obj? a, Obj? b, Obj? c, Obj? d, Obj? e)
+  {
+    verifyEq(m, ActorMsg("foo", a, b, c, d, e))
+    verifyEq(m.a, a)
+    verifyEq(m.b, b)
+    verifyEq(m.c, c)
+    verifyEq(m.d, d)
+    verifyEq(m.e, e)
+  }
 }
 
 **************************************************************************
