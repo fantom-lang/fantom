@@ -14,6 +14,7 @@ import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.util.zip.*;
+import java.util.HashMap;
 
 /**
  * Buf
@@ -589,70 +590,43 @@ public abstract class Buf
 
   public Buf hmac(String algorithm, Buf keyBuf)
   {
-    // get digest algorthim
-    MessageDigest md = null;
-    int blockSize = 64;
+    String javaMacAlg = javaMacAlgorithmNames.get(algorithm);
     try
     {
-      md = MessageDigest.getInstance(algorithm);
+      SecretKeySpec jKey = new SecretKeySpec(keyBuf.safeArray(), algorithm);
+      if (javaMacAlg == null)
+      {
+        //just pass through user supplied algorithm
+        javaMacAlg = algorithm;
+      }
+      Mac jMac = Mac.getInstance(javaMacAlg);
+      jMac.init(jKey);
+      jMac.update(unsafeArray(), 0, sz());
+      return new MemBuf(jMac.doFinal());
     }
     catch (NoSuchAlgorithmException e)
     {
-      throw ArgErr.make("Unknown digest algorthm: " + algorithm);
+      throw ArgErr.make("Unknown HMAC digest algorithm: " + javaMacAlg);
     }
-
-    // get secret key bytes
-    byte[] keyBytes = null;
-    int keySize = 0;
-    try
+    catch (InvalidKeyException e)
     {
-      // get key bytes
-      keyBytes = keyBuf.safeArray();
-      keySize  = keyBytes.length;
-
-      // key is greater than block size we hash it first
-      if (keySize > blockSize)
-      {
-        md.update(keyBytes, 0, keySize);
-        keyBytes = md.digest();
-        keySize = keyBytes.length;
-        md.reset();
-      }
+      throw ArgErr.make("Invalid HMAC digest algorithm: " + algorithm);
     }
-    catch (ClassCastException e)
-    {
-      throw UnsupportedErr.make("key parameter must be memory buffer");
-    }
+  }
 
-    // RFC 2104:
-    //   ipad = the byte 0x36 repeated B times
-    //   opad = the byte 0x5C repeated B times
-    //   H(K XOR opad, H(K XOR ipad, text))
-
-    // inner digest: H(K XOR ipad, text)
-    for (int i=0; i<blockSize; ++i)
-    {
-      if (i < keySize)
-        md.update((byte)(keyBytes[i] ^ 0x36));
-      else
-        md.update((byte)0x36);
-    }
-    md.update(unsafeArray(), 0, sz());
-    byte[] innerDigest = md.digest();
-
-    // outer digest: H(K XOR opad, innerDigest)
-    md.reset();
-    for (int i=0; i<blockSize; ++i)
-    {
-      if (i < keySize)
-        md.update((byte)(keyBytes[i] ^ 0x5C));
-      else
-        md.update((byte)0x5C);
-    }
-    md.update(innerDigest);
-
-    // return result
-    return new MemBuf(md.digest());
+  // Convenience to maintain backwards compatibility by mapping the digest algorithms
+  // to the correct Java MAC Algorithm Name as defined here:
+  //
+  // https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#mac-algorithms
+  private static final HashMap<String, String> javaMacAlgorithmNames = new HashMap<>();
+  static
+  {
+    javaMacAlgorithmNames.put("SHA-1", "HmacSHA1");
+    javaMacAlgorithmNames.put("SHA1", "HmacSHA1");
+    javaMacAlgorithmNames.put("SHA-256", "HmacSHA256");
+    javaMacAlgorithmNames.put("SHA-384", "HmacSHA384");
+    javaMacAlgorithmNames.put("SHA-512", "HmacSHA512");
+    javaMacAlgorithmNames.put("MD5", "HmacMD5");
   }
 
 //////////////////////////////////////////////////////////////////////////
