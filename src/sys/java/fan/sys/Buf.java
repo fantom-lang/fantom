@@ -621,12 +621,12 @@ public abstract class Buf
   private static final HashMap<String, String> javaMacAlgorithmNames = new HashMap<>();
   static
   {
-    javaMacAlgorithmNames.put("SHA-1", "HmacSHA1");
-    javaMacAlgorithmNames.put("SHA1", "HmacSHA1");
+    javaMacAlgorithmNames.put("SHA-1",   "HmacSHA1");
+    javaMacAlgorithmNames.put("SHA1",    "HmacSHA1");
     javaMacAlgorithmNames.put("SHA-256", "HmacSHA256");
     javaMacAlgorithmNames.put("SHA-384", "HmacSHA384");
     javaMacAlgorithmNames.put("SHA-512", "HmacSHA512");
-    javaMacAlgorithmNames.put("MD5", "HmacMD5");
+    javaMacAlgorithmNames.put("MD5",     "HmacMD5");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -774,3 +774,4 @@ public abstract class Buf
   }
 
 }
+

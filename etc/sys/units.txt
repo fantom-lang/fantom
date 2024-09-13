@@ -11,11 +11,11 @@
 
 -- dimensionless (null)
 percent, %; ; 0.01
+percent_relative_humidity, %RH; ; 0.01
 pixel, px
 decibel, db
 power_factor, pf
 ph, pH
-percent_relative_humidity, %RH
 grams_of_water_per_kilogram_dry_air, gH₂O/kgAir
 volts_per_degree_kelvin, V/K
 degree_days_celsius, °daysC
@@ -588,3 +588,4 @@ megabyte, MB; ; 1048576
 gigabyte, GB; ; 1073741824
 terabyte, TB; ; 1099511627776
 petabyte, PB; ; 1125899906842624
+
