@@ -2,6 +2,7 @@
 //
 // History:
 //   17 Aug 2021 Matthew Giannini   Creation
+//   12 Sep 2024 Ross Schwalm       Add support for EC Private Keys encoded as specified in SEC 1
 //
 
 using asn1
@@ -26,6 +27,7 @@ enum class PemLabel
 {
   publicKey("PUBLIC KEY"),
   rsaPrivKey("RSA PRIVATE KEY"),
+  ecPrivKey("EC PRIVATE KEY"),
   privKey("PRIVATE KEY"),
   cert("CERTIFICATE"),
   csr("CERTIFICATE REQUEST")
@@ -104,6 +106,9 @@ class PemReader : PemConst
       case PemLabel.rsaPrivKey:
         der = Buf.fromBase64(rsaP1ToP8(base64))
         return JPrivKey.decode(der, "RSA")
+      case PemLabel.ecPrivKey:
+        der = Buf.fromBase64(ecSEC1ToP8(base64))
+        return JPrivKey.decode(der, "EC")
       case PemLabel.privKey:
         return JPrivKey.decode(der, algorithm)
       case PemLabel.publicKey:
@@ -154,6 +159,50 @@ class PemReader : PemConst
         oid,
         Asn.Null]),
       Asn.octets(p1)])
+    return BerWriter.toBuf(root).toBase64
+  }
+
+  ** Converts EC Private Key ASN.1 encoding format defined in [SEC 1]`https://www.secg.org/sec1-v2.pdf`
+  ** as well as [RFC5915]`https://www.rfc-editor.org/rfc/rfc5915` to PKCS#8
+  **
+  ** ECPrivateKey ::= SEQUENCE {
+  **   version INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
+  **   privateKey OCTET STRING,
+  **   parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,
+  **   publicKey  [1] BIT STRING OPTIONAL
+  ** }
+  **
+  ** ECParameters format is defined in [RFC5480]`https://www.rfc-editor.org/rfc/rfc5480`
+  **
+  ** ECParameters ::= CHOICE {
+  **   namedCurve         OBJECT IDENTIFIER
+  **   -- implicitCurve   NULL
+  **   -- specifiedCurve  SpecifiedECDomain
+  ** }
+  private Str ecSEC1ToP8(Str base64)
+  {
+    sec1 := Buf.fromBase64(base64)
+    seq := BerReader(sec1.in).readObj
+    parts := seq.val as List
+
+    // Only support importing keys that include the optional ECParameters
+    if (parts.size < 3) throw ArgErr("Invalid EC Private Key Encoding")
+
+    ecParams := (((AsnItem)parts[2]).val as AsnObj)
+
+    AsnTag cx0 := AsnTag.context(0).implicit
+    if (ecParams.tags[0] != cx0) throw ArgErr("Invalid EC Private Key ECParameters")
+
+    AsnOid oid := Asn.oid("1.2.840.10045.2.1") //id-ecPublicKey
+    AsnOid curve := BerReader(Buf.fromHex(ecParams.buf.toHex).in).readObj
+
+    root := Asn.seq([
+      Asn.int(0),
+      Asn.seq([
+        oid,
+        curve]),
+      Asn.octets(sec1)])
+
     return BerWriter.toBuf(root).toBase64
   }
 

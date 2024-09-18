@@ -130,6 +130,91 @@ class KeyTest : CryptoTest
 
   }
 
+  Void testLoadSEC1EncodedEC()
+  {
+    //secp224r1
+    secp224r1Priv :=
+      "-----BEGIN EC PRIVATE KEY-----
+       MGgCAQEEHNPusR74D/x3agjeySMQDuCInyqHslY9TeDyoOOgBwYFK4EEACGhPAM6
+       AAQR6uUh2YHV6Aw9Mi+TTOWtdsiZsb0okM88O/oFy9R27eroXszaEDXO7c+EIZe0
+       yQRBXRXgUqssdA==
+       -----END EC PRIVATE KEY-----"
+
+    secp224r1X509 :=
+      "-----BEGIN CERTIFICATE-----
+       MIIBgzCCATECCQCpD+k+mT0boDAKBggqhkjOPQQDAjBTMQswCQYDVQQGEwJVUzEL
+       MAkGA1UECAwCVkExETAPBgNVBAcMCFJpY2htb25kMQ8wDQYDVQQKDAZGYW50b20x
+       EzARBgNVBAMMCmZhbnRvbS5vcmcwHhcNMjQwOTE2MjAwNjQ2WhcNMjUwOTE2MjAw
+       NjQ2WjBTMQswCQYDVQQGEwJVUzELMAkGA1UECAwCVkExETAPBgNVBAcMCFJpY2ht
+       b25kMQ8wDQYDVQQKDAZGYW50b20xEzARBgNVBAMMCmZhbnRvbS5vcmcwTjAQBgcq
+       hkjOPQIBBgUrgQQAIQM6AAQR6uUh2YHV6Aw9Mi+TTOWtdsiZsb0okM88O/oFy9R2
+       7eroXszaEDXO7c+EIZe0yQRBXRXgUqssdDAKBggqhkjOPQQDAgNAADA9Ah0AwPCC
+       KX+MIBcOiQAbC7Xr4P1p8YajGAygX0DhMAIcZugPSHA7lTqG4Ror8HdE9ddccqTi
+       sUCXhakSPw==
+       -----END CERTIFICATE-----"
+
+    PrivKey priv := crypto.loadPem(secp224r1Priv.in) //EC algorithm inferred
+    verifyKey(priv, "EC", "PKCS#8")
+    Cert cert := crypto.loadPem(secp224r1X509.in)
+    verifyEq(cert.certType, "X.509")
+
+    //secp521r1
+    secp521r1Priv :=
+      "-----BEGIN EC PRIVATE KEY-----
+       MIHcAgEBBEIB9JXwBOs9ihM4yZCkqx/ZkahI2O68nzlpi5ndvZ/364ga2zNIJLvP
+       Ezd1d2T287CoeuRl0Z1/4nfJlh7sLHz9j6CgBwYFK4EEACOhgYkDgYYABAD6AS1F
+       lipJNjqm/DN/ZAtkJLmBaQv4lhizdM/w4wykYmqxHQghyrNrH6t4J3+GR3ZJZvjs
+       yuHzeLYJl2CF1+TjpAGfbYxX9C01KV6bhSNzaraUYMN5+vIYC1vR1oL/pkbwxjt2
+       ipHHYQUp1NbAAB0VX8ULLSZaTlr0wZGARrONQSVxOw==
+       -----END EC PRIVATE KEY-----"
+
+    secp521r1X509 :=
+      "-----BEGIN CERTIFICATE-----
+       MIICHjCCAX8CCQCiUoxpzin4GzAKBggqhkjOPQQDBDBTMQswCQYDVQQGEwJVUzEL
+       MAkGA1UECAwCVkExETAPBgNVBAcMCFJpY2htb25kMQ8wDQYDVQQKDAZGYW50b20x
+       EzARBgNVBAMMCmZhbnRvbS5vcmcwHhcNMjQwOTE2MjA1OTU5WhcNMjUwOTE2MjA1
+       OTU5WjBTMQswCQYDVQQGEwJVUzELMAkGA1UECAwCVkExETAPBgNVBAcMCFJpY2ht
+       b25kMQ8wDQYDVQQKDAZGYW50b20xEzARBgNVBAMMCmZhbnRvbS5vcmcwgZswEAYH
+       KoZIzj0CAQYFK4EEACMDgYYABAD6AS1FlipJNjqm/DN/ZAtkJLmBaQv4lhizdM/w
+       4wykYmqxHQghyrNrH6t4J3+GR3ZJZvjsyuHzeLYJl2CF1+TjpAGfbYxX9C01KV6b
+       hSNzaraUYMN5+vIYC1vR1oL/pkbwxjt2ipHHYQUp1NbAAB0VX8ULLSZaTlr0wZGA
+       RrONQSVxOzAKBggqhkjOPQQDBAOBjAAwgYgCQgEPCrMYbywWCloBY0l4wbjaWx1V
+       MK9OIrkxMupmB1WmXTIpoJxBD/WZ1zhXnMDdDSE9WLPik2wFMbPMYKWl6jE22gJC
+       AcGzJbG9NBqExMxstzHXescXqsczDL9u/1y2NbvSDp8r9GfbrGNZE/uVm0UimNHs
+       Z7MuTgBnRoYEE9gooRSoQx67
+       -----END CERTIFICATE-----"
+
+    priv = crypto.loadPem(secp521r1Priv.in)
+    verifyKey(priv, "EC", "PKCS#8")
+    cert = crypto.loadPem(secp521r1X509.in)
+    verifyEq(cert.certType, "X.509")
+
+    //sect233k1
+    sect233k1Priv :=
+      "-----BEGIN EC PRIVATE KEY-----
+       MG0CAQEEHSzD7tGQFy7PXZnHRab2n0IiU5LFYYE95jc0PdMLoAcGBSuBBAAaoUAD
+       PgAEAA4eD1AQxAx8Zu3ikInx1MAmPsTY2Vi7PnZwWU5hAMibYxvdrnIoYef8t5d4
+       XLyECvWtAX5smaTxUYbj
+       -----END EC PRIVATE KEY-----"
+
+    priv = crypto.loadPem(sect233k1Priv.in)
+    verifyKey(priv, "EC", "PKCS#8")
+
+    //sect571r1
+    sect571r1Priv :=
+      "-----BEGIN EC PRIVATE KEY-----
+       MIHuAgEBBEgBIjbdTxdfNIU0vhtLWFFkJxsPDsXDE1jM563JFvG8093FrhsgYp8u
+       0L6KCIZKsXVWNZEMbyoiyiBPiTCa34s3mZFT7U+86i6gBwYFK4EEACehgZUDgZIA
+       BAFL12AP9+JvGGm4hC6BaIucrQ4tU5B1nTwTHMRuaSUllLD6itX9ozFJzdNvV+C+
+       ufNSFSMy7Kb6WiF9SVhPrgzPu6LtTsBVUgZcjhM8B5py7M5RTxyf/z1PFYUIoSzJ
+       7ygLorTbyZf8hbxSHpcOmwGQDh7TpaaFb4aidHVMcszfDw1LvsGjXUrvh9/4c0Bv
+       lQ==
+       -----END EC PRIVATE KEY-----"
+
+    priv = crypto.loadPem(sect571r1Priv.in)
+    verifyKey(priv, "EC", "PKCS#8")
+  }
+
   private Void verifyKey(Key key, Str alg, Str format)
   {
     verifyEq(key.algorithm, alg)
