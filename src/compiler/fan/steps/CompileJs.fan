@@ -62,7 +62,9 @@ class CompileJs  : CompilerStep
 
     // run it
     buf := Buf()
-    t.make([buf.out, pod, compiler.input.forceJs || compiler.isSys])->run
+    opts := [Str:Obj?][:]
+    opts["allTypes"] = compiler.input.forceJs || compiler.isSys
+    t.make([buf.out, pod, opts])->run
     if (!buf.isEmpty)
     {
       compiler.tsDecl = buf.seek(0).readAllStr

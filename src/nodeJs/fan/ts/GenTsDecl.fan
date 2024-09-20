@@ -17,24 +17,38 @@ using fandoc
 class GenTsDecl
 {
   ** Generate ts declare file a pod using reflection
-  static Void genForPod(Pod pod, OutStream out)
+  static Void genForPod(Pod pod, OutStream out, [Str:Obj?] opts := [:])
   {
-    make(out, ReflectPod(ReflectNamespace(), pod), false).run
+    make(out, ReflectPod(ReflectNamespace(), pod), opts).run
   }
 
-  new make(OutStream out, CPod pod, Bool allTypes := false)
+  new make(OutStream out, CPod pod, [Str:Obj?] opts)
   {
     this.out = out
     this.pod = pod
-    this.allTypes = allTypes
+    this.opts = opts
     this.docWriter = TsDocWriter(out)
   }
 
   private OutStream out
   private CPod pod
-  private const Bool allTypes
+  private [Str:Obj?] opts
   private TsDocWriter docWriter
   private Str[]? deps := null
+
+//////////////////////////////////////////////////////////////////////////
+// Opts
+//////////////////////////////////////////////////////////////////////////
+
+  ** Generate all types even if they don't have the @Js facet
+  private Bool allTypes() { opts["allTypes"] == true }
+
+  ** Generate all node types even if they are @NoDoc
+  private Bool genNoDoc() { opts["genNoDoc"] == true }
+
+  ** Check if this node should be generated based on its @NoDoc facet
+  ** and the 'genNoDoc' option.
+  private Bool isNoDoc(CNode node) { node.isNoDoc && !genNoDoc }
 
 //////////////////////////////////////////////////////////////////////////
 // Main writing method
@@ -44,7 +58,7 @@ class GenTsDecl
   {
     genTypes := pod.types.findAll |CType type->Bool|
     {
-      if (type.isSynthetic || type.isInternal || type.isNoDoc) return false
+      if (type.isSynthetic || type.isInternal || isNoDoc(type)) return false
 
       // if we aren't generating all types, short-circuit if missing @Js facet
       if (!allTypes && !type.hasFacet("sys::Js")) return false
@@ -156,7 +170,7 @@ class GenTsDecl
         // skip slots already written by the current type (overridden)
         if (writtenSlots.contains(slot.name)) return
         if (!slot.parent.isMixin) return
-        if (slot.isNoDoc) return
+        if (isNoDoc(slot)) return
         if (slot.isStatic) return
 
         // write the mixin slot
@@ -184,7 +198,7 @@ class GenTsDecl
     if (slot.parent !== type) return false
 
     // skip @NoDoc
-    if (slot.isNoDoc) return false
+    if (isNoDoc(slot)) return false
 
     // public only
     return slot.isPublic
