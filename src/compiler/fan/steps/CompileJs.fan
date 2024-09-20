@@ -32,7 +32,6 @@ class CompileJs  : CompilerStep
     if (needCompileEs)
     {
       if (pod.name != "sys") compile("compilerEs::CompileEsPlugin")
-      genTsDecl
     }
   }
 
@@ -48,28 +47,6 @@ class CompileJs  : CompilerStep
 
     // do it!
     t.make([compiler])->run
-  }
-
-  private Void genTsDecl()
-  {
-    // find the tool to generate d.ts
-    t := Type.find("nodeJs::GenTsDecl", false)
-    if (t == null)
-    {
-      log.info("WARN: GenTsDecl not available")
-      return
-    }
-
-    // run it
-    buf := Buf()
-    opts := [Str:Obj?][:]
-    opts["allTypes"] = compiler.input.forceJs || compiler.isSys
-    t.make([buf.out, pod, opts])->run
-    if (!buf.isEmpty)
-    {
-      compiler.tsDecl = buf.seek(0).readAllStr
-// echo(compiler.tsDecl)
-    }
   }
 
   Bool needCompileEs()
