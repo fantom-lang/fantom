@@ -202,7 +202,7 @@ class GenTsDecl
   private Bool includeSlot(CType type, CSlot slot)
   {
     // declared only slots, not inherited
-    if (slot.parent !== type) return false
+    if (slot.parent != type) return false
 
     // skip @NoDoc
     if (isNoDoc(slot)) return false
