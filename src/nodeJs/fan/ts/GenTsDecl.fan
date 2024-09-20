@@ -19,7 +19,14 @@ class GenTsDecl
   ** Generate ts declare file a pod using reflection
   static Void genForPod(Pod pod, OutStream out, [Str:Obj?] opts := [:])
   {
-    make(out, ReflectPod(ReflectNamespace(), pod), opts).run
+    // hack to make reflect namespace able to resolve native bridge
+    ns := ReflectNamespace()
+    c  := Compiler(CompilerInput { it.podName = "dummy" })
+    c.ns = ns
+    ns->c = c
+
+    // make
+    make(out, ReflectPod(ns, pod), opts).run
   }
 
   new make(OutStream out, CPod pod, [Str:Obj?] opts)
