@@ -370,9 +370,13 @@ class GenTsDecl
   {
     doc := node.doc
     text := doc?.text?.trimToNull
+    if (node.isNoDoc)
+    {
+      if (!genNoDoc) return
+      insert := "NODOC API\n"
+      text = text == null ? insert : "${insert}\n${text}"
+    }
     if (text == null) return
-
-    if (node.isNoDoc) return
 
     parser := FandocParser()
     parser.silent = true
