@@ -52,27 +52,31 @@ public abstract class NativeConsole extends Console
     return null;
   }
 
-  public Console debug(Object msg)
+  public Console debug(Object msg) { return debug(msg, null); }
+  public Console debug(Object msg, Err err)
   {
-    return log("DEBUG", msg);
+    return log("DEBUG", msg, err);
   }
 
-  public Console info(Object msg)
+  public Console info(Object msg) { return info(msg, null); }
+  public Console info(Object msg, Err err)
   {
-    return log("", msg);
+    return log("", msg, err);
   }
 
-  public Console warn(Object msg)
+  public Console warn(Object msg) { return warn(msg, null); }
+  public Console warn(Object msg, Err err)
   {
-    return log("WARN", msg);
+    return log("WARN", msg, err);
   }
 
-  public Console err(Object msg)
+  public Console err(Object msg) { return err(msg, null); }
+  public Console err(Object msg, Err err)
   {
-    return log("ERR", msg);
+    return log("ERR", msg, err);
   }
 
-  private Console log(String level, Object msg)
+  private Console log(String level, Object msg, Err err)
   {
     if (indent > 0)
     {
@@ -84,6 +88,15 @@ public abstract class NativeConsole extends Console
       out().print(": ");
     }
     out().println(msg);
+    if (err != null)
+    {
+      List lines = FanStr.splitLines(err.traceToStr());
+      for (int i=0; i<lines.sz(); ++i)
+      {
+        out().print(FanStr.spaces(indent*2));
+        out().println(lines.get(i));
+      }
+    }
     return this;
   }
 

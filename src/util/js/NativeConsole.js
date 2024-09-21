@@ -18,13 +18,33 @@ fan.util.NativeConsole.curNative = function() { return fan.util.NativeConsole.$c
 
 fan.util.NativeConsole.$curNative = new fan.util.NativeConsole();
 
-fan.util.NativeConsole.prototype.debug = function(msg) { console.debug(msg); return this; }
+fan.util.NativeConsole.prototype.debug = function(msg, err = null)
+{
+  console.debug(msg)
+  if (err) console.debug(err.traceToStr());
+  return this;
+}
 
-fan.util.NativeConsole.prototype.info = function(msg) { console.info(msg); return this; }
+fan.util.NativeConsole.prototype.info = function(msg, err = null)
+{
+  console.info(msg);
+  if (err) console.info(err.traceToStr());
+  return this;
+}
 
-fan.util.NativeConsole.prototype.warn = function(msg) { console.warn(msg); return this; }
+fan.util.NativeConsole.prototype.warn = function(msg, err = null)
+{
+  console.warn(msg);
+  if (err) console.warn(err.traceToStr());
+  return this;
+}
 
-fan.util.NativeConsole.prototype.err = function(msg) { console.error(msg); return this; }
+fan.util.NativeConsole.prototype.err = function(msg, err = null)
+{
+  console.error(msg);
+  if (err) console.err(err.traceToStr());
+  return this;
+}
 
 fan.util.NativeConsole.prototype.width = function() { return null; }
 

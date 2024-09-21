@@ -31,16 +31,16 @@ abstract const class Console
   abstract Int? height()
 
   ** Print a message to the console at the debug level
-  abstract This debug(Obj? msg)
+  abstract This debug(Obj? msg, Err? err := null)
 
   ** Print a message to the console at the informational level
-  abstract This info(Obj? msg)
+  abstract This info(Obj? msg, Err? err := null)
 
   ** Print a message to the console at the warning level
-  abstract This warn(Obj? msg)
+  abstract This warn(Obj? msg, Err? err := null)
 
   ** Print a message to the console at the error level
-  abstract This err(Obj? msg)
+  abstract This err(Obj? msg, Err? err := null)
 
   ** Print tabular data to the console:
   **  - List of list is two dimensional data where first row is header names
@@ -82,10 +82,10 @@ native const class NativeConsole : Console
   static NativeConsole curNative()
   override Int? width()
   override Int? height()
-  override This debug(Obj? msg)
-  override This info(Obj? msg)
-  override This warn(Obj? msg)
-  override This err(Obj? msg)
+  override This debug(Obj? msg, Err? err := null)
+  override This info(Obj? msg, Err? err := null)
+  override This warn(Obj? msg, Err? err := null)
+  override This err(Obj? msg, Err? err := null)
   override This table(Obj? obj)
   override This clear()
   override This group(Obj? msg, Bool collapsed := false)
@@ -108,10 +108,10 @@ const class OutStreamConsole : Console
 
   override Int? width() { null }
   override Int? height() { null }
-  override This debug(Obj? msg) { log("DEBUG", msg) }
-  override This info(Obj? msg) { log(null, msg) }
-  override This warn(Obj? msg) { log("WARN", msg) }
-  override This err(Obj? msg) { log("ERR", msg) }
+  override This debug(Obj? msg, Err? err := null) { log("DEBUG", msg, err) }
+  override This info(Obj? msg, Err? err := null) { log(null, msg, err) }
+  override This warn(Obj? msg, Err? err := null) { log("WARN", msg, err) }
+  override This err(Obj? msg, Err? err := null) { log("ERR", msg, err) }
   override This table(Obj? obj) { ConsoleTable(obj).dump(this); return this }
   override This clear() { this }
   override This group(Obj? msg, Bool collapsed := false) { info(msg); indent.increment; return this }
@@ -119,11 +119,12 @@ const class OutStreamConsole : Console
   override Str? prompt(Str msg := "") { throw UnsupportedErr() }
   override Str? promptPassword(Str msg := "") { throw UnsupportedErr() }
 
-  virtual This log(Str? level, Str msg)
+  virtual This log(Str? level, Str msg, Err? err := null)
   {
     out.print(Str.spaces(indent.val * 2))
     if (level != null) out.print(level).print(": ")
     out.printLine(msg)
+    if (err != null) err.traceToStr.splitLines.each |line| { out.print(level).printLine(line) }
     return this
   }
 

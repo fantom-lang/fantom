@@ -26,6 +26,13 @@ class ConsoleTest : Test
     c.warn("Warn message!")
     c.err("Error message!")
 
+    // basic logging with exception
+    err := Err("bad")
+    c.debug("Debug message!", err)
+    c.info("Info message!", err)
+    c.warn("Warn message!", err)
+    c.err("Error message!", err)
+
     // table - null
     c.info("")
     c.table(null)
