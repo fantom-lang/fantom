@@ -47,6 +47,11 @@ class Email
   Str[]? bcc
 
   **
+  ** Reply-To email address.
+  **
+  Str? replyTo
+
+  **
   ** Subject of the email.  This string can be any Unicode
   ** and is automatically translated into an encoded word.
   **
@@ -90,6 +95,7 @@ class Email
   {
     out.print("Message-ID: $msgId\r\n")
     out.print("From: $from\r\n")
+    if (replyTo?.trimToNull != null) out.print("Reply-To: $replyTo\r\n")
     encodeAddrSpecsField(out, "To", to)
     encodeAddrSpecsField(out, "Cc", cc)
     out.print("Subject: " + MimeUtil.toEncodedWord(subject) + "\r\n")
