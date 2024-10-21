@@ -323,11 +323,11 @@ public class ObjEncoder
   {
     int len = s.length();
     for (int i=0; i<len; ++i)
-      out.writeChar(s.charAt(i));
+      out.writeChar((int)s.charAt(i));
     return this;
   }
 
-  public final ObjEncoder w(char ch)
+  public final ObjEncoder w(int ch)
   {
     out.writeChar(ch);
     return this;

@@ -74,13 +74,18 @@ public class Charset
 
   static class Utf8Encoder extends Encoder
   {
-    public void encode(char c, OutStream out)
+    public void encode(int c, OutStream out)
     {
       if (c <= 0x007F)
       {
         out.w(c);
       }
-      else if (c > 0x07FF)
+      else if (c <= 0x07FF)
+      {
+        out.w(0xC0 | ((c >>  6) & 0x1F))
+           .w(0x80 | ((c >>  0) & 0x3F));
+      }
+      else if (c <= 0xFFFF)
       {
         out.w(0xE0 | ((c >> 12) & 0x0F))
            .w(0x80 | ((c >>  6) & 0x3F))
@@ -88,12 +93,14 @@ public class Charset
       }
       else
       {
-        out.w(0xC0 | ((c >>  6) & 0x1F))
-           .w(0x80 | ((c >>  0) & 0x3F));
+        out.w(0xF0 | ((c >> 18) & 0x07))
+           .w(0x80 | ((c >> 12) & 0x3F))
+           .w(0x80 | ((c >>  6) & 0x3F))
+           .w(0x80 | (( c >> 0) & 0x3F));
       }
     }
 
-    public void encode(char c, InStream out)
+    public void encode(int c, InStream out)
     {
       if (c <= 0x007F)
       {
@@ -151,7 +158,8 @@ public class Charset
           // Java can't handle chars in this upper / extended range
           // so return a replacement character instead
           // see https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character
-          return 0xFFFD;
+          return (((c & 0x07) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | ((c4 & 0x3F) << 0));
+          // return 0xFFFD;
 
         default:
           throw IOErr.make("Invalid UTF-8 encoding");
@@ -177,13 +185,13 @@ public class Charset
 
   static class Utf16BEEncoder extends Encoder
   {
-    public void encode(char c, OutStream out)
+    public void encode(int c, OutStream out)
     {
       out.w((c >>> 8) & 0xFF)
          .w((c >>> 0) & 0xFF);
     }
 
-    public void encode(char c, InStream out)
+    public void encode(int c, InStream out)
     {
       out.unread((c >>> 0) & 0xFF)
          .unread((c >>> 8) & 0xFF);
@@ -219,13 +227,13 @@ public class Charset
 
   static class Utf16LEEncoder extends Encoder
   {
-    public void encode(char c, OutStream out)
+    public void encode(int c, OutStream out)
     {
       out.w((c >>> 0) & 0xFF)
          .w((c >>> 8) & 0xFF);
     }
 
-    public void encode(char c, InStream out)
+    public void encode(int c, InStream out)
     {
       out.unread((c >>> 8) & 0xFF)
          .unread((c >>> 0) & 0xFF);
@@ -261,13 +269,13 @@ public class Charset
 
   static class Iso8859Encoder extends Encoder
   {
-    public void encode(char c, OutStream out)
+    public void encode(int c, OutStream out)
     {
       if (c > 0xFF) throw IOErr.make("Invalid ISO-8859-1 char");
       out.w((c >>> 0) & 0xFF);
     }
 
-    public void encode(char c, InStream out)
+    public void encode(int c, InStream out)
     {
       out.unread((c >>> 0) & 0xFF);
     }
@@ -321,8 +329,8 @@ public class Charset
    */
   public static abstract class Encoder
   {
-    public abstract void encode(char ch, OutStream out);  // -> w(int)
-    public abstract void encode(char ch, InStream out);   // -> unread(int)
+    public abstract void encode(int ch, OutStream out);  // -> w(int)
+    public abstract void encode(int ch, InStream out);   // -> unread(int)
   }
 
   /**
@@ -340,11 +348,11 @@ public class Charset
       this.encoder = charset.charset.newEncoder();
     }
 
-    public void encode(char ch, OutStream out)
+    public void encode(int ch, OutStream out)
     {
       // ready input char buffer
       cbuf.clear();
-      cbuf.put(ch);
+      cbuf.put((char)ch);
       cbuf.flip();
 
       // ready output byte buffer
@@ -364,11 +372,11 @@ public class Charset
         out.w(bbuf.get());
     }
 
-    public void encode(char ch, InStream out)
+    public void encode(int ch, InStream out)
     {
       // ready input char buffer
       cbuf.clear();
-      cbuf.put(ch);
+      cbuf.put((char)ch);
       cbuf.flip();
 
       // ready output byte buffer

@@ -87,12 +87,12 @@ public class StrBufOutStream
 
   static final Charset.Encoder strBufEncoder = new Charset.Encoder()
   {
-    public void encode(char ch, OutStream out)
+    public void encode(int ch, OutStream out)
     {
-      ((StrBufOutStream)out).sb.append(ch);
+      ((StrBufOutStream)out).sb.append((char)ch);
     }
 
-    public void encode(char ch, InStream out)
+    public void encode(int ch, InStream out)
     {
       throw UnsupportedErr.make("Binary write on StrBuf.out");
     }

@@ -273,8 +273,8 @@ public class OutStream
     this.charset = charset;
   }
 
-  public OutStream writeChar(long c) { return writeChar((char)c); }
-  public OutStream writeChar(char c)
+  public OutStream writeChar(long c) { return writeChar((int)c); }
+  public OutStream writeChar(int c)
   {
     if (out != null)
       out.writeChar(c);
