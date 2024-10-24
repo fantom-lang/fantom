@@ -34,4 +34,8 @@ native const class X509 : Cert
   Date notBefore()
 
   Date notAfter()
+
+  override Bool isSelfSigned()
+
+  override Bool isCA()
 }

@@ -30,4 +30,10 @@ const mixin Cert
 
   ** Get the PEM encoding of the certificate
   override abstract Str toStr()
+
+  ** Return true if certificate is self signed
+  abstract Bool isSelfSigned()
+
+  ** Return true if certificate is a Certificate Authority
+  abstract Bool isCA()
 }
