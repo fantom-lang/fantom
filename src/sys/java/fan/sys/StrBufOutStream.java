@@ -63,6 +63,12 @@ public class StrBufOutStream
     return this;
   }
 
+  public OutStream writeChar(int c)
+  {
+    sb.append((char)c);
+    return this;
+  }
+
   public OutStream writeChar(long c)
   {
     sb.append((char)c);
