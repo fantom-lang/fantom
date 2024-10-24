@@ -19,8 +19,13 @@ import java.util.Calendar;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.InvalidKeyException;
+import java.security.SignatureException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.cert.CertificateException;
 
 final public class X509 extends FanObj implements fan.crypto.Cert
 {
@@ -155,6 +160,46 @@ final public class X509 extends FanObj implements fan.crypto.Cert
   public Date notAfter()
   {
     return toDate(cert.getNotAfter());
+  }
+
+  public boolean isSelfSigned()
+  {
+    try
+    {
+      cert.verify(cert.getPublicKey());
+      return true;
+    }
+    catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException | SignatureException e)
+    {
+      return false;
+    }
+  }
+
+  /*
+   *  KeyUsage extension (OID = 2.5.29.15) defines the purpose of the key contained in the certificate.
+   *
+   *  The ASN.1 definition for this is:
+   *
+   *  KeyUsage ::= BIT STRING {
+   *    digitalSignature        (0),
+   *    nonRepudiation          (1),
+   *    keyEncipherment         (2),
+   *    dataEncipherment        (3),
+   *    keyAgreement            (4),
+   *    keyCertSign             (5),
+   *    cRLSign                 (6),
+   *    encipherOnly            (7),
+   *    decipherOnly            (8)
+   *  }
+   *
+   */
+  public boolean isCA()
+  {
+    boolean[] keyUsage = cert.getKeyUsage();
+    //RFC5280 section 4.2.1.3 states conforming CAs MUST include this extension
+    if (keyUsage == null) { return false; }
+    if (keyUsage[5]) { return true; }
+    return false;
   }
 
   private static Date toDate(java.util.Date jdate)
