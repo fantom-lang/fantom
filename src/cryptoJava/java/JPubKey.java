@@ -13,8 +13,10 @@ import fan.sys.*;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.Signature;
 import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.ECParameterSpec;
 import javax.crypto.Cipher;
 
 final public class JPubKey extends JKey implements fan.crypto.PubKey
@@ -53,11 +55,20 @@ final public class JPubKey extends JKey implements fan.crypto.PubKey
 // AsymKey
 //////////////////////////////////////////////////////////////////////////
 
+  // EC curves with an unknown parameter spec will return 0
   public long keySize()
   {
     if (javaKey instanceof RSAPublicKey)
       return ((RSAPublicKey)javaKey).getModulus().bitLength();
-    throw Err.make("Not an RSA public key");
+    if (javaKey instanceof ECPublicKey)
+    {
+      final ECParameterSpec spec = ((ECPublicKey)javaKey).getParams();
+      if (spec != null)
+        return spec.getOrder().bitLength();
+      else // Unable to determine the key length
+        return 0;
+    }
+    throw Err.make("Not an RSA or EC public key");
   }
 
 //////////////////////////////////////////////////////////////////////////
