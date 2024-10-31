@@ -10,7 +10,7 @@
 ** Indented code parser
 **
 @Js
-class IndentedCodeParser : BlockParser
+internal class IndentedCodeParser : BlockParser
 {
   new make()
   {

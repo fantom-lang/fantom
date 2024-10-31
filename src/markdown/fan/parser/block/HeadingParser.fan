@@ -10,7 +10,7 @@
 ** Heading parser
 **
 @Js
-class HeadingParser : BlockParser
+internal class HeadingParser : BlockParser
 {
   new make(Int level, SourceLines content)
   {

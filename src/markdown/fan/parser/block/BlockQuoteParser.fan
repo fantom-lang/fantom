@@ -10,7 +10,7 @@
 ** Block quote parser
 **
 @Js
-class BlockQuoteParser : BlockParser
+internal class BlockQuoteParser : BlockParser
 {
   new make()
   {

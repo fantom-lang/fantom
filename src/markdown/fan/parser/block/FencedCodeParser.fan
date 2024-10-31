@@ -10,7 +10,7 @@
 ** Fenced code parser
 **
 @Js
-class FencedCodeParser : BlockParser
+internal class FencedCodeParser : BlockParser
 {
   new make(Int fenceChar, Int fenceLen, Int fenceIndent)
   {

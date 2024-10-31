@@ -10,7 +10,7 @@
 ** List block parser
 **
 @Js
-class ListBlockParser : BlockParser
+internal class ListBlockParser : BlockParser
 {
   new make(ListBlock block)
   {

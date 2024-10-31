@@ -10,7 +10,7 @@
 ** HTML block parser
 **
 @Js
-class HtmlBlockParser : BlockParser
+internal class HtmlBlockParser : BlockParser
 {
   internal new make(Regex? closingPattern)
   {

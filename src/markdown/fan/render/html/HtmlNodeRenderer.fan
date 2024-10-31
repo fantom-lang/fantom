@@ -24,7 +24,7 @@
 ** The node renderer that renders all the core nodes
 ** (comes last in the order of renderers)
 @Js
-class CoreHtmlNodeRenderer : Visitor, NodeRenderer
+@NoDoc class CoreHtmlNodeRenderer : Visitor, NodeRenderer
 {
   new make(HtmlContext cx)
   {

@@ -10,7 +10,7 @@
 ** Thematic break parser
 **
 @Js
-class ThematicBreakParser : BlockParser
+internal class ThematicBreakParser : BlockParser
 {
   new make(Str literal)
   {

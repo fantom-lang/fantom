@@ -10,7 +10,7 @@
 ** Attempts to parse an HTML entity or numeric character reference.
 **
 @Js
-class EntityInlineParser : InlineContentParser
+internal class EntityInlineParser : InlineContentParser
 {
   private static const |Int->Bool| hex := |Int ch->Bool| {
     ch.isDigit || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F')

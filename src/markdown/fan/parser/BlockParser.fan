@@ -13,7 +13,7 @@
 abstract class BlockParser
 {
   ** Return true if the block that is parsed is a container (i.e. contains other blocks),
-  ** or false if it's a leaf.
+  ** or false (default) if it's a leaf.
   virtual Bool isContainer() { false }
 
   ** Return true if the block can have lazy continuation lines.
@@ -21,14 +21,17 @@ abstract class BlockParser
   ** Lazy continuation lines are lines that were rejected by this `tryContinue` but
   ** didn't match any other block parser either.
   **
-  ** If true is returned here, those lines will get added via `addLine`. For false,
+  ** If true is returned here, those lines will get added via `addLine`. For false (default),
   ** the block is closed instead.
   virtual Bool canHaveLazyContinuationLines() { false }
 
-  virtual Bool canContain(Block childBlocK) { false }
+  ** Return true if the this block may contain the child block; false otherwise (default)
+  virtual Bool canContain(Block childBlock) { false }
 
+  ** Get the parsed block
   abstract Block block()
 
+  ** Attempt to continue parsing the block from the given state
   abstract BlockContinue? tryContinue(ParserState state)
 
   ** Default implementation does nothing with the source line
@@ -43,8 +46,10 @@ abstract class BlockParser
   ** can later be accessed during inline parsing.
   virtual DefinitionMap[] definitions() { DefinitionMap#.emptyList }
 
+  ** Do any processing when the block is closed
   virtual Void closeBlock() { }
 
+  ** Callback to parse inline content
   virtual Void parseInlines(InlineParser inlineParser) { }
 }
 

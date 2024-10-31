@@ -11,7 +11,7 @@
 ** literal sequence of backticks
 **
 @Js
-class BackticksInlineParser : InlineContentParser
+internal class BackticksInlineParser : InlineContentParser
 {
   override ParsedInline? tryParse(InlineParserState state)
   {

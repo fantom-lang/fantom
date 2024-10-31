@@ -10,7 +10,7 @@
 ** Attempt to parse inline HTML
 **
 @Js
-class HtmlInlineParser : InlineContentParser
+internal class HtmlInlineParser : InlineContentParser
 {
   // TODO:MAYBE - the java version usess an "AsciiMatcher" builder pattern
   // for building up a bitmask of characters that match. We might want to use

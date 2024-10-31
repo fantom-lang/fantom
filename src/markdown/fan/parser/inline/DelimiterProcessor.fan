@@ -48,7 +48,7 @@ mixin DelimiterProcessor
 **************************************************************************
 
 @Js
-abstract class EmphasisDelimiterProcessor : DelimiterProcessor
+@NoDoc abstract class EmphasisDelimiterProcessor : DelimiterProcessor
 {
   protected new make(Int delimChar)
   {
@@ -109,7 +109,7 @@ abstract class EmphasisDelimiterProcessor : DelimiterProcessor
 **************************************************************************
 
 @Js
-class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
+internal class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
 {
   new make() : super('*') { }
 }
@@ -119,7 +119,7 @@ class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
 **************************************************************************
 
 @Js
-class UnderscoreDelimiterProcessor : EmphasisDelimiterProcessor
+internal class UnderscoreDelimiterProcessor : EmphasisDelimiterProcessor
 {
   new make() :super('_') { }
 }

@@ -10,7 +10,7 @@
 ** Paragraph parser
 **
 @Js
-class ParagraphParser : BlockParser
+internal class ParagraphParser : BlockParser
 {
   new make() { }
 

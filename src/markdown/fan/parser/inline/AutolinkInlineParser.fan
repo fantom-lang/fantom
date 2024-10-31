@@ -10,7 +10,7 @@
 ** Attempt to parse an autolink (URL or email in pointy brackets)
 **
 @Js
-class AutolinkInlineParser : InlineContentParser
+internal class AutolinkInlineParser : InlineContentParser
 {
   private static const Regex uri := Regex("^[a-zA-Z][a-zA-Z0-9.+-]{1,31}:[^<> - ]*\$")
 

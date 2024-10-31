@@ -12,7 +12,7 @@
 ** to the block's children.
 **
 @Js
-class BackslashInlineParser : InlineContentParser
+internal class BackslashInlineParser : InlineContentParser
 {
   private static const Regex escapable := Regex("^${Esc.escapable}")
 
