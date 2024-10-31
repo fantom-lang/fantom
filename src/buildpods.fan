@@ -27,6 +27,7 @@ class Build : BuildGroup
       `compilerJs/build.fan`,
       `compilerEs/build.fan`,
       `fandoc/build.fan`,
+      `markdown/build.fan`,
       `concurrent/build.fan`,
       `util/build.fan`,
       `nodeJs/build.fan`,

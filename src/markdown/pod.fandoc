@@ -1,0 +1,94 @@
+**************************************************************************
+** title:      Markdown
+** author:     Matthew Giannini
+** created:    31 Oct 2024 🎃
+** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fantom library for parsing and rendering [Markdown]`https://daringfireball.net/projects/markdown/`
+text according to the [CommonMark]`https://commonmark.org/` specification.
+
+Usage [#usage]
+**************
+pre>
+using markdown
+
+parser := Parser()
+doc := parser.parse("This is *Markdown*")
+renderer := HtmlRenderer()
+html := renderer.render(doc) // => "<p>This is <em>Markdown</em></p>\n"
+<pre
+
+This uses the parser and renderer with default options. Both have builders for
+configuring their behavior. See `ParserBuilder` and `HtmlRendererBuilder` for more
+details.
+
+**Use a visitor to process parsed nodes**
+
+After the source text has been parsed, the result is a tree of nodes. That tree
+can be modified before rendering, or just inspected without rendering. See `Visitor`
+and the [HTML rendering example]`#html` below.
+
+HTML Rendering [#html]
+**********************
+You can take complete control over how HTML is rendered.
+
+In this example, we're changing the rendering of indented code blocks to only wrap
+them in 'pre' instead of 'pre' and 'code':
+
+pre>
+parser := Parser()
+renderer := HtmlRenderer.builder
+  .nodeRendererFactory(|HtmlContext cx->NodeRenderer| { IndentedCodeBlockRendere(cx) })
+  .build
+html := renderer.render(parser.parse("Example:\n\n    code"))
+// "<p>Example:</p><pre>code</pre>\n"
+
+class IndentedCodeBlockRenderer : NodeRenderer, Visitor
+{
+  new make(HtmlContext cx) { this.html = cx.writer }
+  private HtmlWriter html
+
+  ** We only want to override rendering of the Code node type
+  override const Type nodeTypes := [Code#]
+
+  override Void render(Node node) { node.walk(this) }
+
+  override Void visitIndentedCode(IndentedCode code)
+  {
+    html.line
+      .tag("pre")
+      .text(code.literal)
+      .tag("/pre")
+      .line
+  }
+}
+<pre
+
+**Add your own node types**
+
+In case you want to store additional data in the document, or have custom elements
+in the resulting HTML, you can create your own subclass of `CustomNode` or `CustomBlock`
+and add instances as child nodes to existing nodes.
+
+To define the HTML rendering for them, you can use a `NodeRenderer` as explained above.
+
+**Customize parsing**
+
+There are a few ways to extend parsing or even override built-in parsing, all of them
+via methods on `Parser.builder`. See Section 3 (Blocks and Inlines) of the spec
+for an overview of blocks/inlines.
+
+- Parsing of specific block types (e.g. headings, code blocks, etc.) can be
+  enabled/disabled with 'withEnabledBlockTypes'
+- Parsing of blocks can be extended/overridden with 'customBlockParserFactory'
+- Parsing of inline content can be extended/overridden with 'customInlineContentParserFactory'
+- Processing of links can be customized with 'linkProcessor' and 'linkMarker'
+
+**Thread-safety**
+
+Both the `Parser` and the `HtmlRenderer` are designed so that you can configure them
+once and then use them multiple times/from multiple Actors.

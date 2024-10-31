@@ -25,6 +25,7 @@ obj/Release/
 /src/domkit/res/css/
 
 # etc
+/etc/markdown/tests/
 /etc/sys/types.db
 /etc/yaml/tests/
 
