@@ -34,6 +34,7 @@ const class Parser
         builder.enabledBlockTypes)
     this.inlineContentParserFactories = builder.inlineContentParserFactories
     this.includeSourceSpans = builder.includeSourceSpans
+    this.delimiterProcessors = builder.delimiterProcessors
     this.linkProcessors = builder.linkProcessors
     this.linkMarkers = builder.linkMarkers
 
@@ -46,6 +47,7 @@ const class Parser
   internal const BlockParserFactory[] blockParserFactories
   internal const InlineContentParserFactory[] inlineContentParserFactories
   internal const IncludeSourceSpans includeSourceSpans
+  internal const DelimiterProcessor[] delimiterProcessors
   internal const LinkProcessor[] linkProcessors
   internal const Int[] linkMarkers
 
@@ -100,6 +102,7 @@ final class ParserBuilder
   internal BlockParserFactory[] blockParserFactories := [,]
   internal InlineContentParserFactory[] inlineContentParserFactories := [,]
   internal Type[] enabledBlockTypes := DocumentParser.core_block_types
+  internal DelimiterProcessor[] delimiterProcessors := [,]
   internal LinkProcessor[] linkProcessors := [,]
   internal Int[] linkMarkers := [,]
 
@@ -161,6 +164,12 @@ final class ParserBuilder
     return this
   }
 
+  This customDelimiterProcessor(DelimiterProcessor delimiterProcessor)
+  {
+    delimiterProcessors.add(delimiterProcessor)
+    return this
+  }
+
   ** Add a custom link/image processor for inline parsing.
   **
   ** Multiple link processors can be added, and will be tried in the order in which they
@@ -182,6 +191,13 @@ final class ParserBuilder
   This linkMarker(Int marker)
   {
     linkMarkers = linkMarkers.add(marker).unique
+    return this
+  }
+
+  ** Configure the given extensions on this parser.
+  This extensions(MarkdownExt[] exts)
+  {
+    exts.each |ext| { ext.extendParser(this) }
     return this
   }
 }

@@ -21,7 +21,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
   {
     this.cx = cx
     this.inlineContentParserFactories = calculateInlineContentParserFactories
-    this.delimProcessors = calculateDelimProcessors
+    this.delimProcessors = calculateDelimProcessors(cx.customDelimiterProcessors)
     this.linkProcessors = calculateLinkProcessors(cx.customLinkProcessors)
     this.linkMarkers = calculateLinkMarkers(cx.customLinkMarkers)
     this.specialChars = calculateSpecialChars(linkMarkers, delimProcessors.keys, inlineContentParserFactories)
@@ -75,11 +75,11 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
     return acc
   }
 
-  private static [Int:DelimiterProcessor] calculateDelimProcessors()
+  private static [Int:DelimiterProcessor] calculateDelimProcessors(DelimiterProcessor[] custom)
   {
     acc := [Int:DelimiterProcessor][:]
     addDelimProcessor([AsteriskDelimiterProcessor(), UnderscoreDelimiterProcessor()], acc)
-    // TODO: custom processors
+    addDelimProcessor(custom, acc)
     return acc
   }
 

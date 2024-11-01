@@ -13,7 +13,7 @@
 ** may be used by multiple parsers.
 **
 @Js
-mixin DelimiterProcessor
+const mixin DelimiterProcessor
 {
   ** The character that marks the beginning of a delimited node, must not clash
   ** with any built-in special characters.
@@ -48,7 +48,7 @@ mixin DelimiterProcessor
 **************************************************************************
 
 @Js
-@NoDoc abstract class EmphasisDelimiterProcessor : DelimiterProcessor
+@NoDoc abstract const class EmphasisDelimiterProcessor : DelimiterProcessor
 {
   protected new make(Int delimChar)
   {
@@ -109,7 +109,7 @@ mixin DelimiterProcessor
 **************************************************************************
 
 @Js
-internal class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
+internal const class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
 {
   new make() : super('*') { }
 }
@@ -119,7 +119,7 @@ internal class AsteriskDelimiterProcessor : EmphasisDelimiterProcessor
 **************************************************************************
 
 @Js
-internal class UnderscoreDelimiterProcessor : EmphasisDelimiterProcessor
+internal const class UnderscoreDelimiterProcessor : EmphasisDelimiterProcessor
 {
   new make() :super('_') { }
 }

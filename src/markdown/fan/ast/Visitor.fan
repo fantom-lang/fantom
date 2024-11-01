@@ -16,6 +16,7 @@ mixin Visitor
   virtual Void visitBulletList(BulletList node) { visitChildren(node) }
   virtual Void visitCode(Code node) { visitChildren(node) }
   virtual Void visitCustomBlock(CustomBlock node) { visitChildren(node) }
+  virtual Void visitCustomNode(CustomNode node) { visitChildren(node) }
   virtual Void visitDocument(Document node) { visitChildren(node) }
   virtual Void visitEmphasis(Emphasis node) { visitChildren(node) }
   virtual Void visitFencedCode(FencedCode node) { visitChildren(node) }

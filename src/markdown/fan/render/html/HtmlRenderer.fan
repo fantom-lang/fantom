@@ -143,4 +143,11 @@ final class HtmlRendererBuilder
     return this
   }
 
+  ** Configure the given extensions on this this renderer
+  This extensions(MarkdownExt[] exts)
+  {
+    exts.each |ext| { ext.extendRenderer(this) }
+    return this
+  }
+
 }

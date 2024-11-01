@@ -29,6 +29,8 @@ class Build : BuildPod
               ]
     srcDirs = [`fan/`,
                `fan/ast/`,
+               `fan/ext/`,
+               `fan/ext/fandoc/`,
                `fan/parser/`,
                `fan/parser/block/`,
                `fan/parser/inline/`,
@@ -36,6 +38,7 @@ class Build : BuildPod
                `fan/render/html/`,
                `fan/util/`,
                `test/`,
+               `test/ext/`,
               ]
     docSrc  = true
   }
@@ -52,6 +55,10 @@ class Build : BuildPod
   {
     html5    := scriptDir + `fan/util/Html5.fan`
     entities := scriptDir + `res/entities.txt`
+
+    // short-circuit if the entities file is older than the generated html5 file
+    if (html5.modified != null && entities.modified != null &&
+        html5.modified > entities.modified) { return }
 
     src := html5.readAllStr
     out := html5.out

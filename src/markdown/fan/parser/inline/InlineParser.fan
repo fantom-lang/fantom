@@ -26,12 +26,14 @@ class InlineParserContext
   internal new make(Parser parser, Definitions defs)
   {
     this.factories = parser.inlineContentParserFactories
+    this.customDelimiterProcessors = parser.delimiterProcessors
     this.customLinkProcessors = parser.linkProcessors
     this.customLinkMarkers = parser.linkMarkers
     this.definitions = defs
   }
 
   const InlineContentParserFactory[] factories
+  const DelimiterProcessor[] customDelimiterProcessors
   const LinkProcessor[] customLinkProcessors
   const Int[] customLinkMarkers
   internal Definitions definitions
