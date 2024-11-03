@@ -9,17 +9,20 @@
 @Js
 class FandocExtTest : RenderingTest
 {
-  override protected Str render(Str source)
-  {
-    fandoc := FandocExt()
-    parser := Parser.builder.extensions([fandoc]).build
-    renderer := HtmlRenderer.builder.extensions([fandoc]).build
-    return renderer.render(parser.parse(source))
-  }
+  private static const MarkdownExt[] exts := [FandocExt()]
+  private static const Parser parser := Parser.builder.extensions(exts).build
+  private static const HtmlRenderer renderer := HtmlRenderer.builder.extensions(exts).build
 
   Void testFanCode()
   {
     verifyEq(render("'code'"), "<p><code>code</code></p>\n")
     verifyEq(render("this is 'fandoc' code"), "<p>this is <code>fandoc</code> code</p>\n")
+    verifyEq(render("not 'fandoc code"), "<p>not 'fandoc code</p>\n")
+    verifyEq(render("empty '' code"), "<p>empty <code></code> code</p>\n")
+  }
+
+  override protected Str render(Str source)
+  {
+    renderer.render(parser.parse(source))
   }
 }

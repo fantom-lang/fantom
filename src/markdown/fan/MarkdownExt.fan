@@ -14,7 +14,7 @@
 ** registered using the methods on the various builders.
 **
 @Js
-mixin MarkdownExt
+const mixin MarkdownExt
 {
   ** Callback to extend the parser. Default implementation does nothing.
   virtual Void extendParser(ParserBuilder builder) { }

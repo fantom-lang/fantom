@@ -92,3 +92,55 @@ for an overview of blocks/inlines.
 
 Both the `Parser` and the `HtmlRenderer` are designed so that you can configure them
 once and then use them multiple times/from multiple Actors.
+
+Extensions [#exts]
+******************
+Extensions are used to extend the parser, the HTML renderer, or both. Extensions
+are configured on the various builders using the 'extensions()' method. The default
+parser and HTML renderer conform to the CommonMark specification. This library includes
+some built-in extensions that you can optionally enable.
+
+For example, the following code enables the `ImgAttrsExt` which allows you to specify
+attributes for images.
+pre>
+using markdown
+
+exts := [ImgAttrsExt()]
+parser := Parser.builder.extensions(exts).build
+renderer := HtmlRenderer.builder.extensions(exts).build
+<pre
+
+**Image Attributes**
+
+Adds support for specifying attributes (specifically height and width) for images. Use
+`ImgAttrsExt` to enable this extension.
+
+The attribute elements are given as 'key=value' pairs inside curly braces '{ }' after
+the image node to which they apply. For example:
+
+pre>
+![text](/url.png){width=640 height=480}
+<pre
+
+will be rendered as
+
+pre>
+<img src="/url.png" alt="text" width="640" height="480" />
+<pre
+
+**Fandoc Syntax**
+
+Adds support for a subset of Fandoc syntax. Currently, only single-quote inline
+code syntax is supported. Use `FandocExt` to enable this extension.
+
+For example:
+
+pre>
+This is a 'fandoc code' snippet
+<pre
+
+will be rendered as
+
+pre>
+<p>This is a <code>fandoc code</code> snippet</p>
+<pre

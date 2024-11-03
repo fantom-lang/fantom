@@ -55,10 +55,16 @@ abstract class Node
   ** to call 'visitor.visit${this.typeof.name}'
   virtual Void walk(Visitor visitor)
   {
+    // This allows visitor sub-classes to have custom 'visit<CustomBlockorNode>()' methods
     method := visitor.typeof.method("visit${this.typeof.name}", false)
-    if (method == null) throw ArgErr("no visit method found for ${this.typeof}")
-    method.callOn(visitor, [this])
-    return visitor
+    if (method != null) method.callOn(visitor, [this])
+    else
+    {
+      // otherwise default back to calling generic visitors for custom nodes
+      if (this is CustomNode) visitor.visitCustomNode(this)
+      else if (this is CustomBlock) visitor.visitCustomBlock(this)
+      else throw ArgErr("no visit method found for ${this.typeof}")
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -185,6 +191,18 @@ abstract class Node
       node = next
     }
     return null
+  }
+
+  @NoDoc static Void eachChild(Node parent, |Node| f)
+  {
+    node := parent.firstChild
+    while (node != null)
+    {
+      saveNext := node.next
+      f(node)
+      eachChild(node, f)
+      node = saveNext
+    }
   }
 
   ** Dump the node tree to given output stream

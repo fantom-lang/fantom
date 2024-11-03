@@ -113,7 +113,7 @@
   override Void visitOrderedList(OrderedList list)
   {
     start := list.startNumber ?: 1
-    attrs := [Str:Str?][:] { ordered = true }
+    attrs := newAttrs
     if (start != 1) attrs["start"] = "${start}"
     renderListBlock(list, "ol", this.attrs(list, "ol", attrs))
   }
@@ -130,7 +130,7 @@
   {
     literal := code.literal
     info := code.info
-    attrs := [Str:Str?][:]
+    attrs := newAttrs
     if (info != null && !info.isEmpty)
     {
       sp := info.index(" ")
@@ -169,7 +169,7 @@
 
   override Void visitLink(Link link)
   {
-    attrs := [Str:Str?][:] { ordered = true }
+    attrs := newAttrs
     url := link.destination
 
     if (cx.sanitizeUrls)
@@ -194,7 +194,7 @@
     image.walk(atv)
     altText := atv.altText
 
-    attrs := [Str:Str?][:] { ordered = true }
+    attrs := newAttrs
     if (cx.sanitizeUrls)
     {
       throw Err("TODO: sanitizeUrls")
@@ -264,7 +264,7 @@
     }
   }
 
-  private Void renderCodeBlock(Str literal, Node node, [Str:Str?]? attrs)
+  private Void renderCodeBlock(Str literal, Node node, [Str:Str] attrs)
   {
     html.line
       .tag("pre", this.attrs(node, "pre"))
@@ -301,11 +301,12 @@
     return false
   }
 
-  [Str:Str?]? attrs(Node node, Str tagName, [Str:Str?]? defAttrs := null)
+  [Str:Str] attrs(Node node, Str tagName, [Str:Str] defAttrs := newAttrs)
   {
-    // TODO: extendable attributes
-    defAttrs
+    cx.extendAttrs(node, tagName, defAttrs)
   }
+
+  protected [Str:Str] newAttrs() { [Str:Str][:] { ordered = true } }
 }
 
 **************************************************************************

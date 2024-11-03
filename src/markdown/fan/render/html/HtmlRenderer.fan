@@ -30,6 +30,7 @@ const class HtmlRenderer : Renderer
     this.percentEncodeUrls = builder.percentEncodeUrls
     this.omitSingleParagraphP = builder.omitSingleParagraphP
     this.sanitizeUrls = builder.sanitizeUrls
+    this.attrProviderFactories = builder.attrProviderFactories
 
     factories := builder.nodeRendererFactories.dup
     factories.add(|cx->NodeRenderer| { CoreHtmlNodeRenderer(cx) })
@@ -42,6 +43,7 @@ const class HtmlRenderer : Renderer
   internal const Bool omitSingleParagraphP
   internal const Bool sanitizeUrls
   internal const |HtmlContext->NodeRenderer|[] nodeRendererFactories
+  internal const |HtmlContext->AttrProvider|[] attrProviderFactories
   internal const UrlSanitizer urlSanitizer := DefaultUrlSanitizer()
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,6 +72,7 @@ final class HtmlRendererBuilder
   internal new make() { }
 
   internal |HtmlContext->NodeRenderer|[] nodeRendererFactories := [,]
+  internal |HtmlContext->AttrProvider|[] attrProviderFactories := [,]
   internal Str softbreak := "\n"
   internal Bool escapeHtml := false
   internal Bool percentEncodeUrls := false
@@ -140,6 +143,14 @@ final class HtmlRendererBuilder
   This nodeRendererFactory(|HtmlContext->NodeRenderer| factory)
   {
     nodeRendererFactories.add(factory)
+    return this
+  }
+
+  ** Add a factory for an attribute provider for adding/changing HTML attributes to the
+  ** rendered tags.
+  This attrProviderFactory(|HtmlContext->AttrProvider| factory)
+  {
+    attrProviderFactories.add(factory)
     return this
   }
 

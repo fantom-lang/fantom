@@ -31,6 +31,7 @@ class Build : BuildPod
                `fan/ast/`,
                `fan/ext/`,
                `fan/ext/fandoc/`,
+               `fan/ext/image-attributes/`,
                `fan/parser/`,
                `fan/parser/block/`,
                `fan/parser/inline/`,
