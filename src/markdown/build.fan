@@ -31,6 +31,7 @@ class Build : BuildPod
                `fan/ast/`,
                `fan/ext/`,
                `fan/ext/fandoc/`,
+               `fan/ext/gfm-tables/`,
                `fan/ext/image-attributes/`,
                `fan/parser/`,
                `fan/parser/block/`,

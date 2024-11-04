@@ -118,7 +118,7 @@ internal const class ImgAttrsDelimiterProcessor : DelimiterProcessor
 @Js
 internal class ImgAttrsAttrProvider : AttrProvider
 {
-  override Void setAttrs(Node node, Str tagName, [Str:Str] attrs)
+  override Void setAttrs(Node node, Str tagName, [Str:Str?] attrs)
   {
     if (node is Image)
     {

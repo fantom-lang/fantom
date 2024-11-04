@@ -68,7 +68,7 @@ internal final class Chars
   ** Skip spaces and tabs in 's' between startIndex (inclusive) and
   ** endIndex (exclusive). Return the index of the first non-space-or-tab, or
   ** endIndex if reached.
-  static Int skipSpaceTab(Str s, Int startIndex, Int endIndex)
+  static Int skipSpaceTab(Str s, Int startIndex := 0, Int endIndex := s.size)
   {
     for (i := startIndex; i < endIndex; ++i)
     {

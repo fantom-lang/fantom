@@ -128,19 +128,13 @@ pre>
 <img src="/url.png" alt="text" width="640" height="480" />
 <pre
 
-**Fandoc Syntax**
+**Tables**
 
-Adds support for a subset of Fandoc syntax. Currently, only single-quote inline
-code syntax is supported. Use `FandocExt` to enable this extension.
-
-For example:
+Enables tables using pipes as in [Github Flavored Markdown]`https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables`.
+See `TablesExt`.
 
 pre>
-This is a 'fandoc code' snippet
-<pre
-
-will be rendered as
-
-pre>
-<p>This is a <code>fandoc code</code> snippet</p>
+| Header1 | Header2 |
+| ------- | ------- |
+| foo     | bar     |
 <pre

@@ -52,9 +52,10 @@ class HtmlContext
 
   UrlSanitizer urlSanitizer() { renderer.urlSanitizer }
 
-  [Str:Str] extendAttrs(Node node, Str tagName, [Str:Str] attrs)
+  [Str:Str?] extendAttrs(Node node, Str tagName, [Str:Str?] attrs := [:])
   {
-    attrs = [Str:Str][:] { ordered = true }.addAll(attrs)
+    // ensure attributes are ordered from this point forward
+    attrs = [Str:Str?][:] { ordered = true }.addAll(attrs)
     attrProviders.each |provider| { provider.setAttrs(node, tagName, attrs) }
     return attrs
   }
@@ -100,5 +101,5 @@ mixin AttrProvider
   **
   ** This method may be called multiple times for the same node, if the node is rendered
   ** using multiple nested tags (e.g. code blocks)
-  abstract Void setAttrs(Node node, Str tagName, [Str:Str] attrs)
+  abstract Void setAttrs(Node node, Str tagName, [Str:Str?] attrs)
 }

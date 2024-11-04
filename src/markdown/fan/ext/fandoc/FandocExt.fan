@@ -10,7 +10,7 @@
 ** Extension to enable certain features of Fandoc in markdown, e.g. ('code')
 **
 @Js
-const class FandocExt : MarkdownExt
+@NoDoc const class FandocExt : MarkdownExt
 {
   override Void extendParser(ParserBuilder builder)
   {

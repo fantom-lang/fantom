@@ -132,9 +132,10 @@ abstract class Node
     if (sibling.prev == null) sibling.parent.firstChild = sibling
   }
 
-  ** Add a source span to the end of the list
-  Void addSourceSpan(SourceSpan sourceSpan)
+  ** Add a source span to the end of the list. If it is null, this is a no-op
+  Void addSourceSpan(SourceSpan? sourceSpan)
   {
+    if (sourceSpan == null) return
     if (sourceSpans == null) sourceSpans = SourceSpan[,]
     sourceSpans.add(sourceSpan)
   }
