@@ -37,6 +37,7 @@ const class Parser
     this.delimiterProcessors = builder.delimiterProcessors
     this.linkProcessors = builder.linkProcessors
     this.linkMarkers = builder.linkMarkers
+    this.postProcessorFactories = builder.postProcessorFactories
 
     // try to make an inline parser. invalid configuration might result in
     // an error, which we want to detect as soon as possible
@@ -50,6 +51,7 @@ const class Parser
   internal const DelimiterProcessor[] delimiterProcessors
   internal const LinkProcessor[] linkProcessors
   internal const Int[] linkMarkers
+  internal const |->PostProcessor|[] postProcessorFactories
 
 //////////////////////////////////////////////////////////////////////////
 // Parse
@@ -78,7 +80,7 @@ const class Parser
 
   private Node postProcess(Node doc)
   {
-    // TODO:FIXIT - add support for post-processing hooks
+    postProcessorFactories.each |factory| { doc = factory().process(doc) }
     return doc
   }
 }
@@ -105,6 +107,7 @@ final class ParserBuilder
   internal DelimiterProcessor[] delimiterProcessors := [,]
   internal LinkProcessor[] linkProcessors := [,]
   internal Int[] linkMarkers := [,]
+  internal |->PostProcessor|[] postProcessorFactories := [,]
 
   ** Describe the list of markdown features the parser will recognize and parse.
   **
@@ -154,6 +157,12 @@ final class ParserBuilder
   This customInlineContentParserFactory(InlineContentParserFactory factory)
   {
     inlineContentParserFactories.add(factory)
+    return this
+  }
+
+  This postProcessorFactory(|->PostProcessor| factory)
+  {
+    postProcessorFactories.add(factory)
     return this
   }
 

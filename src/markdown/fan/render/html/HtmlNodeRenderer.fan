@@ -169,9 +169,6 @@
 
   override Void visitLink(Link link)
   {
-    // resolve link
-    cx.resolveLink(link)
-
     // if link is code wrap it in <code> tag
     if (link.isCode) html.tag("code")
 
@@ -197,9 +194,6 @@
 
   override Void visitImage(Image image)
   {
-    // resolve link
-    cx.resolveLink(image)
-
     url := image.destination
 
     atv := AltTextVisitor()

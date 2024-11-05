@@ -18,24 +18,6 @@
       .customInlineContentParserFactory(TicksInlineParser.factory)
       .customInlineContentParserFactory(BackticksLinkParser.factory)
   }
-
-  override Void extendRenderer(HtmlRendererBuilder builder)
-  {
-    builder
-      .nodeRendererFactory |HtmlContext cx->NodeRenderer| { TicksCodeRenderer(cx) }
-  }
-}
-
-**************************************************************************
-** TickCode
-**************************************************************************
-
-** Inline code using single-quote (tick) delimiters, e.g. 'this is code'
-@Js
-internal class TicksCode : CustomNode
-{
-  new make(Str literal) { this.literal = literal }
-  const Str literal
 }
 
 **************************************************************************
@@ -56,30 +38,6 @@ internal const class TicksInlineParserFactory : InlineContentParserFactory
   override const Int[] triggerChars := ['\'']
 
   override InlineContentParser create() { TicksInlineParser() }
-}
-
-**************************************************************************
-** TicksCodeRenderer
-**************************************************************************
-
-@Js
-internal class TicksCodeRenderer : NodeRenderer, Visitor
-{
-  new make(HtmlContext cx)
-  {
-    this.html = cx.writer
-  }
-
-  private HtmlWriter html
-
-  override const Type[] nodeTypes := [TicksCode#]
-
-  override Void render(Node node) { node.walk(this) }
-
-  virtual Void visitTicksCode(TicksCode code)
-  {
-    html.tag("code").text(code.literal).tag("/code")
-  }
 }
 
 **************************************************************************
