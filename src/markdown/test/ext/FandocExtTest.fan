@@ -23,6 +23,12 @@ class FandocExtTest : RenderingTest
     verifyEq(render("empty '' code is not code"), "<p>empty '' code is not code</p>\n")
 
     verifyEq(render("finally ''this 'is' possible''"),"<p>finally <code>this 'is' possible</code></p>\n")
+
+    // doc := parser.parse("``` fantom\nis this fenced code\n```")
+    doc := parser.parse("```is this fenced code```")
+    Node.dumpTree(doc)
+    echo("===")
+    echo(renderer.render(doc))
   }
 
   Void testBacktickLinks()
@@ -31,7 +37,6 @@ class FandocExtTest : RenderingTest
     Node.dumpTree(doc)
     echo("===")
     echo(renderer.render(doc))
-
   }
 
   override protected Str render(Str source)

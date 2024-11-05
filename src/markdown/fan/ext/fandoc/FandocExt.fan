@@ -87,16 +87,17 @@ internal class TicksCodeRenderer : NodeRenderer, Visitor
 **************************************************************************
 
 **
-** Parses `url` as a link as though it had been specified using
-** the equivalent common markdown: '[url](/url)'
+** Parses '`url`' as a link as though it had been specified using
+** the equivalent common markdown: '[url](/url)'. Note - only single-backticks
+** will be parsed as links, e.g. '``not a link``'
 **
 @Js
 internal class BackticksLinkParser : InlineContentParser
 {
   override ParsedInline? tryParse(InlineParserState state)
   {
-    // parse with normal backticks semantics
-    res := BackticksInlineParser().tryParse(state)
+    // parse with normal backticks semantics (only support single opener/closer sequence)
+    res := BackticksInlineParser().withMaxMarkers(1).tryParse(state)
     if (res == null) return res
 
     // convert to a Link

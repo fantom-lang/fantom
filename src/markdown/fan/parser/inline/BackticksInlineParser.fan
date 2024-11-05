@@ -19,19 +19,23 @@
   }
 
   protected const Int markerChar
+  private Int maxMarkers := Int.maxVal
+  This withMaxMarkers(Int max) { this.maxMarkers = 1.max(max); return this }
 
   override ParsedInline? tryParse(InlineParserState state)
   {
     scanner := state.scanner
     start := scanner.pos
-    openingTicks := scanner.matchMultiple(markerChar)
+    openingMarkers := scanner.matchMultiple(markerChar)
     afterOpening := scanner.pos
+
+    if (openingMarkers > this.maxMarkers) return ParsedInline.none
 
     while (scanner.find(markerChar) > 0)
     {
       beforeClosing := scanner.pos
       count := scanner.matchMultiple(markerChar)
-      if (count == openingTicks)
+      if (count == openingMarkers)
       {
         content := scanner.source(afterOpening, beforeClosing).content
         content = content.replace("\n", " ")
