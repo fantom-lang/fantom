@@ -43,23 +43,9 @@ internal class TicksCode : CustomNode
 **************************************************************************
 
 @Js
-internal class TicksInlineParser : InlineContentParser
+internal class TicksInlineParser : InlineCodeParser
 {
-  override ParsedInline? tryParse(InlineParserState state)
-  {
-    scanner := state.scanner
-    // consume opening "'"
-    scanner.next
-
-    // consume code literal
-    pos := scanner.pos
-    if (scanner.find('\'') == -1) return ParsedInline.none
-    content := scanner.source(pos, scanner.pos).content
-
-    // consume closing "'"
-    scanner.next
-    return ParsedInline.of(TicksCode(content), scanner.pos)
-  }
+  new make() : super('\'') { }
 
   static const InlineContentParserFactory factory := TicksInlineParserFactory()
 }
@@ -97,9 +83,13 @@ internal class TicksCodeRenderer : NodeRenderer, Visitor
 }
 
 **************************************************************************
-**
+** BackticksLinkParser
 **************************************************************************
 
+**
+** Parses `url` as a link as though it had been specified using
+** the equivalent common markdown: '[url](/url)'
+**
 @Js
 internal class BackticksLinkParser : InlineContentParser
 {

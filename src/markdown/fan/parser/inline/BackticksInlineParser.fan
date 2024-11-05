@@ -7,23 +7,30 @@
 //
 
 **
-** Attempt to parse backticks, returning either a backtick code span, or a
-** literal sequence of backticks
+** Configurable inline code parser base class. Parses a 'marker' code span, or
+** a literal sequence of 'marker' characters
 **
 @Js
-internal class BackticksInlineParser : InlineContentParser
+@NoDoc abstract class InlineCodeParser : InlineContentParser
 {
+  new make(Int markerChar)
+  {
+    this.markerChar = markerChar
+  }
+
+  protected const Int markerChar
+
   override ParsedInline? tryParse(InlineParserState state)
   {
     scanner := state.scanner
     start := scanner.pos
-    openingTicks := scanner.matchMultiple('`')
+    openingTicks := scanner.matchMultiple(markerChar)
     afterOpening := scanner.pos
 
-    while (scanner.find('`') > 0)
+    while (scanner.find(markerChar) > 0)
     {
       beforeClosing := scanner.pos
-      count := scanner.matchMultiple('`')
+      count := scanner.matchMultiple(markerChar)
       if (count == openingTicks)
       {
         content := scanner.source(afterOpening, beforeClosing).content
@@ -42,12 +49,25 @@ internal class BackticksInlineParser : InlineContentParser
       }
     }
 
-    // if we got here, we didn't find a matching closing backtick sequence.
+    // if we got here, we didn't find a matching closing markerChar sequence.
     source := scanner.source(start, afterOpening)
     text := Text(source.content)
     return ParsedInline.of(text, afterOpening)
   }
+}
 
+**************************************************************************
+** BackticksInlineParser
+**************************************************************************
+
+**
+** Attempt to parse backticks, returning either a backtick code span, or a
+** literal sequence of backticks.
+**
+@Js
+internal class BackticksInlineParser : InlineCodeParser
+{
+  new make() : super('`') { }
   static const InlineContentParserFactory factory := BackticksInlineParserFactory()
 }
 
