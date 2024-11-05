@@ -52,6 +52,8 @@ class HtmlContext
 
   UrlSanitizer urlSanitizer() { renderer.urlSanitizer }
 
+  @NoDoc Void resolveLink(LinkNode node) { renderer.linkResolver.resolve(node) }
+
   [Str:Str?] extendAttrs(Node node, Str tagName, [Str:Str?] attrs := [:])
   {
     // ensure attributes are ordered from this point forward

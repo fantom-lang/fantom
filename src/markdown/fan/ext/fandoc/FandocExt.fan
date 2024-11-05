@@ -14,33 +14,36 @@
 {
   override Void extendParser(ParserBuilder builder)
   {
-    builder.customInlineContentParserFactory(SingleQuoteInlineParser.factory)
+    builder
+      .customInlineContentParserFactory(TicksInlineParser.factory)
+      .customInlineContentParserFactory(BackticksLinkParser.factory)
   }
 
   override Void extendRenderer(HtmlRendererBuilder builder)
   {
-    builder.nodeRendererFactory |HtmlContext cx->NodeRenderer| { FandocRenderer(cx) }
+    builder
+      .nodeRendererFactory |HtmlContext cx->NodeRenderer| { TicksCodeRenderer(cx) }
   }
 }
 
 **************************************************************************
-** FanCode
+** TickCode
 **************************************************************************
 
-** Fandoc inline code block, e.g. ('this is code')
+** Inline code using single-quote (tick) delimiters, e.g. 'this is code'
 @Js
-internal class FanCode : CustomNode
+internal class TicksCode : CustomNode
 {
   new make(Str literal) { this.literal = literal }
   const Str literal
 }
 
 **************************************************************************
-** SingleQuoteInlineParser
+** TickInlineParser
 **************************************************************************
 
 @Js
-internal class SingleQuoteInlineParser : InlineContentParser
+internal class TicksInlineParser : InlineContentParser
 {
   override ParsedInline? tryParse(InlineParserState state)
   {
@@ -55,30 +58,26 @@ internal class SingleQuoteInlineParser : InlineContentParser
 
     // consume closing "'"
     scanner.next
-    return ParsedInline.of(FanCode(content), scanner.pos)
+    return ParsedInline.of(TicksCode(content), scanner.pos)
   }
 
-  static const InlineContentParserFactory factory := SingleQuoteInlineParserFactory()
+  static const InlineContentParserFactory factory := TicksInlineParserFactory()
 }
 
-**************************************************************************
-** SingleQuoteInlineParserFactory
-**************************************************************************
-
 @Js
-internal const class SingleQuoteInlineParserFactory : InlineContentParserFactory
+internal const class TicksInlineParserFactory : InlineContentParserFactory
 {
   override const Int[] triggerChars := ['\'']
 
-  override InlineContentParser create() { SingleQuoteInlineParser() }
+  override InlineContentParser create() { TicksInlineParser() }
 }
 
 **************************************************************************
-** FandocRenderer
+** TicksCodeRenderer
 **************************************************************************
 
 @Js
-internal class FandocRenderer : NodeRenderer, Visitor
+internal class TicksCodeRenderer : NodeRenderer, Visitor
 {
   new make(HtmlContext cx)
   {
@@ -87,19 +86,42 @@ internal class FandocRenderer : NodeRenderer, Visitor
 
   private HtmlWriter html
 
-  override const Type[] nodeTypes := [FanCode#]
+  override const Type[] nodeTypes := [TicksCode#]
 
   override Void render(Node node) { node.walk(this) }
 
-  override Void visitCustomNode(CustomNode node)
-  {
-    if (node is FanCode) visitFanCode(node)
-    else throw ArgErr("Unexpected custom node: ${node.typeof}")
-  }
-
-  private Void visitFanCode(FanCode code)
+  virtual Void visitTicksCode(TicksCode code)
   {
     html.tag("code").text(code.literal).tag("/code")
   }
+}
 
+**************************************************************************
+**
+**************************************************************************
+
+@Js
+internal class BackticksLinkParser : InlineContentParser
+{
+  override ParsedInline? tryParse(InlineParserState state)
+  {
+    // parse with normal backticks semantics
+    res := BackticksInlineParser().tryParse(state)
+    if (res == null) return res
+
+    // convert to a Link
+    Code code := res.node
+    link := Link(code.literal).appendChild(Text(code.literal))
+    return ParsedInline.of(link, res.pos)
+  }
+
+  static const InlineContentParserFactory factory := BackticksLinkParserFactory()
+}
+
+@Js
+internal const class BackticksLinkParserFactory : InlineContentParserFactory
+{
+  override const Int[] triggerChars := ['`']
+
+  override InlineContentParser create() { BackticksLinkParser() }
 }

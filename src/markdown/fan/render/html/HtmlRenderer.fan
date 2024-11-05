@@ -31,6 +31,7 @@ const class HtmlRenderer : Renderer
     this.omitSingleParagraphP = builder.omitSingleParagraphP
     this.sanitizeUrls = builder.sanitizeUrls
     this.attrProviderFactories = builder.attrProviderFactories
+    this.linkResolver = builder.linkResolver
 
     factories := builder.nodeRendererFactories.dup
     factories.add(|cx->NodeRenderer| { CoreHtmlNodeRenderer(cx) })
@@ -44,6 +45,7 @@ const class HtmlRenderer : Renderer
   internal const Bool sanitizeUrls
   internal const |HtmlContext->NodeRenderer|[] nodeRendererFactories
   internal const |HtmlContext->AttrProvider|[] attrProviderFactories
+  internal const LinkResolver linkResolver
   internal const UrlSanitizer urlSanitizer := DefaultUrlSanitizer()
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,7 @@ final class HtmlRendererBuilder
 
   internal |HtmlContext->NodeRenderer|[] nodeRendererFactories := [,]
   internal |HtmlContext->AttrProvider|[] attrProviderFactories := [,]
+  internal LinkResolver linkResolver := LinkResolver()
   internal Str softbreak := "\n"
   internal Bool escapeHtml := false
   internal Bool percentEncodeUrls := false
@@ -151,6 +154,14 @@ final class HtmlRendererBuilder
   This attrProviderFactory(|HtmlContext->AttrProvider| factory)
   {
     attrProviderFactories.add(factory)
+    return this
+  }
+
+  ** Configure the link resolver to use during rendering. The default link
+  ** resolver makes no changes to the parsed link nodes.
+  @NoDoc This withLinkResolver(LinkResolver linkResolver)
+  {
+    this.linkResolver = linkResolver
     return this
   }
 

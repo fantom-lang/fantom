@@ -7,6 +7,34 @@
 //
 
 **
+** Base class for `Link` and `Image` nodes
+**
+@Js
+abstract class LinkNode : Node
+{
+  new make(Str destination, Str? title := null)
+  {
+    this.destination = destination
+    this.title = title
+  }
+
+  Str destination
+  Str? title
+  @NoDoc Bool isCode := false
+
+  ** Replace the display text for this link
+  @NoDoc Void setText(Str text) { setContent(Text(text)) }
+  ** Replace the display content with the given node
+  @NoDoc Void setContent(Node content)
+  {
+    Node.children(this).each |child| { child.unlink }
+    appendChild(content)
+  }
+
+  override protected Str toStrAttributes() { "dest=${destination}, title=${title}" }
+}
+
+**
 ** A link with a destination and an optional title; the link text is in child nodes
 **
 ** Example for an inline link in a CommonMark document
@@ -19,18 +47,11 @@
 ** contain an image or emphasis, etc.
 **
 @Js
-class Link : Node
+class Link : LinkNode
 {
-  new make(Str destination, Str? title := null)
+  new make(Str destination, Str? title := null) : super(destination, title)
   {
-    this.destination = destination
-    this.title = title
   }
-
-  Str destination
-  Str? title
-
-  override protected Str toStrAttributes() { "dest=${destination}, title=${title}" }
 }
 
 **************************************************************************
@@ -39,18 +60,11 @@ class Link : Node
 
 ** Image node
 @Js
-class Image : Node
+class Image : LinkNode
 {
-  new make(Str destination, Str? title := null)
+  new make(Str destination, Str? title := null) : super(destination, title)
   {
-    this.destination = destination
-    this.title = title
   }
-
-  Str destination
-  Str? title
-
-  override protected Str toStrAttributes() { "dest=${destination}, title=${title}" }
 }
 
 **************************************************************************

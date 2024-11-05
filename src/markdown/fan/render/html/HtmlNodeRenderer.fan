@@ -169,6 +169,12 @@
 
   override Void visitLink(Link link)
   {
+    // resolve link
+    cx.resolveLink(link)
+
+    // if link is code wrap it in <code> tag
+    if (link.isCode) html.tag("code")
+
     attrs := newAttrs
     url := link.destination
 
@@ -184,11 +190,17 @@
     html.tag("a", this.attrs(link, "a", attrs))
     visitChildren(link)
     html.tag("/a")
+
+    // if link is code finish wrapping in </code> tag
+    if (link.isCode) html.tag("/code")
   }
 
   override Void visitImage(Image image)
   {
-    uri := image.destination
+    // resolve link
+    cx.resolveLink(image)
+
+    url := image.destination
 
     atv := AltTextVisitor()
     image.walk(atv)
@@ -197,10 +209,10 @@
     attrs := newAttrs
     if (cx.sanitizeUrls)
     {
-      throw Err("TODO: sanitizeUrls")
+      url = cx.urlSanitizer.sanitizeLink(url)
     }
 
-    attrs["src"] = cx.encodeUrl(uri)
+    attrs["src"] = cx.encodeUrl(url)
     attrs["alt"] = altText
     if (image.title != null) attrs["title"] = image.title
 

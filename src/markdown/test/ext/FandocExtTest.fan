@@ -11,9 +11,10 @@ class FandocExtTest : RenderingTest
 {
   private static const MarkdownExt[] exts := [FandocExt()]
   private static const Parser parser := Parser.builder.extensions(exts).build
-  private static const HtmlRenderer renderer := HtmlRenderer.builder.extensions(exts).build
+  private static const HtmlRenderer renderer
+    := HtmlRenderer.builder.withLinkResolver(TestLinkResolver()).extensions(exts).build
 
-  Void testFanCode()
+  Void testTicks()
   {
     verifyEq(render("'code'"), "<p><code>code</code></p>\n")
     verifyEq(render("this is 'fandoc' code"), "<p>this is <code>fandoc</code> code</p>\n")
@@ -21,8 +22,28 @@ class FandocExtTest : RenderingTest
     verifyEq(render("empty '' code"), "<p>empty <code></code> code</p>\n")
   }
 
+  Void testBacktickLinks()
+  {
+    doc := parser.parse("`sys::Str`")
+    Node.dumpTree(doc)
+    echo("===")
+    echo(renderer.render(doc))
+
+  }
+
   override protected Str render(Str source)
   {
     renderer.render(parser.parse(source))
+  }
+}
+
+@Js
+internal const class TestLinkResolver : LinkResolver
+{
+  override Void resolve(LinkNode node)
+  {
+    node.destination = "/resolved"
+    node.isCode = node is Link
+    node.setText("resolved")
   }
 }
