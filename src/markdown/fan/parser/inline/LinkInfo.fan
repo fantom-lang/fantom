@@ -47,10 +47,12 @@ mixin LinkInfo
   abstract Str? title()
 
   ** The position after the closing text bracket, e.g:
+  **
   ** pre>
   ** [foo][bar]
   **      ^
   ** <pre
+  **
   abstract Position afterTextBracket()
 }
 

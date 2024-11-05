@@ -12,7 +12,7 @@
 ** See [Tables (extension) in GitHub Flavored Markdown Spec]`https://github.github.com/gfm/#tables-extension`
 **
 @Js
-@NoDoc const class TablesExt : MarkdownExt
+const class TablesExt : MarkdownExt
 {
   override Void extendParser(ParserBuilder builder)
   {
