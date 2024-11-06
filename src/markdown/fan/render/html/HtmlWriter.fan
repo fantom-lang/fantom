@@ -20,16 +20,21 @@ class HtmlWriter
   private OutStream out
   private Int lastChar := 0
 
+  ** write a newline character if the last character written wasn't a newline
   This line()
   {
     if (lastChar != 0 && lastChar != '\n') w("\n")
     return this
   }
 
+  ** Write the raw string
   This raw(Str s) { w(s) }
 
+  ** Write the escaped text
   This text(Str text) { w(Esc.escapeHtml(text)) }
 
+  ** Write a tag with the given name ("foo" - opening tag, "/foo" - closing tag) with
+  ** the given attributes. If empty is true an empty tag is written (e.g. <img />)
   This tag(Str name, [Str:Str?]? attrs := null, Bool empty := false)
   {
     w("<")

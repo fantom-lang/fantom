@@ -19,9 +19,16 @@ const class TablesExt : MarkdownExt
     builder.customBlockParserFactory(TableParser.factory)
   }
 
-  override Void extendRenderer(HtmlRendererBuilder builder)
+  override Void extendHtml(HtmlRendererBuilder builder)
   {
-    builder.nodeRendererFactory |HtmlContext cx->NodeRenderer| { TableRenderer(cx) }
+    builder.nodeRendererFactory |cx->NodeRenderer| { TableRenderer(cx) }
+  }
+
+  override Void extendMarkdown(MarkdownRendererBuilder builder)
+  {
+    builder
+      .nodeRendererFactory |cx->NodeRenderer| { MarkdownTableRenderer(cx) }
+      .withSpecialChars(['|'])
   }
 }
 
@@ -440,3 +447,96 @@ internal class TableRenderer : NodeRenderer, Visitor
     cx.extendAttrs(node, tagName, attrs)
   }
 }
+
+**************************************************************************
+** TableNodeRenderer
+**************************************************************************
+
+@Js
+internal class MarkdownTableRenderer : NodeRenderer, Visitor
+{
+  new make(MarkdownContext cx)
+  {
+    this.cx = cx
+    this.writer = cx.writer
+  }
+
+  private static const |Int->Bool| pipe := |c->Bool| { c == '|' }
+
+  private MarkdownContext cx
+  private MarkdownWriter writer
+  private Alignment[] columns := [,]
+
+  override const Type[] nodeTypes := [
+    Table#,
+    TableHead#,
+    TableBody#,
+    TableRow#,
+    TableCell#,
+  ]
+
+  override Void render(Node node) { node.walk(this) }
+
+  virtual Void visitTable(Table node)
+  {
+    columns.clear
+    writer.pushTight(true)
+    renderChildren(node)
+    writer.popTight
+    writer.block
+  }
+
+  virtual Void visitTableHead(TableHead head)
+  {
+    renderChildren(head)
+    columns.each |alignment|
+    {
+      writer.raw('|')
+      switch (alignment)
+      {
+        case Alignment.left:   writer.raw(":---")
+        case Alignment.right:  writer.raw("---:")
+        case Alignment.center: writer.raw(":---:")
+        default: writer.raw("---")
+      }
+    }
+    writer.raw('|')
+    writer.block
+  }
+
+  virtual Void visitTableBody(TableBody body)
+  {
+    renderChildren(body)
+  }
+
+  virtual Void visitTableRow(TableRow row)
+  {
+    renderChildren(row)
+    // trailing | at the end of the line
+    writer.raw('|')
+    writer.block
+  }
+
+  virtual Void visitTableCell(TableCell cell)
+  {
+    if (cell.parent != null && cell.parent.parent is TableHead)
+      columns.add(cell.alignment)
+    writer.raw('|')
+    writer.pushRawEscape(pipe)
+    renderChildren(cell)
+    writer.popRawEscape
+  }
+
+  private Void renderChildren(Node parent)
+  {
+    node := parent.firstChild
+    while (node != null)
+    {
+      next := node.next
+      cx.render(node)
+      node = next
+    }
+  }
+}
+
+

@@ -20,5 +20,8 @@ const mixin MarkdownExt
   virtual Void extendParser(ParserBuilder builder) { }
 
   ** Callback to extend the HTML renderer. Default implementation does nothing.
-  virtual Void extendRenderer(HtmlRendererBuilder builder) { }
+  virtual Void extendHtml(HtmlRendererBuilder builder) { }
+
+  ** Callback to extend the Markdown renderer. Default implementation does nothing.
+  virtual Void extendMarkdown(MarkdownRendererBuilder builder) { }
 }

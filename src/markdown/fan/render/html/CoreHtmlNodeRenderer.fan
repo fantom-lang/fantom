@@ -6,21 +6,6 @@
 //   25 Oct 2024  Matthew Giannini  Creation
 //
 
-/*
-**
-** Instantiates new node renderers when rendering is done
-**
-@NoDoc const mixin HtmlNodeRendererFactory
-{
-  ** Create a new node renderer for the specified rendering context.
-  abstract NodeRenderer create(HtmlContext cx)
-}
-*/
-
-**************************************************************************
-** CoreHtmlNodeRenderer
-**************************************************************************
-
 ** The node renderer that renders all the core nodes
 ** (comes last in the order of renderers)
 @Js

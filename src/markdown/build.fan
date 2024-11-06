@@ -38,9 +38,11 @@ class Build : BuildPod
                `fan/parser/inline/`,
                `fan/render/`,
                `fan/render/html/`,
+               `fan/render/markdown/`,
                `fan/util/`,
                `test/`,
                `test/ext/`,
+               `test/markdown/`,
               ]
     docSrc  = true
   }

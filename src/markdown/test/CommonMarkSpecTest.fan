@@ -16,33 +16,28 @@
 ** <pre
 **
 ** The commonmark-java implementation actually does a simple parsing of the spec.md
-** file to extrac the examples, but we can't do that because of fantom unicode issues.
+** file to extract the examples, but we can't do that because of fantom unicode issues.
 ** Also, it would require a bit more code to do that and this prcoess is not so bad.
 **
-class CommonMarkSpecTest : Test
+abstract class CommonMarkSpecTest : Test
 {
-  private File specFile := Env.cur.homeDir + `etc/markdown/tests/spec.json`
-  private [Str:Example[]] bySection := [:] { ordered = true }
-  private Example[] examples() { bySection.vals.flatten }
+  private const File specFile := Env.cur.homeDir + `etc/markdown/tests/spec.json`
+  protected [Str:Example[]] bySection := [:] { ordered = true }
+  protected Example[] examples() { bySection.vals.flatten }
 
-  private Parser parser := Parser()
+  ** These all fail because of unicode issues in fantom
+  protected virtual Int[] expectedFailures() { [208, 356, 542] }
 
-  ** the spec says URL-escaping is optional, but the examples assume it's enabled
-  private HtmlRenderer renderer := HtmlRenderer.builder.withPercentEncodeUrls.build
+  protected virtual Example[] examplesToRun() { examples }
 
-  private const Int[] expectedFailures := [
-    208, // unicode issues with fantom
-    356, // unicode issues with fantom
-    542, // unicode issues with fantom
-  ]
+  protected abstract ExampleRes run(Example example)
 
   Void test()
   {
     if (!init) return
 
     results := ExampleRes[,]
-    // todo := [examples[617]]
-    examples.each |example| { results.add(run(example)) }
+    examplesToRun.each |example| { results.add(run(example)) }
 
     failedCount := 0
     results.each |result|
@@ -70,24 +65,7 @@ class CommonMarkSpecTest : Test
     if (failedCount > 0) fail("CommonMark spec tests did not pass.")
   }
 
-  private ExampleRes run(Example example)
-  {
-    Str? r
-    try
-    {
-      doc := parser.parse(example.markdown)
-      // Node.tree(doc)
-      r = renderer.render(doc)
-      verifyEq(example.html, r)
-      return ExampleRes(example)
-    }
-    catch (Err err)
-    {
-      return ExampleRes(example, err, r)
-    }
-  }
-
-  private Bool init()
+  protected Bool init()
   {
     if (!specFile.exists)
     {
@@ -118,7 +96,32 @@ class CommonMarkSpecTest : Test
   }
 }
 
-internal const class ExampleRes
+class HtmlCoreSpecTest : CommonMarkSpecTest
+{
+  private Parser parser := Parser()
+
+  ** the spec says URL-escaping is optional, but the examples assume it's enabled
+  private HtmlRenderer renderer := HtmlRenderer.builder.withPercentEncodeUrls.build
+
+  protected override ExampleRes run(Example example)
+  {
+    Str? r
+    try
+    {
+      doc := parser.parse(example.markdown)
+      // Node.tree(doc)
+      r = renderer.render(doc)
+      verifyEq(example.html, r)
+      return ExampleRes(example)
+    }
+    catch (Err err)
+    {
+      return ExampleRes(example, err, r)
+    }
+  }
+}
+
+@NoDoc const class ExampleRes
 {
   new makeOk(Example example) : this.make(example, null, null) { }
   new make(Example example, Err? err, Str? rendered)
@@ -134,7 +137,7 @@ internal const class ExampleRes
   Bool failed() { err != null }
 }
 
-internal const class Example
+@NoDoc const class Example
 {
   new make(Map json)
   {

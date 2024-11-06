@@ -12,6 +12,7 @@ class ImgAttrsExtTest : RenderingTest
   private static const MarkdownExt[] exts := [ImgAttrsExt()]
   private static const Parser parser := Parser.builder.extensions(exts).build
   private static const HtmlRenderer renderer := HtmlRenderer.builder.extensions(exts).build
+  private static const MarkdownRenderer md := MarkdownRenderer.builder.extensions(exts).build
 
   Void testBaseCase()
   {
@@ -99,5 +100,15 @@ class ImgAttrsExtTest : RenderingTest
 
     // TODO:source spans test
 
-  override protected Str render(Str source) { renderer.render(parser.parse(source)) }
+  override protected Str render(Str source)
+  {
+    doc  := parser.parse(source)
+    html := renderer.render(doc)
+
+    // while we're in here round-trip to markdown and verify
+    mark := md.render(doc)
+    verifyEq(html, renderer.render(parser.parse(mark)))
+
+    return html
+  }
 }
