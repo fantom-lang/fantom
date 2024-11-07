@@ -22,7 +22,7 @@
 ** html := renderer.render(parser.parse("Hello 'Xetodoc'!"))
 **
 ** // using convenience methods
-** html = Xetodoc.renderToHtml("Hello, 'Xetodoc'!")
+** html = Xetodoc.toHtml("Hello, 'Xetodoc'!")
 **
 ** // roundtrip the parsed Document back to xetodoc markdown text
 ** md := Xetodoc.renderToMarkdown(parser.parse("Round-trip to markdown"))
@@ -56,10 +56,13 @@
   }
 
   ** Convenience to render the given Xetodoc to HTML
-  static Str renderToHtml(Str source, |->LinkResolver|? f := null)
+  static Str toHtml(Str source, |->LinkResolver|? f := null)
   {
     htmlRenderer.render(parser(f).parse(source))
   }
+
+  ** Convenience to render the given node to HTML
+  static Str renderToHtml(Node node) { htmlRenderer.render(node) }
 
   ** Get a Xetodoc html renderer
   static HtmlRenderer htmlRenderer() { htmlBuilder.build }
