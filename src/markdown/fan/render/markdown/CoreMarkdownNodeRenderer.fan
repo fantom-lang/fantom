@@ -328,11 +328,16 @@
 
   override Void visitCode(Code code)
   {
+    writeCode(writer, code, '`')
+  }
+
+  internal static Void writeCode(MarkdownWriter writer, Code code, Int marker)
+  {
     literal := code.literal
-    // if the literal includes backticks, we can surround them by using one more backtick
-    backticks := findMaxRunLen("`", literal)
-    (backticks+1).times { writer.raw('`') }
-    // if the literal starts or ends with a backtick, surround it with a single space.
+    // if the literal includes marker, we can surround them by using one more marker
+    markers := findMaxRunLen("${marker.toChar}", literal)
+    (markers+1).times { writer.raw(marker) }
+    // if the literal starts or ends with a marker, surround it with a single space.
     // if it starts and ends with a space (but is not only spaces), add an additonal space
     // otherwise they would get removed on parsing).
     addSpace := literal.startsWith("`") || literal.endsWith("`") ||
@@ -340,7 +345,7 @@
     if (addSpace) writer.raw(' ')
     writer.raw(literal)
     if (addSpace) writer.raw(' ')
-    (backticks+1).times { writer.raw('`') }
+    (markers+1).times { writer.raw(marker) }
   }
 
   override Void visitHtmlInline(HtmlInline html)

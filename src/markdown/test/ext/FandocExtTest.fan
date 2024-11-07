@@ -15,6 +15,8 @@ class FandocExtTest : RenderingTest
   private static const HtmlRenderer renderer
     := HtmlRenderer.builder.extensions(exts).build
     // := HtmlRenderer.builder.withLinkResolver(TestLinkResolver()).extensions(exts).build
+  private static const MarkdownRenderer md
+    := MarkdownRenderer.builder.extensions(exts).build
 
   Void testTicks()
   {

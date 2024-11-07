@@ -18,6 +18,11 @@
       .customInlineContentParserFactory(TicksInlineParser.factory)
       .customInlineContentParserFactory(BackticksLinkParser.factory)
   }
+
+  override Void extendMarkdown(MarkdownRendererBuilder builder)
+  {
+    builder.nodeRendererFactory(|cx->NodeRenderer| { MdTicksRenderer(cx) })
+  }
 }
 
 **************************************************************************
@@ -73,4 +78,20 @@ internal const class BackticksLinkParserFactory : InlineContentParserFactory
   override const Int[] triggerChars := ['`']
 
   override InlineContentParser create() { BackticksLinkParser() }
+}
+
+**************************************************************************
+** MdTicksRenderer
+**************************************************************************
+
+@Js
+internal class MdTicksRenderer : NodeRenderer
+{
+  new make(MarkdownContext cx) { this.cx = cx }
+  private MarkdownContext cx
+  override const Type[] nodeTypes := [Code#]
+  override Void render(Node node)
+  {
+    CoreMarkdownNodeRenderer.writeCode(cx.writer, node, '\'')
+  }
 }
