@@ -9,7 +9,7 @@
 @Js
 class XetodocExtTest : RenderingTest
 {
-  private static const Parser parser := Xetodoc.parser |->LinkResolver| { TestLinkResolver() }
+  private static const Parser parser := Xetodoc.parser(TestLinkResolver())
   private static const HtmlRenderer renderer := Xetodoc.htmlRenderer
   private static const MarkdownRenderer md := Xetodoc.markdownRenderer
 
@@ -44,7 +44,7 @@ class XetodocExtTest : RenderingTest
 }
 
 @Js
-internal const class TestLinkResolver : LinkResolver
+@NoDoc class TestLinkResolver : LinkResolver
 {
   override Void resolve(LinkNode node)
   {

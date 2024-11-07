@@ -36,16 +36,22 @@
   private static const MarkdownExt[] xetodoc := [Xetodoc()]
 
   ** Convenience to parse the Xetodoc source
-  static Document parse(Str source, |->LinkResolver|? f := null)
+  static Document parse(Str source, LinkResolver? linkResolver := null)
   {
-    parser(f).parse(source)
+    parser(linkResolver).parse(source)
   }
 
-  ** Get a Xetodoc parser optionally configured with the given `LinkResolver` factory
-  static Parser parser(|->LinkResolver|? f := null)
+  ** Get a Xetodoc parser optionally configured with the given `LinkResolver`.
+  ** Note that if the parser is re-used, the link resolver should be idempotent.
+  static Parser parser(LinkResolver? linkResolver := null)
   {
     builder := parserBuilder
-    if (f != null) builder.postProcessorFactory(f)
+    if (linkResolver != null)
+    {
+      // need to wrap in unsafe to make the closure looks const
+      unsafe := Unsafe(linkResolver)
+      builder.postProcessorFactory |->LinkResolver| { unsafe.val }
+    }
     return builder.build
   }
 
@@ -56,16 +62,16 @@
   }
 
   ** Convenience to render the given Xetodoc to HTML
-  static Str toHtml(Str source, |->LinkResolver|? f := null)
+  static Str toHtml(Str source, LinkResolver? linkResolver := null)
   {
-    htmlRenderer.render(parser(f).parse(source))
+    htmlRenderer.render(parser(linkResolver).parse(source))
   }
 
   ** Convenience to render the given node to HTML
   static Str renderToHtml(Node node) { htmlRenderer.render(node) }
 
   ** Get a Xetodoc html renderer
-  static HtmlRenderer htmlRenderer() { htmlBuilder.build }
+  static const HtmlRenderer htmlRenderer := htmlBuilder.build
 
   ** Get an `HtmlRendererBuilder` with all the standard Xetodoc features enabled.
   static HtmlRendererBuilder htmlBuilder()
@@ -77,7 +83,7 @@
   Str renderToMarkdown(Node node) { markdownRenderer.render(node) }
 
   ** Get a Xetodoc markdown renderer
-  static MarkdownRenderer markdownRenderer() { markdownBuilder.build }
+  static const MarkdownRenderer markdownRenderer := markdownBuilder.build
 
   ** Get a `MarkdownRendererBuilder` with all the standard Xetodoc features enabled.
   static MarkdownRendererBuilder markdownBuilder()
