@@ -7,16 +7,11 @@
 //
 
 @Js
-class FandocExtTest : RenderingTest
+class XetodocExtTest : RenderingTest
 {
-  private static const MarkdownExt[] exts := [FandocExt()]
-  private static const Parser parser
-    := Parser.builder.postProcessorFactory(|->PostProcessor| { TestLinkResolver() }).extensions(exts).build
-  private static const HtmlRenderer renderer
-    := HtmlRenderer.builder.extensions(exts).build
-    // := HtmlRenderer.builder.withLinkResolver(TestLinkResolver()).extensions(exts).build
-  private static const MarkdownRenderer md
-    := MarkdownRenderer.builder.extensions(exts).build
+  private static const Parser parser := Xetodoc.parser |->LinkResolver| { TestLinkResolver() }
+  private static const HtmlRenderer renderer := Xetodoc.htmlRenderer
+  private static const MarkdownRenderer md := Xetodoc.markdownRenderer
 
   Void testTicks()
   {
@@ -36,10 +31,10 @@ class FandocExtTest : RenderingTest
 
   Void testBacktickLinks()
   {
-    doc := parser.parse("`url`\n\n[url](url)\n\n![imgUrl](imgUrl)")
-    Node.dumpTree(doc)
-    echo("===")
-    echo(renderer.render(doc))
+    // doc := parser.parse("`url`\n\n[url](url)\n\n![imgUrl](imgUrl)")
+    // Node.dumpTree(doc)
+    // echo("===")
+    // echo(renderer.render(doc))
   }
 
   override protected Str render(Str source)

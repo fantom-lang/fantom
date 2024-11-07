@@ -30,7 +30,7 @@ class Build : BuildPod
     srcDirs = [`fan/`,
                `fan/ast/`,
                `fan/ext/`,
-               `fan/ext/fandoc/`,
+               `fan/ext/xetodoc/`,
                `fan/ext/gfm-tables/`,
                `fan/ext/image-attributes/`,
                `fan/parser/`,

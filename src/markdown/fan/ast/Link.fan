@@ -18,8 +18,13 @@ abstract class LinkNode : Node
     this.title = title
   }
 
+  ** Link URL destination
   Str destination
+
+  ** Optional link title
   Str? title
+
+  ** Should the link be treated as inline code
   @NoDoc Bool isCode := false
 
   ** Replace the display text for this link
