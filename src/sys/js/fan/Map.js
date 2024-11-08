@@ -118,6 +118,12 @@ fan.sys.Map.prototype.set = function(key, val)
   return this;
 }
 
+fan.sys.Map.prototype.setNotNull = function(key, val)
+{
+  if (val == null) return this;
+  return this.set(key, val);
+}
+
 fan.sys.Map.prototype.add = function(key, val)
 {
   this.modify();
@@ -696,3 +702,4 @@ fan.sys.Map.prototype.$each = function(func)
     }
   }
 }
+

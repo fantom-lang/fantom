@@ -212,6 +212,11 @@ final class List
   @Operator L set(Int index, V item)
 
   **
+  ** Call `set` if item is non-null otherwise do nothing.  Return this.
+  **
+  L setNotNull(Int index, V? item)
+
+  **
   ** Add the specified item to the end of the list.  The item will have
   ** an index of size.  Size is incremented by 1.  Return this.  Throw
   ** ReadonlyErr if readonly.
@@ -688,9 +693,9 @@ final class List
   ** which is '-(insertation point) - 1'.
   **
   ** Example:
-  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 4 <=> item } 
+  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 4 <=> item }
   **               => -3
-  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 3 <=> item } 
+  **   [1,3,5,7,9].binaryFind |Int item->Int| { return 3 <=> item }
   **               => 1
   **
   Int binaryFind(|V item, Int index->Int| c)
@@ -816,3 +821,4 @@ final class List
   L rw()
 
 }
+

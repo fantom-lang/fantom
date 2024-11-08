@@ -82,8 +82,8 @@ class List extends Obj {
 
   isEmpty() { return  this.#size == 0; }
 
-  size(it=undefined) { 
-    if (it === undefined) return this.#size; 
+  size(it=undefined) {
+    if (it === undefined) return this.#size;
     this.#modify();
     // const oldSize = this.#size;
     const newSize = it;
@@ -144,7 +144,7 @@ class List extends Obj {
         return true;
     return false;
   }
-  
+
   index(value, off=0) {
     const size = this.#size;
     const values = this.#values;
@@ -261,6 +261,11 @@ class List extends Obj {
     //{
     //  throw CastErr.make("Setting '" + FanObj.type(value) + "' into '" + of + "[]'").val;
     //}
+  }
+
+  setNotNull(index, value) {
+    if (value == null) return this;
+    return this.set(index, value);
   }
 
   add(value) {
@@ -741,16 +746,16 @@ push(obj) {
 
   sort(f=null) {
     this.#modify();
-    if (f != null) 
+    if (f != null)
       this.#values.sort(f);
-    else 
+    else
       this.#values.sort((a,b)  => ObjUtil.compare(a, b, false));
     return this;
   }
 
   sortr(f=null) {
     this.#modify();
-    if (f != null) 
+    if (f != null)
       this.#values.sort((a,b) => f(b, a));
     else
       this.#values.sort((a,b) => ObjUtil.compare(b, a, false));
@@ -901,3 +906,4 @@ push(obj) {
   }
 
 }
+

@@ -154,6 +154,12 @@ public final class Map
     return this;
   }
 
+  public final Map setNotNull(Object key, Object value)
+  {
+    if (value == null) return this;
+    return set(key, value);
+  }
+
   public final Map add(Object key, Object value)
   {
     modify();
@@ -809,3 +815,4 @@ public final class Map
   private Object def;
 
 }
+

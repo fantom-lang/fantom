@@ -485,10 +485,10 @@ class MapTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// AddNotNull
+// SetNotNull / AddNotNull
 //////////////////////////////////////////////////////////////////////////
 
-  Void testAddNotNull()
+  Void testSetAddNotNull()
   {
     m := Str:Str[:]
     verifySame(m.addNotNull("foo", null), m)
@@ -497,6 +497,11 @@ class MapTest : Test
     verifyEq(m, Str:Str["foo":"bar"])
     verifySame(m.addNotNull("foo", null), m)
     verifyEq(m, Str:Str["foo":"bar"])
+
+    verifySame(m.setNotNull("foo", null), m)
+    verifyEq(m, Str:Str["foo":"bar"])
+    verifySame(m.setNotNull("foo", "x"), m)
+    verifyEq(m, ["foo":"x"])
   }
 
 //////////////////////////////////////////////////////////////////////////

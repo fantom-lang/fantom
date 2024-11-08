@@ -115,6 +115,11 @@ final class Map
   @Operator M set(K key, V val)
 
   **
+  ** Call `set` if val is non-null otherwise do nothing.  Return this.
+  **
+  M setNotNull(K key, V? val)
+
+  **
   ** Add the specified key/value pair to the map.  If the key is
   ** already mapped, then throw ArgErr.  Return this.  If key
   ** does not return true for Obj.isImmutable, then throw NotImmutableErr.
@@ -408,3 +413,4 @@ final class Map
   M rw()
 
 }
+

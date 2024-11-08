@@ -20,6 +20,7 @@
 - Deprecate old, undocumented sql escape syntax (This is a breaking change)
 - Add sql::Statement.executeBatch method
 - Add concurrent::ActorMsg
+- Add List/Map setNotNull
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design

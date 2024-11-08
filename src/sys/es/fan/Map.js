@@ -23,8 +23,8 @@ class Map extends Obj {
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  constructor(mt) { 
-    super(); 
+  constructor(mt) {
+    super();
     this.#vals = [];
     this.#keys = null; // only used for ordered
     this.#size = 0;
@@ -63,7 +63,7 @@ class Map extends Obj {
 //////////////////////////////////////////////////////////////////////////
 
   typeof() { return this.#type; }
-  __type(it) { 
+  __type(it) {
     if (!(it instanceof MapType)) throw ArgErr.make(`Must be MapType: ${it} ${it.constructor.name}`);
     this.#type = it;
   }
@@ -140,12 +140,17 @@ class Map extends Obj {
 
   set(key, val) {
     this.#modify();
-    if (key == null) 
+    if (key == null)
       throw NullErr.make("key is null");
     if (!ObjUtil.isImmutable(key))
       throw NotImmutableErr.make("key is not immutable: " + ObjUtil.typeof(key));
     this.#set(key, val);
     return this;
+  }
+
+  setNotNull(key, val) {
+    if (val == null) return this;
+    return this.set(key, val);
   }
 
   add(key, val) {
@@ -634,3 +639,4 @@ class Map extends Obj {
     }
   }
 }
+

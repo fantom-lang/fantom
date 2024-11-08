@@ -265,6 +265,12 @@ fan.sys.List.prototype.set = function(index, value)
   //}
 }
 
+fan.sys.List.prototype.setNotNull = function(index, value)
+{
+  if (value == null) return this;
+  return this.set(index, value);
+}
+
 fan.sys.List.prototype.add = function(value)
 {
   // modify in insert$

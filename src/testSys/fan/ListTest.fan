@@ -372,10 +372,10 @@ class ListTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
-// AddNotNull
+// SetNotNull/AddNotNull
 //////////////////////////////////////////////////////////////////////////
 
-  Void testAddNotNull()
+  Void testSetAddNotNull()
   {
     x := Str[,]
     verifySame(x.addNotNull("a"), x)
@@ -384,6 +384,11 @@ class ListTest : Test
     verifyEq(x, ["a"])
     verifySame(x.addNotNull("b"), x)
     verifyEq(x, ["a", "b"])
+
+    verifySame(x.setNotNull(1, null), x)
+    verifyEq(x, ["a", "b"])
+    verifySame(x.setNotNull(1, "x"), x)
+    verifyEq(x, ["a", "x"])
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1782,3 +1787,4 @@ echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
   override Bool equals(Obj? that) { that is ListFoo && ((ListFoo)that).s == s }
   override Int hash() { s.hash }
 }
+

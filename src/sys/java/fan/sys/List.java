@@ -387,6 +387,12 @@ public final class List
     }
   }
 
+  public final List setNotNull(long index, Object value)
+  {
+    if (value == null) return this;
+    return set(index, value);
+  }
+
   public final List add(Object value)
   {
     // modify in insert(int, Obj)
@@ -1494,3 +1500,4 @@ public final class List
   private List readonlyList;
 
 }
+
