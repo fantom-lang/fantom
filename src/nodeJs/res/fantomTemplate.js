@@ -20,11 +20,14 @@ const boot = async function(opts={}) {
 
   // find Fantom home dir
   let fan_home = opts["FAN_HOME"] ?? process.env["FAN_HOME"];
+  let modules_path = "esm/";
   if (!fan_home) {
     // assumes that fantom.js is in <fan_home>/lib/es/esm/
     const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
     fan_home = path.resolve(__dirname, "../../../");
+    modules_path = "lib/es/esm/";
   }
+  else fan_home = path.resolve(fan_home);
   fan_home = toDir(fan_home);
 
   // init sys.Env
@@ -39,7 +42,7 @@ const boot = async function(opts={}) {
   }
 
   // import all pods
-  const modules = path.resolve(fan_home, "lib/es/esm");
+  const modules = path.resolve(fan_home, modules_path);
   for (const fan_module of fs.readdirSync(modules)) {
     if (path.extname(fan_module) == ".ts") continue;
     if (fan_module.startsWith("fan_")) continue;
