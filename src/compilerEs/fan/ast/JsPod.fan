@@ -23,11 +23,22 @@ class JsPod : JsNode
     this.pod = plugin.pod
 
     // map native files by name
+    baseDir := c.input.baseDir
     c.jsFiles?.each |f| {
-      // we expect ES javascript files in es/ directory
-      esFile := f.parent.parent.plus(`es/${f.name}`)
+      // get the relative uri to this js file from the baseDir.
+      // For example, consider pod "podName" in this location:
+      //   /path/to/podName/js/Foo.js
+      // The baseDir is /path/to/podName/
+      // When we relativie it it becomes js/Foo.js
+      // We then strip the first directory from the path and change it to es.
+      // Therefore we look for the file in /path/to/podName/es/Foo.js
+      //
+      // This supports deeper paths also:
+      //   /path/to/podName/js/dir1/Bar.js => /path/to/podname/es/dir1/Bar.js
+      relUri := f.uri.relTo(baseDir.uri)[1..-1]
+      esFile := baseDir.plus(`es/${relUri}`)
       if (esFile.exists)
-        natives[f.name] = f.parent.parent.plus(`es/${f.name}`)
+        natives[f.name] = esFile
     }
 
     // find types to emit
