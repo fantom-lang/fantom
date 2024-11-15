@@ -18,7 +18,7 @@
 
 ARG JDK_VERSION=17
 
-FROM eclipse-temurin:$JDK_VERSION as bootstrap
+FROM eclipse-temurin:$JDK_VERSION AS bootstrap
 
 ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
 
@@ -62,11 +62,11 @@ EOF
 # ================================
 # This simply copies the new Fantom into a fresh container and sets up the path.
 
-FROM eclipse-temurin:$JDK_VERSION as run
+FROM eclipse-temurin:$JDK_VERSION AS run
 
 COPY --from=bootstrap /work/fan/ /opt/fan/
 
-ENV PATH $PATH:/opt/fan/bin
+ENV PATH=$PATH:/opt/fan/bin
 
 # Return Fantom's version
 CMD ["fan","-version"]
