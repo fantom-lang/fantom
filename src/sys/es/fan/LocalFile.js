@@ -269,6 +269,8 @@ class LocalFile extends File {
   out(append=false, bufSize=4096) {
     if (this.__isDirectory())
       throw IOErr.make("cannot get out stream for a directory");
+    if (!this.exists())
+      this.create();
 
     const flag = append ? 'a' : 'w';
     const fd = node.fs.openSync(this.#node_os_path, flag);
