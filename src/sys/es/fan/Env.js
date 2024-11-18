@@ -38,6 +38,8 @@ class Env extends Obj {
     if (Env.__isNode()) {
       this.#vars.set("os.name", this.os());
       this.#vars.set("os.version", Env.__node()?.os?.version());
+      this.#vars.set("node.version", process.versions.node);
+      this.#vars.set("node.path", path.dirname(process.execPath).replaceAll(path.sep, path.posix.sep));
     }
 
     for (let i=0; i<keys.length; ++i) {
@@ -141,7 +143,7 @@ class Env extends Obj {
 
   host() { return Env.__node()?.os?.hostname(); }
 
-  user() { return "unknown"; }
+  user() { return Env.__node()?.os?.userInfo()?.username; }
 
   out() { return this.#out; }
 
