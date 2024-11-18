@@ -36,6 +36,7 @@ class Env extends Obj {
 
     // set some pre-defined vars
     if (Env.__isNode()) {
+      let path = Env.__node("path");
       this.#vars.set("os.name", this.os());
       this.#vars.set("os.version", Env.__node()?.os?.version());
       this.#vars.set("node.version", process.versions.node);
