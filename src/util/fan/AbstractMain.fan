@@ -304,6 +304,52 @@ abstract class AbstractMain
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  ** Get map of the standard runtime props including:
+  **   - java version info if JVM
+  **   - node version if running in NodeJS
+  **   - fan version
+  ** Also see `printProps`
+  static Str:Str runtimeProps([Str:Str]? acc := null)
+  {
+    env := Env.cur
+    if (acc == null) acc = Str:Str[:] { ordered = true }
+    addVar := |Str name| { acc.setNotNull(name, env.vars[name]) }
+
+    // java version
+    addVar("java.version")
+    addVar("java.vm.name")
+    addVar("java.vm.vendor")
+    addVar("java.vm.version")
+    addVar("java.home")
+
+    // node version
+    addVar("node.version")
+    addVar("node.path")
+
+    // fantom version
+    acc["fan.version"] = Pod.find("sys").version.toStr
+    acc["fan.home"]    = Env.cur.homeDir.osPath
+
+    return acc
+  }
+
+  ** Print a map of key/value pairs to output with values justified.
+  ** Options:
+  **   - 'out': OutStream to print to (default is Env.cur.out)
+  **   - 'indent': Str spaces (default is "")
+  static Void printProps(Str:Str props, [Str:Obj]? opts := null)
+  {
+    out := opts?.get("out") as OutStream ?: Env.cur.out
+    indent := opts?.get("indent")?.toStr ?: ""
+    maxName := 4
+    props.each |v, n| { maxName = maxName.max(n.size) }
+    props.each |v, n| { out.printLine(indent+ "$n:".padr(maxName+2) + v) }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Run
 //////////////////////////////////////////////////////////////////////////
 
