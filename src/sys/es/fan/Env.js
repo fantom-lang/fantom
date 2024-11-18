@@ -86,7 +86,7 @@ class Env extends Obj {
     else main.callOn(main.parent().make());
   }
 
-  static __isNode() { return typeof node !== "undefined"; }
+  static __isNode() { return typeof process !== "undefined"; }
 
   static __node(module=null) {
     if (typeof node === "undefined") throw UnsupportedErr.make("Only supported in Node runtime");
