@@ -311,11 +311,11 @@ abstract class AbstractMain
   **   - java version info if JVM
   **   - node version if running in NodeJS
   **   - fan version
-  ** Also see `printProps`
-  static Str:Str runtimeProps([Str:Str]? acc := null)
+  ** Map vals are Strs or Lists to indent. Also see `printProps`
+  static Str:Obj runtimeProps([Str:Obj]? acc := null)
   {
     env := Env.cur
-    if (acc == null) acc = Str:Str[:] { ordered = true }
+    if (acc == null) acc = Str:Obj[:] { ordered = true }
     addVar := |Str name| { acc.setNotNull(name, env.vars[name]) }
 
     // java version
@@ -330,23 +330,40 @@ abstract class AbstractMain
     addVar("node.path")
 
     // fantom version
-    acc["fan.version"] = Pod.find("sys").version.toStr
-    acc["fan.home"]    = Env.cur.homeDir.osPath
+    acc["fan.version"]  = Pod.find("sys").version.toStr
+    acc["fan.platform"] = env.platform
+    acc["fan.home"] = env.homeDir.osPath
+    if (env.path.size > 1)
+    {
+      acc["fan.path"] = env.path.map { it.osPath }
+    }
 
     return acc
   }
 
   ** Print a map of key/value pairs to output with values justified.
+  ** Values that are lists are indented and separated by newlines.
   ** Options:
   **   - 'out': OutStream to print to (default is Env.cur.out)
   **   - 'indent': Str spaces (default is "")
-  static Void printProps(Str:Str props, [Str:Obj]? opts := null)
+  static Void printProps(Str:Obj props, [Str:Obj]? opts := null)
   {
     out := opts?.get("out") as OutStream ?: Env.cur.out
     indent := opts?.get("indent")?.toStr ?: ""
     maxName := 4
     props.each |v, n| { maxName = maxName.max(n.size) }
-    props.each |v, n| { out.printLine(indent+ "$n:".padr(maxName+2) + v) }
+    props.each |v, n|
+    {
+      if (v is List)
+      {
+        out.printLine(indent+ "$n:")
+        ((List)v).each |path| { out.printLine(indent + "  " + path) }
+      }
+      else
+      {
+        out.printLine(indent+ "$n:".padr(maxName+2) + v)
+      }
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
