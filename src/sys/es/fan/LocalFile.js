@@ -96,7 +96,12 @@ class LocalFile extends File {
   isWritable() { return this.#checkAccess(node.fs.constants.W_OK); }
   isExecutable() { return this.#checkAccess(node.fs.constants.X_OK); }
 
-  osPath() { return this.#node_os_path; }
+  // NOTE: to be consistent with java, directories should not include trailing slash
+  osPath() {
+    let p = this.#node_os_path;
+    if (p.endsWith("/")) p = p.slice(0,-1);
+    return p
+  }
 
   parent() {
     const parent = this.uri().parent();

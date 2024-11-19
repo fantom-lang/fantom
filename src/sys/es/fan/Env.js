@@ -16,65 +16,50 @@ class Env extends Obj {
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  constructor() {
+  constructor(parent=null) {
     super();
-    this.#args = List.make(Str.type$).toImmutable();
-    this.#index = Map.make(Str.type$, new ListType(Str.type$)).toImmutable();
-    this.#vars = Map.make(Str.type$, Str.type$);
-    this.#vars.caseInsensitive(true);
-    this.#props = Map.make(Str.type$, Str.type$);
-
-    const vars = ((typeof js.fan$env) === 'undefined') ? {} : js.fan$env;
-    this.__loadVars(vars);
-
-    this.#out = new ConsoleOutStream();
+    this.#parent = parent;
   }
 
-  __loadVars(env) {
-    if (!env) return
-    const keys = Object.keys(env)
-
-    // set some pre-defined vars
-    if (Env.__isNode()) {
-      let path = Env.__node("path");
-      this.#vars.set("os.name", this.os());
-      this.#vars.set("os.version", Env.__node()?.os?.version());
-      this.#vars.set("node.version", process.versions.node);
-      this.#vars.set("node.path", path.dirname(process.execPath).replaceAll(path.sep, path.posix.sep));
-    }
-
-    for (let i=0; i<keys.length; ++i) {
-      const k = keys[i];
-      const v = env[k];
-      this.#vars.set(k, v);
-    }
+  static make$(self, parent) {
+    self.#parent = parent;
   }
 
+  static #cur;
+  static cur(env=undefined) {
+    if (env) { Env.#cur = env; return; }
+    if (!Env.#cur) Env.#cur = new BootEnv();
+    return Env.#cur;
+  }
+
+  #parent;
+
+//////////////////////////////////////////////////////////////////////////
+// Static support
+//////////////////////////////////////////////////////////////////////////
+
+  static #index;
   __loadIndex(index) {
     if (index.typeof().toStr() != "[sys::Str:sys::Str[]]") throw ArgErr.make("Invalid type");
-    this.#index = index;
+    Env.#index = index;
   }
 
-  #args;
-  #index;
-  #vars;
-  #props;
-  #out;
-  __homeDir;
-  __workDir;
-  __tempDir;
+  static #props;
+  // internal compiler hook for setting properties
+  __props(key, m) {
+    if (!Env.#props) Env.#props = Map.make(Str.type$, Str.type$);
+    Env.#props.add(key, m.toImmutable());
+  }
 
   // used to display locale keys
   static __localeTestMode = false;
 
-  static #cur = undefined;
-  static cur() {
-    if (Env.#cur === undefined) Env.#cur = new Env()
-    return Env.#cur;
-  }
-
   static configProps() { return Uri.fromStr("config.props"); }
   static localeEnProps() { return Uri.fromStr("locale/en.props"); }
+
+//////////////////////////////////////////////////////////////////////////
+// Main
+//////////////////////////////////////////////////////////////////////////
 
   static __invokeMain(qname) {
     // resolve qname to method
@@ -87,10 +72,18 @@ class Env extends Obj {
     else main.callOn(main.parent().make());
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Node
+//////////////////////////////////////////////////////////////////////////
+
+  // If 'process' is defined, then we are running in Node.js
   static __isNode() { return typeof process !== "undefined"; }
 
+  // Get a node module (must be imported already from node.js source file)
+  // Note that currently the generated sys.js imports that file into
+  // variable 'node'.
   static __node(module=null) {
-    if (typeof node === "undefined") throw UnsupportedErr.make("Only supported in Node runtime");
+    if (typeof node === "undefined") throw Unsupported>err("Only supported in Node.js runtime");
     return module == null ? node : node[module];
   }
 
@@ -98,17 +91,15 @@ class Env extends Obj {
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  toStr() { return this.typeof().toString(); }
+  toStr() { return this.typeof().toStr(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Non-Virtuals
 //////////////////////////////////////////////////////////////////////////
 
-  runtime() { return "js"; }
+  parent() { return this.#parent; }
 
-  javaVersion() { return 0; }
-
-  os() { 
+  os() {
     let p = Env.__node()?.os?.platform();
     if (p === "darwin") p = "macosx";
     return p;
@@ -117,15 +108,23 @@ class Env extends Obj {
   arch() {
     let a = Env.__node()?.os?.arch();
     switch (a) {
-      case "ia32": a = "x86";
-      case "x64":  a = "x86_64";
+      case "ia32":
+        a = "x86";
+        break;
+      case  "x64":
+        a = "x86_64";
+        break;
     }
     return a;
   }
 
   platform() { return `${this.os()}-${this.arch()}`; }
 
-  // TODO: FIXIT
+  // TODO:FIXIT - we should probably make this more flexible than just "js",
+  // but I think a lot of code my depend/assume that single value
+  runtime() { return "js"; }
+
+  javaVersion() { return 0; }
 
   idHash(obj) {
     if (!obj) return 0;
@@ -136,59 +135,35 @@ class Env extends Obj {
 // Virtuals
 //////////////////////////////////////////////////////////////////////////
 
-  args() { return this.#args; }
+  args() { return this.#parent.args(); }
 
-  vars() { return this.#vars.toImmutable(); }
+  mainMethod() { return this.#parent.mainMethod(); }
 
-  diagnostics() { return Map.make(Str.type$, Obj.type$); }
+  vars() { return this.#parent.vars(); }
 
-  host() { return Env.__node()?.os?.hostname(); }
+  diagnostics() { return this.#parent.diagnostics(); }
 
-  user() { return Env.__node()?.os?.userInfo()?.username; }
+  gc() { this.#parent.gc(); }
 
-  out() { return this.#out; }
+  host() { return this.#parent.host(); }
 
-  prompt(msg="") {
-    if (this.os() == "win32") return this.#win32prompt(msg);
-    else return this.#unixprompt(msg);
-  }
+  user() { return this.#parent.user(); }
 
-  #win32prompt(msg) {
-    // https://github.com/nodejs/node/issues/28243
-    const fs = Env.__node()?.fs;
-    fs.writeSync(1, String(msg));
-    let s = '', buf = Buffer.alloc(1);
-    while(buf[0] != 10 && buf[0] != 13) {
-      s += buf;
-      fs.readSync(0, buf, 0, 1, 0);
-    }
-    if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
-    return s.slice(1);
-  }
+  in() { return this.#parent.in(); }
 
-  #unixprompt(msg) {
-    // https://stackoverflow.com/questions/61394928/get-user-input-through-node-js-console/74250003?noredirect=1#answer-75008198
-    const fs = Env.__node()?.fs;
-    const stdin = fs.openSync("/dev/stdin","rs");
+  out() { return this.#parent.out(); }
 
-    fs.writeSync(process.stdout.fd, msg);
-    let s = '';
-    let buf = Buffer.alloc(1);
-    fs.readSync(stdin,buf,0,1,null);
-    while((buf[0] != 10) && (buf[0] != 13)) {
-      s += buf;
-      fs.readSync(stdin,buf,0,1,null);
-    }
-    // Not sure if we need this on unix?
-    // if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
-    return s;
-  }
+  err() { return this.#parent.err(); }
 
-  homeDir() { return this.__homeDir; }
+  prompt(msg="") { return this.#parent.prompt(msg); }
 
-  workDir() { return this.__workDir; }
-  
-  tempDir() { return this.__tempDir; }
+  promptPassword(msg="") { return this.#parent.promptPassword(msg); }
+
+  homeDir() { return this.#parent.homeDir(); }
+
+  workDir() { return this.#parent.workDir(); }
+
+  tempDir() { return this.#parent.tempDir(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Resolution
@@ -200,14 +175,16 @@ class Env extends Obj {
 // State
 //////////////////////////////////////////////////////////////////////////
 
-  index(key) { return this.#index.get(key, Str.type$.emptyList()); }
+  index(key) { return Env.#index.get(key, Str.type$.emptyList()); }
 
   props(pod, uri, maxAge) {
+    // if (!Env.#props) Env.#props = Map.make(Str.type$, Str.type$);
+
     const key = `${pod.name()}:${uri.toStr()}`;
-    let map = this.#props.get(key);
+    let map = Env.#props.get(key);
     if (map == null) {
       map = Map.make(Str.type$, Str.type$).toImmutable();
-      this.#props.add(key, map);
+      Env.#props.add(key, map);
     }
     return map;
   }
@@ -221,9 +198,9 @@ class Env extends Obj {
         key.indexOf(".browser") == -1 &&
         key.indexOf(".icon") == -1 &&
         key.indexOf(".accelerator") == -1 &&
-        pod.name() != "sys") 
-    { 
-      return pod + "::" + key; 
+        pod.name() != "sys")
+    {
+      return pod + "::" + key;
     }
 
     // TODO: why was the old code doing this?
@@ -249,16 +226,13 @@ class Env extends Obj {
     return def;
   }
 
-  // Internal compiler hook for setting properties
-  __props(key, m) { this.#props.add(key, m.toImmutable()); }
-
 //////////////////////////////////////////////////////////////////////////
 // Exiting and Shutdown Hooks
 //////////////////////////////////////////////////////////////////////////
 
-  exit(status=0) { process.exit(status); }
+  exit(status=0) { this.#parent.exit(status); }
 
-  addShutdownHook(f) { }
+  addShutdownHook(f) { this.#parent.addShutdownHook(f); }
 
-  removeShutdownHook(f) { }
+  removeShutdownHook(f) { return this.#parent.removeShutdownHook(f); }
 }
