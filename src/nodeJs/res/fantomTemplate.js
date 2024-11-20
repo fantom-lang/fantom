@@ -50,6 +50,11 @@ const boot = async function(opts={}) {
   Env.cur().__homeDir = File.os(fan_home);
   Env.cur().__workDir = File.os(fan_home);
   Env.cur().__tempDir = File.os(toDir(path.resolve(fan_home, "temp")));
+  Env.cur().__loadVars({
+    "node.version": process.versions.node,
+    "node.path": path.resolve(url.fileURLToPath(import.meta.url), "../..")
+  });
+
   await checkPathEnv();
 
   // handle polyfills

@@ -35,13 +35,8 @@ class BootEnv extends Env {
 
     // set some pre-defined vars
     if (Env.__isNode()) {
-      let path = Env.__node("path");
-      let url = Env.__node("url");
       this.#vars.set("os.name", this.os());
       this.#vars.set("os.version", Env.__node()?.os?.version());
-      this.#vars.set("node.version", process.versions.node);
-      // this assumes that sys.js is in {node.path}/<some_dir>/sys.js
-      this.#vars.set("node.path", path.resolve(url.fileURLToPath(import.meta.url), "../.."));
     }
 
     for (let i=0; i<keys.length; ++i) {
