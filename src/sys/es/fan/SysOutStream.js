@@ -120,7 +120,7 @@ class ConsoleOutStream extends OutStream {
     else this.#buf += String.fromCharCode(v)
   }
   flush() {
-    if (this.#buf.length > 0 && console) console.log(this.#buf);
+    if (console) console.log(this.#buf);
     this.#buf = "";
   }
 }
