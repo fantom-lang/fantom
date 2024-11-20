@@ -52,6 +52,11 @@ class LocalFile extends File {
       }
       instance.#node_os_path = url.fileURLToPath(uriStr).split(path.sep).join(path.posix.sep);
     }
+    else if (instance.#node_os_path.startsWith("file://")) {
+      // need to ensure that even on unix we remove the file scheme so
+      // various node functions will work.
+      instance.#node_os_path = url.fileURLToPath(instance.#node_os_path);
+    }
 
     return instance;
   }
