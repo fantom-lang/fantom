@@ -22,7 +22,10 @@ const class PathEnv : Env
   new make() : super(Env.cur)
   {
     vars := super.vars
-    path := parsePath(null, vars["FAN_ENV_PATH"] ?: "")
+    path := parsePath(null, vars["FAN_ENV_PATH"] ?: "") |msg, err|
+    {
+      log.warn("Parsing FAN_ENV_PATH: $msg", err)
+    }
 
     this.vars = vars
     this.pathRef = AtomicRef(path.toImmutable)
@@ -42,32 +45,46 @@ const class PathEnv : Env
       if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
     }
 
-    path := parsePath(file, props["path"] ?: "")
-    doAdd(path, file.parent.normalize, 0)
+    workDir := file.parent
+    path := parsePath(workDir, props["path"] ?: "") |msg, err|
+    {
+      log.warn("Parsing $file.osPath: $msg", err)
+    }
 
     this.vars = vars
     this.pathRef = AtomicRef(path.toImmutable)
   }
 
-  private File[] parsePath(File? ref, Str path)
+  **
+  ** Parse path string from env var or props file.
+  ** Always put given workDir first and boot homeDir last
+  **
+  @NoDoc static File[] parsePath(File? workDir, Str path, |Str, Err?| onWarn)
   {
+    // add workDir first
     acc := File[,]
+    acc.addNotNull(workDir.normalize)
+
+    // parse path
     try
     {
       path.split(';').each |item|
       {
         if (item.isEmpty) return
-        dir := (item.startsWith("..") && ref != null)
-          ? File.os("$ref.parent.osPath/$item").normalize
+        dir := (item.startsWith("..") && workDir != null)
+          ? File.os("$workDir.osPath/$item").normalize
           : File.os(item).normalize
         if (!dir.exists) dir = File(item.toUri.plusSlash, false).normalize
-        if (!dir.exists) { log.warn("Dir not found: $dir"); return }
-        if (!dir.isDir) { log.warn("Not a dir: $dir"); return }
+        if (!dir.exists) { onWarn("Dir not found: $dir", null); return }
+        if (!dir.isDir) { onWarn("Not a dir: $dir", null); return }
         doAdd(acc, dir)
       }
     }
-    catch (Err e) log.err("Cannot parse path: $path", e)
-    doAdd(acc, Env.cur.homeDir)
+    catch (Err e) onWarn("Cannot parse path: $path", e)
+
+    // ensure homeDir is last
+    acc.remove(Env.cur.homeDir)
+    acc.add(Env.cur.homeDir)
     return acc
   }
 
