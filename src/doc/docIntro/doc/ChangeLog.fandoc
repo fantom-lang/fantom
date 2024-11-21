@@ -21,6 +21,7 @@
 - Add sql::Statement.executeBatch method
 - Add concurrent::ActorMsg
 - Add List/Map setNotNull
+- Fix PathEnv via fan.props to order path correctly
 
 *Build 1.0.80 (23 Apr 2024)*
 - New ECMA class-based JavaScript design
