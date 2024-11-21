@@ -38,10 +38,11 @@ const boot = async function(opts={}) {
     const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
   // find Fantom home dir
+  const node_path = path.resolve(url.fileURLToPath(import.meta.url), "../..");
   let fan_home = opts["FAN_HOME"] ?? process.env["FAN_HOME"];
   if (!fan_home) {
-    // assumes that fantom.js is in <fan_home>/lib/es/esm/
-    fan_home = path.resolve(__dirname, "../../../");
+    // default fan_home is the same as node_path
+    fan_home = node_path;
   }
   else fan_home = path.resolve(fan_home);
   fan_home = toDir(fan_home);
@@ -52,7 +53,7 @@ const boot = async function(opts={}) {
   Env.cur().__tempDir = File.os(toDir(path.resolve(fan_home, "temp")));
   Env.cur().__loadVars({
     "node.version": process.versions.node,
-    "node.path": path.resolve(url.fileURLToPath(import.meta.url), "../..")
+    "node.path": node_path
   });
 
   await checkPathEnv();
