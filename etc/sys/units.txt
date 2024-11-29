@@ -517,9 +517,9 @@ microsecond, µs; sec1; 1.0E-6
 millisecond, ms; sec1; 0.0010
 hundredths_second, cs; sec1; 0.01
 tenths_second, ds; sec1; 0.1
-second, sec, s; sec1
+second, s, sec; sec1
 minute, min; sec1; 60.0
-hour, hr, h; sec1; 3600.0
+hour, h, hr; sec1; 3600.0
 day; sec1; 86400.0
 week, wk; sec1; 604800.0
 julian_month, mo; sec1; 2629800.0
