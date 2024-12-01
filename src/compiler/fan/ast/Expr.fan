@@ -1114,13 +1114,14 @@ class FieldExpr : NameExpr
   {
     s := StrBuf.make
     if (target != null) s.add(target).add(".");
+    if (isSafe) s.add("?")
     if (!useAccessor) s.add("@")
     s.add(name)
     return s.toStr
   }
 
   CField? field       // resolved field
-  Bool useAccessor    // false if access using '*' storage operator
+  Bool useAccessor    // false if access using '&' storage operator
 }
 
 **************************************************************************
@@ -1756,3 +1757,4 @@ enum class ShortcutOp
   const Bool isOperator
   const Str symbol
 }
+

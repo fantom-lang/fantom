@@ -1695,7 +1695,9 @@ public class Parser : CompilerSupport
     if (curt == Token.amp)
     {
       consume
-      return UnknownVarExpr(loc, target, consumeId, ExprId.storage)
+      var := UnknownVarExpr(loc, target, consumeId, ExprId.storage)
+      var.isSafe = safeCall
+      return var
     }
 
     if (peek.isCallOpenParen)

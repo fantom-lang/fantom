@@ -481,6 +481,31 @@ class ExprTest : CompilerTest
   // also see MiscTest.testSafe for more complicated test
 
 //////////////////////////////////////////////////////////////////////////
+// Safe Field Storage
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSafeStorage()
+  {
+    compile(
+    """class Foo {
+         Str baz := "meh" {
+           get { &baz }
+           set { &baz = it }
+         }
+
+         Obj? t0(Foo? foo) { foo?.baz }
+         Obj? t1(Foo? foo) { foo?.&baz }
+       }
+       """)
+
+    obj := pod.types.first.make
+    verifyEq(obj->t0(obj), "meh")
+    verifyEq(obj->t0(null), null)
+    verifyEq(obj->t1(obj), "meh")
+    verifyEq(obj->t1(null), null)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Str Concat
 //////////////////////////////////////////////////////////////////////////
 
@@ -794,3 +819,4 @@ class ExprTest : CompilerTest
    }
 
 }
+
