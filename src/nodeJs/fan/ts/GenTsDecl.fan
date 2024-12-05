@@ -158,9 +158,13 @@ class GenTsDecl
     // Write methods
     if (isList)
     {
-      // make list iterable
-      out.print("  /** List Iterator */\n")
-      out.print("  [Symbol.iterator](): Iterator<V>\n")
+      // make list iterable and write custom make constructor
+      out.print(
+        """  /** List Iterator */
+             [Symbol.iterator](): Iterator<V>;
+             /** Constructor for of[] with optional initial values */
+             static make(of\$: Type, ...args: unknown[]): List;
+           """)
     }
     type.methods.each |method|
     {
@@ -206,6 +210,10 @@ class GenTsDecl
 
     // skip @NoDoc
     if (isNoDoc(slot)) return false
+
+    // we write the List.make() method explicitly because the
+    // javascript impl doesn't adhere to the type signature for Fantom.
+    if (slot.qname == "sys::List.make") return false
 
     // public only
     return slot.isPublic
