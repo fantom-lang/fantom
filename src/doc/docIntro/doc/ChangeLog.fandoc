@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.81 (working)*
+*Build 1.0.81 (6 Dec 2024)*
 - New markdown pod
 - New util::Console API
 - Rewrite fant in Fantom as new util::TestRunner class
