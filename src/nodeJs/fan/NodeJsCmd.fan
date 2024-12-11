@@ -65,7 +65,7 @@ abstract class NodeJsCmd : AbstractMain
 
   protected Bool checkForNode()
   {
-    cmd := ["which", "-s", "node"]
+    cmd := ["which", "node"]
     if ("win32" == Env.cur.os) cmd = ["where", "node"]
     if (Process(cmd) { it.out = null }.run.join != 0)
     {
