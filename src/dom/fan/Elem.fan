@@ -183,6 +183,9 @@ class Elem
 
   ** Paint a '<canvas>' element.  The given callback is invoked
   ** with a graphics context to perform the rendering operation.
+  ** Before calling this code, you should set the canvas width/height
+  ** attributes to match the element size (typically as a ratio of
+  ** the Win.devicePixelRatio).
   Void renderCanvas(|Graphics| f) { CanvasGraphics.render(this, f) }
 
 //////////////////////////////////////////////////////////////////////////
@@ -393,3 +396,4 @@ class Elem
     style->animation = null
   }
 }
+

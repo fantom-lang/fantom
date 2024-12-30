@@ -139,7 +139,7 @@ class WinPeer extends sys.Obj {
 
   devicePixelRatio(self)
   {
-    return sys.Float.make(this.win.devicePixelRatio);
+    return sys.Float.make(this.win.devicePixelRatio || 1);
   }
 
   #parent;

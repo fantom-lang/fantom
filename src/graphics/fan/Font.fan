@@ -168,7 +168,22 @@ const class Font
     if (!style.isNormal)  s.add(style.name).addChar(' ')
     if (!weight.isNormal) s.add(weight.num).addChar(' ')
     s.add(GeomUtil.formatFloat(size)).add("pt").addChar(' ')
-    s.add(names.join(","))
+    names.each |n, i| { if (i > 0) s.add(","); s.add(n) }
+    return s.toStr
+  }
+
+  ** Convert point size to pixel size CSS string taking into
+  ** account devicePixelRatio that we can use in canvas rendering
+  @NoDoc Str toPxSizeCss(Float dpr)
+  {
+    pts := size
+    px  := (pts * 1.333333f * dpr).round
+
+    s := StrBuf()
+    if (!style.isNormal)  s.add(style.name).addChar(' ')
+    if (!weight.isNormal) s.add(weight.num).addChar(' ')
+    s.add(px).add("px").addChar(' ')
+    names.each |n, i| { if (i > 0) s.add(","); s.add(n) }
     return s.toStr
   }
 
@@ -393,3 +408,4 @@ enum class FontStyle
     fromStr(s, checked)
   }
 }
+

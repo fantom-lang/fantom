@@ -22,12 +22,6 @@ class CanvasGraphics extends sys.Obj {
   {
     const cx = canvas.peer.elem.getContext("2d");
     const g = new CanvasGraphics();
-    if (!canvas.peer.__inited)
-    {
-      // first time thru scale by half a pixel to avoid blurry lines
-      canvas.peer.__inited = true;
-      cx.translate(0.5, 0.5);
-    }
     g.cx = cx;
     cb(g);
   }
@@ -88,8 +82,13 @@ class CanvasGraphics extends sys.Obj {
   {
     if (it === undefined) return this.#font;
 
+    // convert the font point size to a pixel size CSS string; we assume
+    // rendering using devicePixelRatio for crisp fonts on retina displays
+    const dpr = window.devicePixelRatio || 1;
+    const str = it.toPxSizeCss(dpr);
+
     this.#font = it;
-    this.cx.font = it.toStr();
+    this.cx.font = str;
   }
 
   // FontMetrics metrics()
@@ -153,6 +152,14 @@ class CanvasGraphics extends sys.Obj {
   {
     this.pathRoundRect(x, y, w, h, wArc, hArc);
     this.cx.fill();
+    return this;
+  }
+
+  // This clipRoundRect(Float x, Float y, Float w, Float h, Float wArc, Float hArc)
+  clipRoundRect(x, y, w, h, wArc, hArc)
+  {
+    this.pathRoundRect(x, y, w, h, wArc, hArc);
+    this.cx.clip();
     return this;
   }
 

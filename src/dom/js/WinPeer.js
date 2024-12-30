@@ -130,7 +130,7 @@ fan.dom.WinPeer.prototype.screenSize = function(self)
 
 fan.dom.WinPeer.prototype.devicePixelRatio = function(self)
 {
-  return fan.sys.Float.make(this.win.devicePixelRatio);
+  return fan.sys.Float.make(this.win.devicePixelRatio || 1);
 }
 
 fan.dom.WinPeer.prototype.parent = function(self)
