@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.82 (working)*
+- Win.devicePixelRatio
+
 *Build 1.0.81 (6 Dec 2024)*
 - New markdown pod
 - New util::Console API

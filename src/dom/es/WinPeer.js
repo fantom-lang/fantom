@@ -137,6 +137,11 @@ class WinPeer extends sys.Obj {
     return this.#screenSize;
   }
 
+  devicePixelRatio(self)
+  {
+    return sys.Float.make(this.win.devicePixelRatio);
+  }
+
   #parent;
   parent(self)
   {
@@ -458,3 +463,4 @@ class WinPeer extends sys.Obj {
     return map;
   }
 }
+

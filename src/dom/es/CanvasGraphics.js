@@ -172,7 +172,7 @@ class CanvasGraphics extends sys.Obj {
   }
 
   // This drawEllipse(Float x, Float y, Float w, Float h)
-  drawEllipsefunction(x, y, w, h)
+  drawEllipse(x, y, w, h)
   {
     this.pathEllipse(x, y, w, h);
     this.cx.stroke();
@@ -274,3 +274,4 @@ class CanvasGraphics extends sys.Obj {
   #stack = new Array();
 
 }
+

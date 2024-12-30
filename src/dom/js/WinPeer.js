@@ -128,6 +128,11 @@ fan.dom.WinPeer.prototype.screenSize = function(self)
   return this.$screenSize;
 }
 
+fan.dom.WinPeer.prototype.devicePixelRatio = function(self)
+{
+  return fan.sys.Float.make(this.win.devicePixelRatio);
+}
+
 fan.dom.WinPeer.prototype.parent = function(self)
 {
   if (this.win == this.win.parent) return null;
@@ -453,3 +458,4 @@ fan.dom.WinPeer.prototype.diagnostics = function(self)
 
   return map;
 }
+

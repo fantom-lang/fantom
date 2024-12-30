@@ -79,6 +79,9 @@ class Win
   ** Return the size of the screen in pixels.
   native Size screenSize()
 
+  ** Ratio of physical pixels to the resolution in CSS pixels
+  native Float devicePixelRatio()
+
   ** Returns a reference to the parent of the current window
   ** or subframe, or null if this is the top-most window.
   native Win? parent()
@@ -256,3 +259,4 @@ class Win
   ** for current state of JsVM and DOM.
   @NoDoc native Str:Obj diagnostics()
 }
+
