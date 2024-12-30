@@ -33,7 +33,7 @@ class AlphaTest : AbstractTest
     g.stroke = Stroke(4f)
     PathTest.pathTurtle(g).draw
 
-    g.font = Font("48pt Times")
+    g.font = Font("32pt Times")
     g.color = Color("darkorange").opacity(0.7f)
     g.drawText("Alpha", 20f, 220f)
 
@@ -48,7 +48,6 @@ class AlphaTest : AbstractTest
     g.stroke = Stroke(4f)
     PathTest.pathTurtle(g).draw
 
-    g.font = Font("48pt Times")
     g.color = Color("darkorange")
     g.drawText("Alpha", 20f, 220f)
 
@@ -63,7 +62,6 @@ class AlphaTest : AbstractTest
     g.stroke = Stroke(4f)
     PathTest.pathTurtle(g).draw
 
-    g.font = Font("48pt Times")
     g.color = Color("darkorange")
     g.drawText("Opaque", 20f, 220f)
   }

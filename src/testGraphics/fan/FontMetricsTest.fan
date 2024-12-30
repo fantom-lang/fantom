@@ -21,16 +21,20 @@ class FontMetricsTest : AbstractTest
 
     names := ["Times", "Helvetica", "Consolas", "Courier", "Tahoma", "Arial"]
 
+    ptSize := 24f
+    g.font = Font(["Times"], ptSize)
+
     ty := 50f
     tx := 30f
+    th := g.metrics.height * 1.2f
 
     names.each |name|
     {
-      g.font = Font([name], 24f)
+      g.font = Font([name], ptSize)
       paintText(g, name, tx, ty)
-      ty += 50f
+      ty += th
       paintText(g, alphabet, tx, ty)
-      ty += 50f
+      ty += th
     }
   }
 

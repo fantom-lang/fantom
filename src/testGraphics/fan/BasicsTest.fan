@@ -25,11 +25,12 @@ class BasicsTest : AbstractTest
     tm := g.metrics
     tw := tm.width(text)
     tx := (size.w - tw) / 2f
+    cy := size.h / 2f
     ty := (size.h - g.metrics.height) / 2f + g.metrics.ascent
     g.color = Color("thistle")
-    g.fillRoundRect(tx - 30f, ty-60f, tw+60f, tm.height+60f, 20f, 20f)
+    g.fillRoundRect(tx - 30f, cy-60f, tw+60f, 120f, 20f, 20f)
     g.color = Color("purple")
-    g.drawRoundRect(tx - 30f, ty-60f, tw+60f, tm.height+60f, 20f, 20f)
+    g.drawRoundRect(tx - 30f, cy-60f, tw+60f, 120f, 20f, 20f)
     g.color = Color("blue")
     g.drawText(text, tx, ty)
   }

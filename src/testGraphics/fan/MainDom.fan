@@ -16,6 +16,7 @@ const class MainDomMod : WebMod
 {
   new make()
   {
+    WebJsMode.setCur(WebJsMode.es)
     pods := [typeof.pod]
     this.jsPack  = FilePack(FilePack.toAppJsFiles(pods))
     this.cssPack = FilePack(FilePack.toAppCssFiles(pods))
@@ -130,16 +131,15 @@ class MainDom
       //Elem("a") { it->href=`/svg/${typeName}`; it.text = "SVG"; it.style->lineHeight = "25px" },
     }
 
-    size := Size(1000, 800)
-    canvas := Elem("canvas")
-    canvas.setAttr("width", "${size.w.toInt}px")
-    canvas.setAttr("height", "${size.h.toInt}px")
-    canvas.renderCanvas |g| { test.paint(size, g) }
+    dpr := Win.cur.devicePixelRatio
+    elemSize := Size(1000, 800)
+    rendSize := Size(elemSize.w * dpr, elemSize.h * dpr)
 
-    repaint = |->|
-    {
-      canvas.renderCanvas |g| { test.paint(size, g) }
-    }
+    canvas := Elem("canvas")
+    canvas.size = elemSize
+    canvas.setAttr("width", rendSize.w.toStr)
+    canvas.setAttr("height", rendSize.h.toStr)
+    canvas.renderCanvas |g| { test.paint(rendSize, g) }
 
     sash := SashBox
     {
@@ -152,3 +152,4 @@ class MainDom
     Win.cur.doc.body.add(sash)
   }
 }
+

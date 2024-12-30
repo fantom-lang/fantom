@@ -39,14 +39,14 @@ class PathTest : AbstractTest
 
     // quadTo
     cx := 100f
-    cy := 250f
-    r  := 45f
+    cy := 450f
+    r  := 90f
     pathArc(g, cx,      cy, r, 0f,   90f).draw
-    pathArc(g, cx+100f, cy, r, 0f,  -90f).draw
-    pathArc(g, cx+200f, cy, r, 90f,  45f).draw
-    pathArc(g, cx+300f, cy, r, 135f, 90f).draw
-    pathArc(g, cx+400f, cy, r, 180f, -45f).draw
-    pathArc(g, cx+500f, cy, r, 270f, 45f).draw
+    pathArc(g, cx+200f, cy, r, 0f,  -90f).draw
+    pathArc(g, cx+400f, cy, r, 90f,  45f).draw
+    pathArc(g, cx+600f, cy, r, 135f, 90f).draw
+    pathArc(g, cx+800f, cy, r, 180f, -45f).draw
+    pathArc(g, cx+1000f, cy, r, 270f, 45f).draw
   }
 
   static GraphicsPath pathTurtle(Graphics g)

@@ -42,7 +42,7 @@ class StrokeTest : AbstractTest
 
     g.color = Color("blue")
     g.stroke = Stroke("[$dash]")
-    g.drawLine(x+60f, y, x+200f, y)
+    g.drawLine(x+100f, y, x+200f, y)
   }
 
   Void paintCap(Graphics g, StrokeCap cap, Float x, Float y)
@@ -52,10 +52,10 @@ class StrokeTest : AbstractTest
 
     g.color = Color("blue")
     g.stroke = Stroke("20 $cap")
-    g.drawLine(x+60f, y, x+200f, y)
+    g.drawLine(x+100f, y, x+200f, y)
     g.color = Color("#ccc")
     g.stroke = Stroke(1f)
-    g.drawLine(x+60f, y, x+200f, y)
+    g.drawLine(x+100f, y, x+200f, y)
   }
 
   Void paintJoin(Graphics g, StrokeJoin join, Float x, Float y)

@@ -17,37 +17,39 @@ class FontStyleTest : AbstractTest
 
     tx := 20f
     ty := 0f
+    th := 20f
     points := 12
     pixels := 16f
     text := "0123456789 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     names.each |n|
     {
-      ty += 40f
+      ty += th*2
       g.color = Color("black")
       g.font = Font("${points}pt $n")
       g.drawText("$g.font", tx, ty)
+      if (Env.cur.runtime == "js") th = g.metrics.height + 10f
 
-      ty += 20f
+      ty += th
       g.color = Color("green")
       g.fillRect(tx, ty-pixels, 6f, pixels)
       g.color = Color("black")
       g.drawText(text, tx+10f, ty)
 
-      ty += 20f
+      ty += th
       g.color = Color("red")
       g.fillRect(tx, ty-pixels, 6f, pixels)
       g.color = Color("black")
       g.font = Font("bold ${points}pt $n")
       g.drawText(text, tx+10f, ty)
 
-      ty += 20f
+      ty += th
       g.color = Color("purple")
       g.fillRect(tx, ty-pixels, 6f, pixels)
       g.color = Color("black")
       g.font = Font("italic ${points}pt $n")
       g.drawText(text, tx+10f, ty)
 
-      ty += 20f
+      ty += th
       g.color = Color("orange")
       g.fillRect(tx, ty-pixels, 6f, pixels)
       g.color = Color("black")
