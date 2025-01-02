@@ -82,6 +82,9 @@ class CanvasGraphics extends sys.Obj {
   {
     if (it === undefined) return this.#font;
 
+    // short circuit if no change
+    if (this.#font === it) return
+
     // convert the font point size to a pixel size CSS string; we assume
     // rendering using devicePixelRatio for crisp fonts on retina displays
     const dpr = window.devicePixelRatio || 1;

@@ -130,6 +130,23 @@ const class Stroke
     return makeFields(newWidth, dash, cap, join)
   }
 
+  ** Scale size and dash pattern by given ratio
+  Stroke scale(Float ratio)
+  {
+    if (ratio == 1f) return this
+    Str? scaleDash := null
+    if (dash != null)
+    {
+      s := StrBuf()
+      GeomUtil.parseFloatList(dash).each |x|
+      {
+        s.join(GeomUtil.formatFloat(x * ratio), ",")
+      }
+      scaleDash = s.toStr
+    }
+    return makeFields(width*ratio, scaleDash, cap, join)
+  }
+
   ** Return string format - see `fromStr`
   override Str toStr()
   {

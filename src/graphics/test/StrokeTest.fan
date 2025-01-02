@@ -42,6 +42,12 @@ class StrokeTest : Test
     verifyStroke(Stroke(3f, "2,1", StrokeCap.square, StrokeJoin.bevel),
       3f, "2,1", StrokeCap.square, StrokeJoin.bevel)
 
+    verifyStroke(Stroke(4f, null, StrokeCap.square, StrokeJoin.bevel).scale(0.5f),
+      2f, null, StrokeCap.square, StrokeJoin.bevel)
+
+    verifyStroke(Stroke(3f, "2,1", StrokeCap.square, StrokeJoin.bevel).scale(2f),
+      6f, "4,2", StrokeCap.square, StrokeJoin.bevel)
+
     verifyErr(ParseErr#) { x := Stroke.fromStr("", true) }
     verifyErr(ParseErr#) { x := Stroke.fromStr("notAColor", true) }
     verifyErr(ParseErr#) { x := Stroke.fromStr("notAColor round", true) }
@@ -71,3 +77,4 @@ class StrokeTest : Test
   }
 
 }
+
