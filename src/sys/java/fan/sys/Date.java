@@ -161,6 +161,11 @@ public final class Date
     return DateTime.dayOfYear(getYear(), month().ord, getDay())+1;
   }
 
+  public final long quarter()
+  {
+    return (month / 3) + 1;
+  }
+
   public final long weekOfYear() { return weekOfYear(Weekday.localeStartOfWeek()); }
   public final long weekOfYear(Weekday startOfWeek)
   {
@@ -295,6 +300,33 @@ public final class Date
     return new Date(year, month, last);
   }
 
+  public final Date firstOfQuarter()
+  {
+    int qmonth = (month/3)*3;
+    if (day == 1 && month == qmonth) return this;
+    return new Date(year, qmonth, 1);
+  }
+
+  public final Date lastOfQuarter()
+  {
+    int qmonth = (month/3)*3 + 2;
+    int qday   = (int)Month.array[qmonth].numDays(year);
+    if (qmonth == month && qday == day) return this;
+    return new Date(year, qmonth, qday);
+  }
+
+  public final Date firstOfYear()
+  {
+    if (month == 0 && day == 1) return this;
+    return new Date(year, 0, 1);
+  }
+
+  public final Date lastOfYear()
+  {
+    if (month == 11 && day == 31) return this;
+    return new Date(year, 11, 31);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
@@ -302,6 +334,12 @@ public final class Date
   public boolean isYesterday() { return equals(today().plus(Duration.negOneDay)); }
   public boolean isToday()     { return equals(today()); }
   public boolean isTomorrow()  { return equals(today().plus(Duration.oneDay)); }
+
+  public boolean isBefore(Date x)  { return compare(x) < 0; }
+  public boolean isAfter(Date x)  { return compare(x) > 0; }
+
+  public boolean isSameYear(Date x)  { return year == x.year; }
+  public boolean isSameMonth(Date x)  { return year == x.year && month == x.month; }
 
   public DateTime toDateTime(Time t) { return DateTime.makeDT(this, t); }
   public DateTime toDateTime(Time t, TimeZone tz) { return DateTime.makeDT(this, t, tz); }
@@ -329,3 +367,4 @@ public final class Date
   private String str;
 
 }
+

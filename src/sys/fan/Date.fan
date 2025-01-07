@@ -119,6 +119,12 @@ const final class Date
   Int dayOfYear()
 
   **
+  ** Integer between 1 and 4 for which of the three month quarters
+  ** this date falls in.
+  **
+  Int quarter()
+
+  **
   ** Return the week number of the year as a number
   ** between 1 and 53 using the given weekday as the
   ** start of the week (defaults to current locale).
@@ -230,6 +236,38 @@ const final class Date
   **
   Date lastOfMonth()
 
+  **
+  ** Get the beginning of this date's three month quarter
+  **
+  ** Example:
+  **   Date("2025-04-28").firstOfQuarter  =>  2025-04-01
+  **
+  Date firstOfQuarter()
+
+  **
+  ** Get the end of this date's three month quarter
+  **
+  ** Example:
+  **   Date("2025-04-28").lastOfQuarter  =>  2025-06-30
+  **
+  Date lastOfQuarter()
+
+  **
+  ** Get the Jan 1st of this Date's current year.
+  **
+  ** Example:
+  **   Date("2025-10-28").firstOfYear  =>  2025-01-01
+  **
+  Date firstOfYear()
+
+  **
+  ** Get the Dec 31st of this Date's current year.
+  **
+  ** Example:
+  **   Date("2025-10-28").lastOfYear  =>  2025-12-31
+  **
+  Date lastOfYear()
+
 //////////////////////////////////////////////////////////////////////////
 // Misc
 //////////////////////////////////////////////////////////////////////////
@@ -250,6 +288,26 @@ const final class Date
   Bool isTomorrow()
 
   **
+  ** Convenience for 'this < that'
+  **
+  Bool isBefore(Date that)
+
+  **
+  ** Convenience for 'this > that'
+  **
+  Bool isAfter(Date that)
+
+  **
+  ** Return if this date is in the same year of 'that'
+  **
+  Bool isSameYear(Date that)
+
+  **
+  ** Return if this date is in the same year and month of 'that'
+  **
+  Bool isSameMonth(Date that)
+
+  **
   ** Combine this Date with the given Time to return a DateTime.
   **
   DateTime toDateTime(Time t, TimeZone tz := TimeZone.cur)
@@ -265,3 +323,4 @@ const final class Date
   Str toCode()
 
 }
+

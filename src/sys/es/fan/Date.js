@@ -23,7 +23,7 @@ class Date extends Obj {
     this.#month = month;
     this.#day = day;
   }
-  
+
   #year;
   #month;
   #day;
@@ -72,13 +72,17 @@ class Date extends Obj {
   month() { return Month.vals().get(this.#month); }
   day() { return this.#day; }
 
+  quarter() {
+    return 1 + (this.#month - this.#month % 3) / 3;
+  }
+
   weekday() {
     const weekday = (DateTime.__firstWeekday(this.#year, this.#month) + this.#day - 1) % 7;
     return Weekday.vals().get(weekday);
   }
 
-  dayOfYear() { 
-    return DateTime.__dayOfYear(this.year(), this.month().ordinal(), this.day())+1; 
+  dayOfYear() {
+    return DateTime.__dayOfYear(this.year(), this.month().ordinal(), this.day())+1;
   }
 
   weekOfYear(startOfWeek=Weekday.localeStartOfWeek()) {
@@ -165,6 +169,29 @@ class Date extends Obj {
     return new Date(this.#year, this.#month, last);
   }
 
+  firstOfQuarter() {
+    const qmonth = (this.quarter() - 1)*3;
+    if (this.#day == 1 && this.#month == qmonth) return this;
+    return new Date(this.#year, qmonth, 1);
+  }
+
+  lastOfQuarter() {
+    const qmonth = (this.quarter() - 1)*3 + 2;
+    const qday = Month.vals().get(qmonth).numDays(this.#year);
+    if (this.#day == qday && this.#month == qmonth) return this;
+    return new Date(this.#year, qmonth, qday);
+  }
+
+  firstOfYear() {
+    if (this.#month == 0 && this.#day == 1) return this;
+    return new Date(this.#year, 0, 1);
+  }
+
+  lastOfYear() {
+    if (this.#month == 11 && this.#day == 31) return this;
+    return new Date(this.#year, 11, 31);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Locale
 //////////////////////////////////////////////////////////////////////////
@@ -233,6 +260,13 @@ class Date extends Obj {
   isToday() { return this.equals(Date.today()); }
   isTomorrow() { return this.equals(Date.today().plus(Duration.oneDay$())); }
 
+  isBefore(x) { return this.compare(x) < 0; }
+  isAfter(x) { return this.compare(x) > 0; }
+
+  isSameYear(x) { return this.#year == x.#year; }
+  isSameMonth(x) { return this.#year == x.#year && this.#month == x.#month; }
+
+
   toDateTime(t, tz=TimeZone.cur()) {
     return DateTime.__makeDT(this, t, tz);
   }
@@ -247,3 +281,4 @@ class Date extends Obj {
   }
 
 }
+

@@ -9,6 +9,7 @@
 *Build 1.0.82 (working)*
 - Win.devicePixelRatio
 - Stroke.scale
+- Date convenience methods
 
 *Build 1.0.81 (6 Dec 2024)*
 - New markdown pod

@@ -122,6 +122,25 @@ class DateTimeTest : Test
 
     verifyFalse(Date(2000, aug, 10) > Date(2000, aug, 11))
     verifyFalse(Date(2000, aug, 10) > Date(2000, dec, 10))
+
+    a := Date(2000, aug, 10)
+    b := Date(2000, aug, 11)
+    verifyEq(a.isBefore(b), true)
+    verifyEq(a.isBefore(a), false)
+    verifyEq(b.isBefore(a), false)
+    verifyEq(a.isAfter(b),  false)
+    verifyEq(a.isAfter(a),  false)
+    verifyEq(b.isAfter(a),  true)
+
+    verifyEq(Date("2025-03-02").isSameYear(Date("2025-03-02")), true)
+    verifyEq(Date("2025-03-02").isSameYear(Date("2025-03-01")), true)
+    verifyEq(Date("2025-03-02").isSameYear(Date("2025-05-02")), true)
+    verifyEq(Date("2025-03-02").isSameYear(Date("2024-03-02")), false)
+
+    verifyEq(Date("2025-03-02").isSameMonth(Date("2025-03-02")), true)
+    verifyEq(Date("2025-03-02").isSameMonth(Date("2025-03-01")), true)
+    verifyEq(Date("2025-03-02").isSameMonth(Date("2025-05-02")), false)
+    verifyEq(Date("2025-03-02").isSameMonth(Date("2024-03-02")), false)
   }
 
   Void testTimeCompare()
@@ -1574,23 +1593,75 @@ class DateTimeTest : Test
 
   Void testDateFirstAndLast()
   {
-    verifyDateFirstAndLast(Date(2009, jan, 1))
-    verifyDateFirstAndLast(Date(2009, jan, 31))
-    verifyDateFirstAndLast(Date(2009, oct, 31))
-    verifyDateFirstAndLast(Date(2008, feb, 4))
-    verifyDateFirstAndLast(Date(2009, feb, 7))
+    verifyDateFirstAndLast(Date(2009, jan, 1),  "2009-01-01", "2009-03-31", 1)
+    verifyDateFirstAndLast(Date(2009, jan, 31), "2009-01-01", "2009-03-31", 1)
+    verifyDateFirstAndLast(Date(2009, oct, 31), "2009-10-01", "2009-12-31", 4)
+    verifyDateFirstAndLast(Date(2008, feb, 4),  "2008-01-01", "2008-03-31", 1)
+    verifyDateFirstAndLast(Date(2009, feb, 7),  "2009-01-01", "2009-03-31", 1)
+    verifyDateFirstAndLast(Date(2025, mar, 30), "2025-01-01", "2025-03-31", 1)
+    verifyDateFirstAndLast(Date(2025, apr, 1),  "2025-04-01", "2025-06-30", 2)
+    verifyDateFirstAndLast(Date(2025, apr, 2),  "2025-04-01", "2025-06-30", 2)
+    verifyDateFirstAndLast(Date(2025, jun, 30), "2025-04-01", "2025-06-30", 2)
+    verifyDateFirstAndLast(Date(2025, jul, 1),  "2025-07-01", "2025-09-30", 3)
+    verifyDateFirstAndLast(Date(2025, sep, 4),  "2025-07-01", "2025-09-30", 3)
+    verifyDateFirstAndLast(Date(2025, dec, 4),  "2025-10-01", "2025-12-31", 4)
   }
 
-  Void verifyDateFirstAndLast(Date d)
+  Void verifyDateFirstAndLast(Date d, Str qfirst, Str qlast, Int quarter)
   {
+    /*
+    echo
+    echo("-- $d")
+    echo(" y < $d.firstOfYear")
+    echo(" q < $d.firstOfQuarter")
+    echo(" m < $d.firstOfMonth")
+    echo(" y > $d.lastOfYear")
+    echo(" q > $d.lastOfQuarter")
+    echo(" m > $d.lastOfMonth")
+    */
+
+    // first of month
     first := d.firstOfMonth
     verifyEq(first.year,  d.year)
     verifyEq(first.month, d.month)
     verifyEq(first.day,   1)
+    verifySame(first.firstOfMonth, first)
+
+    // first of quarter
+    first = d.firstOfQuarter
+    verifyEq(first.toStr, qfirst)
+    verifySame(first.firstOfQuarter, first)
+    verifyEq(d.quarter, quarter)
+    verifyEq(first.quarter, quarter)
+
+    // first of year
+    first = d.firstOfYear
+    verifyEq(first.year,  d.year)
+    verifyEq(first.month, Month.jan)
+    verifyEq(first.day,   1)
+    verifySame(first.firstOfYear, first)
+
+    // last of month
     last := d.lastOfMonth
     verifyEq(last.year,  d.year)
     verifyEq(last.month, d.month)
     verifyEq(last.day,   d.month.numDays(d.year))
+    verifySame(last.lastOfMonth, last)
+
+    // last of quarter
+    last = d.lastOfQuarter
+    verifyEq(last.toStr, qlast)
+    verifySame(last.lastOfQuarter, last)
+    verifyEq(d.quarter, quarter)
+    verifyEq(last.quarter, quarter)
+
+    // last of year
+    last = d.lastOfYear
+    verifyEq(last.year,  d.year)
+    verifyEq(last.month, Month.dec)
+    verifyEq(last.day,   31)
+    verifySame(last.lastOfYear, last)
+
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1815,3 +1886,4 @@ class DateTimeTest : Test
   }
 
 }
+
