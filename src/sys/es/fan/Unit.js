@@ -58,8 +58,8 @@ class Dimension {
 
 class Unit extends Obj {
 
-  constructor(ids, dim, scale, offset) { 
-    super(); 
+  constructor(ids, dim, scale, offset) {
+    super();
     this.#ids    = Unit.#checkIds(ids);
     this.#dim    = dim;
     this.#scale  = scale;
@@ -290,8 +290,9 @@ class Unit extends Obj {
   //////////////////////////////////////////////////////////////////////////
 
   convertTo(scalar, to) {
-    if (this.#dim != to.#dim) throw Err.make("Incovertable units: " + this + " and " + to);
+    if (this.#dim != to.#dim) throw Err.make("Inconvertible units: " + this + " and " + to);
     return ((scalar * this.#scale + this.#offset) - to.#offset) / to.#scale;
   }
 
 }
+

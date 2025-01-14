@@ -302,7 +302,7 @@ fan.sys.Unit.prototype.cd = function() { return this.m_dim.cd; }
 
 fan.sys.Unit.prototype.convertTo = function(scalar, to)
 {
-  if (this.m_dim != to.m_dim) throw fan.sys.Err.make("Incovertable units: " + this + " and " + to);
+  if (this.m_dim != to.m_dim) throw fan.sys.Err.make("Inconvertible units: " + this + " and " + to);
   return ((scalar * this.m_scale + this.m_offset) - to.m_offset) / to.m_scale;
 }
 
@@ -316,5 +316,4 @@ fan.sys.Unit.m_quantities = {}; // String -> List
 fan.sys.Unit.m_quantityNames;
 fan.sys.Unit.m_dimensionless = new fan.sys.Dimension();
 fan.sys.Unit.m_dims[fan.sys.Unit.m_dimensionless.toString()] =  fan.sys.Unit.m_dimensionless;
-
 

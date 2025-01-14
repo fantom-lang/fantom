@@ -504,7 +504,7 @@ public final class Unit
 
   public final double convertTo(double scalar, Unit to)
   {
-    if (dim != to.dim) throw Err.make("Incovertable units: " + this + " and " + to);
+    if (dim != to.dim) throw Err.make("Inconvertible units: " + this + " and " + to);
     return ((scalar * this.scale + this.offset) - to.offset) / to.scale;
   }
 
@@ -531,3 +531,4 @@ public final class Unit
   private final Dimension dim;
 
 }
+
