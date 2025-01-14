@@ -63,7 +63,7 @@ const class PathEnv : Env
   {
     // add workDir first
     acc := File[,]
-    acc.addNotNull(workDir.normalize)
+    acc.addNotNull(workDir?.normalize)
 
     // parse path
     try
