@@ -152,7 +152,7 @@ const class Java2DGraphicsEnv : GraphicsEnv
   Java2DImage loadImage(Uri uri, Buf data)
   {
     awt := ImageIO.read(Interop.toJava(data.in))
-    mime := Image.mimeForExt(uri.ext ?: "")
+    mime := Image.mimeForLoad(uri, data)
     return Java2DImage(uri, mime, awt)
   }
 

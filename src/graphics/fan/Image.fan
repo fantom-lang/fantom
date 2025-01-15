@@ -69,21 +69,53 @@ mixin Image
   **  - 'colorSpaceBits' (Int) - bits-per-channel of the color space
   @NoDoc @Operator abstract Obj? get(Str prop)
 
-  ** Map file extension to mime type
-  @NoDoc static MimeType mimeForExt(Str ext)
+  ** Map file extension for GraphicsEnv.image
+  @NoDoc static MimeType mimeForLoad(Uri uri, Buf? data)
   {
-    ext = ext.lower
+    // prefer data over URI if available
+    if (data != null)
+    {
+      mime := mimeForData(data)
+      if (mime != null) return mime
+    }
+
+    // try to infer from URI extension
+    return mimeForUri(uri) ?: mimeUnknown
+  }
+
+  ** Map file extension to mime type or return null
+  @NoDoc static MimeType? mimeForUri(Uri uri)
+  {
+    ext := uri.ext?.lower ?: ""
     if (ext == "svg") return mimeSvg
     if (ext == "png") return mimePng
     if (ext == "jpg" || ext == "jpeg") return mimeJpeg
     if (ext == "gif") return mimeGif
-    return MimeType.forExt(ext) ?: MimeType("image/unknown")
+    return MimeType.forExt(ext)
   }
 
-  @NoDoc static const MimeType mimePng  := MimeType("image/png")
-  @NoDoc static const MimeType mimeGif  := MimeType("image/gif")
-  @NoDoc static const MimeType mimeJpeg := MimeType("image/jpeg")
-  @NoDoc static const MimeType mimeSvg  := MimeType("image/svg+xml")
+  ** Try to map image file to mime type
+  @NoDoc static MimeType? mimeForData(Buf data)
+  {
+    if (data.size > 4)
+    {
+      d0 := data[0]
+      d1 := data[1]
+      d2 := data[2]
+      d3 := data[3]
+      if (d0 == '<' && d1 == 's' && d2 == 'v' && d3 == 'g') return mimeSvg
+      if (d0==0x89 && d1==0x50 && d2==0x4E && d3==0x47) return mimePng
+      if (d0==0x47 && d1==0x49 && d2==0x46) return mimeGif
+      if (d0==0xFF && d1==0xD8) return mimeJpeg
+    }
+    return null
+  }
+
+  @NoDoc static const MimeType mimePng     := MimeType("image/png")
+  @NoDoc static const MimeType mimeGif     := MimeType("image/gif")
+  @NoDoc static const MimeType mimeJpeg    := MimeType("image/jpeg")
+  @NoDoc static const MimeType mimeSvg     := MimeType("image/svg+xml")
+  @NoDoc static const MimeType mimeUnknown := MimeType("image/unknown")
 }
 
 **************************************************************************
@@ -131,3 +163,4 @@ mixin PngImage : Image
   ** Get decompressed pixels. The Buf is immutable.
   abstract Buf pixels()
 }
+
