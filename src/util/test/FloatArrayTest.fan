@@ -6,6 +6,7 @@
 //   29 Feb 12  Brian Frank  Creation
 //
 
+@Js
 class FloatArrayTest : Test
 {
 
@@ -21,7 +22,7 @@ class FloatArrayTest : Test
     a := FloatArray.makeF8(200)
     verifyMake(a, 200)
     verifyStores(a, false)
- }
+  }
 
   Void testCopyFrom()
   {

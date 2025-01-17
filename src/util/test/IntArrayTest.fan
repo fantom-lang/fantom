@@ -6,6 +6,7 @@
 //   08 Oct 11  Brian Frank  Creation
 //
 
+@Js
 class IntArrayTest : Test
 {
 
