@@ -34,7 +34,7 @@ class ObjUtil {
     if (t === "string") return a === b;
 
     const f = a.fanType$;
-    if (f === Float.type$) return  Number(a) == Number(b) || isNaN(a) && isNaN(b);
+    if (f === Float.type$) return  Number(a) == Number(b);
     if (f === Decimal.type$) return Decimal.equals(a, b);
 
     return a === b;
