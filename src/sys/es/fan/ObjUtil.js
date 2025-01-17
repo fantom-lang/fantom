@@ -25,11 +25,11 @@ class ObjUtil {
     if (a instanceof Obj) return a.equals(b);
 
     const t = typeof a;
-    if (t === "number") return Number(a) == Number(b) || Int.equals(a, b) || (isNaN(a) && isNaN(b));
+    if (t === "number") return Number(a) == Number(b); // || (isNaN(a) && isNaN(b));
     if (t === "string") return a === b;
 
     const f = a.fanType$;
-    if (f === Float.type$) return Float.equals(a, b) || Number(a) == Number(b);
+    if (f === Float.type$) return  Number(a) == Number(b);
     if (f === Decimal.type$) return Decimal.equals(a, b);
 
     return a === b;

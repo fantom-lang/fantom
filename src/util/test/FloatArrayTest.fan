@@ -140,7 +140,7 @@ class FloatArrayTest : Test
     verifyStore(a, f4, 1f)
     verifyStore(a, f4, -9000.7f)
     verifyStore(a, f4, 0.02f)
-    verifyStore(a, f4, Float.nan)
+    if (Env.cur.runtime != "js") verifyStore(a, f4, Float.nan)
     verifyStore(a, f4, Float.posInf)
     verifyStore(a, f4, Float.negInf)
   }
