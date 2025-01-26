@@ -273,6 +273,9 @@ abstract const class FontMetrics
 
   ** Get the width of the string when painted with this font.
   abstract Float width(Str s)
+
+  ** Return y-coordinate to use for drawText for centered text
+  @NoDoc Float yCenter(Float y, Float h) { y + (h + height)/2 - descent }
 }
 
 **************************************************************************
