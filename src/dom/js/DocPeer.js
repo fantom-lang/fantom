@@ -27,6 +27,11 @@ fan.dom.DocPeer.prototype.body = function(self)
   return fan.dom.ElemPeer.wrap(this.doc.body);
 }
 
+fan.dom.DocPeer.prototype.hasFocus = function(self)
+{
+  return this.doc.hasFocus();
+}
+
 fan.dom.DocPeer.prototype.activeElem = function(self)
 {
   var elem = this.doc.activeElement;

@@ -31,6 +31,11 @@ class DocPeer extends sys.Obj {
     return ElemPeer.wrap(this.doc.body);
   }
 
+  hasFocus(self)
+  {
+    return this.doc.hasFocus();
+  }
+
   activeElem(self)
   {
     const elem = this.doc.activeElement;

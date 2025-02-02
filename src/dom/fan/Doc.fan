@@ -43,6 +43,10 @@ class Doc
   ** Get the body element.
   native Elem body()
 
+  ** Return 'true' if this document or any element inside
+  ** the document has focus.
+  native Bool hasFocus()
+
   ** Get the currently focused element, or 'null' for none.
   native Elem? activeElem()
 
