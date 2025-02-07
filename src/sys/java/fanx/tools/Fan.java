@@ -255,14 +255,33 @@ public class Fan
     println("");
     println("Fantom Pods [" + (t2-t1)/1000000L + "ms]:");
 
-    println("  Pod                 Version");
-    println("  ---                 -------");
+    println("  Pod                 Version  Timestamp        File");
+    println("  ---                 -------  --------------   ----");
     for (int i=0; i<pods.sz(); ++i)
     {
       Pod pod = (Pod)pods.get(i);
       println("  " +
         FanStr.justl(pod.name(), 18L) + "  " +
-        FanStr.justl(pod.version().toString(), 8));
+        FanStr.justl(pod.version().toString(), 8) + "  " +
+        FanStr.justl(podTimestamp(pod), 14) + "  " +
+        FanStr.justl(pod.loadFile().osPath(), 32));
+    }
+  }
+
+  private static String podTimestamp(Pod pod)
+  {
+    try
+    {
+      String s = (String)pod.meta().get("build.ts");
+      if (s == null) return "";
+      DateTime dt = DateTime.fromStr(s, false);
+      if (dt == null) return s;
+      dt = dt.toTimeZone(TimeZone.cur());
+      return dt.toLocale("YY-MM-DD hh:mm");
+    }
+    catch (Throwable e)
+    {
+      return "";
     }
   }
 
@@ -347,3 +366,4 @@ public class Fan
   }
 
 }
+
