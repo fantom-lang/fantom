@@ -207,11 +207,11 @@ class InflateInStream extends InStream {
     super(in$);
     this.#in = in$;
     this.#method = method;
-    this.#bufSize = bufferSize;
+    this.#bufSize = bufferSize || 32768; // Use larger buffer size
   }
 
   static makeInflate(in$, opts=null) {
-    const instance = new InflateInStream(in$, node.zlib.inflateSync, 4096);
+    const instance = new InflateInStream(in$, node.zlib.inflateSync, 32768);
     if (opts) {
       if (opts.get("nowrap") === true)
         instance.#method = node.zlib.inflateRawSync;
@@ -220,7 +220,7 @@ class InflateInStream extends InStream {
   }
   
   static makeGunzip(in$) {
-    return new InflateInStream(in$, node.zlib.gunzipSync, 4096);
+    return new InflateInStream(in$, node.zlib.gunzipSync, 32768);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -237,17 +237,44 @@ class InflateInStream extends InStream {
   #bufPos = 0;
 
   #load() {
+    // Read all available compressed data first
+    const chunks = [];
+    let totalLen = 0;
     const rawBuf = MemBuf.makeCapacity(this.#bufSize);
-    const rawBufLen = this.#in.readBuf(rawBuf, this.#bufSize);
+    
+    while (true) {
+      const readLen = this.#in.readBuf(rawBuf, this.#bufSize);
+      if (readLen == null) break;
+      
+      const chunk = rawBuf.__getBytes(0, readLen);
+      chunks.push(chunk);
+      totalLen += readLen;
+      rawBuf.clear();
+    }
+
     this.#bufPos = 0;
-    if (rawBufLen == null) {
+    if (totalLen === 0) {
       this.#buf = EMPTY_BUFFER;
       return;
     }
 
-    this.#buf = this.#method(rawBuf.__getBytes(0, rawBufLen), {
-      chunkSize: this.#bufSize
-    });
+    // Combine all chunks and decompress at once
+    const combinedBuf = Buffer.concat(chunks, totalLen);
+    try {
+      this.#buf = this.#method(combinedBuf, {
+        finishFlush: node.zlib.constants.Z_SYNC_FLUSH
+      });
+    } catch (e) {
+      // If decompression fails, try with raw DEFLATE
+      if (this.#method === node.zlib.inflateSync) {
+        this.#method = node.zlib.inflateRawSync;
+        this.#buf = this.#method(combinedBuf, {
+          finishFlush: node.zlib.constants.Z_SYNC_FLUSH
+        });
+      } else {
+        throw e;
+      }
+    }
   }
 
   read() {
