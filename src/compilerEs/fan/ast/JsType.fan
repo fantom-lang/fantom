@@ -285,8 +285,11 @@ class JsType : JsNode
     js.wl("if (${fieldAccess} === undefined) {").indent
     // call the static initializer
     // if the value is still not initialized, then set it to its default value
-    js.wl("${target}.${curType.staticInit.name}();")
-    js.wl("if (${fieldAccess} === undefined) ${fieldAccess} = ${fieldDefVal(f)};")
+    if (curType.staticInit != null)
+    {
+      js.wl("${target}.${curType.staticInit.name}();")
+      js.wl("if (${fieldAccess} === undefined) ${fieldAccess} = ${fieldDefVal(f)};")
+    }
     js.unindent.wl("}")
 
     // we can't do it this way because if a static field is initialized in an
@@ -520,3 +523,4 @@ internal class ClosureFinder : Visitor
     return Visitor.super.visitExpr(expr)
   }
 }
+
