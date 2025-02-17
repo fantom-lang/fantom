@@ -35,6 +35,8 @@ js=text/javascript; charset=utf-8
 json=application/json
 jsonld=application/ld+json
 map=application/json
+md=text/markdown; charset=utf-8
+markdown=text/markdown; charset=utf-8
 mp3=audio/mpeg3
 mpeg=video/mpeg
 obix=text/xml; charset=utf-8
