@@ -116,10 +116,10 @@ class ZipEntryFile extends File {
 
   in(bufferSize=4096) {
     if (this.#isFileBacked)
-      return (this.#in = this.#yauzlZip.getInStream(this.#entry, {}, bufferSize));
+      return (this.#in = this.#yauzlZip.getInStream(this.#entry, { nowrap: true }, bufferSize));
     else {
       if (this.#in) throw IOErr.make("In stream already created");
-      return (this.#in = this.#yauzlZip.getInStreamFromStream(this.#entry, {}, bufferSize));
+      return (this.#in = this.#yauzlZip.getInStreamFromStream(this.#entry, { nowrap: true }, bufferSize));
     }
   }
 
