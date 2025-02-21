@@ -17,7 +17,7 @@ class Type extends Obj {
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  constructor(qname, base, mixins, facets={}, flags=0, jsRef=null) { 
+  constructor(qname, base, mixins, facets={}, flags=0, jsRef=null) {
     super();
 
     // workaround for inheritance
@@ -62,7 +62,7 @@ class Type extends Obj {
 
   static #noParams = null;
   static $registry =  {};
-  
+
 //////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////
@@ -198,7 +198,7 @@ class Type extends Obj {
       this.emptyList$ = List.make(this).toImmutable();
     return this.emptyList$;
   }
-  
+
 //////////////////////////////////////////////////////////////////////////
 // Make
 //////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ class Type extends Obj {
   slot(name, checked=true) {
     const slot = this.reflect().slotsByName$[name];
     if (slot != null) return slot;
-    if (checked) throw UnknownSlotErr.make(this.m_qname + "." + name);
+    if (checked) throw UnknownSlotErr.make(this.toStr() + "." + name);
     return null;
   }
 
@@ -273,7 +273,7 @@ class Type extends Obj {
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Inheritance 
+// Inheritance
 //////////////////////////////////////////////////////////////////////////
 
   base() { return this.#base; }
@@ -368,7 +368,7 @@ class Type extends Obj {
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Facets 
+// Facets
 //////////////////////////////////////////////////////////////////////////
 
   hasFacet(type) { return this.facet(type, false) != null; }
@@ -617,12 +617,12 @@ class NullableType extends Type {
 }
 
 /*************************************************************************
- * GenericType 
+ * GenericType
  ************************************************************************/
 
 class GenericType extends Type {
-  constructor(qname, base, mixins, facets={}, flags=0) { 
-    super(qname, base, mixins, facets, flags); 
+  constructor(qname, base, mixins, facets={}, flags=0) {
+    super(qname, base, mixins, facets, flags);
   }
 
   params() {
@@ -1002,3 +1002,4 @@ class FuncType extends GenericType {
     return Obj.type$;
   }
 }
+
