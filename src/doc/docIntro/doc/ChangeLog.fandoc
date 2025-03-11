@@ -12,6 +12,7 @@
 - Date convenience methods
 - ES support for IntArray and FloatArray
 - Add Doc.hasFocus
+- Add concurrent ActorContext
 
 *Build 1.0.81 (6 Dec 2024)*
 - New markdown pod
