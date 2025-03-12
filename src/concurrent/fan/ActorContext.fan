@@ -28,7 +28,8 @@ mixin ActorContext
 }
 
 ** Thrown by ActorContext.cur when not set for current actor thread
-@NoDoc const class ContextUnavailableErr : Err
+@Js @NoDoc
+const class ContextUnavailableErr : Err
 {
   new make(Str msg := "", Err? cause := null) : super(msg, cause) {}
 }
