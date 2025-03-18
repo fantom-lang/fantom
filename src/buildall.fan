@@ -120,6 +120,7 @@ class Build : BuildGroup
   {
     // lib dirs nuke it all
     Delete.make(this, devHomeDir + `lib/fan/`).run
+    Delete.make(this, devHomeDir + `lib/js/`).run
     Delete.make(this, devHomeDir + `lib/patches/`).run
     Delete.make(this, devHomeDir + `lib/install/`).run
 
@@ -281,3 +282,4 @@ class Build : BuildGroup
   }
 
 }
+
