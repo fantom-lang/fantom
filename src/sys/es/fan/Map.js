@@ -404,6 +404,7 @@ class Map extends Obj {
         return false;
       }
     });
+
     return all;
   }
 
@@ -524,6 +525,13 @@ class Map extends Obj {
     var js = {};
     this.#each((b) => { js[b.key] = b.val });
     return js;
+  }
+
+  static fromJs(js) {
+    // only works to create Str:Str map
+    var fan = Map.make(Str.type$, Str.type$);
+    for (var key in js) fan.set(""+key, ""+js[key]);
+    return fan;
   }
 
 //////////////////////////////////////////////////////////////////////////
