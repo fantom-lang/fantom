@@ -155,6 +155,9 @@ class Win
   ** Go to next page in the session history.
   native Void hisForward()
 
+  ** State at the top of the history stack
+  native Str:Obj hisState()
+
   **
   ** Push a new history item onto the history stack. Use 'onpopstate'
   ** to listen for changes:
@@ -164,9 +167,7 @@ class Win
   **
   native Void hisPushState(Str title, Uri uri, Str:Obj map)
 
-  **
   ** Modify the current history item.
-  **
   native Void hisReplaceState(Str title, Uri uri, Str:Obj map)
 
 //////////////////////////////////////////////////////////////////////////

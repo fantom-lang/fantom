@@ -260,12 +260,19 @@ class WinPeer extends sys.Obj {
     this.win.history.replaceState(state, title, uri.encode());
   }
 
-  static mapToState(map)
+  hisState(self)
   {
-    // TODO FIXIT: serializtaion
-    const array = [];
-    map.each((val,key) => { array[key] = val });
-    return array;
+    return WinPeer.mapFromState(this.win.history.state);
+  }
+
+  static mapToState(fan)
+  {
+    return fan.toJs();
+  }
+
+  static mapFromState(js)
+  {
+    return sys.Map.fromJs(js)
   }
 
 //////////////////////////////////////////////////////////////////////////
