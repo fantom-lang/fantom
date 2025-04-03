@@ -22,6 +22,7 @@ class ObjUtil {
 
   static equals(a, b) {
     if (a == null) return b == null;
+    if (b == null) return a == null;
     if (a instanceof Obj) return a.equals(b);
 
     const t = typeof a;
