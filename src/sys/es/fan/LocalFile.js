@@ -271,8 +271,14 @@ class LocalFile extends File {
       throw IOErr.make("cannot get in stream for a directory");
     if (!bufSize) bufSize = Int.__chunk;
 
-    const fd = node.fs.openSync(this.#node_os_path, 'r');
-    return LocalFileInStream.make(fd, bufSize);
+    try
+    {
+      const fd = node.fs.openSync(this.#node_os_path, 'r');
+      return LocalFileInStream.make(fd, bufSize);
+    }
+    catch (e) {
+      throw IOErr.make(`Failed to open file`, e);
+    }
     // return this.m_in = new fan.sys.LocalFileInStream(fd, bufSize);
   }
 
@@ -283,8 +289,15 @@ class LocalFile extends File {
       this.create();
 
     const flag = append ? 'a' : 'w';
-    const fd = node.fs.openSync(this.#node_os_path, flag);
-    // TODO: add bufSize
-    return LocalFileOutStream.make(fd);
+    try
+    {
+
+      const fd = node.fs.openSync(this.#node_os_path, flag);
+      // TODO: add bufSize
+      return LocalFileOutStream.make(fd);
+    }
+    catch (e) {
+      throw IOErr.make(`Failed to open file`, e);
+    }
   }
 }

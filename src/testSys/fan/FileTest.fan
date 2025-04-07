@@ -384,6 +384,15 @@ class FileTest : Test
     verifyEq(f.readProps, props)
   }
 
+  Void testWith()
+  {
+    f := tempDir + `testWith.txt`
+    f.withOut(null) |out| { out.writeChars("test with"); }
+    verifyEq("test with", f.withIn(null) |in->Obj?| { in.readAllStr })
+
+    verifyErr(IOErr#) { this.tempDir.plus(`missing.txt`).withIn(null) |in->Obj?| { in.readAllStr } }
+  }
+
   Void testAvail()
   {
     f := tempDir + `testfile.txt`

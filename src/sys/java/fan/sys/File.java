@@ -392,10 +392,39 @@ public abstract class File
 
   public InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);
+  public Object withIn(Map opts, Func f)
+  {
+    if (opts == null) opts = new Map(Type.find("sys::Str"), Type.find("sys::Obj"));
+    final Long bufSize = (Long)opts.get("bufferSize", 4096L);
+    final InStream in = this.in(bufSize);
+    try
+    {
+      return f.call(in);
+    }
+    finally
+    {
+      in.close();
+    }
+  }
 
   public OutStream out() { return out(false, FanInt.Chunk); }
   public OutStream out(boolean append) { return out(append, FanInt.Chunk); }
   public abstract OutStream out(boolean append, Long bufSize);
+  public void withOut(Map opts, Func f)
+  {
+    if (opts == null) opts = new Map(Type.find("sys::Str"), Type.find("sys::Obj"));
+    final boolean append = (boolean)opts.get("append", false);
+    final Long bufSize = (Long)opts.get("bufferSize", 4096L);
+    final OutStream out = this.out(append, bufSize);
+    try
+    {
+      f.call(out);
+    }
+    finally
+    {
+      out.close();
+    }
+  }
 
   public final Buf readAllBuf()
   {

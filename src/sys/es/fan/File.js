@@ -319,7 +319,31 @@ class File extends Obj {
   mmap(mode, pos, size) { this.#throwNotSupported("mmap"); }
 
   in(bufSize=4096) { this.#throwNotSupported("in"); }
+  withIn(opts, f) {
+    if (!opts) opts = Map.make(Str.type$, Obj.type$);
+    const bufSize = opts.get("bufferSize", 4096);
+    const inStream = this.in(bufSize);
+    try {
+      return f(inStream);
+    }
+    finally {
+      inStream.close();
+    }
+  }
+
   out(append=false, bufSize=4096) { this.#throwNotSupported("out"); }
+  withOut(opts, f) {
+    if (!opts) opts = Map.make(Str.type$, Obj.type$);
+    const append = opts.get("append", false);
+    const bufSize = opts.get("bufferSize", 4096);
+    const outStream = this.out(append, bufSize);
+    try {
+      f(outStream);
+    }
+    finally {
+      outStream.close();
+    }
+  }
 
   readAllBuf() { return this.in(Int.__chunk).readAllBuf(); }
 
