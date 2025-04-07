@@ -63,38 +63,7 @@ const class SyntheticFile : File
   ** Raise IOErr
   override InStream in(Int? bufferSize := 4096) { throw IOErr() }
 
-  ** Default implementation uses `SyntheticFile.in`
-  override Obj? withIn([Str:Obj]? opts, |InStream->Obj?| f)
-  {
-    bufSize := 4096
-    if (opts != null) bufSize = opts.get("bufferSize", bufSize)
-
-    in := this.in(bufSize)
-    try
-      return f(in)
-    finally
-      in.close
-  }
-
   ** Raise IOErr
   override OutStream out(Bool append := false, Int? bufferSize := 4096) { throw IOErr() }
-
-  ** Default implementation uses `SyntehticFile.out`
-  override Void withOut([Str:Obj]? opts, |OutStream| f)
-  {
-    append  := false
-    bufSize := 4096
-    if (opts != null)
-    {
-      append  = opts.get("append", append)
-      bufSize = opts.get("bufferSize", bufSize)
-    }
-
-    out := this.out(append, bufSize)
-    try
-      f(out)
-    finally
-      out.close
-  }
 }
 

@@ -411,7 +411,7 @@ abstract const class File
   **
   ** The method returns the value returned by the callback.
   **
-  abstract Obj? withIn([Str:Obj]? opts, |InStream->Obj?| f)
+  virtual Obj? withIn([Str:Obj]? opts, |InStream->Obj?| f)
 
   **
   ** Open a new buffered OutStream used to write to this file.  If append is
@@ -428,7 +428,7 @@ abstract const class File
   **   - "append": true/false - has the same semantics and default as `File.out`.
   **   - "bufferSize": The buffer size to use when opening the output stream.
   **   Has the same semantics and default as `File.out`.
-  abstract Void withOut([Str:Obj]? opts, |OutStream| f)
+  virtual Void withOut([Str:Obj]? opts, |OutStream| f)
 
   **
   ** Convenience for [in.readAllBuf]`InStream.readAllBuf`.
