@@ -244,6 +244,12 @@ public final class ConstBuf
       this.size = size;
     }
 
+    public long avail()
+    {
+      if (numRead >= size) return 0;
+      return size - numRead;
+    }
+
     public Long read() { int n = r(); return n < 0 ? null : FanInt.pos[n]; }
     public int r()
     {
