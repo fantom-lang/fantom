@@ -320,8 +320,12 @@ class File extends Obj {
 
   in(bufSize=4096) { this.#throwNotSupported("in"); }
   withIn(opts, f) {
-    if (!opts) opts = Map.make(Str.type$, Obj.type$);
-    const bufSize = opts.get("bufferSize", 4096);
+    let bufSize = Int.__chunk;
+    if (opts)
+    {
+      bufSize = opts.get("bufferSize", bufSize);
+    }
+
     const inStream = this.in(bufSize);
     try {
       return f(inStream);
@@ -333,9 +337,14 @@ class File extends Obj {
 
   out(append=false, bufSize=4096) { this.#throwNotSupported("out"); }
   withOut(opts, f) {
-    if (!opts) opts = Map.make(Str.type$, Obj.type$);
-    const append = opts.get("append", false);
-    const bufSize = opts.get("bufferSize", 4096);
+    let append  = false;
+    let bufSize = Int.__chunk;
+    if (opts)
+    {
+      append  = opts.get("append", append);
+      bufSize = opts.get("bufferSize", bufSize);
+    }
+
     const outStream = this.out(append, bufSize);
     try {
       f(outStream);
