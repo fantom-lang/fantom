@@ -60,9 +60,9 @@ public class SqlUtil
       fan.sys.Time t = (fan.sys.Time)value;
       jobj = new java.sql.Time((int)t.hour(), (int)t.min(), (int)t.sec());
     }
-    else if (value instanceof MemBuf)
+    else if (value instanceof Buf)
     {
-      jobj = ((MemBuf)value).bytes();
+      jobj = ((Buf)value).safeArray();
     }
     // Support for Postgres text[] <--> Fantom Str[]
     else if ((value instanceof List) && (((List) value).of().equals(Sys.StrType)))
