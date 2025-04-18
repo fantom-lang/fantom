@@ -773,5 +773,10 @@ public abstract class Buf
     return copy;
   }
 
+  /** Get a java InputStream for the Buf */
+  public InputStream javaIn()
+  {
+    throw UnsupportedErr.make(typeof()+".javaIn");
+  }
 }
 

@@ -48,6 +48,7 @@ class SqlTest : Test
       batchExecute
       pool
       mysqlVariable
+      postgresBuf
     }
     catch (Err e)
     {
@@ -611,6 +612,46 @@ class SqlTest : Test
       verifyEq(r.get(r.col("@v1")),  42)
 
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// read/write Buf field
+//////////////////////////////////////////////////////////////////////////
+
+  Void postgresBuf()
+  {
+    if (dbType != DbType.postgres) return
+
+    if (db.meta.tableExists("buf"))
+      db.sql("drop table buf").execute
+
+    db.sql(
+     "create table buf (
+      id   text primary key,
+      info bytea)").execute
+
+    insert := db.sql("insert into buf (id, info) values (@id, @info)").prepare
+    select := db.sql("select info from buf where id = @id").prepare
+
+    // MemBuf
+    buf := Buf()
+    buf.writeUtf("Don Quixote")
+    verifyEq(buf.typeof.qname, "sys::MemBuf")
+    verifyBuf("aaa", buf, insert, select)
+
+    // ConstBuf
+    buf = "Sancho Panza".toBuf.toImmutable
+    verifyEq(buf.typeof.qname, "sys::ConstBuf")
+    verifyBuf("bbb", buf, insert, select)
+  }
+
+  private Void verifyBuf(Str id, Buf buf, Statement insert, Statement select)
+  {
+    insert.execute(["id": id, "info": buf])
+
+    rows := select.query(["id": id])
+    verifyEq(rows.size, 1)
+    verifyTrue((rows[0]->info as Buf).bytesEqual(buf))
   }
 
 //////////////////////////////////////////////////////////////////////////
