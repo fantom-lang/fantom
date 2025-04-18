@@ -60,9 +60,10 @@ public class SqlUtil
       fan.sys.Time t = (fan.sys.Time)value;
       jobj = new java.sql.Time((int)t.hour(), (int)t.min(), (int)t.sec());
     }
+    // Stream via PreparedStatement.setBinaryStream()
     else if (value instanceof Buf)
     {
-      jobj = ((Buf)value).safeArray();
+      jobj = ((Buf)value).javaIn();
     }
     // Support for Postgres text[] <--> Fantom Str[]
     else if ((value instanceof List) && (((List) value).of().equals(Sys.StrType)))

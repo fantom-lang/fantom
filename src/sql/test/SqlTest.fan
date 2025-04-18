@@ -635,22 +635,21 @@ class SqlTest : Test
 
     // MemBuf
     buf := Buf()
-    verifyEq(buf.typeof.qname, "sys::MemBuf")
     buf.writeUtf("Don Quixote")
-
-    insert.execute(["id": "aaa", "info": buf])
-
-    rows := select.query(["id": "aaa"])
-    verifyEq(rows.size, 1)
-    verifyTrue((rows[0]->info as Buf).bytesEqual(buf))
+    verifyEq(buf.typeof.qname, "sys::MemBuf")
+    verifyBuf("aaa", buf, insert, select)
 
     // ConstBuf
     buf = "Sancho Panza".toBuf.toImmutable
     verifyEq(buf.typeof.qname, "sys::ConstBuf")
+    verifyBuf("bbb", buf, insert, select)
+  }
 
-    insert.execute(["id": "bbb", "info": buf])
+  private Void verifyBuf(Str id, Buf buf, Statement insert, Statement select)
+  {
+    insert.execute(["id": id, "info": buf])
 
-    rows = select.query(["id": "bbb"])
+    rows := select.query(["id": id])
     verifyEq(rows.size, 1)
     verifyTrue((rows[0]->info as Buf).bytesEqual(buf))
   }

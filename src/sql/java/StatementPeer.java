@@ -7,6 +7,7 @@
 //
 package fan.sql;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Iterator;
 import fan.sys.*;
@@ -409,9 +410,19 @@ public class StatementPeer
         try
         {
           int idx = ((Long) locs.get(j)).intValue();
-          pstmt.setObject(idx, jobj);
+
+          // Stream via PreparedStatement.setBinaryStream()
+          if (jobj instanceof InputStream)
+          {
+            InputStream stream = (InputStream) jobj;
+            pstmt.setBinaryStream(idx, stream, stream.available());
+          }
+          else
+          {
+            pstmt.setObject(idx, jobj);
+          }
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
           throw SqlErr.make("Param name='" + key + "' class='" + value.getClass().getName() + "'; " +
                             e.getMessage(), Err.make(e));

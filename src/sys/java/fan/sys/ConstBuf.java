@@ -191,6 +191,11 @@ public final class ConstBuf
     return ByteBuffer.wrap(safeArray());
   }
 
+  public InputStream javaIn()
+  {
+    return new ByteArrayInputStream(buf, off, size);
+  }
+
   static final Err err()
   {
     return ReadonlyErr.make("Buf is immutable");
