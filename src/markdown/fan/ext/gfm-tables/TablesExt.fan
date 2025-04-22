@@ -30,6 +30,12 @@ const class TablesExt : MarkdownExt
       .nodeRendererFactory |cx->NodeRenderer| { MarkdownTableRenderer(cx) }
       .withSpecialChars(['|'])
   }
+
+  override Void extendText(TextRendererBuilder builder)
+  {
+    builder
+      .nodeRendererFactory |cx->NodeRenderer| { TextTableRenderer(cx) }
+  }
 }
 
 **************************************************************************
@@ -539,4 +545,76 @@ internal class MarkdownTableRenderer : NodeRenderer, Visitor
   }
 }
 
+**************************************************************************
+** TextTableRenderer
+**************************************************************************
 
+@Js
+internal class TextTableRenderer : NodeRenderer, Visitor
+{
+  new make(TextContext cx)
+  {
+    this.cx = cx
+    this.content = cx.writer
+  }
+
+  private TextContext cx
+  private TextWriter content
+
+  override const Type[] nodeTypes := [
+    Table#,
+    TableHead#,
+    TableBody#,
+    TableRow#,
+    TableCell#,
+  ]
+
+  override Void render(Node node) { node.walk(this) }
+
+  virtual Void visitTable(Table node)
+  {
+    // render rows tight
+    content.pushTight(true)
+    renderChildren(node)
+    content.popTight
+    content.block
+  }
+
+  virtual Void visitTableHead(TableHead head)
+  {
+    renderChildren(head)
+  }
+
+  virtual Void visitTableBody(TableBody body)
+  {
+    renderChildren(body)
+  }
+
+  virtual Void visitTableRow(TableRow row)
+  {
+    renderChildren(row)
+    content.block
+  }
+
+  virtual Void visitTableCell(TableCell cell)
+  {
+    renderChildren(cell)
+    // for the last cell in row, don't render the delimiter
+    if (cell.next != null)
+    {
+      content.writeChar('|')
+      content.whitespace
+    }
+  }
+
+  private Void renderChildren(Node parent)
+  {
+    node := parent.firstChild
+    while (node != null)
+    {
+      next := node.next
+      cx.render(node)
+      node = next
+    }
+  }
+}

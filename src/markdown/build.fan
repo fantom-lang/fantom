@@ -39,6 +39,7 @@ class Build : BuildPod
                `fan/render/`,
                `fan/render/html/`,
                `fan/render/markdown/`,
+               `fan/render/text/`,
                `fan/util/`,
                `test/`,
                `test/ext/`,

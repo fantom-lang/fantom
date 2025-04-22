@@ -76,6 +76,18 @@ and add instances as child nodes to existing nodes.
 
 To define the HTML rendering for them, you can use a `NodeRenderer` as explained above.
 
+Plaintext Rendering [#plaintext]
+********************************
+You can also render markdown to plaintext with most formatting removed. The
+[builder]`TextRendererBuilder` for the `TextRenderer` supports various methods
+or rendering line breaks depending on your use case.
+
+pre>
+// Generate plaintext using the default "compact" rendering
+doc := Parser().parse("Here, the **emphasis** is ignored")
+str := TextRenderer().render(doc) // => Here the emphasis is ignored
+<pre
+
 **Customize parsing**
 
 There are a few ways to extend parsing or even override built-in parsing, all of them

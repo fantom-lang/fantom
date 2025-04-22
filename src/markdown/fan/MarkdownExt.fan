@@ -24,4 +24,7 @@ const mixin MarkdownExt
 
   ** Callback to extend the Markdown renderer. Default implementation does nothing.
   virtual Void extendMarkdown(MarkdownRendererBuilder builder) { }
+
+  ** Callback to extend the Plaintext renderer. Default implementation does nothing.
+  virtual Void extendText(TextRendererBuilder builder) { }
 }
