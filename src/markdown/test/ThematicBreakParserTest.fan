@@ -23,7 +23,7 @@ class ThematicBreakParserTest : Test
 
   private Void verifyLiteral(Str expected, Str input)
   {
-    tb := Node.find(parser.parse(input), ThematicBreak#) as ThematicBreak
+    tb := parser.parse(input).find(ThematicBreak#) as ThematicBreak
     verifyNotNull(tb)
     verifyEq(expected, tb.literal)
   }

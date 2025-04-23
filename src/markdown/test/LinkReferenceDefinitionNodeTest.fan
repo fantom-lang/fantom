@@ -13,7 +13,7 @@ class LinkReferenceDefinitionNodeTest : Test
   {
     // doc := parse("This is a paragraph with a [foo] link\n\n[foo]: /url 'title'")
     doc := parse("This is a paragraph with a [foo] link.\n\n[foo]: /url 'title'")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(2, nodes.size)
     verifyType(nodes[0], Paragraph#)
@@ -26,7 +26,7 @@ class LinkReferenceDefinitionNodeTest : Test
   Void testDefinitionWithParagraph()
   {
     doc := parse("[foo]: /url\nThis is a paragraph with a [foo] link.")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(2, nodes.size)
     // note that defintion is not part of the paragraph, it's a sibling
@@ -37,7 +37,7 @@ class LinkReferenceDefinitionNodeTest : Test
   Void testMultipleDefinitions()
   {
     doc := parse("This is a paragraph with a [foo] link.\n\n[foo]: /url\n[bar]: /url")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(3, nodes.size)
     verifyType(nodes[0], Paragraph#)
@@ -48,7 +48,7 @@ class LinkReferenceDefinitionNodeTest : Test
   Void testMultipleDefinitionsWithSameLabel()
   {
     doc := parse("This is a paragraph with a [foo] link.\n\n[foo]: /url1\n[foo]: /url2")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(3, nodes.size)
     verifyType(nodes[0], Paragraph#)
@@ -64,7 +64,7 @@ class LinkReferenceDefinitionNodeTest : Test
   Void testDefinitionOfReplacedBlock()
   {
     doc := parse("[foo]: /url\nHeading\n=======")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(2, nodes.size)
     verifyDef(nodes[0], "foo")
@@ -78,7 +78,7 @@ class LinkReferenceDefinitionNodeTest : Test
     item := doc.firstChild.firstChild
     verifyType(item, ListItem#)
 
-    nodes := Node.children(item)
+    nodes := item.children
     verifyEq(2, nodes.size)
     verifyDef(nodes[0], "foo")
     verifyType(nodes[1], Paragraph#)
@@ -89,7 +89,7 @@ class LinkReferenceDefinitionNodeTest : Test
     doc := parse("* [foo]: /url\n* [foo]\n")
     verifyType(doc.firstChild, BulletList#)
 
-    items := Node.children(doc.firstChild)
+    items := doc.firstChild.children
     verifyEq(2, items.size)
     item1 := items[0]
     item2 := items[1]
@@ -97,17 +97,17 @@ class LinkReferenceDefinitionNodeTest : Test
     verifyType(item1, ListItem#)
     verifyType(item2, ListItem#)
 
-    verifyEq(1, Node.children(item1).size)
+    verifyEq(1, item1.children.size)
     verifyDef(item1.firstChild, "foo")
 
-    verifyEq(1, Node.children(item2).size)
+    verifyEq(1, item2.children.size)
     verifyType(item2.firstChild, Paragraph#)
   }
 
   Void testDefinitionLabelCaseIsPreserved()
   {
     doc := parse("This is a paragraph with a [foo] link.\n\n[fOo]: /url 'title'")
-    nodes := Node.children(doc)
+    nodes := doc.children
 
     verifyEq(2, nodes.size)
     verifyType(nodes[0], Paragraph#)

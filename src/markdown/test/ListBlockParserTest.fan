@@ -65,7 +65,7 @@ class ListBlockParserTest : Test
   private Void verifyListItemIndents(Str input, Int expectedMarkerIndent, Int expectedContentIndent)
   {
     doc := parser.parse(input)
-    listItem := Node.find(doc, ListItem#) as ListItem
+    listItem := doc.find(ListItem#) as ListItem
     verifyEq(expectedMarkerIndent, listItem.markerIndent)
     verifyEq(expectedContentIndent, listItem.contentIndent)
   }

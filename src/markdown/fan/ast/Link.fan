@@ -32,7 +32,7 @@ abstract class LinkNode : Node
   ** Replace the display content with the given node
   @NoDoc Void setContent(Node content)
   {
-    Node.children(this).each |child| { child.unlink }
+    children.each |child| { child.unlink }
     appendChild(content)
   }
 

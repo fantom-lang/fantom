@@ -150,8 +150,18 @@ abstract class Node
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get nodes between start (exclusive) and end (exclusive)
-  static Void eachBetween(Node start, Node end, |Node| f)
+  ** Get nodes between start (exclusive) and end (exclusive) by iterating
+  ** siblings of the start node.
+  **
+  ** pre>
+  ** // A -> B -> C-> D-> E
+  **         |->B1    |-> D1
+  **         |->B2
+  **
+  ** Node.eachBetween(A, D, f)    => f(B), f(C)
+  ** Node.eachBetween(B, null, f) => f(C), f(D), f(E)
+  ** <pre
+  static Void eachBetween(Node start, Node? end, |Node| f)
   {
     Node? node := start.next
     while (node != null && node !== end)
@@ -163,24 +173,39 @@ abstract class Node
     }
   }
 
-  ** Get all the children of the given parent node
-  static Node[] children(Node parent)
+  ** Get all the direct children of this node
+  Node[] children()
   {
     acc := Node[,]
-    for (child := parent.firstChild; child != null; child = child.next) acc.add(child)
+    for (child := this.firstChild; child != null; child = child.next) acc.add(child)
     return acc
   }
 
   ** Recursively try to find a node with the given type within the children
-  ** of the specified node. Throw if node could not be found
-  static Node find(Node parent, Type nodeType)
+  ** of this node. If checked, throw an error if the node could not be found;
+  ** otherwise return null.
+  Node? find(Type nodeType, Bool checked := true)
   {
-    tryFind(parent, nodeType) ?: throw Err("${nodeType} not found")
+    n := tryFind(this, nodeType)
+    if (n != null) return n
+    if (checked) throw Err("${nodeType} not found")
+    return null
+  }
+
+  ** Recursively find all children of this node for which the callback returns true
+  Node[] findAll(|Node->Bool| f)
+  {
+    acc := Node[,]
+    eachDescendant |node|
+    {
+      if (f(node)) acc.add(node)
+    }
+    return acc
   }
 
   ** Recursively try to find a node with the given type within the children of the
   ** specified node.
-  static Node? tryFind(Node parent, Type nodeType)
+  private Node? tryFind(Node parent, Type nodeType)
   {
     node := parent.firstChild
     while (node != null)
@@ -194,14 +219,16 @@ abstract class Node
     return null
   }
 
-  @NoDoc static Void eachChild(Node parent, |Node| f)
+  ** Recursively walk the descendants of this node using a depth-first search and
+  ** invoke the callback on each node.
+  Void eachDescendant(|Node| f)
   {
-    node := parent.firstChild
+    node := this.firstChild
     while (node != null)
     {
       saveNext := node.next
       f(node)
-      eachChild(node, f)
+      node.eachDescendant(f)
       node = saveNext
     }
   }

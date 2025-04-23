@@ -127,7 +127,7 @@ internal class ImgAttrsAttrProvider : AttrProvider
   {
     if (node is Image)
     {
-      Node.eachChild(node) |c|
+      node.eachDescendant |c|
       {
         imgAttrs := c as ImgAttrs
         if (imgAttrs == null) return
