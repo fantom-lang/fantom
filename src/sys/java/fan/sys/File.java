@@ -118,7 +118,7 @@ public abstract class File
 
   public final String ext() { return uri.ext(); }
 
-  public final MimeType mimeType() { return uri.mimeType(); }
+  public MimeType mimeType() { return uri.mimeType(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Access

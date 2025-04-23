@@ -123,9 +123,9 @@ abstract const class File
   Str? ext()
 
   **
-  ** Convenience for [uri.mimeType]`Uri.mimeType`.
+  ** Default implementation is convenience for [uri.mimeType]`Uri.mimeType`.
   **
-  MimeType? mimeType()
+  virtual MimeType? mimeType()
 
 //////////////////////////////////////////////////////////////////////////
 // Access
