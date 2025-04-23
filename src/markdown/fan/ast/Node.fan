@@ -181,6 +181,12 @@ abstract class Node
     return acc
   }
 
+  ** Invoke the callback on each direct child of this node
+  Void eachChild(|Node| f)
+  {
+    for (child := this.firstChild; child != null; child = child.next) f(child)
+  }
+
   ** Recursively try to find a node with the given type within the children
   ** of this node. If checked, throw an error if the node could not be found;
   ** otherwise return null.
