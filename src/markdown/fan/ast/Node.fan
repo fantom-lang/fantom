@@ -346,9 +346,7 @@ class Emphasis : Node, Delimited
 class Text : Node
 {
   new make(Str literal) { this.literal = literal }
-
   Str literal
-
   override protected Str toStrAttributes() { "literal=${literal}" }
 }
 
@@ -362,6 +360,7 @@ class Code : Node
 {
   new make(Str literal) { this.literal = literal }
   const Str literal
+  override protected Str toStrAttributes() { "literal=${literal}" }
 }
 
 **************************************************************************

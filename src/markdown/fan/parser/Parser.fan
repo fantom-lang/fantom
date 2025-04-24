@@ -37,7 +37,12 @@ const class Parser
     this.delimiterProcessors = builder.delimiterProcessors
     this.linkProcessors = builder.linkProcessors
     this.linkMarkers = builder.linkMarkers
-    this.postProcessorFactories = builder.postProcessorFactories
+
+    // install post-processors. We auto-inject a HeadingProcessor so that
+    // anchor ids are always generated.
+    this.postProcessorFactories =
+      [|->HeadingProcessor| { HeadingProcessor() }]
+        .addAll(builder.postProcessorFactories)
 
     // try to make an inline parser. invalid configuration might result in
     // an error, which we want to detect as soon as possible

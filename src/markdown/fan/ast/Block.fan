@@ -47,6 +47,11 @@ class Heading : Block
 
   ** The heading "level"
   const Int level
+
+  ** The anchor id to use for this heading.
+  Str? anchor
+
+  override protected Str toStrAttributes() { "level=${level} anchor=${anchor}" }
 }
 
 **************************************************************************

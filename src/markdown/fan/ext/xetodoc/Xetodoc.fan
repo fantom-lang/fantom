@@ -105,7 +105,9 @@
 
   override Void extendHtml(HtmlRendererBuilder builder)
   {
-    builder.extensions(exts)
+    builder
+      .attrProviderFactory |HtmlContext cx->AttrProvider| { HeadingAttrsProvider() }
+      .extensions(exts)
   }
 
   override Void extendMarkdown(MarkdownRendererBuilder builder)
@@ -143,6 +145,19 @@
 //     builder.nodeRendererFactory(|cx->NodeRenderer| { MdTicksRenderer(cx) })
 //   }
 // }
+
+**************************************************************************
+** HeadingAttrsProvider
+**************************************************************************
+
+@Js
+internal class HeadingAttrsProvider : AttrProvider
+{
+  override Void setAttrs(Node node, Str tagName, [Str:Str?] attrs)
+  {
+    if (node is Heading) attrs["id"] = ((Heading)node).anchor
+  }
+}
 
 **************************************************************************
 ** TickInlineParser
