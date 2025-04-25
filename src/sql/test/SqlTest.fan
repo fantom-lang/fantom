@@ -6,6 +6,8 @@
 //   12 Jan 07  John Sublett  Creation
 //
 
+using concurrent
+
 **
 ** SqlTest
 **
@@ -46,7 +48,7 @@ class SqlTest : Test
       preparedStmts
       executeStmts
       batchExecute
-      pool
+      withPrepare
       mysqlVariable
       postgresBuf
     }
@@ -561,7 +563,7 @@ class SqlTest : Test
 // Pool
 //////////////////////////////////////////////////////////////////////////
 
-  Void pool()
+  Void withPrepare()
   {
     pool := TestPool
     {
@@ -569,8 +571,26 @@ class SqlTest : Test
       it.username = this.user
       it.password = this.pass
     }
-    pool.execute(|SqlConn c| {})
-    pool.close
+
+    pool.execute(|SqlConn conn| {
+      conn.withPrepare("update farmers set pet = @pet where name = @name") |stmt|
+      {
+        stmt.execute(["name": "Alice", "pet": "Aardvark"])
+      }
+      conn.commit
+
+      res := conn.withPrepare("select pet from farmers where name = @name") |stmt|
+      {
+        rows := stmt.query(["name": "Alice"])
+        verifyEq(rows.size, 1)
+        return rows[0]->pet
+      }
+      verifyEq(res, "Aardvark")
+    })
+
+    verifyEq(pool.openConnections.val, 1)
+    pool.close()
+    verifyEq(pool.openConnections.val, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -735,18 +755,19 @@ internal enum class DbType
 ** TestPool
 **************************************************************************
 
-const internal class TestPool : SqlConnPool
+internal const class TestPool : SqlConnPool
 {
   new make(|This|? f) : super(f) {}
 
   protected override Void onOpen(SqlConn c)
   {
-    if (!c.stash.isEmpty) throw Err("test failure")
-    c.stash["foo"] = 42
+    openConnections.increment
   }
 
   protected override Void onClose(SqlConn c)
   {
-    if (c.stash["foo"] != 42) throw Err("test failure")
+    openConnections.decrement
   }
+
+  internal const AtomicInt openConnections := AtomicInt(0)
 }

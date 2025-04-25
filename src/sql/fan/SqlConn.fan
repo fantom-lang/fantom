@@ -63,6 +63,18 @@ mixin SqlConn
   **
   abstract Statement sql(Str sql)
 
+  ** withPrepare creates a prepared Statement, passes the Statement to the
+  ** callback, and then closes the prepared Statement.
+  **
+  ** The method returns the value returned by the callback.
+  Obj? withPrepare(Str sql, |Statement->Obj?| f)
+  {
+    stmt := this.sql(sql).prepare
+    res := f(stmt)
+    stmt.close
+    return res
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Transactions
 //////////////////////////////////////////////////////////////////////////
