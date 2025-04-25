@@ -157,6 +157,10 @@ public class SqlConnPoolPeer
   private SqlConn open(SqlConnPool self)
   {
     SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
+
+    // set auto-commit based on connection pool property
+    c.autoCommit(self.autoCommit());
+
     self.onOpen(c);
     return c;
   }
