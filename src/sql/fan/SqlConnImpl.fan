@@ -59,11 +59,6 @@ class SqlConnImpl : SqlConn
   **
   override Statement sql(Str sql) { Statement(this, sql) }
 
-  **
-  ** User data stash for adding cached data to this connection
-  **
-  override once Str:Obj? stash() { Str:Obj[:] }
-
 //////////////////////////////////////////////////////////////////////////
 // Transactions
 //////////////////////////////////////////////////////////////////////////
@@ -104,7 +99,6 @@ internal class TestSqlConn: SqlConn
   override Bool autoCommit
   override Void commit() {}
   override Void rollback() {}
-  override once Str:Obj? stash() { Str:Obj[:] }
   override Str toStr() { "TestSqlConn-$id" }
   private Bool closed
 }
