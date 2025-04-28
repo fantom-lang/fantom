@@ -65,9 +65,10 @@ mixin SqlConn
   Obj? withPrepare(Str sql, |Statement->Obj?| f)
   {
     stmt := this.sql(sql).prepare
-    res := f(stmt)
-    stmt.close
-    return res
+    try
+       return f(stmt)
+    finally
+       stmt.close
   }
 
 //////////////////////////////////////////////////////////////////////////
