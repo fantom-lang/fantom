@@ -171,9 +171,8 @@ internal const class SqlConnPoolTestActor : Actor
     cp.execute |c|
     {
       isExecutingRef.val = true
-      // cp.log.info("SqlConnPoolTestActor.execute $name | $c | $wait | $c.stash")
+      // cp.log.info("SqlConnPoolTestActor.execute $name | $c | $wait")
       lastName.val = c.toStr
-      c.stash["lastName"] = lastName
       Actor.sleep(wait)
     }
     isExecutingRef.val = false

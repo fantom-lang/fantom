@@ -44,11 +44,6 @@ mixin SqlConn
   **
   abstract Bool isClosed()
 
-  **
-  ** User data stash for adding cached data to this connection.
-  **
-  abstract Str:Obj? stash()
-
 //////////////////////////////////////////////////////////////////////////
 // Data
 //////////////////////////////////////////////////////////////////////////
@@ -62,6 +57,19 @@ mixin SqlConn
   ** Create a statement for this database.
   **
   abstract Statement sql(Str sql)
+
+  ** withPrepare creates a prepared Statement, passes the Statement to the
+  ** callback, and then closes the prepared Statement.
+  **
+  ** The method returns the value returned by the callback.
+  Obj? withPrepare(Str sql, |Statement->Obj?| f)
+  {
+    stmt := this.sql(sql).prepare
+    try
+       return f(stmt)
+    finally
+       stmt.close
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Transactions
