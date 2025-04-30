@@ -58,7 +58,9 @@
   ** Get a `ParserBuilder` with all the standard Xetodoc features enabled.
   static ParserBuilder parserBuilder()
   {
-    Parser.builder.extensions(xetodoc)
+    Parser.builder
+      .linkProcessor(VideoProcessor())
+      .extensions(xetodoc)
   }
 
   ** Convenience to render the given Xetodoc to HTML
@@ -175,9 +177,7 @@ internal class BackticksLinkParser : InlineContentParser
 
     // convert to a Link
     Code code := res.node
-    dest := code.literal
-    uri  := dest.toUri
-    link := uri.scheme == "video" ? Video(dest) : Link(dest).appendChild(Text(dest))
+    link := Link(code.literal).appendChild(Text(code.literal))
     return ParsedInline.of(link, res.pos)
   }
 
@@ -197,9 +197,12 @@ internal const class BackticksLinkParserFactory : InlineContentParserFactory
 **************************************************************************
 
 **
-** A link to an embedded video. Supported uris for the video are
-** - Loom: 'video://loom/<id>?sid=<sid>'
-** - YouTube: 'video://youtu.be/<id>?si=<si>' or 'video://youtube/<id>?si=<si>'
+** A link to an embedded video. Uses markdown image syntax.
+** Supported uris for the video are:
+** - Loom: ![Alt text](video://loom/<id>?sid=<sid>)
+** - YouTube:
+**   1. ![Alt text](video://youtu.be/<id>?si=<si>)
+**   1. ![Alt text](video://youtube/<id>?si=<si>)
 **
 ** You may specify additional query params and those will be applied as attributes
 ** to the rendered iframe in HTML
@@ -207,11 +210,33 @@ internal const class BackticksLinkParserFactory : InlineContentParserFactory
 @Js
 internal class Video : LinkNode
 {
-  new make(Str destination) : super(destination)
+  new make(Str destination, Str alt) : super(destination, alt)
   {
     this.uri = destination.toUri
   }
   const Uri uri
+  Str altText() { this.title ?: "Video" }
+}
+
+@Js
+internal const class VideoProcessor : LinkProcessor
+{
+  new make() { }
+  override LinkResult? process(LinkInfo info, Scanner scanner, InlineParserContext cx)
+  {
+    // ensure there is a link and this is not a link reference
+    dest := info.destination
+    if (dest == null) return null
+
+    // check for image marker
+    if (info.marker?.literal != "!") return null
+
+    // check if it is a video:// uri
+    uri := Uri.fromStr(dest, false)
+    if (uri?.scheme != "video") return null
+
+    return LinkResult.wrapTextIn(Video(dest, info.text), scanner.pos) { it.includeMarker = true }
+  }
 }
 
 @Js
@@ -258,7 +283,10 @@ internal class VideoRenderer : NodeRenderer
     id  := uri.path.last.trimToNull ?: throw ParseErr("Invalid loom uri: ${uri}")
     sid := uri.query["sid"] ?: throw ParseErr("Invalid loom uri: ${uri}")
     src := `https://www.loom.com/embed/${id}?sid=${sid}`
-    attrs := stdAttrs.dup.addAll(["title": "Loom", "src": "${src}"]).setAll(uri.query)
+    attrs := stdAttrs.dup.addAll([
+      "title": "${video.altText}",
+      "src": "${src}"
+    ]).setAll(uri.query)
     renderVideo(attrs)
   }
 
@@ -269,7 +297,7 @@ internal class VideoRenderer : NodeRenderer
     si  := uri.query["si"] ?: throw ParseErr("Invalid youtube uri: ${uri}")
     src := `https://www.youtube.com/embed/${id}?si=${si}`
     attrs := stdAttrs.dup.addAll([
-      "title":"YouTube",
+      "title": "${video.altText}",
       "src":"${src}",
       "allow":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webshare",
       "referrerpolicy": "strict-origin-when-cross-origin",
