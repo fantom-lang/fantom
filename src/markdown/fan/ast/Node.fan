@@ -63,7 +63,7 @@ abstract class Node
       // otherwise default back to calling generic visitors for custom nodes
       if (this is CustomNode) visitor.visitCustomNode(this)
       else if (this is CustomBlock) visitor.visitCustomBlock(this)
-      else throw ArgErr("no visit method found for ${this.typeof}")
+      // else throw ArgErr("no visit method found for ${this.typeof}")
     }
   }
 

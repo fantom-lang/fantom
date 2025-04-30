@@ -76,7 +76,9 @@
   ** Get an `HtmlRendererBuilder` with all the standard Xetodoc features enabled.
   static HtmlRendererBuilder htmlBuilder()
   {
-    HtmlRenderer.builder.extensions(xetodoc)
+    HtmlRenderer.builder
+      .nodeRendererFactory |cx->NodeRenderer| { EmbedRenderer(cx) }
+      .extensions(xetodoc)
   }
 
   ** Convenience to render parsed AST back to Xetodoc markdown text
@@ -117,34 +119,6 @@
       .extensions(exts)
   }
 }
-
-// **************************************************************************
-// ** FandocExt
-// **************************************************************************
-
-// **
-// ** The Fandoc extension modifies the parser so that single-ticks (') are the delimiter
-// ** for inline code (e.g. 'code'), and backticks can be used to create links,
-// ** (e.g. `http://fantom.org`)
-// **
-// ** This is nodoc extension that is used by `Xetodoc` to enable these features as
-// ** part of the suite of features enabled in that mode.
-// **
-// @Js
-// @NoDoc const class FandocExt : MarkdownExt
-// {
-//   override Void extendParser(ParserBuilder builder)
-//   {
-//     builder
-//       .customInlineContentParserFactory(TicksInlineParser.factory)
-//       .customInlineContentParserFactory(BackticksLinkParser.factory)
-//   }
-
-//   override Void extendMarkdown(MarkdownRendererBuilder builder)
-//   {
-//     builder.nodeRendererFactory(|cx->NodeRenderer| { MdTicksRenderer(cx) })
-//   }
-// }
 
 **************************************************************************
 ** HeadingAttrsProvider
@@ -188,6 +162,8 @@ internal const class TicksInlineParserFactory : InlineContentParserFactory
 ** the equivalent common markdown: '[url](/url)'. Note - only single-backticks
 ** will be parsed as links, e.g. '``not a link``'
 **
+** Has special handling for `embed://` links
+**
 @Js
 internal class BackticksLinkParser : InlineContentParser
 {
@@ -199,7 +175,9 @@ internal class BackticksLinkParser : InlineContentParser
 
     // convert to a Link
     Code code := res.node
-    link := Link(code.literal).appendChild(Text(code.literal))
+    dest := code.literal
+    uri  := dest.toUri
+    link := uri.scheme == "embed" ? Embed(dest) : Link(dest).appendChild(Text(dest))
     return ParsedInline.of(link, res.pos)
   }
 
@@ -212,6 +190,99 @@ internal const class BackticksLinkParserFactory : InlineContentParserFactory
   override const Int[] triggerChars := ['`']
 
   override InlineContentParser create() { BackticksLinkParser() }
+}
+
+**************************************************************************
+** Embedded Video
+**************************************************************************
+
+**
+** A link to a video. Supported uris for the video are
+** - Loom: 'embed://loom/<id>?sid=<sid>'
+** - YouTube: 'embed://youtu.be/<id>?si=<si>' or 'embed://youtube/<id>?si=<si>'
+**
+** You may specify additional query params and those will be applied as attributes
+** to the rendered iframe in HTML
+**
+@Js
+internal class Embed : LinkNode
+{
+  new make(Str destination) : super(destination)
+  {
+    this.uri = destination.toUri
+  }
+  const Uri uri
+}
+
+@Js
+internal class EmbedRenderer : NodeRenderer
+{
+  new make(HtmlContext cx)
+  {
+    this.cx = cx
+    this.html = cx.writer
+  }
+
+  private HtmlContext cx
+  private HtmlWriter html
+
+  override const Type[] nodeTypes := [Embed#]
+  private const [Str:Str?] stdAttrs := [
+    "frameborder": "0",
+    "allowfullscreen": null,
+    "webkitallowfullscreen": null,
+    "mozallowfullscreen": null,
+    "width": "50%",
+    "height": "35%",
+  ]
+
+  override Void render(Node node)
+  {
+    embed := (Embed)node
+    type  := embed.uri.host.lower
+    switch (type)
+    {
+      case "loom": renderLoom(embed)
+      // case "vimeo": renderVimeo(embed)
+      case "youtube":
+      case "youtu.be":
+        renderYoutube(embed)
+      default: throw UnsupportedErr("Cannot embed '${type}'")
+    }
+  }
+
+  private Void renderLoom(Embed embed)
+  {
+    uri := embed.uri
+    id  := uri.path.last.trimToNull ?: throw ParseErr("Invalid loom uri: ${uri}")
+    sid := uri.query["sid"] ?: throw ParseErr("Invalid loom uri: ${uri}")
+    src := `https://www.loom.com/embed/${id}?sid=${sid}`
+    attrs := stdAttrs.dup.addAll(["title": "Loom", "src": "${src}"]).setAll(uri.query)
+    renderEmbedded(attrs)
+  }
+
+  private Void renderYoutube(Embed embed)
+  {
+    uri := embed.uri
+    id  := uri.path.getSafe(0) ?: throw ParseErr("Invalid youtube uri: ${uri}")
+    si  := uri.query["si"] ?: throw ParseErr("Invalid youtube uri: ${uri}")
+    src := `https://www.youtube.com/embed/${id}?si=${si}`
+    attrs := stdAttrs.dup.addAll([
+      "title":"YouTube",
+      "src":"${src}",
+      "allow":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webshare",
+      "referrerpolicy": "strict-origin-when-cross-origin",
+    ]).setAll(uri.query)
+    renderEmbedded(attrs)
+  }
+
+  private Void renderEmbedded([Str:Str?] attrs)
+  {
+    html.line
+    html.tag("div")
+    html.tag("iframe", attrs).tag("/iframe")
+    html.tag("/div")
+  }
 }
 
 **************************************************************************
