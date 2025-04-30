@@ -77,7 +77,7 @@
   static HtmlRendererBuilder htmlBuilder()
   {
     HtmlRenderer.builder
-      .nodeRendererFactory |cx->NodeRenderer| { EmbedRenderer(cx) }
+      .nodeRendererFactory |cx->NodeRenderer| { VideoRenderer(cx) }
       .extensions(xetodoc)
   }
 
@@ -177,7 +177,7 @@ internal class BackticksLinkParser : InlineContentParser
     Code code := res.node
     dest := code.literal
     uri  := dest.toUri
-    link := uri.scheme == "embed" ? Embed(dest) : Link(dest).appendChild(Text(dest))
+    link := uri.scheme == "video" ? Video(dest) : Link(dest).appendChild(Text(dest))
     return ParsedInline.of(link, res.pos)
   }
 
@@ -197,15 +197,15 @@ internal const class BackticksLinkParserFactory : InlineContentParserFactory
 **************************************************************************
 
 **
-** A link to a video. Supported uris for the video are
-** - Loom: 'embed://loom/<id>?sid=<sid>'
-** - YouTube: 'embed://youtu.be/<id>?si=<si>' or 'embed://youtube/<id>?si=<si>'
+** A link to an embedded video. Supported uris for the video are
+** - Loom: 'video://loom/<id>?sid=<sid>'
+** - YouTube: 'video://youtu.be/<id>?si=<si>' or 'video://youtube/<id>?si=<si>'
 **
 ** You may specify additional query params and those will be applied as attributes
 ** to the rendered iframe in HTML
 **
 @Js
-internal class Embed : LinkNode
+internal class Video : LinkNode
 {
   new make(Str destination) : super(destination)
   {
@@ -215,7 +215,7 @@ internal class Embed : LinkNode
 }
 
 @Js
-internal class EmbedRenderer : NodeRenderer
+internal class VideoRenderer : NodeRenderer
 {
   new make(HtmlContext cx)
   {
@@ -226,8 +226,9 @@ internal class EmbedRenderer : NodeRenderer
   private HtmlContext cx
   private HtmlWriter html
 
-  override const Type[] nodeTypes := [Embed#]
-  private const [Str:Str?] stdAttrs := [
+  override const Type[] nodeTypes := [Video#]
+
+  private static const [Str:Str?] stdAttrs := [
     "frameborder": "0",
     "allowfullscreen": null,
     "webkitallowfullscreen": null,
@@ -238,32 +239,32 @@ internal class EmbedRenderer : NodeRenderer
 
   override Void render(Node node)
   {
-    embed := (Embed)node
-    type  := embed.uri.host.lower
+    video := (Video)node
+    type  := video.uri.host.lower
     switch (type)
     {
-      case "loom": renderLoom(embed)
+      case "loom": renderLoom(video)
       // case "vimeo": renderVimeo(embed)
       case "youtube":
       case "youtu.be":
-        renderYoutube(embed)
-      default: throw UnsupportedErr("Cannot embed '${type}'")
+        renderYoutube(video)
+      default: throw UnsupportedErr("Video: '${type}'")
     }
   }
 
-  private Void renderLoom(Embed embed)
+  private Void renderLoom(Video video)
   {
-    uri := embed.uri
+    uri := video.uri
     id  := uri.path.last.trimToNull ?: throw ParseErr("Invalid loom uri: ${uri}")
     sid := uri.query["sid"] ?: throw ParseErr("Invalid loom uri: ${uri}")
     src := `https://www.loom.com/embed/${id}?sid=${sid}`
     attrs := stdAttrs.dup.addAll(["title": "Loom", "src": "${src}"]).setAll(uri.query)
-    renderEmbedded(attrs)
+    renderVideo(attrs)
   }
 
-  private Void renderYoutube(Embed embed)
+  private Void renderYoutube(Video video)
   {
-    uri := embed.uri
+    uri := video.uri
     id  := uri.path.getSafe(0) ?: throw ParseErr("Invalid youtube uri: ${uri}")
     si  := uri.query["si"] ?: throw ParseErr("Invalid youtube uri: ${uri}")
     src := `https://www.youtube.com/embed/${id}?si=${si}`
@@ -273,10 +274,10 @@ internal class EmbedRenderer : NodeRenderer
       "allow":"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webshare",
       "referrerpolicy": "strict-origin-when-cross-origin",
     ]).setAll(uri.query)
-    renderEmbedded(attrs)
+    renderVideo(attrs)
   }
 
-  private Void renderEmbedded([Str:Str?] attrs)
+  private Void renderVideo([Str:Str?] attrs)
   {
     html.line
     html.tag("div")
