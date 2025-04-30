@@ -308,7 +308,7 @@ internal class VideoRenderer : NodeRenderer
   private Void renderVideo([Str:Str?] attrs)
   {
     html.line
-    html.tag("div")
+    html.tag("div", ["class": "xetodoc-video"])
     html.tag("iframe", attrs).tag("/iframe")
     html.tag("/div")
   }
