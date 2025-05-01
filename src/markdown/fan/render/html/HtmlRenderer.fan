@@ -30,6 +30,7 @@ const class HtmlRenderer : Renderer
     this.percentEncodeUrls = builder.percentEncodeUrls
     this.omitSingleParagraphP = builder.omitSingleParagraphP
     this.sanitizeUrls = builder.sanitizeUrls
+    this.disableHtml = builder.disableHtml
     this.attrProviderFactories = builder.attrProviderFactories
 
     factories := builder.nodeRendererFactories.dup
@@ -42,6 +43,7 @@ const class HtmlRenderer : Renderer
   internal const Bool percentEncodeUrls
   internal const Bool omitSingleParagraphP
   internal const Bool sanitizeUrls
+  internal const Bool disableHtml
   internal const |HtmlContext->NodeRenderer|[] nodeRendererFactories
   internal const |HtmlContext->AttrProvider|[] attrProviderFactories
   internal const UrlSanitizer urlSanitizer := DefaultUrlSanitizer()
@@ -78,6 +80,7 @@ final class HtmlRendererBuilder
   internal Bool percentEncodeUrls := false
   internal Bool omitSingleParagraphP := false
   internal Bool sanitizeUrls := false
+  internal Bool disableHtml := false
 
   ** Get the configured `HtmlRenderer`
   HtmlRenderer build() { HtmlRenderer(this) }
@@ -131,6 +134,13 @@ final class HtmlRendererBuilder
   This withSanitizeUrls(Bool val := true)
   {
     this.sanitizeUrls = val
+    return this
+  }
+
+  ** Whether `HtmlInline` and `HtmlBlock` nodes should be rendered, defaults to 'false'.
+  This withDisableHtml(Bool val := true)
+  {
+    this.disableHtml = val
     return this
   }
 

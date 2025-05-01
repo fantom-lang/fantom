@@ -55,6 +55,11 @@ class XetodocExtTest : RenderingTest
     verifyEq(render("# Heading#!\tNoSpace!!!  "), """<h1 id="headingnospace">Heading#!\tNoSpace!!!</h1>\n""")
   }
 
+  Void testIgnoreHtml()
+  {
+    verifyEq(render("Foo<h1>H1</h1>\n<h2>H2</h2>\n\nText"), "<p>FooH1</p>\n<p>Text</p>\n")
+  }
+
   override protected Str render(Str source)
   {
     renderer.render(parser.parse(source))

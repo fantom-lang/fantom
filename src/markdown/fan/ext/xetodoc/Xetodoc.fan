@@ -13,8 +13,12 @@
 ** pre>
 ** 'this is code'
 ** <pre
+** - Disables rendering of inline and block HTML nodes
 ** - Allows links to be specified in backticks, e.g. '`http://fantom.org`'
 ** - Enables the following extensions: `ImgAttrsExt`, and `TablesExt`
+** - Enables embedding videos in HTML using image links using video scheme links
+**   - ![alt text](video://youtu.be/abc?si=123)
+**   - ![alt text](video://loom/def?sid=456)
 **
 ** pre>
 ** parser := Xetodoc.parser |->LinkResolver| { MyCustomLinkResolver() }
@@ -79,6 +83,7 @@
   static HtmlRendererBuilder htmlBuilder()
   {
     HtmlRenderer.builder
+      .withDisableHtml
       .nodeRendererFactory |cx->NodeRenderer| { VideoRenderer(cx) }
       .extensions(xetodoc)
   }

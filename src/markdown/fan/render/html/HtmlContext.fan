@@ -43,6 +43,8 @@ class HtmlContext
 
   Bool percentEncodeUrls() { renderer.percentEncodeUrls }
 
+  Bool disableHtml() { renderer.disableHtml }
+
   Str softbreak() { renderer.softbreak }
 
   Str encodeUrl(Str url)
