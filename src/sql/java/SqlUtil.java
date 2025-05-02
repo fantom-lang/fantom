@@ -70,19 +70,19 @@ public class SqlUtil
     {
       List list = (List) value;
 
-      // Str
+      // postgres text array
       if (list.of().equals(Sys.StrType))
       {
-        String[] arr = new String[(int)list.size()];
-        for (int i = 0; i < list.size(); i++)
+        String[] arr = new String[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
           arr[i] = (String) list.get(i);
         jobj = arr;
       }
-      // Int
+      // postgres int/bigint array (works for both)
       else if (list.of().equals(Sys.IntType))
       {
-        Long[] arr = new Long[(int)list.size()];
-        for (int i = 0; i < list.size(); i++)
+        Long[] arr = new Long[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
           arr[i] = (Long) list.get(i);
         jobj = arr;
       }
@@ -368,18 +368,24 @@ public class SqlUtil
     {
       Object arr = ((java.sql.Array) rs.getObject(col)).getArray();
 
+      // postgres text array
       if (arr instanceof String[])
       {
         return new List(Sys.StrType, (String[]) arr);
       }
+      // postgres int array
       else if (arr instanceof Integer[])
       {
-        Integer[] intArr = (Integer[]) arr;
-        Long[] lngArr = new Long[(int)intArr.length];
-        for (int i = 0; i < intArr.length; i++)
-          lngArr[i] = new Long(intArr[i]);
-        return new List(Sys.IntType, lngArr);
+        // We have to copy the Integer[] over to a Long[]
+        Integer[] src = (Integer[]) arr;
+        Long[] dst = new Long[src.length];
+
+        for (int i = 0; i < src.length; i++)
+          dst[i] = src[i].longValue();
+
+        return new List(Sys.IntType, dst);
       }
+      // postgres bigint array
       else if (arr instanceof Long[])
       {
         return new List(Sys.IntType, (Long[]) arr);
