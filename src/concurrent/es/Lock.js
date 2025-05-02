@@ -15,4 +15,12 @@ class Lock extends sys.Obj {
 
   typeof() { return Lock.type$; }
 
+  static makeReentrant() { return new Lock(); }
+
+  lock() { }
+
+  unlock() { }
+
+  tryLock(timeout=null) { return true; }
+
 }

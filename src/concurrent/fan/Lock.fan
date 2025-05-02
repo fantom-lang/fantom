@@ -9,6 +9,7 @@
 **
 ** Lock for synchronization between actors.
 **
+@Js
 native const class Lock
 {
   ** Construct mutual exclusion lock.
