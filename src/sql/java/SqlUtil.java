@@ -65,14 +65,31 @@ public class SqlUtil
     {
       jobj = ((Buf)value).javaIn();
     }
-    // Support for Postgres text[] <--> Fantom Str[]
-    else if ((value instanceof List) && (((List) value).of().equals(Sys.StrType)))
+    // Support for converting Fantom Lists to Postgres arrays.
+    else if (value instanceof List)
     {
       List list = (List) value;
-      String[] arr = new String[(int)list.size()];
-      for (int i = 0; i < list.size(); i++)
-        arr[i] = list.get(i).toString();
-      jobj = arr;
+
+      // postgres text array
+      if (list.of().equals(Sys.StrType))
+      {
+        String[] arr = new String[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+          arr[i] = (String) list.get(i);
+        jobj = arr;
+      }
+      // postgres int/bigint array (works for both)
+      else if (list.of().equals(Sys.IntType))
+      {
+        Long[] arr = new Long[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+          arr[i] = (Long) list.get(i);
+        jobj = arr;
+      }
+      else
+      {
+        throw SqlErr.make("Cannot create array from " + list.of());
+      }
     }
 
     return jobj;
@@ -343,16 +360,40 @@ public class SqlUtil
     }
   }
 
-  // Support for Postgres text[] <--> Fantom Str[]
+  // Support for converting Postgres arrays to Fantom Lists.
   public static class ToFanList extends SqlToFan
   {
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
-      String[] arr = (String[])
-        ((java.sql.Array) rs.getObject(col)).getArray();
+      Object arr = ((java.sql.Array) rs.getObject(col)).getArray();
 
-      return new List(Sys.StrType, arr);
+      // postgres text array
+      if (arr instanceof String[])
+      {
+        return new List(Sys.StrType, (String[]) arr);
+      }
+      // postgres int array
+      else if (arr instanceof Integer[])
+      {
+        // We have to copy the Integer[] over to a Long[]
+        Integer[] src = (Integer[]) arr;
+        Long[] dst = new Long[src.length];
+
+        for (int i = 0; i < src.length; i++)
+          dst[i] = src[i].longValue();
+
+        return new List(Sys.IntType, dst);
+      }
+      // postgres bigint array
+      else if (arr instanceof Long[])
+      {
+        return new List(Sys.IntType, (Long[]) arr);
+      }
+      else
+      {
+        throw SqlErr.make("Cannot create array from " + arr.getClass());
+      }
     }
   }
 

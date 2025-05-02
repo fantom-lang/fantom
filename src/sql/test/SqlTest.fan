@@ -51,6 +51,7 @@ class SqlTest : Test
       withPrepare
       mysqlVariable
       postgresBuf
+      postgresList
     }
     catch (Err e)
     {
@@ -672,6 +673,45 @@ class SqlTest : Test
     rows := select.query(["id": id])
     verifyEq(rows.size, 1)
     verifyTrue((rows[0]->info as Buf).bytesEqual(buf))
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// read/write List field
+//////////////////////////////////////////////////////////////////////////
+
+  Void postgresList()
+  {
+    if (dbType != DbType.postgres) return
+    echo("postgresList")
+
+    if (db.meta.tableExists("list"))
+      db.sql("drop table list").execute
+
+    db.sql(
+      "create table list (
+         text_arr text[],
+         int_arr  int[],
+         long_arr bigint[])"
+       ).execute
+
+    base := 3000000000 // Larger than Integer.MAX_VALUE
+
+    insert := db.sql(
+      "insert into list (text_arr, int_arr, long_arr)
+       values (@textArr, @intArr, @longArr)").prepare
+
+    insert.execute([
+      "textArr": Str["a", "b", "c"],
+      "intArr":  Int[1, 2, 3],
+      "longArr": Int[base+1, base+2, base+3],
+    ])
+
+    select := db.sql("select * from list").prepare
+    rows := select.query()
+    verifyEq(rows.size, 1)
+    verifyEq(rows[0]->text_arr, Str["a", "b", "c"])
+    verifyEq(rows[0]->int_arr,  Int[1, 2, 3])
+    verifyEq(rows[0]->long_arr, Int[base+1, base+2, base+3])
   }
 
 //////////////////////////////////////////////////////////////////////////
