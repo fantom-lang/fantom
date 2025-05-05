@@ -86,6 +86,33 @@ public class SqlUtil
           arr[i] = (Long) list.get(i);
         jobj = arr;
       }
+      // postgres boolean array
+      else if (list.of().equals(Sys.BoolType))
+      {
+        Boolean[] arr = new Boolean[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+          arr[i] = (Boolean) list.get(i);
+        jobj = arr;
+      }
+      // postgres real/double precision array (works for both)
+      else if (list.of().equals(Sys.FloatType))
+      {
+        Double[] arr = new Double[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+          arr[i] = (Double) list.get(i);
+        jobj = arr;
+      }
+      // postgres timestamptz
+      else if (list.of().equals(Sys.DateTimeType))
+      {
+        Timestamp[] arr = new Timestamp[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+        {
+          DateTime dt = (DateTime) list.get(i);
+          arr[i] = new Timestamp(dt.toJava());
+        }
+        jobj = arr;
+      }
       else
       {
         throw SqlErr.make("Cannot create array from " + list.of());
@@ -389,6 +416,40 @@ public class SqlUtil
       else if (arr instanceof Long[])
       {
         return new List(Sys.IntType, (Long[]) arr);
+      }
+      // postgres boolean array
+      else if (arr instanceof Boolean[])
+      {
+        return new List(Sys.BoolType, (Boolean[]) arr);
+      }
+      // postgres real array
+      else if (arr instanceof Float[])
+      {
+        // We have to copy the Float[] over to a Double[]
+        Float[] src = (Float[]) arr;
+        Double[] dst = new Double[src.length];
+
+        for (int i = 0; i < src.length; i++)
+          dst[i] = src[i].doubleValue();
+
+        return new List(Sys.FloatType, dst);
+      }
+      // postgres double precision array
+      else if (arr instanceof Double[])
+      {
+        return new List(Sys.FloatType, (Double[]) arr);
+      }
+      // postgres timestamptz array
+      else if (arr instanceof Timestamp[])
+      {
+        // We have to copy the Timestamp[] over to a DateTime[]
+        Timestamp[] src = (Timestamp[]) arr;
+        DateTime[] dst = new DateTime[src.length];
+
+        for (int i = 0; i < src.length; i++)
+          dst[i] = DateTime.fromJava(src[i].getTime());
+
+        return new List(Sys.DateTimeType, dst);
       }
       else
       {

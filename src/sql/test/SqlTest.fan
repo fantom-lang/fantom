@@ -682,36 +682,48 @@ class SqlTest : Test
   Void postgresList()
   {
     if (dbType != DbType.postgres) return
-    echo("postgresList")
 
     if (db.meta.tableExists("list"))
       db.sql("drop table list").execute
 
     db.sql(
       "create table list (
-         text_arr text[],
-         int_arr  int[],
-         long_arr bigint[])"
+         texts   text[],
+         ints    int[],
+         longs   bigint[],
+         bools   boolean[],
+         floats  real[],
+         doubles double precision[],
+         times   timestamptz[])"
        ).execute
 
     base := 3000000000 // Larger than Integer.MAX_VALUE
+    now := DateTime.now
 
     insert := db.sql(
-      "insert into list (text_arr, int_arr, long_arr)
-       values (@textArr, @intArr, @longArr)").prepare
+      "insert into list (texts, ints, longs, bools, floats, doubles, times)
+       values (@texts, @ints, @longs, @bools, @floats, @doubles, @times)").prepare
 
     insert.execute([
-      "textArr": Str["a", "b", "c"],
-      "intArr":  Int[1, 2, 3],
-      "longArr": Int[base+1, base+2, base+3],
+      "texts":   Str["a", "b", "c"],
+      "ints":    Int[1, 2, 3],
+      "longs":   Int[base+1, base+2, base+3],
+      "bools":   Bool[true, false],
+      "floats":  Float[1.0f, 2.0f, 3.0f],
+      "doubles": Float[4.0f, 5.0f, 6.0f],
+      "times":   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)],
     ])
 
     select := db.sql("select * from list").prepare
     rows := select.query()
     verifyEq(rows.size, 1)
-    verifyEq(rows[0]->text_arr, Str["a", "b", "c"])
-    verifyEq(rows[0]->int_arr,  Int[1, 2, 3])
-    verifyEq(rows[0]->long_arr, Int[base+1, base+2, base+3])
+    verifyEq(rows[0]->texts,   Str["a", "b", "c"])
+    verifyEq(rows[0]->ints,    Int[1, 2, 3])
+    verifyEq(rows[0]->longs,   Int[base+1, base+2, base+3])
+    verifyEq(rows[0]->bools,   Bool[true, false])
+    verifyEq(rows[0]->floats,  Float[1.0f, 2.0f, 3.0f])
+    verifyEq(rows[0]->doubles, Float[4.0f, 5.0f, 6.0f])
+    verifyEq(rows[0]->times,   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)])
   }
 
 //////////////////////////////////////////////////////////////////////////
