@@ -691,6 +691,7 @@ class SqlTest : Test
          texts   text[],
          ints    int[],
          longs   bigint[],
+         bools   boolean[],
          floats  real[],
          doubles double precision[],
          times   timestamptz[])"
@@ -700,13 +701,14 @@ class SqlTest : Test
     now := DateTime.now
 
     insert := db.sql(
-      "insert into list (texts, ints, longs, floats, doubles, times)
-       values (@texts, @ints, @longs, @floats, @doubles, @times)").prepare
+      "insert into list (texts, ints, longs, bools, floats, doubles, times)
+       values (@texts, @ints, @longs, @bools, @floats, @doubles, @times)").prepare
 
     insert.execute([
       "texts":   Str["a", "b", "c"],
       "ints":    Int[1, 2, 3],
       "longs":   Int[base+1, base+2, base+3],
+      "bools":   Bool[true, false],
       "floats":  Float[1.0f, 2.0f, 3.0f],
       "doubles": Float[4.0f, 5.0f, 6.0f],
       "times":   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)],
@@ -718,6 +720,7 @@ class SqlTest : Test
     verifyEq(rows[0]->texts,   Str["a", "b", "c"])
     verifyEq(rows[0]->ints,    Int[1, 2, 3])
     verifyEq(rows[0]->longs,   Int[base+1, base+2, base+3])
+    verifyEq(rows[0]->bools,   Bool[true, false])
     verifyEq(rows[0]->floats,  Float[1.0f, 2.0f, 3.0f])
     verifyEq(rows[0]->doubles, Float[4.0f, 5.0f, 6.0f])
     verifyEq(rows[0]->times,   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)])

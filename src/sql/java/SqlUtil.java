@@ -86,6 +86,14 @@ public class SqlUtil
           arr[i] = (Long) list.get(i);
         jobj = arr;
       }
+      // postgres boolean array
+      else if (list.of().equals(Sys.BoolType))
+      {
+        Boolean[] arr = new Boolean[list.sz()];
+        for (int i = 0; i < list.sz(); i++)
+          arr[i] = (Boolean) list.get(i);
+        jobj = arr;
+      }
       // postgres real/double precision array (works for both)
       else if (list.of().equals(Sys.FloatType))
       {
@@ -408,6 +416,11 @@ public class SqlUtil
       else if (arr instanceof Long[])
       {
         return new List(Sys.IntType, (Long[]) arr);
+      }
+      // postgres boolean array
+      else if (arr instanceof Boolean[])
+      {
+        return new List(Sys.BoolType, (Boolean[]) arr);
       }
       // postgres real array
       else if (arr instanceof Float[])
