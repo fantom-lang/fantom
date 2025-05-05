@@ -238,45 +238,45 @@ public class SqlUtil
       case Types.CHAR:
       case Types.VARCHAR:
       case Types.LONGVARCHAR:
-        return new ToFanStr();
+        return toFanStr;
 
       case Types.BIT:
-        return new ToFanBool();
+        return toFanBool;
 
       case Types.TINYINT:
       case Types.SMALLINT:
       case Types.INTEGER:
       case Types.BIGINT:
-        return new ToFanInt();
+        return toFanInt;
 
       case Types.REAL:
       case Types.FLOAT:
       case Types.DOUBLE:
-        return new ToFanFloat();
+        return toFanFloat;
 
       case Types.DECIMAL:
       case Types.NUMERIC:
-        return new ToFanDecimal();
+        return toFanDecimal;
 
       case Types.BINARY:
       case Types.VARBINARY:
       case Types.LONGVARBINARY:
-        return new ToFanBuf();
+        return toFanBuf;
 
       case Types.TIMESTAMP:
-        return new ToFanDateTime();
+        return toFanDateTime;
 
       case Types.DATE:
-        return new ToFanDate();
+        return toFanDate;
 
       case Types.TIME:
-        return new ToFanTime();
+        return toFanTime;
 
       case Types.ARRAY:
-        return new ToFanList();
+        return toFanList;
 
       default:
-        return new ToDefFanStr();
+        return toDefFanStr;
     }
   }
 
@@ -466,6 +466,18 @@ public class SqlUtil
       return String.valueOf(rs.getObject(col));
     }
   }
+
+  public static SqlToFan toFanStr      = new ToFanStr();
+  public static SqlToFan toFanBool     = new ToFanBool();
+  public static SqlToFan toFanInt      = new ToFanInt();
+  public static SqlToFan toFanFloat    = new ToFanFloat();
+  public static SqlToFan toFanDecimal  = new ToFanDecimal();
+  public static SqlToFan toFanDateTime = new ToFanDateTime();
+  public static SqlToFan toFanDate     = new ToFanDate();
+  public static SqlToFan toFanTime     = new ToFanTime();
+  public static SqlToFan toFanBuf      = new ToFanBuf();
+  public static SqlToFan toFanList     = new ToFanList();
+  public static SqlToFan toDefFanStr   = new ToDefFanStr();
 
 }
 
