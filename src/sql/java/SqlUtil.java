@@ -238,45 +238,45 @@ public class SqlUtil
       case Types.CHAR:
       case Types.VARCHAR:
       case Types.LONGVARCHAR:
-        return new ToFanStr();
+        return toFanStr;
 
       case Types.BIT:
-        return new ToFanBool();
+        return toFanBool;
 
       case Types.TINYINT:
       case Types.SMALLINT:
       case Types.INTEGER:
       case Types.BIGINT:
-        return new ToFanInt();
+        return toFanInt;
 
       case Types.REAL:
       case Types.FLOAT:
       case Types.DOUBLE:
-        return new ToFanFloat();
+        return toFanFloat;
 
       case Types.DECIMAL:
       case Types.NUMERIC:
-        return new ToFanDecimal();
+        return toFanDecimal;
 
       case Types.BINARY:
       case Types.VARBINARY:
       case Types.LONGVARBINARY:
-        return new ToFanBuf();
+        return toFanBuf;
 
       case Types.TIMESTAMP:
-        return new ToFanDateTime();
+        return toFanDateTime;
 
       case Types.DATE:
-        return new ToFanDate();
+        return toFanDate;
 
       case Types.TIME:
-        return new ToFanTime();
+        return toFanTime;
 
       case Types.ARRAY:
-        return new ToFanList();
+        return toFanList;
 
       default:
-        return new ToDefFanStr();
+        return toDefFanStr;
     }
   }
 
@@ -466,6 +466,18 @@ public class SqlUtil
       return String.valueOf(rs.getObject(col));
     }
   }
+
+  public static final SqlToFan toFanStr      = new ToFanStr();
+  public static final SqlToFan toFanBool     = new ToFanBool();
+  public static final SqlToFan toFanInt      = new ToFanInt();
+  public static final SqlToFan toFanFloat    = new ToFanFloat();
+  public static final SqlToFan toFanDecimal  = new ToFanDecimal();
+  public static final SqlToFan toFanDateTime = new ToFanDateTime();
+  public static final SqlToFan toFanDate     = new ToFanDate();
+  public static final SqlToFan toFanTime     = new ToFanTime();
+  public static final SqlToFan toFanBuf      = new ToFanBuf();
+  public static final SqlToFan toFanList     = new ToFanList();
+  public static final SqlToFan toDefFanStr   = new ToDefFanStr();
 
 }
 
