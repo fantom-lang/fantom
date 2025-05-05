@@ -467,17 +467,17 @@ public class SqlUtil
     }
   }
 
-  public static SqlToFan toFanStr      = new ToFanStr();
-  public static SqlToFan toFanBool     = new ToFanBool();
-  public static SqlToFan toFanInt      = new ToFanInt();
-  public static SqlToFan toFanFloat    = new ToFanFloat();
-  public static SqlToFan toFanDecimal  = new ToFanDecimal();
-  public static SqlToFan toFanDateTime = new ToFanDateTime();
-  public static SqlToFan toFanDate     = new ToFanDate();
-  public static SqlToFan toFanTime     = new ToFanTime();
-  public static SqlToFan toFanBuf      = new ToFanBuf();
-  public static SqlToFan toFanList     = new ToFanList();
-  public static SqlToFan toDefFanStr   = new ToDefFanStr();
+  public static final SqlToFan toFanStr      = new ToFanStr();
+  public static final SqlToFan toFanBool     = new ToFanBool();
+  public static final SqlToFan toFanInt      = new ToFanInt();
+  public static final SqlToFan toFanFloat    = new ToFanFloat();
+  public static final SqlToFan toFanDecimal  = new ToFanDecimal();
+  public static final SqlToFan toFanDateTime = new ToFanDateTime();
+  public static final SqlToFan toFanDate     = new ToFanDate();
+  public static final SqlToFan toFanTime     = new ToFanTime();
+  public static final SqlToFan toFanBuf      = new ToFanBuf();
+  public static final SqlToFan toFanList     = new ToFanList();
+  public static final SqlToFan toDefFanStr   = new ToDefFanStr();
 
 }
 
