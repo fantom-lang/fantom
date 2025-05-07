@@ -7,6 +7,8 @@
 //
 package fan.sql;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.sql.*;
 import fan.sys.*;
 
@@ -36,6 +38,10 @@ public class SqlUtil
     catch (Exception e) { e.printStackTrace(); }
     rowType = t;
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Fantom => Sql
+//////////////////////////////////////////////////////////////////////////
 
   /**
    * Get a JDBC Java object for the specified Fan object.
@@ -69,58 +75,84 @@ public class SqlUtil
     else if (value instanceof List)
     {
       List list = (List) value;
-
-      // postgres text array
-      if (list.of().equals(Sys.StrType))
-      {
-        String[] arr = new String[list.sz()];
-        for (int i = 0; i < list.sz(); i++)
-          arr[i] = (String) list.get(i);
-        jobj = arr;
-      }
-      // postgres int/bigint array (works for both)
-      else if (list.of().equals(Sys.IntType))
-      {
-        Long[] arr = new Long[list.sz()];
-        for (int i = 0; i < list.sz(); i++)
-          arr[i] = (Long) list.get(i);
-        jobj = arr;
-      }
-      // postgres boolean array
-      else if (list.of().equals(Sys.BoolType))
-      {
-        Boolean[] arr = new Boolean[list.sz()];
-        for (int i = 0; i < list.sz(); i++)
-          arr[i] = (Boolean) list.get(i);
-        jobj = arr;
-      }
-      // postgres real/double precision array (works for both)
-      else if (list.of().equals(Sys.FloatType))
-      {
-        Double[] arr = new Double[list.sz()];
-        for (int i = 0; i < list.sz(); i++)
-          arr[i] = (Double) list.get(i);
-        jobj = arr;
-      }
-      // postgres timestamptz
-      else if (list.of().equals(Sys.DateTimeType))
-      {
-        Timestamp[] arr = new Timestamp[list.sz()];
-        for (int i = 0; i < list.sz(); i++)
-        {
-          DateTime dt = (DateTime) list.get(i);
-          arr[i] = new Timestamp(dt.toJava());
-        }
-        jobj = arr;
-      }
-      else
-      {
+      FanListToArray conv = listToArray.get(list.of());
+      if (conv == null)
         throw SqlErr.make("Cannot create array from " + list.of());
-      }
+      return conv.toArray(list);
     }
 
     return jobj;
   }
+
+  interface FanListToArray
+  {
+    Object[] toArray(List list);
+  }
+
+  static final FanListToArray toStringArray = (list) ->
+  {
+    String[] arr = new String[list.sz()];
+    for (int i = 0; i < list.sz(); i++)
+      arr[i] = (String) list.get(i);
+    return arr;
+  };
+
+  static final FanListToArray toLongArray = (list) ->
+  {
+    Long[] arr = new Long[list.sz()];
+    for (int i = 0; i < list.sz(); i++)
+      arr[i] = (Long) list.get(i);
+    return arr;
+  };
+
+  static final FanListToArray toBooleanArray = (list) ->
+  {
+    Boolean[] arr = new Boolean[list.sz()];
+    for (int i = 0; i < list.sz(); i++)
+      arr[i] = (Boolean) list.get(i);
+    return arr;
+  };
+
+  static final FanListToArray toDoubleArray = (list) ->
+  {
+    Double[] arr = new Double[list.sz()];
+    for (int i = 0; i < list.sz(); i++)
+      arr[i] = (Double) list.get(i);
+    return arr;
+  };
+
+  static final FanListToArray toTimestampArray = (list) ->
+  {
+    Timestamp[] arr = new Timestamp[list.sz()];
+    for (int i = 0; i < list.sz(); i++)
+    {
+      DateTime dt = (DateTime) list.get(i);
+      arr[i] = (dt == null) ? null : new Timestamp(dt.toJava());
+    }
+    return arr;
+  };
+
+  static final Map<Type, FanListToArray> listToArray;
+  static
+  {
+    listToArray = new HashMap<>();
+
+    listToArray.put(Sys.StrType,      toStringArray);
+    listToArray.put(Sys.IntType,      toLongArray);
+    listToArray.put(Sys.BoolType,     toBooleanArray);
+    listToArray.put(Sys.FloatType,    toDoubleArray);
+    listToArray.put(Sys.DateTimeType, toTimestampArray);
+
+    listToArray.put(Sys.StrType.toNullable(),      toStringArray);
+    listToArray.put(Sys.IntType.toNullable(),      toLongArray);
+    listToArray.put(Sys.BoolType.toNullable(),     toBooleanArray);
+    listToArray.put(Sys.FloatType.toNullable(),    toDoubleArray);
+    listToArray.put(Sys.DateTimeType.toNullable(), toTimestampArray);
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Sql => Fantom
+//////////////////////////////////////////////////////////////////////////
 
   /**
    * Map an java.sql.Types code to a Fan type.
@@ -173,10 +205,6 @@ public class SqlUtil
         return null;
     }
   }
-
-//////////////////////////////////////////////////////////////////////////
-// Sql => Fantom
-//////////////////////////////////////////////////////////////////////////
 
   /**
    * Map an java.sql.ResultSet column to a Fantom object.
@@ -393,68 +421,128 @@ public class SqlUtil
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
-      Object arr = ((java.sql.Array) rs.getObject(col)).getArray();
+      Object obj = ((java.sql.Array) rs.getObject(col)).getArray();
 
       // postgres text array
-      if (arr instanceof String[])
+      if (obj instanceof String[])
       {
-        return new List(Sys.StrType, (String[]) arr);
+        String[] arr = (String[]) obj;
+        return new List(
+          hasNull(arr) ?
+            Sys.StrType.toNullable() :
+            Sys.StrType,
+          arr);
       }
       // postgres int array
-      else if (arr instanceof Integer[])
+      else if (obj instanceof Integer[])
       {
-        // We have to copy the Integer[] over to a Long[]
-        Integer[] src = (Integer[]) arr;
+        // Copy the Integer[] over to a Long[]
+        Integer[] src = (Integer[]) obj;
         Long[] dst = new Long[src.length];
 
+        boolean hasNull = false;
         for (int i = 0; i < src.length; i++)
-          dst[i] = src[i].longValue();
+        {
+          if (src[i] == null)
+            hasNull = true;
+          else
+            dst[i] = src[i].longValue();
+        }
 
-        return new List(Sys.IntType, dst);
+        return new List(
+          hasNull ?
+            Sys.IntType.toNullable() :
+            Sys.IntType,
+          dst);
       }
       // postgres bigint array
-      else if (arr instanceof Long[])
+      else if (obj instanceof Long[])
       {
-        return new List(Sys.IntType, (Long[]) arr);
+        Long[] arr = (Long[]) obj;
+        return new List(
+          hasNull(arr) ?
+            Sys.IntType.toNullable() :
+            Sys.IntType,
+          arr);
       }
       // postgres boolean array
-      else if (arr instanceof Boolean[])
+      else if (obj instanceof Boolean[])
       {
-        return new List(Sys.BoolType, (Boolean[]) arr);
+        Boolean[] arr = (Boolean[]) obj;
+        return new List(
+          hasNull(arr) ?
+            Sys.BoolType.toNullable() :
+            Sys.BoolType,
+          arr);
       }
       // postgres real array
-      else if (arr instanceof Float[])
+      else if (obj instanceof Float[])
       {
-        // We have to copy the Float[] over to a Double[]
-        Float[] src = (Float[]) arr;
+        // Copy the Float[] over to a Double[]
+        Float[] src = (Float[]) obj;
         Double[] dst = new Double[src.length];
 
+        boolean hasNull = false;
         for (int i = 0; i < src.length; i++)
-          dst[i] = src[i].doubleValue();
+        {
+          if (src[i] == null)
+            hasNull = true;
+          else
+            dst[i] = src[i].doubleValue();
+        }
 
-        return new List(Sys.FloatType, dst);
+        return new List(
+          hasNull ?
+            Sys.FloatType.toNullable() :
+            Sys.FloatType,
+          dst);
       }
       // postgres double precision array
-      else if (arr instanceof Double[])
+      else if (obj instanceof Double[])
       {
-        return new List(Sys.FloatType, (Double[]) arr);
+        Double[] arr = (Double[]) obj;
+        return new List(
+          hasNull(arr) ?
+            Sys.FloatType.toNullable() :
+            Sys.FloatType,
+          arr);
       }
       // postgres timestamptz array
-      else if (arr instanceof Timestamp[])
+      else if (obj instanceof Timestamp[])
       {
-        // We have to copy the Timestamp[] over to a DateTime[]
-        Timestamp[] src = (Timestamp[]) arr;
+        // Copy the Timestamp[] over to a DateTime[]
+        Timestamp[] src = (Timestamp[]) obj;
         DateTime[] dst = new DateTime[src.length];
 
+        boolean hasNull = false;
         for (int i = 0; i < src.length; i++)
-          dst[i] = DateTime.fromJava(src[i].getTime());
+        {
+          if (src[i] == null)
+            hasNull = true;
+          else
+            dst[i] = DateTime.fromJava(src[i].getTime());
+        }
 
-        return new List(Sys.DateTimeType, dst);
+        return new List(
+          hasNull ?
+            Sys.DateTimeType.toNullable() :
+            Sys.DateTimeType,
+          dst);
       }
       else
       {
-        throw SqlErr.make("Cannot create array from " + arr.getClass());
+        throw SqlErr.make("Cannot create array from " + obj.getClass());
       }
+    }
+
+    private boolean hasNull(Object[] arr)
+    {
+      for (int i = 0; i < arr.length; i++)
+      {
+        if (arr[i] == null)
+          return true;
+      }
+      return false;
     }
   }
 
