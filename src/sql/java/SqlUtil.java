@@ -75,6 +75,7 @@ public class SqlUtil
     else if (value instanceof List)
     {
       List list = (List) value;
+
       FanListToArray conv = listToArray.get(list.of());
       if (conv == null)
         throw SqlErr.make("Cannot create array from " + list.of());
@@ -83,6 +84,10 @@ public class SqlUtil
 
     return jobj;
   }
+
+  //--------------------------------------------
+  // Convert a Fan List to a java Array
+  //--------------------------------------------
 
   interface FanListToArray
   {
@@ -423,126 +428,10 @@ public class SqlUtil
     {
       Object obj = ((java.sql.Array) rs.getObject(col)).getArray();
 
-      // postgres text array
-      if (obj instanceof String[])
-      {
-        String[] arr = (String[]) obj;
-        return new List(
-          hasNull(arr) ?
-            Sys.StrType.toNullable() :
-            Sys.StrType,
-          arr);
-      }
-      // postgres int array
-      else if (obj instanceof Integer[])
-      {
-        // Copy the Integer[] over to a Long[]
-        Integer[] src = (Integer[]) obj;
-        Long[] dst = new Long[src.length];
-
-        boolean hasNull = false;
-        for (int i = 0; i < src.length; i++)
-        {
-          if (src[i] == null)
-            hasNull = true;
-          else
-            dst[i] = src[i].longValue();
-        }
-
-        return new List(
-          hasNull ?
-            Sys.IntType.toNullable() :
-            Sys.IntType,
-          dst);
-      }
-      // postgres bigint array
-      else if (obj instanceof Long[])
-      {
-        Long[] arr = (Long[]) obj;
-        return new List(
-          hasNull(arr) ?
-            Sys.IntType.toNullable() :
-            Sys.IntType,
-          arr);
-      }
-      // postgres boolean array
-      else if (obj instanceof Boolean[])
-      {
-        Boolean[] arr = (Boolean[]) obj;
-        return new List(
-          hasNull(arr) ?
-            Sys.BoolType.toNullable() :
-            Sys.BoolType,
-          arr);
-      }
-      // postgres real array
-      else if (obj instanceof Float[])
-      {
-        // Copy the Float[] over to a Double[]
-        Float[] src = (Float[]) obj;
-        Double[] dst = new Double[src.length];
-
-        boolean hasNull = false;
-        for (int i = 0; i < src.length; i++)
-        {
-          if (src[i] == null)
-            hasNull = true;
-          else
-            dst[i] = src[i].doubleValue();
-        }
-
-        return new List(
-          hasNull ?
-            Sys.FloatType.toNullable() :
-            Sys.FloatType,
-          dst);
-      }
-      // postgres double precision array
-      else if (obj instanceof Double[])
-      {
-        Double[] arr = (Double[]) obj;
-        return new List(
-          hasNull(arr) ?
-            Sys.FloatType.toNullable() :
-            Sys.FloatType,
-          arr);
-      }
-      // postgres timestamptz array
-      else if (obj instanceof Timestamp[])
-      {
-        // Copy the Timestamp[] over to a DateTime[]
-        Timestamp[] src = (Timestamp[]) obj;
-        DateTime[] dst = new DateTime[src.length];
-
-        boolean hasNull = false;
-        for (int i = 0; i < src.length; i++)
-        {
-          if (src[i] == null)
-            hasNull = true;
-          else
-            dst[i] = DateTime.fromJava(src[i].getTime());
-        }
-
-        return new List(
-          hasNull ?
-            Sys.DateTimeType.toNullable() :
-            Sys.DateTimeType,
-          dst);
-      }
-      else
-      {
-        throw SqlErr.make("Cannot create array from " + obj.getClass());
-      }
-    }
-
-    private boolean hasNull(Object[] arr)
-    {
-      for (int i = 0; i < arr.length; i++)
-      {
-        if (arr[i] == null)
-          return true;
-      }
-      return false;
+      ArrayToFanList conv = arrayToList.get(obj.getClass());
+      if (conv == null)
+        throw SqlErr.make("Cannot create List from " + obj);
+      return conv.toList(obj);
     }
   }
 
@@ -567,5 +456,143 @@ public class SqlUtil
   public static final SqlToFan toFanList     = new ToFanList();
   public static final SqlToFan toDefFanStr   = new ToDefFanStr();
 
+  //--------------------------------------------
+  // Convert a java Array to a Fan List
+  //--------------------------------------------
+
+  interface ArrayToFanList
+  {
+    List toList(Object obj);
+  }
+
+  static final ArrayToFanList toFanStringList = (obj) ->
+  {
+    String[] arr = (String[]) obj;
+    return new List(
+      hasNull(arr) ?
+        Sys.StrType.toNullable() :
+        Sys.StrType,
+      arr);
+  };
+
+  static final ArrayToFanList toFanIntegerList = (obj) ->
+  {
+    // Copy the Integer[] over to a Long[]
+    Integer[] src = (Integer[]) obj;
+    Long[] dst = new Long[src.length];
+
+    boolean hasNull = false;
+    for (int i = 0; i < src.length; i++)
+    {
+      if (src[i] == null)
+        hasNull = true;
+      else
+        dst[i] = src[i].longValue();
+    }
+
+    return new List(
+      hasNull ?
+        Sys.IntType.toNullable() :
+        Sys.IntType,
+      dst);
+  };
+
+  static final ArrayToFanList toFanLongList = (obj) ->
+  {
+    Long[] arr = (Long[]) obj;
+    return new List(
+      hasNull(arr) ?
+        Sys.IntType.toNullable() :
+        Sys.IntType,
+      arr);
+  };
+
+  static final ArrayToFanList toFanBooleanList = (obj) ->
+  {
+    Boolean[] arr = (Boolean[]) obj;
+    return new List(
+      hasNull(arr) ?
+        Sys.BoolType.toNullable() :
+        Sys.BoolType,
+      arr);
+  };
+
+  static final ArrayToFanList toFanFloatList = (obj) ->
+  {
+    // Copy the Float[] over to a Double[]
+    Float[] src = (Float[]) obj;
+    Double[] dst = new Double[src.length];
+
+    boolean hasNull = false;
+    for (int i = 0; i < src.length; i++)
+    {
+      if (src[i] == null)
+        hasNull = true;
+      else
+        dst[i] = src[i].doubleValue();
+    }
+
+    return new List(
+      hasNull ?
+        Sys.FloatType.toNullable() :
+        Sys.FloatType,
+      dst);
+  };
+
+  static final ArrayToFanList toFanDoubleList = (obj) ->
+  {
+    Double[] arr = (Double[]) obj;
+    return new List(
+      hasNull(arr) ?
+        Sys.FloatType.toNullable() :
+        Sys.FloatType,
+      arr);
+  };
+
+  static final ArrayToFanList toFanTimestampList = (obj) ->
+  {
+    // Copy the Timestamp[] over to a DateTime[]
+    Timestamp[] src = (Timestamp[]) obj;
+    DateTime[] dst = new DateTime[src.length];
+
+    boolean hasNull = false;
+    for (int i = 0; i < src.length; i++)
+    {
+      if (src[i] == null)
+        hasNull = true;
+      else
+        dst[i] = DateTime.fromJava(src[i].getTime());
+    }
+
+    return new List(
+      hasNull ?
+        Sys.DateTimeType.toNullable() :
+        Sys.DateTimeType,
+      dst);
+  };
+
+  static boolean hasNull(Object[] arr)
+  {
+    for (int i = 0; i < arr.length; i++)
+    {
+      if (arr[i] == null)
+        return true;
+    }
+    return false;
+  }
+
+  static final Map<Class, ArrayToFanList> arrayToList;
+  static
+  {
+    arrayToList = new HashMap<>();
+
+    arrayToList.put(String[].class,    toFanStringList);
+    arrayToList.put(Integer[].class,   toFanIntegerList);
+    arrayToList.put(Long[].class,      toFanLongList);
+    arrayToList.put(Boolean[].class,   toFanBooleanList);
+    arrayToList.put(Float[].class,     toFanFloatList);
+    arrayToList.put(Double[].class,    toFanDoubleList);
+    arrayToList.put(Timestamp[].class, toFanTimestampList);
+  }
 }
 
