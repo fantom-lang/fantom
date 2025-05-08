@@ -68,41 +68,41 @@ class ScannerTest : Test
   Void testTextBetween()
   {
     scanner := Scanner([
-      SourceLine("ab", SourceSpan(10, 3, 2)),
-      SourceLine("cde", SourceSpan(11, 4, 3))], 0, 0)
+      SourceLine("ab", SourceSpan(10, 3, 13, 2)),
+      SourceLine("cde", SourceSpan(11, 4, 20, 3))], 0, 0)
 
     start := scanner.pos
 
     scanner.next
-    verifySourceLines(scanner.source(start, scanner.pos), "a", [SourceSpan(10, 3, 1)])
+    verifySourceLines(scanner.source(start, scanner.pos), "a", [SourceSpan(10, 3, 13, 1)])
 
     afterA := scanner.pos
 
     scanner.next
-    verifySourceLines(scanner.source(start, scanner.pos), "ab", [SourceSpan(10, 3, 2)])
+    verifySourceLines(scanner.source(start, scanner.pos), "ab", [SourceSpan(10, 3, 13, 2)])
 
     afterB := scanner.pos
 
     scanner.next
-    verifySourceLines(scanner.source(start, scanner.pos), "ab\n", [SourceSpan(10, 3, 2)])
+    verifySourceLines(scanner.source(start, scanner.pos), "ab\n", [SourceSpan(10, 3, 13, 2)])
 
     scanner.next
     verifySourceLines(scanner.source(start, scanner.pos), "ab\nc",
-      [SourceSpan(10, 3, 2), SourceSpan(11, 4, 1)])
+      [SourceSpan(10, 3, 13, 2), SourceSpan(11, 4, 20, 1)])
 
     scanner.next
     verifySourceLines(scanner.source(start, scanner.pos), "ab\ncd",
-      [SourceSpan(10, 3, 2), SourceSpan(11, 4, 2)])
+      [SourceSpan(10, 3, 13, 2), SourceSpan(11, 4, 20, 2)])
 
     scanner.next
     verifySourceLines(scanner.source(start, scanner.pos), "ab\ncde",
-      [SourceSpan(10, 3, 2), SourceSpan(11, 4, 3)])
+      [SourceSpan(10, 3, 13, 2), SourceSpan(11, 4, 20, 3)])
 
     verifySourceLines(scanner.source(afterA, scanner.pos), "b\ncde",
-      [SourceSpan(10, 4, 1), SourceSpan(11, 4, 3)])
+      [SourceSpan(10, 4, 14, 1), SourceSpan(11, 4, 20, 3)])
 
     verifySourceLines(scanner.source(afterB, scanner.pos), "\ncde",
-      [SourceSpan(11, 4, 3)])
+      [SourceSpan(11, 4, 20, 3)])
   }
 
   Void testNextStr()
@@ -126,7 +126,9 @@ class ScannerTest : Test
 
   private Void verifySourceLines(SourceLines lines, Str expectedContent, SourceSpan[] expectedSpans)
   {
+    // need to force into non-nullable list
+    exp := SourceSpan[,].addAll(expectedSpans)
     verifyEq(expectedContent, lines.content)
-    verifyEq(expectedSpans, lines.sourceSpans)
+    verifyEq(exp, lines.sourceSpans)
   }
 }

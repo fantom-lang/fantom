@@ -63,6 +63,7 @@
   static ParserBuilder parserBuilder()
   {
     Parser.builder
+      .withIncludeSourceSpans(IncludeSourceSpans.blocks_and_inlines)
       .linkProcessor(VideoProcessor())
       .extensions(xetodoc)
   }

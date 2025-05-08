@@ -39,10 +39,13 @@ const class SourceLine
     SourceSpan? newSourceSpan := null
     if (sourceSpan != null)
     {
-      colIndex := sourceSpan.columnIndex + beginIndex
       len := endIndex - beginIndex
       if (len != 0)
-        newSourceSpan = SourceSpan(sourceSpan.lineIndex, colIndex, len)
+      {
+        columnIndex := sourceSpan.columnIndex + beginIndex
+        inputIndex  := sourceSpan.inputIndex + beginIndex
+        newSourceSpan = SourceSpan.of(sourceSpan.lineIndex, columnIndex, inputIndex, len)
+      }
     }
     return SourceLine(newContent, newSourceSpan)
   }

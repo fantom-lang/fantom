@@ -62,8 +62,12 @@ const class Parser
 // Parse
 //////////////////////////////////////////////////////////////////////////
 
+  ** Convenience to parse a file into a `Document`. If source span parsing
+  ** is enabled the nodes will have access to the file location using `Node.loc`.
+  Document parseFile(File file) { parseStream(file.in).withFile(file) }
+
   ** Convenience for 'parseStream(text.in)'
-  Node parse(Str text) { parseStream(text.in) }
+  Document parse(Str text) { parseStream(text.in) }
 
   ** Parse the contents of the input stream into a tree of nodes.
   **
@@ -71,7 +75,7 @@ const class Parser
   ** doc := Parser().parse("Hello *Markdown*!")
   ** <pre
   **
-  Node parseStream(InStream in)
+  Document parseStream(InStream in)
   {
     docParser := createDocumentParser
     doc :=  docParser.parse(in)
@@ -83,7 +87,7 @@ const class Parser
     DocumentParser(this)
   }
 
-  private Node postProcess(Node doc)
+  private Document postProcess(Node doc)
   {
     postProcessorFactories.each |factory| { doc = factory().process(doc) }
     return doc

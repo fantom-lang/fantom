@@ -269,7 +269,7 @@ class Scanner
       SourceSpan? newSourceSpan := null
       sourceSpan := line.sourceSpan
       if (sourceSpan != null)
-        newSourceSpan = SourceSpan(sourceSpan.lineIndex, sourceSpan.columnIndex + begin.index, newContent.size)
+        newSourceSpan = sourceSpan.subSpan(begin.index, end.index)
       return SourceLines(SourceLine(newContent, newSourceSpan))
     }
     else

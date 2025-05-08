@@ -6,6 +6,8 @@
 //   08 Oct 2024  Matthew Giannini  Creation
 //
 
+using util
+
 **
 ** Base class for all CommonMark AST nodes.
 **
@@ -34,6 +36,14 @@ abstract class Node
   ** Private storage for parent
   private Node? p
 
+  ** Get the root `Document` node or null if this node is mounted in a document yet
+  Document? doc()
+  {
+    Node? n := this
+    while(n != null && n isnot Document) n = n.parent
+    return n
+  }
+
   Node? next { private set }
 
   Node? prev { private set }
@@ -42,13 +52,18 @@ abstract class Node
 
   Node? lastChild { private set }
 
-  SourceSpan[]? sourceSpans := null
+  SourceSpan[] sourceSpans := SourceSpan[,] { private set }
+
+  ** Get the file location for this node from the original parsed source.
+  ** If the location is not known or source spans were not enabled during
+  ** parsing, then return `FileLoc.unknown`.
+  FileLoc loc()
   {
-    get
-    {
-      &sourceSpans == null ? SourceSpan#.emptyList : &sourceSpans.toImmutable
-    }
-    private set
+    if (sourceSpans.isEmpty) return FileLoc.unknown
+    file := doc?.file?.name ?: "inputs"
+    span := sourceSpans.first
+    // I think if the best way to report the location is using the first source span
+    return FileLoc(file, span.lineIndex+1, span.columnIndex+1)
   }
 
   ** Walk the AST using the given visitor. By default, we use reflection
@@ -136,14 +151,15 @@ abstract class Node
   Void addSourceSpan(SourceSpan? sourceSpan)
   {
     if (sourceSpan == null) return
-    if (sourceSpans == null) sourceSpans = SourceSpan[,]
-    sourceSpans.add(sourceSpan)
+    // Err("addSourceSpan").trace
+    this.sourceSpans.add(sourceSpan)
   }
 
   ** Replace the current source spans with the provided list
   Void setSourceSpans(SourceSpan[] sourceSpans)
   {
-    this.sourceSpans = sourceSpans.isEmpty ? null : sourceSpans.dup
+    // Err("setSourceSpans").trace
+    this.sourceSpans = sourceSpans.dup
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,7 +259,7 @@ abstract class Node
   @NoDoc static Void dumpTree(Node node, OutStream out := Env.cur.out, Int indent := 0)
   {
     sp := " " * indent
-    out.writeChars("${sp}${node}\n")
+    out.writeChars("${sp}${node} ${node.loc}\n")
     child := node.firstChild
     while (child != null)
     {

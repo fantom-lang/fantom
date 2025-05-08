@@ -159,17 +159,24 @@ internal class DocumentParser : ParserState
   ** Parse the input into a document AST
   Document parse(InStream in)
   {
-    Str? line := null
-    while ((line = in.readLine) != null)
-      parseLine(line)
+    lineReader := LineReader(in)
+    inputIndex := 0
+    Str? line  := null
+    while ((line = lineReader.readLine) != null)
+    {
+      parseLine(line, inputIndex)
+      inputIndex += line.size
+      eol := lineReader.lineTerminator
+      if (eol != null) inputIndex += eol.size
+    }
 
     return finalizeAndProcess
   }
 
   ** Inspect the current line and update the document accordingly.
-  private Void parseLine(Str ln)
+  private Void parseLine(Str ln, Int inputIndex)
   {
-    setLine(ln)
+    setLine(ln, inputIndex)
 
     // For each containing block, try to parse the associated line start.
     // The document will always match, so we can skip the first block parser
@@ -307,7 +314,7 @@ internal class DocumentParser : ParserState
   }
 
   ** Update document parser state for a new line of input
-  private Void setLine(Str ln)
+  private Void setLine(Str ln, Int inputIndex)
   {
     // move to next line
     this.lineIndex++
@@ -319,7 +326,7 @@ internal class DocumentParser : ParserState
     lineContent := prepareLine(ln)
     SourceSpan? sourceSpan := null
     if (includeSourceSpans != IncludeSourceSpans.none)
-      sourceSpan = SourceSpan(lineIndex, 0, lineContent.size)
+      sourceSpan = SourceSpan.of(lineIndex, 0, inputIndex, lineContent.size)
     this.line = SourceLine(lineContent, sourceSpan)
   }
 
@@ -429,12 +436,12 @@ internal class DocumentParser : ParserState
     }
 
     SourceSpan? sourceSpan := null
-    if (includeSourceSpans === IncludeSourceSpans.blocks_and_inlines)
+    if (includeSourceSpans === IncludeSourceSpans.blocks_and_inlines && index < line.sourceSpan.len)
     {
       // Note that if we're in a partially-consume tab, the length here corresponds to
       // the content but not to the actual source length. That sounds like a problem,
       // but I haven't found a test case where it matters (yet).
-      sourceSpan = SourceSpan(lineIndex, index, content.size)
+      sourceSpan = line.sourceSpan.subSpan(index)
     }
 
     activeBlockParser.addLine(SourceLine(content, sourceSpan))
@@ -444,7 +451,20 @@ internal class DocumentParser : ParserState
   private Void addSourceSpans()
   {
     if (includeSourceSpans === IncludeSourceSpans.none) return
-    throw Err("TODO:HERE")
+
+    // Don't add source spans for Document itself (it would get the whole source text),
+    // so start at 1, not 0
+    openBlockParsers[1..-1].each |openBlockParser|
+    {
+      // In case of a lazy continuation line, the index is less than where the block
+      // parser would expect the contents to start, so let's use whichever is smaller.
+      blockIndex := openBlockParser.sourceIndex.min(index)
+      len := line.content.size - blockIndex
+      if (len != 0)
+      {
+        openBlockParser.blockParser.addSourceSpan(line.sourceSpan.subSpan(blockIndex))
+      }
+    }
   }
 
   private BlockStart? findBlockStart(BlockParser blockParser)

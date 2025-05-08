@@ -459,7 +459,10 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
 
     if (includeSourceSpans)
     {
-      throw Err("TODO: source spans")
+      startPos := includeMarker && opener.markerPos != null
+        ? opener.markerPos
+        : opener.bracketPos
+      wrapperNode.setSourceSpans(scanner.source(startPos, scanner.pos).sourceSpans)
     }
 
     // process delimiters such as emphasis inside link/image
@@ -881,18 +884,18 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
     {
       sb := StrBuf()
       sb.add(first.literal)
-      // TODO:sourcespans
-      Obj? sourceSpans := null
+      SourceSpans? sourceSpans := null
       if (includeSourceSpans)
       {
-        throw Err("TODO:source spans")
+        sourceSpans = SourceSpans.empty
+        sourceSpans.addAll(first.sourceSpans)
       }
       node := first.next
       stop := last.next
       while (node != stop)
       {
         sb.add(((Text)node).literal)
-        if (sourceSpans != null) throw Err("TODO:source spans")
+        if (sourceSpans != null) sourceSpans.addAll(node.sourceSpans)
 
         unlink := node
         node = node.next
@@ -900,7 +903,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
       }
       literal := sb.toStr
       first.literal = literal
-      if (sourceSpans != null) throw Err("TODO: source spans")
+      if (sourceSpans != null) first.setSourceSpans(sourceSpans.sourceSpans)
     }
   }
 }

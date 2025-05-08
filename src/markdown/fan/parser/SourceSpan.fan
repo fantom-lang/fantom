@@ -20,21 +20,43 @@ const class SourceSpan
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(Int lineIndex, Int columnIndex, Int len)
+  new of(Int lineIndex, Int columnIndex, Int inputIndex, Int len)
   {
+    if (lineIndex < 0) throw ArgErr("lineIndex: ${lineIndex}")
+    if (columnIndex < 0) throw ArgErr("columnIndex: ${lineIndex}")
+    if (inputIndex < 0) throw ArgErr("inputIndex: ${lineIndex}")
+    if (len < 0) throw ArgErr("len: ${lineIndex}")
+
     this.lineIndex = lineIndex
     this.columnIndex = columnIndex
+    this.inputIndex = inputIndex
     this.len = len
   }
 
-  ** 0-based index of line in source
+  ** 0-based line index, e.g. 0 for first line, 1 for second line, etc.
   const Int lineIndex
 
-  ** 0-based index of column (i.e. character on line) in source
+  ** 0-based index of column (i.e. character on line) in source, e.g. 0 for the
+  ** first character of a line, 1 for the second character, etc.
   const Int columnIndex
+
+  ** 0-based index in whole input
+  const Int inputIndex
 
   ** Length of the span in characters
   const Int len
+
+  SourceSpan subSpan(Int beginIndex, Int endIndex := this.len)
+  {
+    if (beginIndex < 0) throw ArgErr("beginIndex: ${beginIndex}")
+    if (beginIndex > len) throw IndexErr("beginIndex ${beginIndex} must be <= length ${len}")
+    if (endIndex < 0) throw ArgErr("endIndex: ${endIndex}")
+    if (endIndex > len) throw IndexErr("endIndex ${endIndex} must be <= length ${len}")
+    if (beginIndex > endIndex) throw IndexErr("beginIndex ${beginIndex} must be <= endIndex ${endIndex}")
+
+    if (beginIndex == 0 && endIndex == len) return this
+    return SourceSpan.of(lineIndex, columnIndex + beginIndex, inputIndex+beginIndex, endIndex-beginIndex)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Obj
@@ -47,6 +69,7 @@ const class SourceSpan
     if (that == null) return false
     return this.lineIndex == that.lineIndex &&
            this.columnIndex == that.columnIndex &&
+           this.inputIndex == that.inputIndex &&
            this.len == that.len
   }
 
@@ -55,11 +78,12 @@ const class SourceSpan
     res := 1
     res = (31 * res) + lineIndex.hash
     res = (31 * res) + columnIndex.hash
+    res = (31 * res) + inputIndex.hash
     res = (31 * res) + len.hash
     return res
   }
 
-  override Str toStr() { "SourceSpan(line=${lineIndex}, column=${columnIndex}, len=${len}" }
+  override Str toStr() { "SourceSpan(line=${lineIndex}, column=${columnIndex}, input=${inputIndex}, len=${len})" }
 }
 
 **************************************************************************
@@ -112,7 +136,12 @@ class SourceSpans
       lastIndex := sourceSpans.size - 1
       a := sourceSpans[lastIndex]
       b := other[0]
-      throw Err("TODO: need new input index stuff from 0.24 java")
+      if (a.inputIndex + a.len == b.inputIndex)
+      {
+        sourceSpans[lastIndex] = SourceSpan.of(a.lineIndex, a.columnIndex, a.inputIndex, a.len + b.len)
+        sourceSpans.addAll(other[1..-1])
+      }
+      else sourceSpans.addAll(other)
     }
   }
 }

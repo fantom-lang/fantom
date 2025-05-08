@@ -98,7 +98,19 @@ class ImgAttrsExtTest : RenderingTest
       verifyRendering("{}", "<p>{}</p>\n");
   }
 
-    // TODO:source spans test
+  Void testSourceSpans()
+  {
+    parser := Parser.builder
+      .extensions(exts)
+      .withIncludeSourceSpans(IncludeSourceSpans.blocks_and_inlines)
+      .build
+
+    // This doesn't result in image attributes, so source spans should be for the single (merged) text node.
+    doc := parser.parse("x{height=3 width=4}\n")
+    block := (Paragraph) doc.firstChild
+    text := block.firstChild
+    verifyEq(SourceSpan[SourceSpan.of(0, 0, 0, 19)], text.sourceSpans)
+  }
 
   override protected Str render(Str source)
   {

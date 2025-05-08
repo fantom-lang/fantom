@@ -33,7 +33,16 @@ abstract class Block : Node
 
 ** Document is the root node of the AST
 @Js
-final class Document : Block { }
+final class Document : Block
+{
+  new make() { }
+
+  ** Get the file this document was generated from, or null if not known
+  File? file { private set }
+
+  ** Set the file that was used to generate this document
+  This withFile(File file) { this.file = file; return this }
+}
 
 **************************************************************************
 ** Heading
