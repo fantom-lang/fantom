@@ -13,6 +13,7 @@ import java.nio.*;
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
+import java.util.Arrays;
 import java.util.zip.*;
 import java.util.HashMap;
 
@@ -428,7 +429,7 @@ public abstract class Buf
   static int[] hexInv    = new int[128];
   static
   {
-    for (int i=0; i<hexInv.length; ++i) hexInv[i] = -1;
+      Arrays.fill(hexInv, -1);
     for (int i=0; i<10; ++i)  hexInv['0'+i] = i;
     for (int i=10; i<16; ++i) hexInv['a'+i-10] = hexInv['A'+i-10] = i;
   }
@@ -515,7 +516,7 @@ public abstract class Buf
   static final int[] base64inv = new int[128];
   static
   {
-    for (int i=0; i<base64inv.length; ++i)   base64inv[i] = -1;
+    Arrays.fill(base64inv, -1);
     for (int i=0; i<base64chars.length; ++i) base64inv[base64chars[i]] = i;
     base64inv['-'] = 62;
     base64inv['_'] = 63;
@@ -716,7 +717,7 @@ public abstract class Buf
 
     private static void INT(byte[] dest, int offset, int i)
     {
-      dest[offset + 0] = (byte) (i / (256 * 256 * 256));
+      dest[offset] = (byte) (i / (256 * 256 * 256));
       dest[offset + 1] = (byte) (i / (256 * 256));
       dest[offset + 2] = (byte) (i / (256));
       dest[offset + 3] = (byte) (i);

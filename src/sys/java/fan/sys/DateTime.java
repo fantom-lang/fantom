@@ -384,7 +384,7 @@ public final class DateTime
 
   public int hashCode()
   {
-    return (int)(ticks ^ (ticks >>> 32));
+    return Long.hashCode(ticks);
   }
 
   public long hash()
