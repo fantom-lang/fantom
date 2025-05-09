@@ -47,8 +47,9 @@ class Env extends Obj {
   static #props;
   // internal compiler hook for setting properties
   __props(key, m) {
-    if (!Env.#props) Env.#props = Map.make(Str.type$, Str.type$);
-    Env.#props.add(key, m.toImmutable());
+    if (!Env.#props) Env.#props = Map.make(Str.type$, Map.type$);
+    let existing = Env.#props.get(key);
+    if (!existing) Env.#props.add(key, m.toImmutable());
   }
 
   // used to display locale keys
