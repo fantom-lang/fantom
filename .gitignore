@@ -29,6 +29,9 @@ obj/Release/
 /etc/sys/types.db
 /etc/yaml/tests/
 
+# gen
+/gen/
+
 # lib/
 /lib/java/**/*.jar
 /lib/javascript/
