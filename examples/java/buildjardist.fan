@@ -19,7 +19,7 @@ class Build : BuildScript
   {
     dist := JarDist(this)
     dist.outFile = `./fansh.jar`.toFile.normalize
-    dist.podNames = Str["compiler", "concurrent", "fansh"]
+    dist.podNames = Str["compiler", "concurrent", "fansh", "util"]
     dist.mainMethod = "fansh::Main.main"
     dist.run
   }
@@ -57,3 +57,4 @@ class Build : BuildScript
     // java -cp lib\java\ext\win32-x86_64\swt.jar;fwtTest.jar fanjardist.Main
   }
 }
+

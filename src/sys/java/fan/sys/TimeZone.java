@@ -472,7 +472,7 @@ public final class TimeZone
   {
     if (Sys.isJarDist)
       return new DataInputStream(new BufferedInputStream(
-        TimeZone.class.getClassLoader().getResourceAsStream("etc/sys/timezones.ftz")));
+        TimeZone.class.getClassLoader().getResourceAsStream("res/sys/timezones.ftz")));
     else
       return new DataInputStream(new BufferedInputStream(
         new FileInputStream(dbFile)));
@@ -798,3 +798,4 @@ public final class TimeZone
   private Rule[] rules;    // reverse sorted by year
 
 }
+

@@ -156,6 +156,14 @@ class JarDist : JdkTask
   private Void reflect(Str podName)
   {
     copyOpts := ["overwrite":true]
+    doReflect(podName) |path, file|
+    {
+      file.copyTo(tempDir + path, copyOpts)
+    }
+  }
+
+  static Void doReflect(Str podName, |Uri path, File| onFile)
+  {
     resources := Str[,]
     zip := Zip.open(Env.cur.findPodFile(podName))
     zip.contents.each |f|
@@ -163,29 +171,46 @@ class JarDist : JdkTask
       if (f.isDir) return
       if (f.name == "meta.props" || f.ext == "def" || f.ext == "fcode")
       {
-        dest := tempDir + "reflect/${podName}${f.pathStr}".toUri
-        f.copyTo(dest, copyOpts)
+        onFile("reflect/${podName}${f.pathStr}".toUri, f)
       }
       else
       {
         // decide if this is a resource file we should bundle
         if (f.ext == "class") return
         if (f.ext == "apidoc") return
+        if (f.ext == "fan") return
 
         resources.add(f.pathStr)
-        dest := tempDir + "res/${podName}${f.pathStr}".toUri
-        f.copyTo(dest, copyOpts)
+        onFile("res/${podName}${f.pathStr}".toUri, f)
       }
     }
-    (tempDir + `res/${podName}/res-manifest.txt`).out.print(resources.join("\n")).close
+
+    if (!resources.isEmpty)
+    {
+      manifest := Buf().print(resources.join("\n")).toFile(`res-manifest.txt`)
+      onFile("res/${podName}/res-manifest.txt".toUri,manifest)
+    }
+
+    zip.close
   }
 
   private Void etcFiles()
   {
-    copyEtcFile(`etc/sys/timezones.ftz`)
-    copyEtcFile(`etc/sys/timezone-aliases.props`, `res/sys/timezone-aliases.props`)
-    copyEtcFile(`etc/sys/ext2mime.props`, `res/sys/ext2mime.props`)
-    copyEtcFile(`etc/sys/units.txt`)
+    doEtcFiles(script.devHomeDir) |path, file|
+    {
+      file.copyTo(tempDir + path)
+    }
+  }
+
+  static Void doEtcFiles(File homeDir, |Uri path, File| onFile)
+  {
+    names := ["timezones.ftz", "timezone-aliases.props", "ext2mime.props", "units.txt"]
+    names.each |name|
+    {
+      file := homeDir + `etc/sys/$name`
+      path := "res/sys/$name".toUri
+      onFile(path, file)
+    }
   }
 
   private Void copyEtcFile(Uri uri, Uri destUri := uri)
@@ -296,3 +321,4 @@ class JarDist : JdkTask
   private File? tempDir       // initTempDir
   private File? manifestFile  // manifest
 }
+

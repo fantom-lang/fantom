@@ -59,11 +59,10 @@ public final class Unit
     try
     {
       // open etc/sys/units.txt
-      String path = "etc/sys/units.txt";
       if (Sys.isJarDist)
-        in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream(path));
+        in = new SysInStream(Unit.class.getClassLoader().getResourceAsStream("res/sys/units.txt"));
       else
-        in = Env.cur().findFile(Uri.fromStr(path)).in();
+        in = Env.cur().findFile(Uri.fromStr("etc/sys/units.txt")).in();
 
       // parse each line
       String curQuantityName = null;
