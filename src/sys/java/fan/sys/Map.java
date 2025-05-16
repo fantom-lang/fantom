@@ -45,6 +45,11 @@ public final class Map
     return new Map(t, new HashMap());
   }
 
+  public static Map makeKV(Type k, Type v)
+  {
+    return new Map(k, v);
+  }
+
   public Map(Type k, Type v)
   {
     this(new MapType(k, v), new HashMap());

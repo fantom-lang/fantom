@@ -1164,6 +1164,8 @@ class LocalVarExpr : Expr
 
   virtual Int register() { var.register }
 
+  Str name() { var.name }
+
   override Str toStr()
   {
     if (var == null) return "???"

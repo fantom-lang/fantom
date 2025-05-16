@@ -197,6 +197,8 @@ class LocalDefStmt : Stmt
     if (nl) out.nl
   }
 
+  Expr? initVal() { init == null ? null : ((BinaryExpr)init).rhs }
+
   CType? ctype      // type of the variable (or null if inferred)
   Str name          // variable name
   Expr? init        // rhs of init; in ResolveExpr it becomes full assign expr

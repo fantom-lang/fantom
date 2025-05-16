@@ -227,6 +227,12 @@ public class FanObj
   public static void wait(Object o, long t) throws InterruptedException { o.wait(t); }
   public static void wait(Object o, long t, int n) throws InterruptedException { o.wait(t, n); }
 
+  // as operator for Java source
+  public static <T> T as(Class<T> cls, Object obj)
+  {
+    return cls.isInstance(obj) ? cls.cast(obj) : null;
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
@@ -247,3 +253,4 @@ public class FanObj
   }
 
 }
+
