@@ -76,7 +76,7 @@ public class SqlUtil
     {
       List list = (List) value;
 
-      FanListToArray conv = listToArray.get(list.of());
+      FanListToArray conv = listToArray.get(list.of().toNonNullable());
       if (conv == null)
         throw SqlErr.make("Cannot create array from " + list.of());
       return conv.toArray(list);
@@ -147,12 +147,6 @@ public class SqlUtil
     listToArray.put(Sys.BoolType,     toBooleanArray);
     listToArray.put(Sys.FloatType,    toDoubleArray);
     listToArray.put(Sys.DateTimeType, toTimestampArray);
-
-    listToArray.put(Sys.StrType.toNullable(),      toStringArray);
-    listToArray.put(Sys.IntType.toNullable(),      toLongArray);
-    listToArray.put(Sys.BoolType.toNullable(),     toBooleanArray);
-    listToArray.put(Sys.FloatType.toNullable(),    toDoubleArray);
-    listToArray.put(Sys.DateTimeType.toNullable(), toTimestampArray);
   }
 
 //////////////////////////////////////////////////////////////////////////
