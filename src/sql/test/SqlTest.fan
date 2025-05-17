@@ -714,8 +714,7 @@ class SqlTest : Test
       "times":   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)],
     ])
 
-    select := db.sql("select * from list").prepare
-    rows := select.query()
+    rows := db.sql("select * from list").query
     verifyEq(rows.size, 1)
     verifyEq(rows[0]->texts,   Str["a", "b", "c"])
     verifyEq(rows[0]->ints,    Int[1, 2, 3])
@@ -724,6 +723,32 @@ class SqlTest : Test
     verifyEq(rows[0]->floats,  Float[1.0f, 2.0f, 3.0f])
     verifyEq(rows[0]->doubles, Float[4.0f, 5.0f, 6.0f])
     verifyEq(rows[0]->times,   DateTime[now.plus(1hr), now.plus(2hr), now.plus(3hr)])
+
+    db.sql("delete from list").execute
+    rows = db.sql("select * from list").query
+    verifyEq(rows.size, 0)
+
+    // nullable lists
+
+    insert.execute([
+      "texts":   Str?["a", "b", "c", null],
+      "ints":    Int?[1, 2, 3, null],
+      "longs":   Int?[base+1, base+2, base+3, null],
+      "bools":   Bool?[true, false, null],
+      "floats":  Float?[1.0f, 2.0f, 3.0f, null],
+      "doubles": Float?[4.0f, 5.0f, 6.0f, null],
+      "times":   DateTime?[now.plus(1hr), now.plus(2hr), now.plus(3hr), null],
+    ])
+
+    rows = db.sql("select * from list").query
+    verifyEq(rows.size, 1)
+    verifyEq(rows[0]->texts,   Str?["a", "b", "c", null])
+    verifyEq(rows[0]->ints,    Int?[1, 2, 3, null])
+    verifyEq(rows[0]->longs,   Int?[base+1, base+2, base+3, null])
+    verifyEq(rows[0]->bools,   Bool?[true, false, null])
+    verifyEq(rows[0]->floats,  Float?[1.0f, 2.0f, 3.0f, null])
+    verifyEq(rows[0]->doubles, Float?[4.0f, 5.0f, 6.0f, null])
+    verifyEq(rows[0]->times,   DateTime?[now.plus(1hr), now.plus(2hr), now.plus(3hr), null])
   }
 
 //////////////////////////////////////////////////////////////////////////
