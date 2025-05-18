@@ -325,8 +325,8 @@ class TypeTest : Test
 
   Void testMake()
   {
-    verify(File#.make([`foo`]) is File)
-    verifyEq(File#.make([`foo`])->uri, `foo`)
+    verify(File#.make([`foobar`]) is File)
+    verifyEq(File#.make([`foobar`])->uri, `foobar`)
     //verifyErr(Err#) { Bool.type.make }
     verifyErr(Err#) { TypeInheritTestAbstract#.make }
     verifyErr(Err#) { TypeInheritTestM1#.make }
@@ -480,3 +480,4 @@ class TypeTest : Test
 {
   Float c := 7.5f
 }
+
