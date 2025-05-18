@@ -306,7 +306,8 @@ public final class Sys
   {
     try
     {
-      return sysPropToDir("fan.home", "FAN_HOME", null);
+      String def = isJarDist ? "." : null;
+      return sysPropToDir("fan.home", "FAN_HOME", def);
     }
     catch (Throwable e)
     {
@@ -623,3 +624,4 @@ public final class Sys
   public static void boot() {}
 
 }
+
