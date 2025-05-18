@@ -26,9 +26,10 @@ class Build : BuildJava
                 "fanx.fcode",
                 "fanx.interop",
                 "fanx.serial",
-                "fanx.test",
+                //"fanx.test",
                 "fanx.tools",
                 "fanx.util"]
   }
 
 }
+

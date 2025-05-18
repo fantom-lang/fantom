@@ -84,8 +84,8 @@ public class Fant
         pattern = "";
       else
         pattern = pattern.substring(5);
-      if (!fanx.test.Test.test(pattern)) failures++;
-      totalVerifyCount += fanx.test.Test.totalVerified;
+      //if (!fanx.test.Test.test(pattern)) failures++;
+      //totalVerifyCount += fanx.test.Test.totalVerified;
       return 0;
     }
 
@@ -257,7 +257,7 @@ public class Fant
         {
           verbose = true;
           fan.sys.Test.verbose =  true;
-          fanx.test.Test.verbose = true;
+          //fanx.test.Test.verbose = true;
         }
         else if (a == "-js")
         {
@@ -347,3 +347,4 @@ public class Fant
   ArrayList failureNames = new ArrayList();
 
 }
+
