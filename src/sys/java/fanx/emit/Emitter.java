@@ -241,7 +241,7 @@ public class Emitter
    */
   public int nt(int name, int type)
   {
-    Integer key = new Integer(name << 16 | type);
+    Integer key = Integer.valueOf(name << 16 | type);
     CpNameType info = (CpNameType)cpNt.get(key);
     if (info == null)
     {
@@ -526,3 +526,4 @@ public class Emitter
   HashMap cpInterface = new HashMap();   // String  -> CpInterface
 
 }
+

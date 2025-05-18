@@ -185,7 +185,7 @@ public class EmitTest
     // try out add() method
     Method add = cls.getMethod("add", new Class[] { int.class, int.class });
     verify(add.getReturnType() == int.class);
-    Integer r = (Integer)add.invoke(foo, new Object[] { new Integer(3), new Integer(5) });
+    Integer r = (Integer)add.invoke(foo, new Object[] { Integer.valueOf(3), Integer.valueOf(5) });
     verify(r.intValue() == 8);
 
     // sets() method tests setting each field to constant
@@ -258,3 +258,4 @@ public class EmitTest
   Emitter toLoad;
 
 }
+
