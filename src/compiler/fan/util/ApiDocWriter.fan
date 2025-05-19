@@ -88,7 +88,7 @@ class ApiDocWriter
       if (p.def != null) w(":=").w(encodeExpr(p.def))
       w("\n")
     }
-    w(") ").w(m.returnType.signature).w("\n")
+    w(") ").w(m.returns.signature).w("\n")
   }
 
 //////////////////////////////////////////////////////////////////////////

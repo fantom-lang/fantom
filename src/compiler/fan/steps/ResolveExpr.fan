@@ -498,7 +498,7 @@ class ResolveExpr : CompilerStep
 
     // resolve to Obj.trap of its override
     call.method = call.target.ctype.method("trap")
-    call.ctype = call.method.returnType
+    call.ctype = call.method.returns
 
     // if subclass has covariant return type, then insert cast
     if (call.ctype.isObj)
@@ -587,7 +587,7 @@ class ResolveExpr : CompilerStep
     // we have our resolved match
     match := matches.vals.first
     call.method = match
-    call.ctype = match.isStatic ? match.returnType : base
+    call.ctype = match.isStatic ? match.returns : base
 
     // hook to infer closure type from call or to
     // translateinto an implicit call to Obj.with
@@ -761,7 +761,7 @@ class ResolveExpr : CompilerStep
     set := get.parent.method("set")
     if (set == null || set.params.size != 2 || set.isStatic ||
         set.params[0].type.toNonNullable != get.params[0].type.toNonNullable ||
-        set.params[1].type.toNonNullable != get.returnType.toNonNullable)
+        set.params[1].type.toNonNullable != get.returns.toNonNullable)
       err("No matching 'set' method for '$get.qname'", orig.loc)
     else
       expr.setMethod = set

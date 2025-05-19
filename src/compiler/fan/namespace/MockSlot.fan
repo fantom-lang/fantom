@@ -43,7 +43,7 @@ class MockField : MockSlot, CField
   override CType fieldType
   override CMethod? getter() { null }
   override CMethod? setter() { null }
-  override CType inheritedReturnType() { fieldType }
+  override CType inheritedReturns() { fieldType }
 }
 
 **************************************************************************
@@ -55,13 +55,13 @@ class MockMethod : MockSlot, CMethod
   new make(CType parent, Str name, Int flags, CType ret, CType[] params)
     : super(parent, name, flags)
   {
-    this.parent = parent
-    this.returnType = ret
-    this.params = params.map |CType p, Int i->CParam| { MockParam("p$i", p) }
+    this.parent  = parent
+    this.returns = ret
+    this.params  = params.map |CType p, Int i->CParam| { MockParam("p$i", p) }
   }
 
-  override CType returnType
-  override CType inheritedReturnType() { returnType }
+  override CType returns
+  override CType inheritedReturns() { returns }
   override CParam[] params
 }
 

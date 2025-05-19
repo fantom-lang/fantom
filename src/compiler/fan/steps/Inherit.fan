@@ -164,18 +164,18 @@ class Inherit : CompilerStep
       return fa.fieldType == fb.fieldType
 
     if (ma != null && mb != null)
-      return ma.returnType == mb.returnType &&
-             ma.inheritedReturnType == mb.inheritedReturnType &&
+      return ma.returns == mb.returns &&
+             ma.inheritedReturns == mb.inheritedReturns &&
              ma.hasSameParams(mb)
 
     if (fa != null && mb != null)
-      return fa.fieldType == mb.returnType &&
-             fa.fieldType == mb.inheritedReturnType &&
+      return fa.fieldType == mb.returns &&
+             fa.fieldType == mb.inheritedReturns &&
              mb.params.size == 0
 
     if (ma != null && fb != null)
-      return ma.returnType == fb.fieldType &&
-             ma.inheritedReturnType == fb.fieldType &&
+      return ma.returns == fb.fieldType &&
+             ma.inheritedReturns == fb.fieldType &&
              ma.params.size == 0
 
     return false
@@ -264,8 +264,8 @@ class Inherit : CompilerStep
   {
     loc := def.loc
 
-    defRet := def.returnType
-    baseRet := base.returnType
+    defRet := def.returns
+    baseRet := base.returns
 
     // if the base is defined as This, then all overrides must be This
     if (baseRet.isThis)
@@ -293,15 +293,15 @@ class Inherit : CompilerStep
       // can't have conflicting covariant overrides because in JVM we
       // need everything to compile to the same inherited signature with
       // same return type so it resolves correctly
-      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturnType)
-        throw err("Conflicting covariant returns: '$def.inheritedRet' and '$base.inheritedReturnType'", loc)
+      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturns)
+        throw err("Conflicting covariant returns: '$def.inheritedRet' and '$base.inheritedReturns'", loc)
 
       // used from Jan-Apr 2023
-      //      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturnType && !base.inheritedReturnType.isObj)
+      //      if (def.inheritedRet != null && def.inheritedRet != base.inheritedReturns && !base.inheritedReturns.isObj)
     }
 
     // save original return type
-    def.inheritedRet = base.inheritedReturnType
+    def.inheritedRet = base.inheritedReturns
 
     // check that we have same parameter count
     if (!base.hasSameParams(def))
@@ -328,7 +328,7 @@ class Inherit : CompilerStep
 
     // check that types match
     ft := def.fieldType
-    rt := base.returnType
+    rt := base.returns
     if (ft != rt)
     {
       // we allow field to be covariant typed
@@ -349,7 +349,7 @@ class Inherit : CompilerStep
       throw err("Field '$def.name' cannot override method with params '$base.qname'", loc)
 
     // save original return type
-    def.inheritedRet = base.inheritedReturnType
+    def.inheritedRet = base.inheritedReturns
 
     // correct override
     return
@@ -378,3 +378,4 @@ class Inherit : CompilerStep
 
 
 }
+

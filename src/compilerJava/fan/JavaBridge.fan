@@ -306,9 +306,9 @@ class JavaBridge : CBridge
     // Fantom declaration matches how it is inferred into the Fan
     // type system, then just change the return type - the compiler
     // will impliclty do all the return coercions
-    if (isOverrideInferredType(base.returnType, def.returnType))
+    if (isOverrideInferredType(base.returns, def.returns))
     {
-      def.ret = def.inheritedRet = base.returnType
+      def.ret = def.inheritedRet = base.returns
     }
 
     // if any of the parameters is a primitive or Java array
@@ -650,7 +650,7 @@ class JavaBridge : CBridge
     if (funcType.params.size > method.params.size) return false
 
     // check that func return type fits method return
-    retOk := method.returnType.isVoid || fits(funcType.ret, method.returnType)
+    retOk := method.returns.isVoid || fits(funcType.ret, method.returns)
     if (!retOk) return false
 
     // check all the method parameters fit the function parameters
@@ -704,7 +704,7 @@ class JavaBridge : CBridge
 
     // generate FuncWrapper override of abstract method
     over := MethodDef(loc, cls, method.name, FConst.Public + FConst.Override + FConst.Synthetic)
-    over.ret = method.returnType
+    over.ret = method.returns
     over.paramDefs = ParamDef[,]
     over.code = Block.make(loc)
     callArity := "call"
@@ -716,7 +716,7 @@ class JavaBridge : CBridge
       if (i < funcType.params.size)
         call.args.add(UnknownVarExpr(loc, null, paramName))
     }
-    if (method.returnType.isVoid)
+    if (method.returns.isVoid)
       over.code.stmts.add(call.toStmt).add(ReturnStmt(loc))
     else
       over.code.stmts.add(ReturnStmt(loc, call))
@@ -826,7 +826,7 @@ internal class CallMatch
   {
     call.args   = args
     call.method = method
-    call.ctype  = method.isCtor ? method.parent : method.returnType
+    call.ctype  = method.isCtor ? method.parent : method.returns
     return call
   }
 

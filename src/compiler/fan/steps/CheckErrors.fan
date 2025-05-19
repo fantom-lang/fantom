@@ -337,14 +337,14 @@ class CheckErrors : CompilerStep
     // check types used in signature
     if (!m.isAccessor)
     {
-      checkTypeProtection(m.returnType, m.loc)
+      checkTypeProtection(m.returns, m.loc)
       m.paramDefs.each |ParamDef p| { checkTypeProtection(p.type, p.loc) }
     }
 
     // check that public method isn't using internal types in its signature
     if (!m.isAccessor && curType.isPublic && (m.isPublic || m.isProtected))
     {
-      if (!m.returnType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returnType'", m.loc);
+      if (!m.returns.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returns'", m.loc);
       m.paramDefs.each |ParamDef p|
       {
         if (!p.type.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.type'", m.loc);
@@ -566,10 +566,10 @@ class CheckErrors : CompilerStep
     if (prefix == null) { err("Operator method '$m.name' has invalid name", m.loc); return }
     op := ShortcutOp.fromPrefix(prefix)
 
-    if (m.name == "add" && !m.returnType.isThis && !isSys)
+    if (m.name == "add" && !m.returns.isThis && !isSys)
       err("Operator method '$m.name' must return This", m.loc)
 
-    if (m.returnType.isVoid && op !== ShortcutOp.set)
+    if (m.returns.isVoid && op !== ShortcutOp.set)
       err("Operator method '$m.name' cannot return Void", m.loc)
 
     if (m.params.size+1 != op.degree && !(m.params.getSafe(op.degree-1)?.hasDefault ?: false))
@@ -1080,7 +1080,7 @@ class CheckErrors : CompilerStep
     if (shortcut.isAssign)
     {
       lhs := shortcut.target
-      ret := shortcut.method.returnType
+      ret := shortcut.method.returns
 
       // check that lhs is assignable
       if (!lhs.isAssignable)
@@ -1202,11 +1202,11 @@ class CheckErrors : CompilerStep
       warn("Using static method '$call.method.qname' as constructor", call.loc)
 
       // check that ctor method is the expected type
-      if (call.ctype.toNonNullable != call.method.returnType.toNonNullable)
+      if (call.ctype.toNonNullable != call.method.returns.toNonNullable)
         err("Construction method '$call.method.qname' must return '$call.ctype.name'", call.loc)
 
       // but allow ctor to be typed as nullable
-      call.ctype = call.method.returnType
+      call.ctype = call.method.returns
     }
 
     checkCall(call)
@@ -1237,9 +1237,9 @@ class CheckErrors : CompilerStep
     if (m.isForeign)
     {
       // just log one use of unsupported return or param type and return
-      if (!m.returnType.isSupported)
+      if (!m.returns.isSupported)
       {
-        err("Method '$name' uses unsupported type '$m.returnType'", call.loc)
+        err("Method '$name' uses unsupported type '$m.returns'", call.loc)
         return
       }
       unsupported := m.params.find |CParam p->Bool| { !p.type.isSupported }

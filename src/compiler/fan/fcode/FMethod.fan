@@ -35,12 +35,12 @@ class FMethod : FSlot, CMethod
 // CMethod
 //////////////////////////////////////////////////////////////////////////
 
-  override CType returnType() { fparent.fpod.toType(ret) }
+  override CType returns() { fparent.fpod.toType(ret) }
   override CParam[] params() { fparams }
 
   override Str signature()
   {
-    return "$returnType $name(" + params.join(",") + ")"
+    return "$returns $name(" + params.join(",") + ")"
   }
 
   override once Bool isGeneric()
@@ -48,7 +48,7 @@ class FMethod : FSlot, CMethod
     return calcGeneric(this)
   }
 
-  override CType inheritedReturnType()
+  override CType inheritedReturns()
   {
     return fparent.fpod.toType(inheritedRet)
   }

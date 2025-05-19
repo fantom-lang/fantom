@@ -51,7 +51,7 @@ public class FieldDef : SlotDef, CField
   override CMethod? getter() { get }
   override CMethod? setter() { set }
 
-  override CType inheritedReturnType()
+  override CType inheritedReturns()
   {
     if (inheritedRet != null)
       return inheritedRet
@@ -104,3 +104,4 @@ public class FieldDef : SlotDef, CField
   Str? closureInfo          // if this is a closure wrapper field
 
 }
+

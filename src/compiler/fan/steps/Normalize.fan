@@ -132,7 +132,7 @@ class Normalize : CompilerStep
     loc := code.loc
 
     // we allow return keyword to be omitted if there is exactly one statement
-    if (code.size == 1 && !m.returnType.isVoid && code.stmts[0].id == StmtId.expr)
+    if (code.size == 1 && !m.returns.isVoid && code.stmts[0].id == StmtId.expr)
     {
       code.stmts[0] = ReturnStmt.makeSynthetic(code.stmts[0].loc, code.stmts[0]->expr)
       return
@@ -212,7 +212,7 @@ class Normalize : CompilerStep
     x := MethodDef(loc, curType)
     x.flags        = methodFlags
     x.name         = m.name + "\$Once"
-    x.ret          = m.returnType
+    x.ret          = m.returns
     x.inheritedRet = null
     x.paramDefs    = m.paramDefs
     x.vars         = m.vars

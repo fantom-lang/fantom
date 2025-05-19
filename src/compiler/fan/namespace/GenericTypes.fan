@@ -454,7 +454,7 @@ class ParameterizedField : CField
   override CType fieldType
   override CMethod? getter
   override CMethod? setter
-  override CType inheritedReturnType() { fieldType }
+  override CType inheritedReturns() { fieldType }
 
   override Bool isParameterized() { true }
 
@@ -476,7 +476,7 @@ class ParameterizedMethod : CMethod
     this.parent = parent
     this.generic = generic
 
-    this.returnType = parent.parameterize(generic.returnType)
+    this.returns = parent.parameterize(generic.returns)
     this.params = generic.params.map |CParam p->CParam|
     {
       if (!p.type.isGenericParameter)
@@ -485,7 +485,7 @@ class ParameterizedMethod : CMethod
         return ParameterizedMethodParam(parent, p)
     }
 
-    signature = "$returnType $name(" + params.join(", ") + ")"
+    signature = "$returns $name(" + params.join(", ") + ")"
   }
 
   override CDoc? doc() { generic.doc }
@@ -496,12 +496,12 @@ class ParameterizedMethod : CMethod
 
   override Bool isParameterized()  { true }
 
-  override CType inheritedReturnType()  { generic.inheritedReturnType }
+  override CType inheritedReturns()  { generic.inheritedReturns }
 
   override CType parent     { private set }
   override Str signature    { private set }
   override CMethod? generic { private set }
-  override CType returnType { private set }
+  override CType returns    { private set }
   override CParam[] params  { private set }
 }
 

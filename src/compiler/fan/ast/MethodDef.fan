@@ -134,9 +134,9 @@ class MethodDef : SlotDef, CMethod
 
   override Str signature() { qname + "(" + params.join(",") + ")" }
 
-  override CType returnType() { ret }
+  override CType returns() { ret }
 
-  override CType inheritedReturnType()
+  override CType inheritedReturns()
   {
     if (inheritedRet != null)
       return inheritedRet

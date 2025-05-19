@@ -55,10 +55,10 @@ class FField : FSlot, CField
     return fparent.fpod.toType(typeRef)
   }
 
-  override CType inheritedReturnType()
+  override CType inheritedReturns()
   {
     if (!isOverride || getter == null) return fieldType
-    else return getter.inheritedReturnType
+    else return getter.inheritedReturns
   }
 
 //////////////////////////////////////////////////////////////////////////

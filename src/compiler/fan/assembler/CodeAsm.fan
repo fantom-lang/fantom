@@ -1076,7 +1076,7 @@ class CodeAsm : CompilerSupport
       if (field.isParameterized)
         coerceOp(ns.objType, field.fieldType)
       else if (field.isCovariant)
-        coerceOp(field.inheritedReturnType, field.fieldType)
+        coerceOp(field.inheritedReturns, field.fieldType)
     }
     // load field directly from storage
     else
@@ -1222,8 +1222,8 @@ class CodeAsm : CompilerSupport
     if (call.isSafe)
     {
       // if the method return a value type, ensure it is coerced to nullable
-      if (method.returnType.isVal && call.leave)
-        coerceOp(method.returnType, call.ctype.toNullable)
+      if (method.returns.isVal && call.leave)
+        coerceOp(method.returns, call.ctype.toNullable)
 
       // jump to end after successful call and push null onto
       // stack for null check from above (if a leave)
@@ -1314,18 +1314,18 @@ class CodeAsm : CompilerSupport
     //   Int.toStr    => non-generic - no cast
     //   Str[].toStr  => return isn't parameterized - no cast
     //   Str[].get()  => actual return is Obj, but we want Str - cast
-    //   covariant    => actual call is against inheritedReturnType
+    //   covariant    => actual call is against inheritedReturns
     if (leave)
     {
       if (m.isParameterized)
       {
-        ret := m.generic.returnType
+        ret := m.generic.returns
         if (ret.isGenericParameter)
-          coerceOp(ns.objType, m.returnType)
+          coerceOp(ns.objType, m.returns)
       }
       else if (m.isCovariant)
       {
-        coerceOp(m.inheritedReturnType, m.returnType)
+        coerceOp(m.inheritedReturns, m.returns)
       }
     }
 
@@ -1335,8 +1335,8 @@ class CodeAsm : CompilerSupport
     {
       // note we need to use the actual method signature (not parameterized)
       x := m.isParameterized ? m.generic : m
-      if (!x.returnType.isVoid || x.isInstanceCtor)
-        opType(FOp.Pop, x.returnType)
+      if (!x.returns.isVoid || x.isInstanceCtor)
+        opType(FOp.Pop, x.returns)
     }
   }
 
@@ -1490,7 +1490,7 @@ class CodeAsm : CompilerSupport
         // if calling setter check if we need to boxed
         if (c.ctype.isVal && !setParam.isVal && coerce == null) coerceOp(c.ctype, setParam)
         op(FOp.CallVirtual, fpod.addMethodRef(set, 2))
-        if (!set.returnType.isVoid) opType(FOp.Pop, set.returnType)
+        if (!set.returns.isVoid) opType(FOp.Pop, set.returns)
       default:
         throw err("Internal error", var.loc)
     }

@@ -50,23 +50,23 @@ class NamespaceTest : JavaTest
     verifySame(gc.parent, sys)
     verifyEq(gc.name, "gc")
     verifyEq(gc.qname, "[java]java.lang::System.gc")
-    verifySame(gc.returnType, ns.voidType)
+    verifySame(gc.returns, ns.voidType)
     verifyEq(gc.params.size, 0)
 
     // java.lang.System.mapLibraryName (all Strings are considered nullable)
     mapLib := sys.method("mapLibraryName")
     verifySame(mapLib.parent, sys)
-    verifySame(mapLib.returnType, ns.strType.toNullable)
+    verifySame(mapLib.returns, ns.strType.toNullable)
     verifyEq(mapLib.params.size, 1)
     verifyEq(mapLib.params[0].name, "p0")
     verifySame(mapLib.params[0].type, ns.strType.toNullable)
 
     // check that APIs considered nullable
-    secMgr := sys.method("getSecurityManager").returnType
+    secMgr := sys.method("getSecurityManager").returns
     verifyEq(secMgr.isNullable, true)
     verifyEq(secMgr.signature, "[java]java.lang::SecurityManager?")
     verifyEq(secMgr.toNonNullable.signature, "[java]java.lang::SecurityManager")
-    verifyEq(sys.method("getSecurityManager").returnType.signature,
+    verifyEq(sys.method("getSecurityManager").returns.signature,
       "[java]java.lang::SecurityManager?")
     verifySame(sys.method("identityHashCode").params[0].type,
       ns.objType.toNullable)
@@ -75,9 +75,9 @@ class NamespaceTest : JavaTest
 
     // primitives/arrays
     t := ns.resolvePod("[java]fanx.test", null).resolveType("InteropTest", true)
-    verifyEq(t.method("booleanArray").returnType.isNullable, true)
-    verifyEq(t.method("booleanArray").returnType.signature, "[java]fanx.interop::BooleanArray?")
-    verifyEq(t.method("booleanArray").returnType.toNonNullable.signature, "[java]fanx.interop::BooleanArray")
+    verifyEq(t.method("booleanArray").returns.isNullable, true)
+    verifyEq(t.method("booleanArray").returns.signature, "[java]fanx.interop::BooleanArray?")
+    verifyEq(t.method("booleanArray").returns.toNonNullable.signature, "[java]fanx.interop::BooleanArray")
     verifyEq(t.field("numb").fieldType.signature, "[java]::byte")
 
     // protected
@@ -111,13 +111,13 @@ class NamespaceTest : JavaTest
     format3 := formats.find |m| { m.params.size == 3 && m.params[0].type.name == "Obj" }
     format4 := formats.find |m| { m.params.size == 3 && m.params[0].type.name == "Date" }
     verifyEq(format1.parent.qname,     "[java]java.text::Format")
-    verifyEq(format1.returnType.qname, "sys::Str")
+    verifyEq(format1.returns.qname, "sys::Str")
     verifyEq(format2.parent.qname,     "[java]java.text::DateFormat")
-    verifyEq(format2.returnType.qname, "sys::Str")
+    verifyEq(format2.returns.qname, "sys::Str")
     verifyEq(format3.parent.qname,     "[java]java.text::DateFormat")
-    verifyEq(format3.returnType.qname, "[java]java.lang::StringBuffer")
+    verifyEq(format3.returns.qname, "[java]java.lang::StringBuffer")
     verifyEq(format4.parent.qname,     "[java]java.text::SimpleDateFormat")
-    verifyEq(format4.returnType.qname, "[java]java.lang::StringBuffer")
+    verifyEq(format4.returns.qname, "[java]java.lang::StringBuffer")
   }
 
 //////////////////////////////////////////////////////////////////////////

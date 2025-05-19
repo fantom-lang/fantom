@@ -814,7 +814,7 @@ class CallExpr : NameExpr
     : this.make(loc, target, method.name, ExprId.call)
   {
     this.method = method
-    this.ctype = method.isCtor ? method.parent : method.returnType
+    this.ctype = method.isCtor ? method.parent : method.returns
     if (args != null) this.args = args
   }
 

@@ -139,7 +139,7 @@ class MiscTest : CompilerTest
      g := bar.slot("g") as FieldDef
      verify(bar.slotDefs.find |SlotDef s->Bool| { return s === g.get } != null)
      verifyEq(g.get.name, "g")
-     verifyEq(g.get.returnType.qname, "sys::Int")
+     verifyEq(g.get.returns.qname, "sys::Int")
      verifyEq(g.get.params.size, 0)
      verifyEq(g.get.code.stmts.size, 1)
      verifyEq(g.get.code.stmts[0].id, StmtId.returnStmt)
@@ -149,7 +149,7 @@ class MiscTest : CompilerTest
      // g field setter
      verify(bar.slotDefs.find |SlotDef s->Bool| { return s === g.set } != null)
      verifyEq(g.set.name, "g")
-     verifyEq(g.set.returnType.qname, "sys::Void")
+     verifyEq(g.set.returns.qname, "sys::Void")
      verifyEq(g.set.params.size, 1)
      verifyEq(g.set.params[0].type.qname, "sys::Int")
      verifyEq(g.set.params[0].name, "it")

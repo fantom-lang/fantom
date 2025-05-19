@@ -334,7 +334,7 @@ class CallResolver : CompilerSupport
     if (method.isInstanceCtor)
       call.ctype = method.parent
     else
-      call.ctype = method.returnType
+      call.ctype = method.returns
 
     return call
   }
@@ -482,8 +482,8 @@ class CallResolver : CompilerSupport
     // then we also need an implicit cast operation
     base := foundOnIt ? this.baseIt : this.base
     result.ctype = base
-    if (method.inheritedReturnType != base)
-      result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturnType }
+    if (method.inheritedReturns != base)
+      result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturns }
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -100,12 +100,12 @@ mixin CField : CSlot
   **
   ** Original return type from inherited method if a covariant override.
   **
-  abstract CType inheritedReturnType()
+  abstract CType inheritedReturns()
 
   **
   ** Does this field covariantly override a method?
   **
-  Bool isCovariant() { isOverride && fieldType != inheritedReturnType }
+  Bool isCovariant() { isOverride && fieldType != inheritedReturns }
 
   **
   ** Is this field typed with a generic parameter.
@@ -143,7 +143,9 @@ mixin CMethod : CSlot
   **
   ** Return type
   **
-  abstract CType returnType()
+  abstract CType returns()
+
+  @Deprecated CType returnType() { returns }
 
   **
   ** Parameter signatures
@@ -153,13 +155,15 @@ mixin CMethod : CSlot
   **
   ** Original return type from inherited method if a covariant override.
   **
-  abstract CType inheritedReturnType()
+  abstract CType inheritedReturns()
+
+  @Deprecated  CType inheritedReturnType() { inheritedReturns }
 
   **
   ** Does this method have a covariant return type (we
   ** don't count This returns as covariant)
   **
-  Bool isCovariant() { isOverride && !returnType.isThis && returnType != inheritedReturnType }
+  Bool isCovariant() { isOverride && !returns.isThis && returns != inheritedReturns }
 
   **
   ** Return the bridge if this slot is foreign or uses any foreign
@@ -168,7 +172,7 @@ mixin CMethod : CSlot
   override CBridge? usesBridge()
   {
     if (bridge != null) return bridge
-    if (returnType.bridge != null) return returnType.bridge
+    if (returns.bridge != null) return returns.bridge
     return params.eachWhile |CParam p->CBridge?| { p.type.bridge }
   }
 
@@ -192,7 +196,7 @@ mixin CMethod : CSlot
   static Bool calcGeneric(CMethod m)
   {
     if (!m.parent.isGeneric) return false
-    isGeneric := m.returnType.isGenericParameter
+    isGeneric := m.returns.isGenericParameter
     m.params.each |CParam p| { isGeneric = isGeneric || p.type.isGenericParameter }
     return isGeneric
   }

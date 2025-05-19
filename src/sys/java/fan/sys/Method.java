@@ -93,7 +93,7 @@ public class Method
   public Object trap(String name, List args)
   {
     // private undocumented access
-    if (name.equals("inheritedReturnType"))
+    if (name.equals("inheritedReturns"))
       return inheritedReturns;
     else
       return super.trap(name, args);

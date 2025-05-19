@@ -526,36 +526,36 @@ class InheritTest : CompilerTest
      TypeDef b := compiler.types[2]
 
      verifyEq(q.name, "Q")
-     verifyEq(q.method("m").returnType.name, "Q")
-     verifyEq(q.method("m").inheritedReturnType.name, "Q")
+     verifyEq(q.method("m").returns.name, "Q")
+     verifyEq(q.method("m").inheritedReturns.name, "Q")
 
      verifyEq(p.name, "P")
-     verifyEq(p.method("n").returnType.name, "P")
-     verifyEq(p.method("n").inheritedReturnType.name, "Q")
-     verifyEq(p.method("f").returnType.signature, "sys::Int[]")
-     verifyEq(p.method("f").inheritedReturnType.signature, "sys::Num[]")
+     verifyEq(p.method("n").returns.name, "P")
+     verifyEq(p.method("n").inheritedReturns.name, "Q")
+     verifyEq(p.method("f").returns.signature, "sys::Int[]")
+     verifyEq(p.method("f").inheritedReturns.signature, "sys::Num[]")
 
      verifyEq(a.name, "A")
-     verifyEq(a.method("x").returnType.name, "A")
-     verifyEq(a.method("x").inheritedReturnType.name, "A")
+     verifyEq(a.method("x").returns.name, "A")
+     verifyEq(a.method("x").inheritedReturns.name, "A")
 
      verifyEq(m.name, "M")
-     verifyEq(m.method("y").returnType.name, "M")
-     verifyEq(m.method("y").inheritedReturnType.name, "M")
+     verifyEq(m.method("y").returns.name, "M")
+     verifyEq(m.method("y").inheritedReturns.name, "M")
 
      verifyEq(b.name, "B")
-     verifyEq(b.method("x").returnType.name, "B")
-     verifyEq(b.method("x").inheritedReturnType.name, "A")
-     verifyEq(b.method("y").returnType.name, "B")
-     verifyEq(b.method("y").inheritedReturnType.name, "M")
-     verifyEq(b.method("m").returnType.name, "B")
-     verifyEq(b.method("m").inheritedReturnType.name, "Q")
-     verifyEq(b.method("n").returnType.name, "B")
-     verifyEq(b.method("n").inheritedReturnType.name, "Q")
-     verifyEq(b.method("e").returnType.signature, "sys::Str[]")
-     verifyEq(b.method("e").inheritedReturnType.signature, "sys::Obj[]")
-     verifyEq(b.method("f").returnType.signature, "sys::Int[]")
-     verifyEq(b.method("f").inheritedReturnType.signature, "sys::Num[]")
+     verifyEq(b.method("x").returns.name, "B")
+     verifyEq(b.method("x").inheritedReturns.name, "A")
+     verifyEq(b.method("y").returns.name, "B")
+     verifyEq(b.method("y").inheritedReturns.name, "M")
+     verifyEq(b.method("m").returns.name, "B")
+     verifyEq(b.method("m").inheritedReturns.name, "Q")
+     verifyEq(b.method("n").returns.name, "B")
+     verifyEq(b.method("n").inheritedReturns.name, "Q")
+     verifyEq(b.method("e").returns.signature, "sys::Str[]")
+     verifyEq(b.method("e").inheritedReturns.signature, "sys::Obj[]")
+     verifyEq(b.method("f").returns.signature, "sys::Int[]")
+     verifyEq(b.method("f").inheritedReturns.signature, "sys::Num[]")
 
      //
      // verify reflection
@@ -1312,3 +1312,4 @@ class InheritTest : CompilerTest
 
 
 }
+

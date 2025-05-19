@@ -60,7 +60,7 @@ class JavaField : JavaSlot, CField
   override CMethod? setter
 
   override Str signature() { return "$fieldType $name" }
-  override CType inheritedReturnType() { return fieldType }
+  override CType inheritedReturns() { return fieldType }
 
 }
 
@@ -76,19 +76,19 @@ class JavaMethod : JavaSlot, CMethod
   new make(CType parent, Str name, Int flags, CType ret, CParam[] params := [,])
     : super(parent, name, flags)
   {
-    this.returnType = ret
-    this.params = params
+    this.returns = ret
+    this.params  = params
   }
 
   override CType parent
-  override CType returnType
+  override CType returns
   override CParam[] params
   override Bool isGeneric
 
-  override This dup() { make(parent, name, flags, returnType, params) }
+  override This dup() { make(parent, name, flags, returns, params) }
 
-  override Str signature() { return "$returnType $name(" + params.join(",") + ")" }
-  override CType inheritedReturnType() { return returnType }
+  override Str signature() { return "$returns $name(" + params.join(",") + ")" }
+  override CType inheritedReturns() { return returns }
 
   Void setParamTypes(CType[] types)
   {

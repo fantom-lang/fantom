@@ -274,7 +274,7 @@ class GenTsDecl
 
   private Str toMethodReturn(CType type, CMethod method)
   {
-    output := method.isCtor ? type.name : toMethodSigType(method, method.returnType, pmap.containsKey(type.signature) ? type : null)
+    output := method.isCtor ? type.name : toMethodSigType(method, method.returns, pmap.containsKey(type.signature) ? type : null)
     if (method.qname == "sys::Obj.toImmutable" ||
         method.qname == "sys::List.ro" ||
         method.qname == "sys::Map.ro")

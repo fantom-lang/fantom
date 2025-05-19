@@ -101,7 +101,7 @@ class Assembler : CompilerSupport, FConst
     m.nameIndex    = name(def.name)
     m.flags        = def.flags
     m.ret          = typeRef(def.ret)
-    m.inheritedRet = typeRef(def.inheritedReturnType)
+    m.inheritedRet = typeRef(def.inheritedReturns)
     m.paramCount   = def.params.size
     m.localCount   = def.vars.size - def.params.size
 

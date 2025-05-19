@@ -693,7 +693,7 @@ internal class JsCallExpr : JsExpr
     {
       ClosureExpr ce := ce.args.last
       js.w(", ")
-      writeType(ce.doCall.returnType)
+      writeType(ce.doCall.returns)
     }
 
     if (ce.isDynamic) js.w("])")
@@ -815,3 +815,4 @@ internal class JsShortcutExpr : JsCallExpr
     plugin.thisName = old
   }
 }
+
