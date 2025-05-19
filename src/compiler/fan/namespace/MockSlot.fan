@@ -74,11 +74,11 @@ class MockParam : CParam
   new make(Str name, CType of)
   {
     this.name = name
-    this.paramType = of
+    this.type = of
   }
 
   override Str name
-  override CType paramType
+  override CType type
   override Bool hasDefault() { false }
 }
 

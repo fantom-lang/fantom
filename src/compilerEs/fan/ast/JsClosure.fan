@@ -69,7 +69,7 @@ class JsClosure : JsNode
       func.params.each |p,i|
       {
         if (i>0) js.w(",")
-        js.w("new sys.Param(${p.name.toCode}, ${p.paramType.signature.toCode}, ${p.hasDefault})")
+        js.w("new sys.Param(${p.name.toCode}, ${p.type.signature.toCode}, ${p.hasDefault})")
       }
       js.w("])")
         .w("];").nl
@@ -90,7 +90,7 @@ class JsClosure : JsNode
     buf := StrBuf()
     func.params.each |p|
     {
-      buf.add("${p.name}-${p.paramType.signature}-${p.hasDefault},")
+      buf.add("${p.name}-${p.type.signature}-${p.hasDefault},")
     }
     buf.add("${func.ret.signature}")
     return buf.toStr
@@ -102,3 +102,4 @@ class JsClosure : JsNode
   ** Func spec field variable name to prototype function (for params and return type)
   private Str:MethodDef varToFunc := [:] { ordered = true }
 }
+

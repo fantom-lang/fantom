@@ -54,7 +54,7 @@ class ClosureTest : CompilerTest
      verifyEq(call.args[1]->check->qname, "sys::Str")
 
      verifyEq(c.name, "Foo\$x\$2")
-     verifyEq(c.slotDef("callList")->params->get(0)->paramType->qname, "sys::List")
+     verifyEq(c.slotDef("callList")->params->get(0)->type->qname, "sys::List")
      call = c.slotDef("callList")->code->stmts->get(0)->expr as CallExpr
      verifyEq(call.args[0].id, ExprId.coerce)
      verifyEq(call.args[0]->check->qname, "sys::Int")
@@ -656,3 +656,4 @@ class ClosureTest : CompilerTest
        ((((b)))) b b")
   }
 }
+

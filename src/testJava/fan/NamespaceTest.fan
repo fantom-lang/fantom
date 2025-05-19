@@ -59,7 +59,7 @@ class NamespaceTest : JavaTest
     verifySame(mapLib.returnType, ns.strType.toNullable)
     verifyEq(mapLib.params.size, 1)
     verifyEq(mapLib.params[0].name, "p0")
-    verifySame(mapLib.params[0].paramType, ns.strType.toNullable)
+    verifySame(mapLib.params[0].type, ns.strType.toNullable)
 
     // check that APIs considered nullable
     secMgr := sys.method("getSecurityManager").returnType
@@ -68,9 +68,9 @@ class NamespaceTest : JavaTest
     verifyEq(secMgr.toNonNullable.signature, "[java]java.lang::SecurityManager")
     verifyEq(sys.method("getSecurityManager").returnType.signature,
       "[java]java.lang::SecurityManager?")
-    verifySame(sys.method("identityHashCode").params[0].paramType,
+    verifySame(sys.method("identityHashCode").params[0].type,
       ns.objType.toNullable)
-    verifyEq(sys.method("setProperties").params[0].paramType.signature,
+    verifyEq(sys.method("setProperties").params[0].type.signature,
       "[java]java.util::Properties?")
 
     // primitives/arrays
@@ -106,10 +106,10 @@ class NamespaceTest : JavaTest
     formats := JavaMethod[,]
     while (fm != null) { formats.add(fm); fm = fm.next }
     verifyEq(formats.size, 4)
-    format1 := formats.find |m| { m.params.size == 1 && m.params[0].paramType.name == "Obj" }
-    format2 := formats.find |m| { m.params.size == 1 && m.params[0].paramType.name == "Date" }
-    format3 := formats.find |m| { m.params.size == 3 && m.params[0].paramType.name == "Obj" }
-    format4 := formats.find |m| { m.params.size == 3 && m.params[0].paramType.name == "Date" }
+    format1 := formats.find |m| { m.params.size == 1 && m.params[0].type.name == "Obj" }
+    format2 := formats.find |m| { m.params.size == 1 && m.params[0].type.name == "Date" }
+    format3 := formats.find |m| { m.params.size == 3 && m.params[0].type.name == "Obj" }
+    format4 := formats.find |m| { m.params.size == 3 && m.params[0].type.name == "Date" }
     verifyEq(format1.parent.qname,     "[java]java.text::Format")
     verifyEq(format1.returnType.qname, "sys::Str")
     verifyEq(format2.parent.qname,     "[java]java.text::DateFormat")
@@ -163,3 +163,4 @@ class NamespaceTest : JavaTest
   }
 
 }
+

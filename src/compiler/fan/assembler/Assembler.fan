@@ -109,7 +109,7 @@ class Assembler : CompilerSupport, FConst
     {
       f := FMethodVar(m)
       f.nameIndex = name(v.name)
-      f.typeRef   = typeRef(v.paramDef?.paramType ?: v.ctype)
+      f.typeRef   = typeRef(v.paramDef?.type ?: v.ctype)
       f.flags     = v.flags
       if (v.paramDef != null)
       {

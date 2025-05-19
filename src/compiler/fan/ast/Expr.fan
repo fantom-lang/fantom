@@ -1537,7 +1537,7 @@ class ClosureExpr : Expr
       doCall.paramDefs.each |ParamDef p, Int i|
       {
         if (i < signature.params.size)
-          p.paramType = signature.params[i]
+          p.type = signature.params[i]
       }
 
       // update return, we might have to translate an single

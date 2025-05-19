@@ -233,7 +233,7 @@ class JavaBridge : CBridge
       else
       {
         // ensure arg fits parameter type (or auto-cast)
-        newArgs[i] = coerce(args[i], p.paramType) |->| { isErr = true }
+        newArgs[i] = coerce(args[i], p.type) |->| { isErr = true }
       }
     }
     if (isErr) return null
@@ -268,7 +268,7 @@ class JavaBridge : CBridge
     return a.method.params.all |CParam ap, Int i->Bool|
     {
       bp := b.method.params[i]
-      return ap.paramType.fits(bp.paramType)
+      return ap.type.fits(bp.type)
     }
   }
 
@@ -323,18 +323,18 @@ class JavaBridge : CBridge
     base.params.eachr |CParam bp, Int i|
     {
       dp := def.paramDefs[i]
-      if (!isOverrideInferredType(bp.paramType, dp.paramType)) return
+      if (!isOverrideInferredType(bp.type, dp.type)) return
 
       // add local variable: Int bar := bar_$J
       local := LocalDefStmt(def.loc)
-      local.ctype = dp.paramType
+      local.ctype = dp.type
       local.name  = dp.name
       local.init  = UnknownVarExpr(def.loc, null, dp.name + "_\$J")
       def.code.stmts.insert(0, local)
 
       // rename parameter Int bar -> int bar_$J
       dp.name = dp.name + "_\$J"
-      dp.paramType = bp.paramType
+      dp.type = bp.type
     }
   }
 
@@ -412,7 +412,7 @@ class JavaBridge : CBridge
     if (a.params.size != b.params.size) return false
     for (i:=0; i<a.params.size; ++i)
     {
-      if (a.params[i].paramType != b.params[i].paramType)
+      if (a.params[i].type != b.params[i].type)
         return false
     }
     return true
@@ -654,7 +654,7 @@ class JavaBridge : CBridge
     if (!retOk) return false
 
     // check all the method parameters fit the function parameters
-    paramsOk := funcType.params.all |CType f, Int i->Bool| { return fits(f, method.params[i].paramType) }
+    paramsOk := funcType.params.all |CType f, Int i->Bool| { return fits(f, method.params[i].type) }
     if (!paramsOk) return false
 
     return true
@@ -712,7 +712,7 @@ class JavaBridge : CBridge
     method.params.each |CParam param, Int i|
     {
       paramName := "p$i"
-      over.params.add(ParamDef(loc, param.paramType, paramName))
+      over.params.add(ParamDef(loc, param.type, paramName))
       if (i < funcType.params.size)
         call.args.add(UnknownVarExpr(loc, null, paramName))
     }
@@ -835,3 +835,4 @@ internal class CallMatch
   CMethod? method    // matched method
   Expr[]? args       // coerced arguments
 }
+

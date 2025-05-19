@@ -386,7 +386,7 @@ class CallResolver : CompilerSupport
     // is expected to be a function type, then use that to
     // infer the type signature of the closure
     m := call.method
-    lastParam := m.params.last?.paramType?.deref?.toNonNullable as FuncType
+    lastParam := m.params.last?.type?.deref?.toNonNullable as FuncType
     if (lastParam != null && call.args.size == m.params.size &&
         c.signature.params.size <= lastParam.params.size)
     {
@@ -548,3 +548,4 @@ class CallResolver : CompilerSupport
   Expr? result         // resolveToExpr()
 
 }
+

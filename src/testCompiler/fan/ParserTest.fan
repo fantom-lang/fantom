@@ -524,7 +524,7 @@ class ParserTest : CompilerTest
 
   Void verifyParam(ParamDef p, Str typeName, Str name)
   {
-    verifyEq(p.paramType.qname, typeName)
+    verifyEq(p.type.qname, typeName)
     verifyEq(p.name, name)
   }
 
@@ -1294,7 +1294,7 @@ class ParserTest : CompilerTest
     parse("class Foo { Void m($typeStr x) {} }")
     m := (MethodDef)t.slotDefs.first
     // echo(" --> $m.params.first.ctype")
-    return m.paramDefs.first.paramType
+    return m.paramDefs.first.type
   }
 
   Void testBadTypes()
@@ -1439,3 +1439,4 @@ class ParserTest : CompilerTest
   ClosureExpr[]? closures  // compiler.closures
 
 }
+

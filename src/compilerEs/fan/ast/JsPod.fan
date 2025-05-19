@@ -171,8 +171,8 @@ class JsPod : JsNode
       t.methods.each |MethodDef m|
       {
         if (m.isFieldAccessor) return
-        if (m.params.any |CParam p->Bool| { p.paramType.isForeign }) return
-        params := m.params.join(",") |p| { "new sys.Param('${p.name}','${p.paramType.signature}',${p.hasDefault})"}
+        if (m.params.any |CParam p->Bool| { p.type.isForeign }) return
+        params := m.params.join(",") |p| { "new sys.Param('${p.name}','${p.type.signature}',${p.hasDefault})"}
         paramList := m.params.isEmpty
           ? "xp"
           : "sys.List.make(sys.Param.type\$,[${params}])"
@@ -249,3 +249,4 @@ class JsPod : JsNode
     js.wl("// cjs exports end")
   }
 }
+

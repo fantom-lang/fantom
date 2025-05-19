@@ -156,7 +156,7 @@ class JsMethodParam : JsNode
     this.loc = p is Node ? ((Node)p).loc : null
     this.reflectName = p.name
     this.name = vnameToJs(p.name)
-    this.paramType = JsTypeRef(s, p.paramType, this.loc)
+    this.paramType = JsTypeRef(s, p.type, this.loc)
     this.hasDef = p.hasDefault
     if (hasDef) this.defVal = JsExpr.makeFor(s, p->def)
   }
@@ -203,3 +203,4 @@ internal class ClosureFinder : Visitor
   Node node
   Bool found := false
 }
+

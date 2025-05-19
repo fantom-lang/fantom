@@ -169,7 +169,7 @@ mixin CMethod : CSlot
   {
     if (bridge != null) return bridge
     if (returnType.bridge != null) return returnType.bridge
-    return params.eachWhile |CParam p->CBridge?| { p.paramType.bridge }
+    return params.eachWhile |CParam p->CBridge?| { p.type.bridge }
   }
 
   **
@@ -193,7 +193,7 @@ mixin CMethod : CSlot
   {
     if (!m.parent.isGeneric) return false
     isGeneric := m.returnType.isGenericParameter
-    m.params.each |CParam p| { isGeneric = isGeneric || p.paramType.isGenericParameter }
+    m.params.each |CParam p| { isGeneric = isGeneric || p.type.isGenericParameter }
     return isGeneric
   }
 
@@ -203,7 +203,7 @@ mixin CMethod : CSlot
   Str nameAndParamTypesToStr()
   {
     return name + "(" +
-      params.join(", ", |CParam p->Str| { p.paramType.inferredAs.signature }) +
+      params.join(", ", |CParam p->Str| { p.type.inferredAs.signature }) +
       ")"
   }
 
@@ -218,7 +218,7 @@ mixin CMethod : CSlot
 
     if (a.size != b.size) return false
     for (i:=0; i<a.size; ++i)
-      if (a[i].paramType != b[i].paramType) return false
+      if (a[i].type != b[i].type) return false
 
     return true
   }
@@ -236,8 +236,9 @@ mixin CMethod : CSlot
 mixin CParam
 {
   abstract Str name()
-  abstract CType paramType()
+  abstract CType type()
   abstract Bool hasDefault()
+  @Deprecated CType paramType() { type }
 }
 
 **************************************************************************

@@ -118,9 +118,9 @@ class FMethodVar : FConst, CParam
   new make(FMethod fmethod) { this.fmethod = fmethod }
 
   override Str name() { fpod.n(nameIndex) }
-  override CType paramType() { fpod.toType(typeRef) }
+  override CType type() { fpod.toType(typeRef) }
   override Bool hasDefault() { def != null }
-  override Str toStr() { "$paramType $name" }
+  override Str toStr() { "$type $name" }
 
   Bool isParam()  { flags.and(FConst.Param) != 0 }
 
@@ -170,3 +170,4 @@ class FMethodVar : FConst, CParam
   Buf? def         // default expression or null (only for params)
 
 }
+

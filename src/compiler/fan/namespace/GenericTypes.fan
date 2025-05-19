@@ -479,7 +479,7 @@ class ParameterizedMethod : CMethod
     this.returnType = parent.parameterize(generic.returnType)
     this.params = generic.params.map |CParam p->CParam|
     {
-      if (!p.paramType.isGenericParameter)
+      if (!p.type.isGenericParameter)
         return p
       else
         return ParameterizedMethodParam(parent, p)
@@ -514,14 +514,14 @@ class ParameterizedMethodParam : CParam
   new make(GenericType parent, CParam generic)
   {
     this.generic = generic
-    this.paramType = parent.parameterize(generic.paramType)
+    this.type   = parent.parameterize(generic.type)
   }
 
   override Str name() { generic.name }
   override Bool hasDefault() { generic.hasDefault }
-  override Str toStr() { "$paramType $name" }
+  override Str toStr() { "$type $name" }
 
-  override CType paramType { private set }
+  override CType type { private set }
   CParam generic { private set }
 }
 

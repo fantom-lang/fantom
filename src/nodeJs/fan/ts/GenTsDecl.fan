@@ -134,7 +134,7 @@ class GenTsDecl
     out.print("export ${abstr}class $type.name$classParams $extends{\n")
 
     hasItBlockCtor := type.ctors.any |CMethod m->Bool| {
-      m.params.any |CParam p->Bool| { p.paramType.isFunc }
+      m.params.any |CParam p->Bool| { p.type.isFunc }
     }
 
     // keep track of slot names we've written. only mixin slots that have
@@ -267,7 +267,7 @@ class GenTsDecl
     paramName := JsNode.pickleName(p.name, deps)
     if (p.hasDefault)
       paramName += "?"
-    paramType := toMethodSigType(method, p.paramType, isStatic ? parent : null)
+    paramType := toMethodSigType(method, p.type, isStatic ? parent : null)
 
     return "${paramName}: ${paramType}"
   }

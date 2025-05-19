@@ -79,7 +79,7 @@ class MethodDef : SlotDef, CMethod
   Bool isItBlockCtor()
   {
     if (!isCtor || params.isEmpty) return false
-    lastArg := params.last.paramType.deref.toNonNullable as FuncType
+    lastArg := params.last.type.deref.toNonNullable as FuncType
     if (lastArg == null || lastArg.params.size != 1) return false
     return true
   }
@@ -201,3 +201,4 @@ class MethodDef : SlotDef, CMethod
   FieldDef? accessorFor  // if accessor method for field
   Bool usesCvars         // does this method have locals enclosed by closure
 }
+

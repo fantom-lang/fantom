@@ -84,7 +84,7 @@ class ApiDocWriter
     w(slotPrefix).w(m.name).w("(\n")
     m.paramDefs.each |p, i|
     {
-      w(p.name).w(" ").w(p.paramType.signature)
+      w(p.name).w(" ").w(p.type.signature)
       if (p.def != null) w(":=").w(encodeExpr(p.def))
       w("\n")
     }

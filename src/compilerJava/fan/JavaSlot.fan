@@ -112,7 +112,7 @@ class JavaMethod : JavaSlot, CMethod
   {
     this.name == m.name &&
     this.params.size == m.params.size &&
-    this.params.all |p, i| { p.paramType == m.params[i].paramType }
+    this.params.all |p, i| { p.type == m.params[i].type }
   }
 }
 
@@ -125,10 +125,10 @@ class JavaMethod : JavaSlot, CMethod
 **
 class JavaParam : CParam
 {
-  new make(Str n, CType t) { name = n; paramType = t }
+  new make(Str n, CType t) { name = n; type = t }
   override Str name
   override Bool hasDefault
-  override CType paramType
-  override Str toStr() { return "$paramType $name" }
+  override CType type
+  override Str toStr() { return "$type $name" }
 }
 

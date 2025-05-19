@@ -442,7 +442,7 @@ class ClosureVars : CompilerStep
     ctor.name   = "make"
     ctor.ret    = cs.ns.voidType
     param := ParamDef(loc, ctype, "v")
-    pvar  := MethodVar.makeForParam(ctor, 1, param, param.paramType)
+    pvar  := MethodVar.makeForParam(ctor, 1, param, param.type)
     ctor.params.add(param)
     ctor.vars.add(pvar)
     ctor.code   = Block(loc)

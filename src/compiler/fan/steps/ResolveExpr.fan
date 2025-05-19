@@ -617,7 +617,7 @@ class ResolveExpr : CompilerStep
 
       // check that each parameter fits
       for (i:=0; i<args.size; ++i)
-        if (!CheckErrors.canCoerce(args[i], params[i].paramType))
+        if (!CheckErrors.canCoerce(args[i], params[i].type))
           return
 
       // its a match!
@@ -705,7 +705,7 @@ class ResolveExpr : CompilerStep
       matches = matches.findAll |m|
       {
         if (m.params.size != 1) return false
-        paramType := m.params.first.paramType
+        paramType := m.params.first.type
         return CheckErrors.canCoerce(rhs, paramType)
       }
     }
@@ -760,8 +760,8 @@ class ResolveExpr : CompilerStep
     get := ((ShortcutExpr)expr.target).method
     set := get.parent.method("set")
     if (set == null || set.params.size != 2 || set.isStatic ||
-        set.params[0].paramType.toNonNullable != get.params[0].paramType.toNonNullable ||
-        set.params[1].paramType.toNonNullable != get.returnType.toNonNullable)
+        set.params[0].type.toNonNullable != get.params[0].type.toNonNullable ||
+        set.params[1].type.toNonNullable != get.returnType.toNonNullable)
       err("No matching 'set' method for '$get.qname'", orig.loc)
     else
       expr.setMethod = set
@@ -836,7 +836,7 @@ class ResolveExpr : CompilerStep
 
     m.paramDefs.each |ParamDef p|
     {
-      var := MethodVar.makeForParam(m, reg++, p, p.paramType.parameterizeThis(curType))
+      var := MethodVar.makeForParam(m, reg++, p, p.type.parameterizeThis(curType))
       m.vars.add(var)
     }
   }

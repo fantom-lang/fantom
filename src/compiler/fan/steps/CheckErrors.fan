@@ -338,7 +338,7 @@ class CheckErrors : CompilerStep
     if (!m.isAccessor)
     {
       checkTypeProtection(m.returnType, m.loc)
-      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.paramType, p.loc) }
+      m.paramDefs.each |ParamDef p| { checkTypeProtection(p.type, p.loc) }
     }
 
     // check that public method isn't using internal types in its signature
@@ -347,7 +347,7 @@ class CheckErrors : CompilerStep
       if (!m.returnType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$m.returnType'", m.loc);
       m.paramDefs.each |ParamDef p|
       {
-        if (!p.paramType.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.paramType'", m.loc);
+        if (!p.type.isPublic) err("Public method '${curType.name}.${m.name}' cannot use internal type '$p.type'", m.loc);
       }
     }
   }
@@ -433,7 +433,7 @@ class CheckErrors : CompilerStep
   private Void checkParam(ParamDef p)
   {
     // check type
-    t := p.paramType
+    t := p.type
     if (t.isVoid) { err("Cannot use Void as parameter type", p.loc); return }
     if (t.isThis)  { err("Cannot use This as parameter type", p.loc); return }
     func := t.deref.toNonNullable as FuncType
@@ -443,11 +443,11 @@ class CheckErrors : CompilerStep
       checkValidType(p.loc, t)
 
     // check parameter default type
-    if (p.def != null && !p.paramType.isGenericParameter)
+    if (p.def != null && !p.type.isGenericParameter)
     {
-      p.def = coerce(p.def, p.paramType) |->|
+      p.def = coerce(p.def, p.type) |->|
       {
-        err("'$p.def.toTypeStr' is not assignable to '$p.paramType'", p.def.loc)
+        err("'$p.def.toTypeStr' is not assignable to '$p.type'", p.def.loc)
       }
     }
   }
@@ -1242,10 +1242,10 @@ class CheckErrors : CompilerStep
         err("Method '$name' uses unsupported type '$m.returnType'", call.loc)
         return
       }
-      unsupported := m.params.find |CParam p->Bool| { !p.paramType.isSupported }
+      unsupported := m.params.find |CParam p->Bool| { !p.type.isSupported }
       if (unsupported != null)
       {
-        err("Method '$name' uses unsupported type '$unsupported.paramType'", call.loc)
+        err("Method '$name' uses unsupported type '$unsupported.type'", call.loc)
         return
       }
     }
@@ -1575,7 +1575,7 @@ class CheckErrors : CompilerStep
         else
         {
           // ensure arg fits parameter type (or auto-cast)
-          pt := p.paramType.parameterizeThis(base)
+          pt := p.type.parameterizeThis(base)
           newArgs[i] = coerce(args[i], pt) |->|
           {
             isErr = name != "compare" // TODO let anything slide for Obj.compare
@@ -1584,7 +1584,7 @@ class CheckErrors : CompilerStep
           // if this a parameterized generic, then we need to box
           // even if the expected type is a value-type (since the
           // actual implementation methods are all Obj based)
-          if (!isErr && genericParams != null && genericParams[i].paramType.isGenericParameter)
+          if (!isErr && genericParams != null && genericParams[i].type.isGenericParameter)
             newArgs[i] = box(newArgs[i])
         }
       }
@@ -1607,7 +1607,7 @@ class CheckErrors : CompilerStep
 
   internal static Str paramTypeStr(CType base, CParam param)
   {
-    return param.paramType.parameterizeThis(base).inferredAs.signature
+    return param.type.parameterizeThis(base).inferredAs.signature
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -421,7 +421,7 @@ class JsType : JsNode
     if (!JsCallExpr.typedFuncs.contains(methName)) return
     param := methParams.last
     if (param == null) return
-    ft := resolveType(param.paramType) as FuncType
+    ft := resolveType(param.type) as FuncType
     if (ft == null) return
     name := nameToJs(param.name)
     js.wl("${name}.__returns = ((arg) => { let r = arg; if (r == null || r == sys.Void.type\$ || !(r instanceof sys.Type)) r = null; return r; })(arguments[arguments.length-1]);")
@@ -497,8 +497,7 @@ internal class SyntheticParam : CParam
 {
   new make(Str name, CType type) { this.name = name; this.type = type }
   override const Str name
-  private CType type
-  override CType paramType() { return this.type; }
+  override CType type
   override const Bool hasDefault := false
 }
 

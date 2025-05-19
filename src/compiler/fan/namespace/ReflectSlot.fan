@@ -108,14 +108,14 @@ class ReflectParam : CParam
   new make(ReflectNamespace ns, Param p)
   {
     this.p = p
-    this.paramType = ns.importType(p.type)
+    this.type = ns.importType(p.type)
   }
 
   override Str name() { p.name }
   override Bool hasDefault() { p.hasDefault }
 
-  override CType paramType { private set }
-  Param p                  { private set }
+  override CType type { private set }
+  Param p             { private set }
 }
 
 **************************************************************************
