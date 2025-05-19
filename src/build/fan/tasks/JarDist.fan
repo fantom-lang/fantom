@@ -165,7 +165,8 @@ class JarDist : JdkTask
   static Void doReflect(Str podName, |Uri path, File| onFile)
   {
     resources := Str[,]
-    zip := Zip.open(Env.cur.findPodFile(podName))
+    podFile := Env.cur.findPodFile(podName) ?: throw Err("Pod file not found: $podName")
+    zip := Zip.open(podFile)
     zip.contents.each |f|
     {
       if (f.isDir) return
