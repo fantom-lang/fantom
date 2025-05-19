@@ -72,8 +72,8 @@ public class JavaType
   int flags() { return init().flags; }
 
   public Type base() { return init().base; }
-  public List mixins() { return init().mixins; }
-  public List inheritance() { return init().inheritance; }
+  public List<Type> mixins() { return init().mixins; }
+  public List<Type> inheritance() { return init().inheritance; }
   public boolean is(Type type)
   {
     type = type.toNonNullable();
@@ -90,9 +90,9 @@ public class JavaType
     return nullable;
   }
 
-  public List fields() { return initSlots().fields; }
+  public List<Field> fields() { return initSlots().fields; }
 
-  public List methods() { return initSlots().methods; }
+  public List<Method> methods() { return initSlots().methods; }
   public Method method(String name, boolean checked)
   {
     // check if slot is overloaded by both field and method
@@ -105,7 +105,7 @@ public class JavaType
     return (Method)slot;
   }
 
-  public List slots() { return initSlots().slots; }
+  public List<Slot> slots() { return initSlots().slots; }
   public Slot slot(String name, boolean checked)
   {
     Slot slot = (Slot)initSlots().slotsByName.get(name);
@@ -114,7 +114,7 @@ public class JavaType
     return null;
   }
 
-  public List facets() { return Facets.empty().list(); }
+  public List<Facet> facets() { return Facets.empty().list(); }
   public Facet facet(Type t, boolean c) { return Facets.empty().get(t, c); }
 
   public String doc() { return null; }
@@ -549,3 +549,4 @@ public class JavaType
   private HashMap slotsByName; // initSlots() - String:Slot
 
 }
+

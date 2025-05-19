@@ -180,7 +180,7 @@ public class Pod
     return fpod;
   }
 
-  public static List list()
+  public static List<Pod> list()
   {
     synchronized(podsByName)
     {
@@ -314,7 +314,7 @@ public class Pod
     return version;
   }
 
-  public final List depends()
+  public final List<Depend> depends()
   {
     if (depends == null)
       depends = (List)new List(Sys.DependType, fpod.depends).toImmutable();
@@ -329,7 +329,7 @@ public class Pod
 
   public final String toStr() { return name; }
 
-  public final Map meta()
+  public final Map<String,String> meta()
   {
     if (meta == null)
     {
@@ -356,7 +356,7 @@ public class Pod
 // Types
 //////////////////////////////////////////////////////////////////////////
 
-  public List types() { return new List(Sys.TypeType, types); }
+  public List<Type> types() { return new List(Sys.TypeType, types); }
 
   public Type type(String name) { return type(name, true); }
   public Type type(String name, boolean checked)
@@ -390,7 +390,7 @@ public class Pod
 // Files
 //////////////////////////////////////////////////////////////////////////
 
-  public final List files()
+  public final List<fan.sys.File> files()
   {
     loadFiles();
     return filesList;
@@ -457,7 +457,7 @@ public class Pod
     return log;
   }
 
-  public final Map props(Uri uri, Duration maxAge)
+  public final Map<String,String> props(Uri uri, Duration maxAge)
   {
     return Env.cur().props(this, uri, maxAge);
   }
@@ -482,7 +482,7 @@ public class Pod
     return Env.cur().locale(this, key, def);
   }
 
-  public static List flattenDepends(List pods)
+  public static List<Pod> flattenDepends(List<Pod> pods)
   {
     Map acc = new Map(Sys.StrType, Sys.PodType);
     for (int i=0; i<pods.sz(); ++i)
@@ -502,7 +502,7 @@ public class Pod
     }
   }
 
-  public static List orderByDepends(List pods)
+  public static List<Pod> orderByDepends(List<Pod> pods)
   {
     List left = pods.dup().sort();
     List ordered = List.make(Sys.PodType, pods.size());
@@ -678,3 +678,4 @@ public class Pod
   public String doc;
 
 }
+

@@ -41,8 +41,8 @@ public abstract class GenericType
   int flags() { return base.flags(); }
 
   public final Type base() { return base; }
-  public final List mixins() { return base.mixins(); }
-  public final List inheritance() { return base.inheritance(); }
+  public final List<Type> mixins() { return base.mixins(); }
+  public final List<Type> inheritance() { return base.inheritance(); }
 
   public final boolean isGenericInstance() { return true; }
 
@@ -52,9 +52,9 @@ public abstract class GenericType
     return base.is(type);
   }
 
-  public final List fields()  { return reflect().fields.ro(); }
-  public final List methods() { return reflect().methods.ro(); }
-  public final List slots()   { return reflect().slots.ro(); }
+  public final List<Field> fields()  { return reflect().fields.ro(); }
+  public final List<Method> methods() { return reflect().methods.ro(); }
+  public final List<Slot> slots()   { return reflect().slots.ro(); }
 
   public final Slot slot(String name, boolean checked)
   {
@@ -70,7 +70,7 @@ public abstract class GenericType
     return nullable;
   }
 
-  public Map params()
+  public Map<String,Type> params()
   {
     if (params == null) params = makeParams();
     return params;
@@ -78,7 +78,7 @@ public abstract class GenericType
 
   abstract Map makeParams();
 
-  public List facets() { return base.facets(); }
+  public List<Facet> facets() { return base.facets(); }
   public Facet facet(Type t, boolean c) { return base.facet(t, c); }
 
   public String doc() { return base.doc(); }
@@ -255,3 +255,4 @@ public abstract class GenericType
   private List slots;
   private HashMap slotsByName;  // String:Slot
 }
+

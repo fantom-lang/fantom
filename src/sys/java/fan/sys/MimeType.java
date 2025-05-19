@@ -87,8 +87,8 @@ public final class MimeType
     return r;
   }
 
-  public static Map parseParams(String s) { return parseParams(s, true); }
-  public static Map parseParams(String s, boolean checked)
+  public static Map<String,String> parseParams(String s) { return parseParams(s, true); }
+  public static Map<String,String> parseParams(String s, boolean checked)
   {
     try
     {
@@ -281,7 +281,7 @@ public final class MimeType
     return subType;
   }
 
-  public Map params()
+  public Map<String,String> params()
   {
     return params;
   }

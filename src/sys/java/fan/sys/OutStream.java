@@ -315,8 +315,8 @@ public class OutStream
     return this;
   }
 
-  public OutStream writeProps(Map props) { return writeProps(props, true); }
-  public OutStream writeProps(Map props, boolean close)
+  public OutStream writeProps(Map<String,String> props) { return writeProps(props, true); }
+  public OutStream writeProps(Map<String,String> props, boolean close)
   {
     Charset origCharset = charset();
     charset(Charset.utf8());
@@ -520,3 +520,4 @@ public class OutStream
   Charset.Encoder charsetEncoder = charset.newEncoder();
   int bitsBuf;
 }
+

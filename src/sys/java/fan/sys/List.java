@@ -914,7 +914,7 @@ public final class List<V>
     return acc;
   }
 
-  public final Map groupBy(Func f)
+  public final Map<Object,List<V>> groupBy(Func f)
   {
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType;
@@ -922,7 +922,7 @@ public final class List<V>
     return groupByInto(acc, f);
   }
 
-  public final Map groupByInto(Map acc, Func f)
+  public final Map<Object,List<V>> groupByInto(Map acc, Func f)
   {
     MapType accType = acc.type();
     if (!(accType.v instanceof ListType)) throw ArgErr.make("Map value type is not list: $accType");

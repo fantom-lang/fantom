@@ -27,12 +27,12 @@ public class Process
     return new Process(new List(Sys.StrType), null);
   }
 
-  public static Process make(List command)
+  public static Process make(List<String> command)
   {
     return new Process(command, null);
   }
 
-  public static Process make(List command, File dir)
+  public static Process make(List<String> command, File dir)
   {
     return new Process(command, dir);
   }
@@ -56,8 +56,8 @@ public class Process
 // Configuration
 //////////////////////////////////////////////////////////////////////////
 
-  public List command() { return command; }
-  public void command(List v) { this.command = v; }
+  public List<String> command() { return command; }
+  public void command(List<String> v) { this.command = v; }
 
   public File dir() { return dir; }
   public void dir(File v)
@@ -68,7 +68,7 @@ public class Process
     this.dir = v;
   }
 
-  public Map env()
+  public Map<String,String> env()
   {
     if (env == null)
     {
@@ -285,3 +285,4 @@ public class Process
   private volatile java.lang.Process proc;
 
 }
+

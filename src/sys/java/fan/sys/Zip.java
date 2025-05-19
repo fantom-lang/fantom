@@ -85,7 +85,7 @@ public final class Zip
     return file;
   }
 
-  public Map contents()
+  public Map<Uri,File> contents()
   {
     if (contents == null)
     {
@@ -95,7 +95,7 @@ public final class Zip
     return contents.ro();
   }
 
-  public static Map contents(ZipFile zipFile)
+  public static Map<Uri,File> contents(ZipFile zipFile)
   {
     Map c = new Map(Sys.UriType, Sys.FileType);
     Enumeration e = zipFile.entries();
@@ -334,3 +334,4 @@ public final class Zip
   int zipOutCount;          // write only
 
 }
+

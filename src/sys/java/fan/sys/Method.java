@@ -72,7 +72,7 @@ public class Method
 
   public Type inheritedReturns() { return inheritedReturns; }
 
-  public List params() { return params.ro(); }
+  public List<Param> params() { return params.ro(); }
 
   public Func func() { return func; }
 
@@ -683,3 +683,4 @@ public class Method
   private int minParams = -1;
 
 }
+

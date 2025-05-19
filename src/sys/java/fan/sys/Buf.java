@@ -292,7 +292,7 @@ public abstract class Buf
   public final Buf printLine() { o().printLine(); return this; }
   public final Buf printLine(Object obj) { o().printLine(obj); return this; }
 
-  public final Buf writeProps(Map props) { o().writeProps(props); return this; }
+  public final Buf writeProps(Map<String,String> props) { o().writeProps(props); return this; }
 
   public final Buf writeObj(Object obj) { o().writeObj(obj); return this; }
   public final Buf writeObj(Object obj, Map opt) { o().writeObj(obj, opt); return this; }
@@ -357,14 +357,14 @@ public abstract class Buf
   public final String readStrToken(Long max) { return i().readStrToken(max); }
   public final String readStrToken(Long max, Func f) { return i().readStrToken(max, f); }
 
-  public final List readAllLines() { return i().readAllLines(); }
+  public final List<String> readAllLines() { return i().readAllLines(); }
 
   public final void eachLine(Func f) { i().eachLine(f); }
 
   public final String readAllStr() { return i().readAllStr(); }
   public final String readAllStr(boolean normalizeNewlines)  { return i().readAllStr(normalizeNewlines); }
 
-  public final Map readProps() { return i().readProps(); }
+  public final Map<String,String> readProps() { return i().readProps(); }
 
   public final Object readObj() { return i().readObj(); }
   public final Object readObj(Map opt) { return i().readObj(opt); }

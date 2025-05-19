@@ -122,7 +122,7 @@ public abstract class Slot
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public List facets() { return facets.list(); }
+  public List<Facet> facets() { return facets.list(); }
   public Facet facet(Type t) { return facets.get(t, true); }
   public Facet facet(Type t, boolean c) { return facets.get(t, c); }
   public final boolean hasFacet(Type t) { return facet(t, false) != null; }
@@ -163,3 +163,4 @@ public abstract class Slot
 
 
 }
+

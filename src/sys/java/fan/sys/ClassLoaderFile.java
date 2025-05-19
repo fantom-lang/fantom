@@ -69,7 +69,7 @@ public class ClassLoaderFile
     return null;
   }
 
-  public List list(Regex pattern)
+  public List<File> list(Regex pattern)
   {
     return new List(Sys.FileType, 0);
   }
@@ -172,3 +172,4 @@ public class ClassLoaderFile
   private long modified;
 
 }
+

@@ -85,7 +85,7 @@ public class ZipEntryFile
     return null;
   }
 
-  public List list(Regex pattern)
+  public List<File> list(Regex pattern)
   {
     return new List(Sys.FileType, 0);
   }
@@ -180,3 +180,4 @@ public class ZipEntryFile
   final java.util.zip.ZipEntry entry;
 
 }
+

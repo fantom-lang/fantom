@@ -48,8 +48,8 @@ public class NullableType
   int flags() { return root.flags(); }
 
   public Type base() { return root.base(); }
-  public List mixins() { return root.mixins(); }
-  public List inheritance() { return root.inheritance(); }
+  public List<Type> mixins() { return root.mixins(); }
+  public List<Type> inheritance() { return root.inheritance(); }
   public boolean is(Type type) { return root.is(type); }
 
   public boolean isVal() { return root.isVal(); }
@@ -62,15 +62,15 @@ public class NullableType
   public boolean isGenericInstance() { return root.isGenericInstance(); }
   public boolean isGenericParameter() { return root.isGenericParameter(); }
   public Type getRawType() { return root.getRawType(); }
-  public Map params() { return root.params(); }
-  public Type parameterize(Map params) { return root.parameterize(params).toNullable(); }
+  public Map<String,Type> params() { return root.params(); }
+  public Type parameterize(Map<String,Type> params) { return root.parameterize(params).toNullable(); }
 
-  public List fields() { return root.fields(); }
-  public List methods() { return root.methods(); }
-  public List slots() { return root.slots(); }
+  public List<Field> fields() { return root.fields(); }
+  public List<Method> methods() { return root.methods(); }
+  public List<Slot> slots() { return root.slots(); }
   public Slot slot(String name, boolean checked) { return root.slot(name, checked); }
 
-  public List facets() { return root.facets(); }
+  public List<Facet> facets() { return root.facets(); }
   public Facet facet(Type t, boolean c) { return root.facet(t, c); }
 
   public String doc() { return root.doc(); }
@@ -87,3 +87,4 @@ public class NullableType
   private Type listOf;
 
 }
+

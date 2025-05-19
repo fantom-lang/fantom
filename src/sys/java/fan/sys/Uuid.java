@@ -134,20 +134,6 @@ public final class Uuid
     s.append(str);
   }
 
-  /*
-  public String format()
-  {
-    DateTime t = created();
-    StringBuilder s = new StringBuilder();
-    s.append(t.toLocale("YYYYMMDD-hhmmss.fffffffff"))
-     .append('-')
-     .append(Long.toHexString((lo >> 48) & 0xFFFFL))
-     .append('-')
-     .append(Long.toHexString(lo & 0xFFFFFFFFFFFFL));
-    return s.toString();
-  }
-  */
-
 //////////////////////////////////////////////////////////////////////////
 // Factory
 //////////////////////////////////////////////////////////////////////////
@@ -261,3 +247,4 @@ public final class Uuid
   private final long lo;
 
 }
+

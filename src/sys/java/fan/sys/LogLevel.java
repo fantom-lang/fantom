@@ -26,7 +26,7 @@ public class LogLevel
 
   static final LogLevel[] array = { debug, info, warn, err, silent };
 
-  public static final List vals = (List)new List(Sys.LogLevelType, array).toImmutable();
+  public static final List<LogLevel> vals = (List)new List(Sys.LogLevelType, array).toImmutable();
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation
@@ -49,3 +49,4 @@ public class LogLevel
   final int ord;
 
 }
+

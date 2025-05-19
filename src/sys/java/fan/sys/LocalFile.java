@@ -243,9 +243,9 @@ public class LocalFile
     return new LocalFile(parent, uriToFile(parent));
   }
 
-  public List list(Regex pattern)      { return doList(pattern, '*'); }
-  public List listFiles(Regex pattern) { return doList(pattern, 'f'); }
-  public List listDir(Regex pattern)   { return doList(pattern, 'd'); }
+  public List<File> list(Regex pattern)      { return doList(pattern, '*'); }
+  public List<File> listFiles(Regex pattern) { return doList(pattern, 'f'); }
+  public List<File> listDir(Regex pattern)   { return doList(pattern, 'd'); }
 
   private List doList(final Regex pattern, int mode)
   {
@@ -563,3 +563,4 @@ public class LocalFile
   final java.io.File file;
 
 }
+

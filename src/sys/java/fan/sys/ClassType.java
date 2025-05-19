@@ -93,9 +93,9 @@ public class ClassType
 // Slots
 //////////////////////////////////////////////////////////////////////////
 
-  public final List fields()  { return reflect().fields.ro(); }
-  public final List methods() { return reflect().methods.ro(); }
-  public final List slots()   { return reflect().slots.ro(); }
+  public final List<Field> fields()  { return reflect().fields.ro(); }
+  public final List<Method> methods() { return reflect().methods.ro(); }
+  public final List<Slot> slots()   { return reflect().slots.ro(); }
 
   public final Slot slot(String name, boolean checked)
   {
@@ -116,9 +116,9 @@ public class ClassType
 
   public Type base() { return base; }
 
-  public List mixins() { return mixins; }
+  public List<Type> mixins() { return mixins; }
 
-  public List inheritance()
+  public List<Type> inheritance()
   {
     if (inheritance == null) inheritance = inheritance(this);
     return inheritance;
@@ -205,7 +205,7 @@ public class ClassType
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public List facets()
+  public List<Facet> facets()
   {
     if (inheritedFacets == null) loadFacets();
     return inheritedFacets .list();

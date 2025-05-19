@@ -24,7 +24,7 @@ public abstract class Func
 
   public abstract long arity();
 
-  public abstract List params();
+  public abstract List<Param> params();
 
   public abstract boolean isImmutable();
 
@@ -429,3 +429,4 @@ public abstract class Func
   static final FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
 
 }
+

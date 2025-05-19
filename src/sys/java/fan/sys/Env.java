@@ -61,13 +61,13 @@ public abstract class Env
 // Virtuals
 //////////////////////////////////////////////////////////////////////////
 
-  public List args() { return parent.args(); }
+  public List<String> args() { return parent.args(); }
 
   public Method mainMethod() { return parent.mainMethod(); }
 
-  public Map vars()  { return parent.vars(); }
+  public Map<String,String> vars()  { return parent.vars(); }
 
-  public Map diagnostics() { return parent.diagnostics(); }
+  public Map<String,Object> diagnostics() { return parent.diagnostics(); }
 
   public void gc() { parent.gc(); }
 
@@ -104,7 +104,7 @@ public abstract class Env
 // Resolution
 //////////////////////////////////////////////////////////////////////////
 
-  public List path()
+  public List<File> path()
   {
     return (List)List.make(Sys.FileType, new File[] { homeDir() }).toImmutable();
   }
@@ -115,7 +115,7 @@ public abstract class Env
     return parent.findFile(uri, checked);
   }
 
-  public List findAllFiles(Uri uri)
+  public List<File> findAllFiles(Uri uri)
   {
     return parent.findAllFiles(uri);
   }
@@ -132,7 +132,7 @@ public abstract class Env
     return file;
   }
 
-  public List findAllPodNames()
+  public List<String> findAllPodNames()
   {
     List acc = new List(Sys.StrType);
     List files = findFile(Uri.fromStr("lib/fan/")).list();
@@ -161,22 +161,22 @@ public abstract class Env
     return scripts.compileJs(file, options);
   }
 
-  public List index(String key)
+  public List<String> index(String key)
   {
     return index.get(key);
   }
 
-  public List indexKeys()
+  public List<String> indexKeys()
   {
     return index.keys();
   }
 
-  public List indexPodNames(String key)
+  public List<String> indexPodNames(String key)
   {
     return index.podNames(key);
   }
 
-  public Map props(Pod pod, Uri uri, Duration maxAge)
+  public Map<String,String> props(Pod pod, Uri uri, Duration maxAge)
   {
     return props.get(pod, uri, maxAge);
   }
@@ -423,3 +423,4 @@ public abstract class Env
   private EnvIndex index = new EnvIndex(this);
   private HashMap javaTypeCache = new HashMap();  // String class name => JavaType
 }
+

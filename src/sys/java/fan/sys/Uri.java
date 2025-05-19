@@ -65,7 +65,7 @@ public final class Uri
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public static Map decodeQuery(String s)
+  public static Map<String,String> decodeQuery(String s)
   {
     try
     {
@@ -81,7 +81,7 @@ public final class Uri
     }
   }
 
-  public static String encodeQuery(Map map)
+  public static String encodeQuery(Map<String,String> map)
   {
     StringBuilder buf = new StringBuilder(256);
     java.util.Iterator it = map.keysIterator();
@@ -913,7 +913,7 @@ public final class Uri
   }
 
   public final String path(int depth) { return (String)path.get(depth); }
-  public List path()
+  public List<String> path()
   {
     return path;
   }
@@ -980,7 +980,7 @@ public final class Uri
     return MimeType.forExt(ext());
   }
 
-  public Map query()
+  public Map<String,String> query()
   {
     return query;
   }
@@ -1304,7 +1304,7 @@ public final class Uri
     return new Uri(t);
   }
 
-  public Uri plusQuery(Map q)
+  public Uri plusQuery(Map<String,String> q)
   {
     if (q == null || q.isEmpty()) return this;
 
@@ -1593,3 +1593,4 @@ public final class Uri
   String encoded;
 
 }
+

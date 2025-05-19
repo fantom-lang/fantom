@@ -199,7 +199,7 @@ public final class Range
     return acc;
   }
 
-  public final List toList()
+  public final List<Long> toList()
   {
     long start = this.start;
     long end = this.end;
@@ -296,3 +296,4 @@ public final class Range
   private final long start, end;
   private final boolean exclusive;
 }
+

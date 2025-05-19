@@ -33,12 +33,12 @@ public final class TimeZone
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
-  public static List listNames()
+  public static List<String> listNames()
   {
     return new List(Sys.StrType, indexNames).ro();
   }
 
-  public static List listFullNames()
+  public static List<String> listFullNames()
   {
     List list = new List(Sys.StrType);
     for (int i=0; i<indexNames.length; ++i)

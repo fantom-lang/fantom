@@ -62,7 +62,7 @@ public final class Version
     return new Version(segments);
   }
 
-  public static Version make(List segments)
+  public static Version make(List<Long> segments)
   {
     boolean valid = segments.sz() > 0;
     for (int i=0; i<segments.sz(); ++i)
@@ -139,7 +139,7 @@ public final class Version
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public List segments()
+  public List<Long> segments()
   {
     return segments;
   }
@@ -182,3 +182,4 @@ public final class Version
   private String str;
 
 }
+

@@ -23,7 +23,7 @@ public class Service$
   private static HashMap byService = new HashMap();  // Service:State
   private static HashMap byType = new HashMap();     // Type:Node
 
-  public static List list()
+  public static List<Service> list()
   {
     synchronized (lock)
     {
@@ -272,3 +272,4 @@ public class Service$
   }
 
 }
+

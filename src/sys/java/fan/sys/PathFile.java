@@ -106,9 +106,9 @@ public class PathFile
     return new PathFile(parentPath);
   }
 
-  public List list(Regex pattern)      { return doList(pattern, '*'); }
-  public List listFiles(Regex pattern) { return doList(pattern, 'f'); }
-  public List listDir(Regex pattern)   { return doList(pattern, 'd'); }
+  public List<File> list(Regex pattern)      { return doList(pattern, '*'); }
+  public List<File> listFiles(Regex pattern) { return doList(pattern, 'f'); }
+  public List<File> listDir(Regex pattern)   { return doList(pattern, 'd'); }
 
   private List doList(final Regex pattern, final int mode)
   {
@@ -348,3 +348,4 @@ public class PathFile
     }
   }
 }
+

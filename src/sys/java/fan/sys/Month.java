@@ -33,7 +33,7 @@ public final class Month
     jul, aug, sep, oct, nov, dec
   };
 
-  public static final List vals = (List)new List(Sys.MonthType, array).toImmutable();
+  public static final List<Month> vals = (List)new List(Sys.MonthType, array).toImmutable();
 
   public static Month fromOrdinal(int ord) { return array[ord]; }
 
@@ -102,3 +102,4 @@ public final class Month
   final String localeAbbrKey;
   final String localeFullKey;
 }
+

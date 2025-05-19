@@ -34,7 +34,7 @@ public abstract class File
     return new LocalFile(new java.io.File(osPath));
   }
 
-  public static List osRoots()
+  public static List<File> osRoots()
   {
     List list = new List(Sys.FileType);
     java.io.File[] roots = java.io.File.listRoots();
@@ -108,7 +108,7 @@ public abstract class File
 
   public final boolean isDir() { return uri.isDir();   }
 
-  public final List path() { return uri.path(); }
+  public final List<String> path() { return uri.path(); }
 
   public final String pathStr() { return uri.pathStr(); }
 
@@ -150,11 +150,11 @@ public abstract class File
 
   public abstract File parent();
 
-  public List list() { return list(null); }
-  public abstract List list(Regex pattern);
+  public List<File> list() { return list(null); }
+  public abstract List<File> list(Regex pattern);
 
-  public List listDirs() { return listDirs(null); }
-  public List listDirs(Regex pattern)
+  public List<File> listDirs() { return listDirs(null); }
+  public List<File> listDirs(Regex pattern)
   {
     List list = list(pattern);
     if (list.isEmpty()) return list;
@@ -167,8 +167,8 @@ public abstract class File
     return acc;
   }
 
-  public List listFiles() { return listFiles(null); }
-  public List listFiles(Regex pattern)
+  public List<File> listFiles() { return listFiles(null); }
+  public List<File> listFiles(Regex pattern)
   {
     List list = list(pattern);
     if (list.isEmpty()) return list;
@@ -440,7 +440,7 @@ public abstract class File
     return in(FanInt.Chunk).readAllBuf();
   }
 
-  public final List readAllLines()
+  public final List<String> readAllLines()
   {
     return in(FanInt.Chunk).readAllLines();
   }
@@ -456,12 +456,12 @@ public abstract class File
     return in(FanInt.Chunk).readAllStr(normalizeNewlines);
   }
 
-  public final Map readProps()
+  public final Map<String,String> readProps()
   {
     return in(FanInt.Chunk).readProps();
   }
 
-  public final void writeProps(Map props)
+  public final void writeProps(Map<String,String> props)
   {
     out(false, FanInt.Chunk).writeProps(props, true);
   }
@@ -545,3 +545,4 @@ public abstract class File
 
   Uri uri;
 }
+

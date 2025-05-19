@@ -24,7 +24,7 @@ public final class Weekday
 
   static final Weekday[] array = { sun, mon, tue, wed, thu, fri, sat };
 
-  public static final List vals = (List)new List(Sys.WeekdayType, array).toImmutable();
+  public static final List<Weekday> vals = (List)new List(Sys.WeekdayType, array).toImmutable();
 
   private Weekday(int ordinal, String name)
   {
@@ -81,7 +81,7 @@ public final class Weekday
     return fromStr(Env.cur().locale(Sys.sysPod, "weekdayStart", "sun", locale));
   }
 
-  public static List localeVals()
+  public static List<Weekday> localeVals()
   {
     Weekday start = localeStartOfWeek();
     List list = localeVals[start.ord];
@@ -100,3 +100,4 @@ public final class Weekday
   final String localeAbbrKey;
   final String localeFullKey;
 }
+

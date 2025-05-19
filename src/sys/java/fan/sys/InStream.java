@@ -574,7 +574,7 @@ public class InStream
     return buf.toString();
   }
 
-  public List readAllLines()
+  public List<String> readAllLines()
   {
     try
     {
@@ -656,8 +656,8 @@ public class InStream
     return new ObjDecoder(this, options).readObj();
   }
 
-  public Map readProps() { return readProps(false); }
-  public Map readPropsListVals() { return readProps(true); }
+  public Map<String,String> readProps() { return readProps(false); }
+  public Map<String,String> readPropsListVals() { return readProps(true); }
 
   private Map readProps(boolean listVals)  // listVals is Str:Str[]
   {
@@ -879,3 +879,4 @@ public class InStream
   int bitsBuf;
 
 }
+

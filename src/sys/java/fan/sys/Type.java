@@ -163,13 +163,13 @@ public abstract class Type
     return isGenericType();
   }
 
-  public Map params()
+  public Map<String,Type> params()
   {
     if (noParams == null) noParams = Sys.emptyStrTypeMap;
     return (Map)noParams;
   }
 
-  public Type parameterize(Map params)
+  public Type parameterize(Map<String,Type> params)
   {
     if (this == Sys.ListType)
     {
@@ -220,9 +220,9 @@ public abstract class Type
 // Slots
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract List fields();
-  public abstract List methods();
-  public abstract List slots();
+  public abstract List<Field> fields();
+  public abstract List<Method> methods();
+  public abstract List<Slot> slots();
 
   public final Field field(String name) { return field(name, true); }
   public Field field(String name, boolean checked) { return (Field)slot(name, checked); }
@@ -262,9 +262,9 @@ public abstract class Type
 
   public abstract Type base();
 
-  public abstract List mixins();
+  public abstract List<Type> mixins();
 
-  public abstract List inheritance();
+  public abstract List<Type> inheritance();
 
   public final boolean fits(Type type) { return toNonNullable().is(type.toNonNullable()); }
   public abstract boolean is(Type type);
@@ -299,7 +299,7 @@ public abstract class Type
 // Facets
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract List facets();
+  public abstract List<Facet> facets();
 
   public final Facet facet(Type t) { return facet(t, true); }
   public abstract Facet facet(Type t, boolean c);
@@ -361,3 +361,4 @@ public abstract class Type
   List emptyList;  // cached value of emptyList()
 
 }
+

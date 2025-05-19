@@ -19,7 +19,7 @@ public final class Endian
 
   static final Endian[] array = { big, little };
 
-  public static final List vals = (List)new List(Sys.EndianType, array).toImmutable();
+  public static final List<Endian> vals = (List)new List(Sys.EndianType, array).toImmutable();
 
   private Endian(int ordinal, String name)
   {
@@ -35,3 +35,4 @@ public final class Endian
   public Type typeof() { return Sys.EndianType; }
 
 }
+

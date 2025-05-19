@@ -32,7 +32,7 @@ public final class Unit
     }
   }
 
-  public static List list()
+  public static List<Unit> list()
   {
     synchronized (list)
     {
@@ -40,12 +40,12 @@ public final class Unit
     }
   }
 
-  public static List quantities()
+  public static List<String> quantities()
   {
     return quantityNames;
   }
 
-  public static List quantity(String quantity)
+  public static List<Unit> quantity(String quantity)
   {
     List list = (List)quantities.get(quantity);
     if (list == null) throw Err.make("Unknown unit database quantity: " + quantity);
@@ -248,7 +248,7 @@ public final class Unit
 
   public final String toStr() { return (String)ids.last(); }
 
-  public final List ids() { return ids; }
+  public final List<String> ids() { return ids; }
 
   public final String name() { return (String)ids.first(); }
 
