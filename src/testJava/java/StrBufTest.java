@@ -5,7 +5,7 @@
 // History:
 //   28 Sep 05  Brian Frank  Creation
 //
-package fanx.test;
+package fan.testJava;
 
 import fan.sys.*;
 
@@ -72,3 +72,4 @@ public class StrBufTest
   }
 
 }
+

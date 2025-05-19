@@ -283,11 +283,16 @@ class MiscTest : JavaTest
     verifySame(obj->a("foo"), "foo")
     verifySame(obj->b("foo"), "java.lang.String")
     verifyEq(obj->c(obj), obj.hash)
-    verifySame(obj->d(obj).toStr, "java.lang.IllegalMonitorStateException")
-    verifySame(obj->e(obj).toStr, "java.lang.IllegalMonitorStateException")
-    verifySame(obj->f(obj).toStr, "java.lang.IllegalMonitorStateException")
-    verifySame(obj->g(obj).toStr, "java.lang.IllegalMonitorStateException")
-    verifySame(obj->h(obj).toStr, "java.lang.IllegalMonitorStateException")
+    verifyMonitorErr(obj->d(obj))
+    verifyMonitorErr(obj->e(obj))
+    verifyMonitorErr(obj->f(obj))
+    verifyMonitorErr(obj->g(obj))
+    verifyMonitorErr(obj->h(obj))
+  }
+
+  Void verifyMonitorErr(Obj x)
+  {
+    verifyEq(x, "java.lang.IllegalMonitorStateException: current thread is not owner")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -317,3 +322,4 @@ class MiscTest : JavaTest
   }
 
 }
+

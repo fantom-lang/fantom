@@ -5,7 +5,7 @@
 // History:
 //   15 Sep 05  Brian Frank  Creation
 //
-package fanx.test;
+package fan.testJava;
 
 import java.io.*;
 import java.util.*;
@@ -177,3 +177,4 @@ public class FileUtilTest
 
 
 }
+

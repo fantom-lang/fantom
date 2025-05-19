@@ -12,3 +12,4 @@
 abstract class JavaTest : testCompiler::CompilerTest
 {
 }
+

@@ -5,7 +5,7 @@
 // History:
 //   3 Sep 05  Brian Frank  Creation
 //
-package fanx.test;
+package fan.testJava;
 
 import java.io.*;
 import java.io.File;
@@ -426,3 +426,4 @@ public class TokenizerTest
   }
 
 }
+

@@ -5,7 +5,7 @@
 // History:
 //   3 Sep 05  Brian Frank  Creation
 //
-package fanx.test;
+package fan.testJava;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +26,12 @@ public abstract class Test
   public static String[] tests =
   {
     "CharsetTest",
+    "DateTimeTest",
     "EmitTest",
     "FileUtilTest",
     "StrBufTest",
     "StrUtilTest",
     "TokenizerTest",
-    "DateTimeTest",
   };
 
 //////////////////////////////////////////////////////////////////////////
@@ -278,7 +278,7 @@ public abstract class Test
   {
     try
     {
-      Class cls = Class.forName("fanx.test." + testName);
+      Class cls = Class.forName("fan.testJava." + testName);
       Test test = (Test)cls.newInstance();
       test.testName = testName;
       if (test.skip())
@@ -336,3 +336,4 @@ public abstract class Test
   private String testName;
 
 }
+

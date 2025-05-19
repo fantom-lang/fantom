@@ -5,7 +5,7 @@
 // History:
 //   15 Sep 05  Brian Frank  Creation
 //
-package fanx.test;
+package fan.testJava;
 
 import fan.sys.*;
 import java.io.*;
@@ -161,3 +161,4 @@ public class CharsetTest
   }
 
 }
+
