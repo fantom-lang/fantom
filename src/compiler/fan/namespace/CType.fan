@@ -461,6 +461,7 @@ mixin CType : CNode
   Bool isDecimal() { qname == "sys::Decimal" }
   Bool isRange()   { qname == "sys::Range" }
   Bool isStr()     { qname == "sys::Str" }
+  Bool isNum()     { qname == "sys::Num" }
   Bool isThis()    { qname == "sys::This" }
   Bool isType()    { qname == "sys::Type" }
   Bool isVoid()    { qname == "sys::Void" }
