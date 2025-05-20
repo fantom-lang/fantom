@@ -844,6 +844,14 @@ class CallExpr : NameExpr
 
   virtual Bool isCompare() { false }
 
+  // get non-nullable target
+  Expr targetx()
+  {
+    if (target != null) return target
+    if (method.isStatic || method.isCtor) return StaticTargetExpr(loc, method.parent)
+    throw Err("Call missing target: $this")
+  }
+
   override Void walkChildren(Visitor v)
   {
     target = walkExpr(v, target)

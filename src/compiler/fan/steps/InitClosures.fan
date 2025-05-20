@@ -138,7 +138,7 @@ class InitClosures : CompilerStep
 
     // method def
     m := MethodDef(loc, parent)
-    m.flags = FConst.Override + FConst.Synthetic
+    m.flags = FConst.Public + FConst.Override + FConst.Synthetic
     m.ret   = ns.objType.toNullable
     m.code  = Block(loc)
 
@@ -238,3 +238,4 @@ class InitClosures : CompilerStep
   MethodDef? doCall           // R doCall(A a, ...) { closure.code }
 
 }
+
