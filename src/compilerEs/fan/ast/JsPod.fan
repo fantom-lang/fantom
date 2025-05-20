@@ -177,7 +177,7 @@ class JsPod : JsNode
           ? "xp"
           : "sys.List.make(sys.Param.type\$,[${params}])"
         facets := toFacets(m.facets)
-        js.w(".am\$('${m.name}',${m.flags},'${m.ret.signature}',${paramList},{${facets}})")
+        js.w(".am\$('${m.name}',${m.flags},'${m.returns.signature}',${paramList},{${facets}})")
       }
       js.wl(";")
     }

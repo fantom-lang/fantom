@@ -93,10 +93,10 @@ class InitClosures : CompilerStep
     code.stmts.add(ReturnStmt.makeSynthetic(loc))
 
     ctor = MethodDef(loc, cls)
-    ctor.flags = FConst.Internal + FConst.Ctor + FConst.Synthetic
-    ctor.name = "make"
-    ctor.ret  = ns.voidType
-    ctor.code = code
+    ctor.flags   = FConst.Internal + FConst.Ctor + FConst.Synthetic
+    ctor.name    = "make"
+    ctor.returns = ns.voidType
+    ctor.code    = code
     cls.addSlot(ctor)
   }
 
@@ -107,10 +107,10 @@ class InitClosures : CompilerStep
   private Void genDoCall()
   {
     doCall = MethodDef(loc, cls)
-    doCall.name  = "doCall"
-    doCall.flags = FConst.Internal + FConst.Synthetic
-    doCall.code  = closure.code
-    doCall.ret = signature.ret
+    doCall.name    = "doCall"
+    doCall.flags   = FConst.Internal + FConst.Synthetic
+    doCall.code    = closure.code
+    doCall.returns = signature.returns
     doCall.paramDefs = signature.toParamDefs(loc)
     closure.doCall = doCall
     cls.addSlot(doCall)
@@ -138,9 +138,9 @@ class InitClosures : CompilerStep
 
     // method def
     m := MethodDef(loc, parent)
-    m.flags = FConst.Public + FConst.Override + FConst.Synthetic
-    m.ret   = ns.objType.toNullable
-    m.code  = Block(loc)
+    m.flags   = FConst.Public + FConst.Override + FConst.Synthetic
+    m.returns = ns.objType.toNullable
+    m.code    = Block(loc)
 
     // signature:
     //   callList(List)             // if > MaxIndirectParams
@@ -195,7 +195,7 @@ class InitClosures : CompilerStep
     // return:
     //   doCall; return null;  // if doCall() is void
     //   return doCall         // if doCall() non-void
-    if (signature.ret.isVoid)
+    if (signature.returns.isVoid)
     {
       m.code.add(c.toStmt)
       m.code.add(ReturnStmt.makeSynthetic(loc, LiteralExpr.makeNull(loc, ns)))

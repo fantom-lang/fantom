@@ -183,9 +183,9 @@ class Normalize : CompilerStep
       return
 
     // error checking
-    if (m.ret.isVoid) err("Once method '$m.name' cannot return Void", loc)
+    if (m.returns.isVoid) err("Once method '$m.name' cannot return Void", loc)
     if (!m.params.isEmpty) err("Once method '$m.name' cannot have parameters", loc)
-    if (m.ret.isForeign) err("Once method cannot be used with FFI type '$m.ret'", loc)
+    if (m.returns.isForeign) err("Once method cannot be used with FFI type '$m.returns'", loc)
 
     // field flags
     fieldFlags  := FConst.Private + FConst.Storage + FConst.Synthetic + FConst.Once
@@ -212,7 +212,7 @@ class Normalize : CompilerStep
     x := MethodDef(loc, curType)
     x.flags        = methodFlags
     x.name         = m.name + "\$Once"
-    x.ret          = m.returns
+    x.returns      = m.returns
     x.inheritedRet = null
     x.paramDefs    = m.paramDefs
     x.vars         = m.vars

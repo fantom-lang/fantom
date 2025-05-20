@@ -308,7 +308,7 @@ class JavaBridge : CBridge
     // will impliclty do all the return coercions
     if (isOverrideInferredType(base.returns, def.returns))
     {
-      def.ret = def.inheritedRet = base.returns
+      def.returns = def.inheritedRet = base.returns
     }
 
     // if any of the parameters is a primitive or Java array
@@ -650,7 +650,7 @@ class JavaBridge : CBridge
     if (funcType.params.size > method.params.size) return false
 
     // check that func return type fits method return
-    retOk := method.returns.isVoid || fits(funcType.ret, method.returns)
+    retOk := method.returns.isVoid || fits(funcType.returns, method.returns)
     if (!retOk) return false
 
     // check all the method parameters fit the function parameters
@@ -693,9 +693,9 @@ class JavaBridge : CBridge
 
     // generate FuncWrapper.make constructor
     ctor := MethodDef(loc, cls, "make", FConst.Internal + FConst.Ctor + FConst.Synthetic)
-    ctor.ret  = ns.voidType
+    ctor.returns   = ns.voidType
     ctor.paramDefs = [ParamDef(loc, funcType, "f")]
-    ctor.code = Block.make(loc)
+    ctor.code      = Block.make(loc)
     ctor.code.stmts.add(BinaryExpr.makeAssign(
       FieldExpr(loc, ThisExpr(loc), field),
       UnknownVarExpr(loc, null, "f")).toStmt)
@@ -704,9 +704,9 @@ class JavaBridge : CBridge
 
     // generate FuncWrapper override of abstract method
     over := MethodDef(loc, cls, method.name, FConst.Public + FConst.Override + FConst.Synthetic)
-    over.ret = method.returns
+    over.returns   = method.returns
     over.paramDefs = ParamDef[,]
-    over.code = Block.make(loc)
+    over.code      = Block.make(loc)
     callArity := "call"
     call := CallExpr.makeWithMethod(loc, FieldExpr(loc, ThisExpr(loc), field), funcType.method(callArity))
     method.params.each |CParam param, Int i|

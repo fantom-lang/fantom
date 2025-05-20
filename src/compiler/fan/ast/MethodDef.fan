@@ -20,20 +20,20 @@ class MethodDef : SlotDef, CMethod
   public static MethodDef makeStaticInit(Loc loc, TypeDef parent, Block? block)
   {
     def := make(loc, parent)
-    def.name   = "static\$init"
-    def.flags  = FConst.Private + FConst.Static + FConst.Synthetic
-    def.ret    = parent.ns.voidType
-    def.code   = block
+    def.name    = "static\$init"
+    def.flags   = FConst.Private + FConst.Static + FConst.Synthetic
+    def.returns = parent.ns.voidType
+    def.code    = block
     return def;
   }
 
   public static MethodDef makeInstanceInit(Loc loc, TypeDef parent, Block? block)
   {
     def := make(loc, parent)
-    def.name   = "instance\$init\$$parent.pod.name\$$parent.name";
-    def.flags  = FConst.Private + FConst.Synthetic
-    def.ret    = parent.ns.voidType
-    def.code   = block
+    def.name    = "instance\$init\$$parent.pod.name\$$parent.name";
+    def.flags   = FConst.Private + FConst.Synthetic
+    def.returns = parent.ns.voidType
+    def.code    = block
     return def;
   }
 
@@ -42,7 +42,7 @@ class MethodDef : SlotDef, CMethod
   {
     this.name = name
     this.flags = flags
-    this.ret = parent.ns.error
+    this.returns = parent.ns.error
     paramDefs = ParamDef[,]
     vars = MethodVar[,]
   }
@@ -134,14 +134,20 @@ class MethodDef : SlotDef, CMethod
 
   override Str signature() { qname + "(" + params.join(",") + ")" }
 
-  override CType returns() { ret }
+  override CType returns
+
+  @Deprecated CType ret
+  {
+    get { returns }
+    set { returns = it }
+  }
 
   override CType inheritedReturns()
   {
     if (inheritedRet != null)
       return inheritedRet
     else
-      return ret
+      return returns
   }
 
   override CParam[] params() { paramDefs }
@@ -174,7 +180,7 @@ class MethodDef : SlotDef, CMethod
   override Void print(AstWriter out)
   {
     printFacets(out)
-    out.flags(flags).w(ret).w(" ").w(name).w("(")
+    out.flags(flags).w(returns).w(" ").w(name).w("(")
     paramDefs.each |ParamDef p, Int i|
     {
       if (i > 0) out.w(", ")
@@ -192,8 +198,7 @@ class MethodDef : SlotDef, CMethod
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  CType ret              // return type
-  CType? inheritedRet    // used for original return if covariant
+  CType? inheritedRet   // used for original return if covariant
   ParamDef[] paramDefs   // parameter definitions
   Block? code            // code block
   CallExpr? ctorChain    // constructor chain for this/super ctor

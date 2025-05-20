@@ -438,9 +438,9 @@ class ClosureVars : CompilerStep
 
     // generate constructor:  make(T v) { this.val = v }
     ctor := MethodDef(loc, w)
-    ctor.flags  = FConst.Ctor + FConst.Internal + FConst.Synthetic
-    ctor.name   = "make"
-    ctor.ret    = cs.ns.voidType
+    ctor.flags   = FConst.Ctor + FConst.Internal + FConst.Synthetic
+    ctor.name    = "make"
+    ctor.returns = cs.ns.voidType
     param := ParamDef(loc, ctype, "v")
     pvar  := MethodVar.makeForParam(ctor, 1, param, param.type)
     ctor.params.add(param)

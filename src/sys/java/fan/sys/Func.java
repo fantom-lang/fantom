@@ -286,6 +286,71 @@ public abstract class Func
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Support for SAM function interfaces by Java transpiler
+//////////////////////////////////////////////////////////////////////////
+
+  public static abstract class Sam0 extends Indirect1
+  {
+    private static final FuncType myFuncType = samFuncType(0);
+    public Sam0() { super(myFuncType); }
+  }
+
+  public static abstract class Sam1 extends Indirect1
+  {
+    private static final FuncType myFuncType = samFuncType(1);
+    public Sam1() { super(myFuncType); }
+  }
+
+  public static abstract class Sam2 extends Indirect2
+  {
+    private static final FuncType myFuncType =  samFuncType(2);
+    public Sam2() { super(myFuncType); }
+  }
+
+  public static abstract class Sam3 extends Indirect3
+  {
+    private static final FuncType myFuncType =  samFuncType(3);
+    public Sam3() { super(myFuncType); }
+  }
+
+  public static abstract class Sam4 extends Indirect4
+  {
+    private static final FuncType myFuncType =  samFuncType(4);
+    public Sam4() { super(myFuncType); }
+  }
+
+  public static abstract class Sam5 extends Indirect4
+  {
+    private static final FuncType myFuncType =  samFuncType(5);
+    public Sam5() { super(myFuncType); }
+  }
+
+  public static abstract class Sam6 extends Indirect6
+  {
+    private static final FuncType myFuncType =  samFuncType(6);
+    public Sam6() { super(myFuncType); }
+  }
+
+  public static abstract class Sam7 extends Indirect7
+  {
+    private static final FuncType myFuncType =  samFuncType(6);
+    public Sam7() { super(myFuncType); }
+  }
+
+  public static abstract class Sam8 extends Indirect8
+  {
+    private static final FuncType myFuncType =  samFuncType(8);
+    public Sam8() { super(myFuncType); }
+  }
+
+  static FuncType samFuncType(int size)
+  {
+    Type[] params = new Type[size];
+    for (int i=0; i<size; ++i) params[i] = Sys.ObjType.toNullable();
+    return new FuncType(params, Sys.ObjType.toNullable());
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Retype
 //////////////////////////////////////////////////////////////////////////
 

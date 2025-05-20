@@ -1550,9 +1550,9 @@ class ClosureExpr : Expr
 
       // update return, we might have to translate an single
       // expression statement into a return statement
-      if (doCall.ret.isVoid && !t.ret.isVoid)
+      if (doCall.returns.isVoid && !t.returns.isVoid)
       {
-        doCall.ret = t.ret
+        doCall.returns = t.returns
         collapseExprAndReturn(doCall)
         collapseExprAndReturn(call)
       }

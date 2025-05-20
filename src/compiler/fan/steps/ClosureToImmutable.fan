@@ -108,10 +108,10 @@ class ClosureToImmutable : CompilerStep
   {
     loc := cls.loc
     m := MethodDef(loc, cls)
-    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
-    m.name = "isImmutable"
-    m.ret  = ns.boolType
-    m.code = Block(loc)
+    m.flags   = FConst.Public + FConst.Synthetic + FConst.Override
+    m.name    = "isImmutable"
+    m.returns = ns.boolType
+    m.code    = Block(loc)
     m.code.stmts.add(ReturnStmt.makeSynthetic(loc, result))
     cls.addSlot(m)
   }
@@ -206,10 +206,10 @@ class ClosureToImmutable : CompilerStep
   {
     loc := cls.loc
     m := MethodDef(loc, cls)
-    m.flags = FConst.Public + FConst.Synthetic + FConst.Override
-    m.name = "toImmutable"
-    m.ret  = ns.objType
-    m.code = Block(loc)
+    m.flags   = FConst.Public + FConst.Synthetic + FConst.Override
+    m.name    = "toImmutable"
+    m.returns = ns.objType
+    m.code    = Block(loc)
     cls.addSlot(m)
     return m
   }

@@ -112,7 +112,7 @@ abstract class GenericType : CType
   private CType parameterizeFuncType(FuncType t)
   {
     CType[] params := t.params.map |CType p->CType| { parameterize(p) }
-    ret := parameterize(t.ret)
+    ret := parameterize(t.returns)
     return FuncType(params, t.names, ret)
   }
 
@@ -251,13 +251,13 @@ class MapType : GenericType
 **
 class FuncType : GenericType
 {
-  new make(CType[] params, Str[] names, CType ret)
-    : super(ret.ns.funcType)
+  new make(CType[] params, Str[] names, CType returns)
+    : super(returns.ns.funcType)
   {
-    this.params = params
-    this.names  = names
-    this.ret    = ret
-    this.isGenericParameter = ret.isGenericParameter
+    this.params  = params
+    this.names   = names
+    this.returns = returns
+    this.isGenericParameter = returns.isGenericParameter
 
     s := StrBuf.make.add("|")
     params.each |CType p, Int i|
@@ -265,7 +265,7 @@ class FuncType : GenericType
       isGenericParameter = isGenericParameter.or(p.isGenericParameter)
       if (i > 0) s.add(","); s.add(p.signature)
     }
-    s.add("->").add(ret.signature).add("|")
+    s.add("->").add(returns.signature).add("|")
     this.signature = s.toStr
   }
 
@@ -278,7 +278,7 @@ class FuncType : GenericType
 
   override Int flags()
   {
-    allPublic := ret.isPublic && params.all |CType p->Bool| { p.isPublic }
+    allPublic := returns.isPublic && params.all |CType p->Bool| { p.isPublic }
     return allPublic ? FConst.Public : FConst.Internal
   }
 
@@ -294,7 +294,7 @@ class FuncType : GenericType
     if (that == null) return false
 
     // match return type (if void is needed, anything matches)
-    if (!that.ret.isVoid && !ret.fits(that.ret)) return false
+    if (!that.returns.isVoid && !returns.fits(that.returns)) return false
 
     // match params - it is ok for me to have less than
     // the type params (if I want to ignore them), but I
@@ -313,7 +313,7 @@ class FuncType : GenericType
   {
     if (num == params.size) return this
     if (num > params.size) throw Err("Cannot increase arity $this")
-    return make(params[0..<num], names[0..<num], ret)
+    return make(params[0..<num], names[0..<num], returns)
   }
 
   FuncType mostSpecific(FuncType b)
@@ -321,8 +321,8 @@ class FuncType : GenericType
     a := this
     if (a.arity != b.arity) throw Err("Different arities: $a / $b")
     params := a.params.map |p, i| { toMostSpecific(p, b.params[i]) }
-    ret := toMostSpecific(a.ret, b.ret)
-    return make(params, b.names, ret)
+    returns := toMostSpecific(a.returns, b.returns)
+    return make(params, b.names, returns)
   }
 
   static CType toMostSpecific(CType a, CType b)
@@ -354,7 +354,7 @@ class FuncType : GenericType
 
     switch (ch)
     {
-      case 'R': return ret
+      case 'R': return returns
       default:  throw Err(ch.toChar)
     }
   }
@@ -364,7 +364,7 @@ class FuncType : GenericType
   **
   Bool usesThis()
   {
-    return ret.isThis || params.any |CType p->Bool| { p.isThis }
+    return returns.isThis || params.any |CType p->Bool| { p.isThis }
   }
 
   **
@@ -374,21 +374,23 @@ class FuncType : GenericType
   {
     if (!usesThis) return this
     f := |CType t->CType| { t.isThis ? thisType : t }
-    return FuncType(params.map(f), names, f(ret))
+    return FuncType(params.map(f), names, f(returns))
   }
 
   override Bool isValid()
   {
-    (ret.isVoid || ret.isValid) && params.all |CType p->Bool| { p.isValid }
+    (returns.isVoid || returns.isValid) && params.all |CType p->Bool| { p.isValid }
   }
 
   CType[] params { private set } // a, b, c ...
   Str[] names    { private set } // parameter names
-  CType ret      { private set } // return type
+  CType returns { private set } // return type
   Bool unnamed                   // were any names auto-generated
   override const Str signature   // |a,b..n->r|
   override const Bool isGenericParameter
   Bool inferredSignature   // were one or more parameters inferred
+
+  @Deprecated CType ret() { returns }
 }
 
 **************************************************************************

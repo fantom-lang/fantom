@@ -536,9 +536,9 @@ public class Parser : CompilerSupport
     loc := f.loc
     get := MethodDef(loc, f.parentDef)
     get.accessorFor = f
-    get.flags = f.flags.or(FConst.Getter)
-    get.name  = f.name
-    get.ret   = f.fieldType
+    get.flags   = f.flags.or(FConst.Getter)
+    get.name    = f.name
+    get.returns = f.fieldType
     f.get = get
   }
 
@@ -548,9 +548,9 @@ public class Parser : CompilerSupport
     loc := f.loc
     set := MethodDef(loc, f.parentDef)
     set.accessorFor = f
-    set.flags = f.flags.or(FConst.Setter)
-    set.name  = f.name
-    set.ret   = ns.voidType
+    set.flags   = f.flags.or(FConst.Setter)
+    set.name    = f.name
+    set.returns = ns.voidType
     set.params.add(ParamDef(loc, f.fieldType, "it"))
     f.set = set
   }
@@ -649,11 +649,11 @@ public class Parser : CompilerSupport
   private MethodDef methodDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
     method := MethodDef(loc, parent)
-    method.docDef = doc
-    method.facets = facets
-    method.flags  = flags
-    method.ret    = ret
-    method.name   = name
+    method.docDef  = doc
+    method.facets  = facets
+    method.flags   = flags
+    method.returns = ret
+    method.name    = name
 
     // if This is returned, then we configure inheritedRet
     // right off the bat (this is actual signature we will use)

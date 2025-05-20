@@ -8,6 +8,10 @@
 
 *Build 1.0.82 (working)*
 - Java make List/Map generic types
+- Compiler: rename CParam.paramType to type
+- Compiler: rename CParam.returnType to returns
+- Compiler: rename MethodDef.ret to returns
+- Compiler: rename FuncType.ret to returns
 - Win.devicePixelRatio
 - Stroke.scale
 - Date convenience methods

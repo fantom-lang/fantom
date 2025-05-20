@@ -20,7 +20,7 @@ class JsMethod : JsSlot
     this.isGetter   = m.isGetter
     this.isSetter   = m.isSetter
     this.params     = m.params.map |CParam p->JsMethodParam| { JsMethodParam(s, p) }
-    this.ret        = JsTypeRef(s, m.ret, m.loc)
+    this.ret        = JsTypeRef(s, m.returns, m.loc)
     this.hasClosure = ClosureFinder(m).exists
     // this.doc        = m.doc?.lines?.join("\n")
     if (m.ctorChain != null) this.ctorChain = JsExpr.makeFor(s, m.ctorChain)

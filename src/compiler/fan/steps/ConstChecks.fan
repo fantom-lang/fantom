@@ -171,10 +171,10 @@ class ConstChecks : CompilerStep
 
     // create checkFields method
     m := MethodDef(loc, t)
-    m.flags = FConst.Private.or(FConst.Synthetic)
-    m.name  = "checkFields\$" + t.name
-    m.ret   = ns.voidType
-    m.code  = block
+    m.flags   = FConst.Private.or(FConst.Synthetic)
+    m.name    = "checkFields\$" + t.name
+    m.returns = ns.voidType
+    m.code    = block
     t.addSlot(m)
     return m
   }
@@ -186,3 +186,4 @@ class ConstChecks : CompilerStep
   MethodDef? curCtor
   MethodDef? fieldCheck
 }
+

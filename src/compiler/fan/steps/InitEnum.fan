@@ -95,10 +95,10 @@ class InitEnum : CompilerStep
     if (m == null)
     {
       m = MethodDef(curType.loc, curType)
-      m.name = "make"
-      m.flags = FConst.Ctor + FConst.Private + FConst.Synthetic
-      m.ret = TypeRef(curType.loc, ns.voidType)
-      m.code = Block(curType.loc)
+      m.name    = "make"
+      m.flags   = FConst.Ctor + FConst.Private + FConst.Synthetic
+      m.returns = TypeRef(curType.loc, ns.voidType)
+      m.code    = Block(curType.loc)
       m.code.stmts.add(ReturnStmt.makeSynthetic(curType.loc))
       curType.addSlot(m)
     }
@@ -131,9 +131,9 @@ class InitEnum : CompilerStep
     m.flags = FConst.Public + FConst.Static + FConst.Ctor
     m.params.add(ParamDef(loc, ns.strType, "name"))
     m.params.add(ParamDef(loc, ns.boolType, "checked", LiteralExpr(loc, ExprId.trueLiteral, ns.boolType, true)))
-    m.ret = TypeRef(loc, curType.toNullable)
-    m.code = Block(loc)
-    m.docDef = DocDef(loc,
+    m.returns = TypeRef(loc, curType.toNullable)
+    m.code    = Block(loc)
+    m.docDef  = DocDef(loc,
               ["Return the $curType.name instance for the specified name.  If not a",
                "valid name and checked is false return null, otherwise throw ParseErr."])
     curType.addSlot(m)

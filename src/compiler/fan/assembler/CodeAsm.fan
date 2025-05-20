@@ -121,7 +121,7 @@ class CodeAsm : CompilerSupport
       exprOnStack = !stmt.expr.ctype.isVoid
 
       // if we have expr on stack inside a void method, need to pop it
-      inVoidMethod := curMethod != null && curMethod.ret.isVoid
+      inVoidMethod := curMethod != null && curMethod.returns.isVoid
       if (inVoidMethod && exprOnStack)
       {
         opType(FOp.Pop, stmt.expr.ctype)

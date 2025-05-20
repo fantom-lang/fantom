@@ -129,7 +129,7 @@ class JsType : JsNode
       safe := true
       ft := (FuncType)ctype
       ft.params.each |param| { safe = safe && checkJsSafety(param, cs, loc) }
-      safe = safe && checkJsSafety(ft.ret, cs, loc)
+      safe = safe && checkJsSafety(ft.returns, cs, loc)
       return safe
     }
     else if (!(ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null || cs.forceJs))
@@ -236,3 +236,4 @@ class JsTypeRef : JsNode
   JsTypeRef? k       // only valid for MapType
   JsTypeRef? v       // only valid for ListType, MapType
 }
+

@@ -35,7 +35,7 @@ class JsPodClosures : JsNode
     out.w("fan.sys.Func.make\$closure(", loc).nl
     out.indent
 
-    CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.ret)
+    CType[] sigTypes := [,].addAll(ce.signature.params).add(ce.signature.returns)
     isJs := sigTypes.all { JsType.checkJsSafety(it, support, loc) && !it.isForeign }
     if (isJs)
     {
@@ -125,3 +125,4 @@ class JsPodClosures : JsNode
   ** Func spec field variable name to prototype function (for params and return type)
   private Str:JsMethod varToFunc := [:] { ordered = true }
 }
+

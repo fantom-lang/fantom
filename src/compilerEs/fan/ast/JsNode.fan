@@ -65,7 +65,7 @@ abstract class JsNode
       safe := true
       ft := (FuncType)ctype
       ft.params.each |param| { safe = safe && checkJsSafety(param, loc) }
-      safe = safe && checkJsSafety(ft.ret, loc)
+      safe = safe && checkJsSafety(ft.returns, loc)
       return safe
     }
     else if (!(ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null || c.input.forceJs))
@@ -277,3 +277,4 @@ abstract class JsNode
   TypeDef? curType() { plugin.curType }
 
 }
+

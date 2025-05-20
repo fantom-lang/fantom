@@ -454,8 +454,8 @@ class CheckErrors : CompilerStep
 
   private Void checkParamFuncType(ParamDef param, FuncType t)
   {
-    if (!t.ret.isVoid && !t.ret.isValid)
-      err("Invalid return type '$t.ret' in func type of param '$param.name'", param.loc)
+    if (!t.returns.isVoid && !t.returns.isValid)
+      err("Invalid return type '$t.returns' in func type of param '$param.name'", param.loc)
 
     // This type is allowed in func params as a co-variant position
     t.params.each |p|
@@ -467,17 +467,17 @@ class CheckErrors : CompilerStep
 
   private Void checkMethodReturn(MethodDef m)
   {
-    if (m.ret.isThis)
+    if (m.returns.isThis)
     {
       if (m.isStatic)
         err("Cannot return This from static method", m.loc)
 
-      if (m.ret.isNullable)
+      if (m.returns.isNullable)
         err("This type cannot be nullable", m.loc)
     }
 
-    if (!m.ret.isThis && !m.ret.isVoid)
-      checkValidType(m.loc, m.ret)
+    if (!m.returns.isThis && !m.returns.isVoid)
+      checkValidType(m.loc, m.returns)
   }
 
   private Void checkInstanceCtor(MethodDef m)
@@ -756,7 +756,7 @@ class CheckErrors : CompilerStep
 
   private Void checkReturn(ReturnStmt stmt)
   {
-    ret := curMethod.ret
+    ret := curMethod.returns
     if (stmt.expr == null)
     {
       // this is just a sanity check - it should be caught in parser
@@ -1670,7 +1670,7 @@ class CheckErrors : CompilerStep
       else
       {
         x := (FuncType)t
-        checkTypeProtection(x.ret, loc)
+        checkTypeProtection(x.returns, loc)
         x.params.each |CType p| { checkTypeProtection(p, loc) }
       }
     }
@@ -1883,7 +1883,7 @@ class CheckErrors : CompilerStep
     if (actual.arity > expected.arity) return false
 
     // check return type
-    if (!isFuncAutoCoerceMatch(actual.ret, expected.ret))
+    if (!isFuncAutoCoerceMatch(actual.returns, expected.returns))
       return false
 
     // check that each parameter is auto-castable
