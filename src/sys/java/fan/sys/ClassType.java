@@ -662,10 +662,11 @@ catch (Exception e) { e.printStackTrace(); }
     }
     else
     {
+      // note in Java transpiler we generate getter for const fields too
       Field field = (Field)slot;
       if (m.getReturnType() == void.class)
         field.setter.reflect = new java.lang.reflect.Method[] { m };
-      else
+      else if (field.getter != null)
         field.getter.reflect = new java.lang.reflect.Method[] { m };
     }
   }
