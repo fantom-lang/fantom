@@ -556,22 +556,22 @@ internal class JavaPrinter : CodePrinter
 
   override This isExpr(TypeCheckExpr x)
   {
-    oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.ctype).cparen
+    oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check).cparen
   }
 
   override This isnotExpr(TypeCheckExpr x)
   {
-    w("!(").expr(x.target).w(" instanceof ").typeSigNullable(x.ctype).w(")")
+    w("!(").expr(x.target).w(" instanceof ").typeSigNullable(x.check).w(")")
   }
 
   override This asExpr(TypeCheckExpr x)
   {
-    w("as(").typeSigNullable(x.ctype).w(".class, ").expr(x.target).w(")")
+    w("as(").typeSigNullable(x.check).w(".class, ").expr(x.target).w(")")
   }
 
   override This coerceExpr(TypeCheckExpr x)
   {
-    oparen.w("(").typeSig(x.ctype).w(")(").expr(x.target).w(")").cparen
+    oparen.w("(").typeSig(x.check).w(")(").expr(x.target).w(")").cparen
   }
 
 //////////////////////////////////////////////////////////////////////////
