@@ -165,7 +165,7 @@ internal class JavaPrinter : CodePrinter
       chain     := x.ctorChain
       chainType := chain.target.id == ExprId.superExpr ? selfType.base : selfType
       chainName := JavaUtil.ctorImplName(chain.method)
-      typeSig(chainType).w(".").w(chainName).w("(it").args(x.ctorChain, true).w(")").eos
+      typeSig(chainType).w(".").w(chainName).w("(it").args(x.ctorChain.args, true).w(")").eos
     }
     x.code.stmts.each |s| { stmt(s) }
     unindent
@@ -707,22 +707,34 @@ internal class JavaPrinter : CodePrinter
 
   override This callMethodExpr(CallExpr x)
   {
-    target     := x.targetx
+    call(x.targetx, x.method, x.args)
+  }
+
+  private This call(Expr target, CMethod method, Expr[] args)
+  {
     targetType := target.ctype
-    method     := x.method
     methodName := JavaUtil.methodName(method)
 
     // special handling for Obj.compare => fan.sys.FanObj.compare, etc
     if (targetType != null && JavaUtil.isJavaNative(targetType))
     {
       w("fan.sys.Fan").w(targetType.name).w(".").w(methodName).w("(")
-      if (!x.method.isStatic) expr(x.target).args(x, true)
-      else args(x)
+      if (!method.isStatic) expr(target).args(args, true)
+      else this.args(args)
       w(")")
       return this
     }
 
-    expr(target).w(".").w(methodName).w("(").args(x).w(")")
+    return expr(target).w(".").w(methodName).w("(").args(args).w(")")
+  }
+
+  private This args(Expr[] args, Bool forceComma := false)
+  {
+    args.each |arg, i|
+    {
+      if (i > 0 || forceComma) w(", ")
+      expr(arg)
+    }
     return this
   }
 
@@ -731,9 +743,7 @@ internal class JavaPrinter : CodePrinter
     w("fan.sys.FanObj.trap(").expr(x.target).w(", ").str(x.name)
     if (!x.args.isEmpty)
     {
-      w(", fan.sys.List.makeObj(new Object[] {")
-      x.args.each |arg, i| { if (i > 0) w(", "); expr(arg) }
-      w("})")
+      w(", fan.sys.List.makeObj(new Object[] {").args(x.args).w("})")
     }
     return w(")")
   }
@@ -742,8 +752,9 @@ internal class JavaPrinter : CodePrinter
   {
     // uh Java is fun isn't it?
     w("java.util.Optional.<").typeSig(x.target.ctype).w(">ofNullable(").expr(x.target).w(")")
-    w(".<").typeSig(x.ctype).w(">map(").w("it -> it.").methodName(x.method).w("(").args(x).w("))")
-    w(".orElse(null)")
+    w(".<").typeSig(x.ctype).w(">map(").w("it -> ")
+    call(ItExpr(x.loc, x.target.ctype), x.method, x.args)
+    w(").orElse(null)")
     return this
   }
 
@@ -757,17 +768,7 @@ internal class JavaPrinter : CodePrinter
 
   override This ctorExpr(CallExpr x)
   {
-    expr(x.target).w(".").methodName(x.method).w("(").args(x).w(")")
-  }
-
-  private This args(CallExpr x, Bool forceComma := false)
-  {
-    x.args.each |arg, i|
-    {
-      if (i > 0 || forceComma) w(", ")
-      expr(arg)
-    }
-    return this
+    expr(x.target).w(".").methodName(x.method).w("(").args(x.args).w(")")
   }
 
   override This staticTargetExpr(StaticTargetExpr x)
