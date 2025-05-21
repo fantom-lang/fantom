@@ -1188,7 +1188,8 @@ class CheckErrors : CompilerStep
     if (rhs.id == ExprId.nullLiteral) return rhs
 
     // wrap existing assigned with call toImmutable
-    call := CallExpr.makeWithMethod(rhs.loc, rhs, ns.objToImmutable) { isSafe = true }
+    call := CallExpr.makeWithMethod(rhs.loc, rhs, ns.objToImmutable)
+    call.isSafe = fieldType.isNullable
     if (fieldType.toNonNullable.isObj) return call
     return TypeCheckExpr.coerce(call, fieldType)
 
