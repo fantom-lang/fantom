@@ -20,12 +20,6 @@ public abstract class Enum
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  public static Enum make(long ordinal, String name)
-  {
-    // should never be used
-    throw new IllegalStateException();
-  }
-
   public static void make$(Enum self, long ordinal, String name)
   {
     if (name == null) throw NullErr.make();
@@ -93,3 +87,4 @@ public abstract class Enum
   private String name;
 
 }
+
