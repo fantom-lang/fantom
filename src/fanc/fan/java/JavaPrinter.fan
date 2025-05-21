@@ -23,8 +23,12 @@ internal class JavaPrinter : CodePrinter
   {
     prelude(t)
     typeHeader(t)
+    w(" {").nl
+    indent
+    typeOf(t)
     slots(t)
-    unindent.w("}").nl
+    unindent
+    w("}").nl
   }
 
   Void prelude(TypeDef t)
@@ -48,9 +52,22 @@ internal class JavaPrinter : CodePrinter
     if (t.base.isObj) w("fan.sys.FanObj")
     else if (t.isClosure) w(JavaUtil.closureBase(t))
     else typeSig(t.base)
+  }
 
-    w(" {").nl
-    indent
+  Void typeOf(TypeDef t)
+  {
+    if (t.isSynthetic) return
+
+    w("/** Reflect type of this object */").nl
+    w("public fan.sys.Type typeof() { return typeof\$(); }").nl
+    nl
+    w("/** Type literal for $t.qname */").nl
+    w("public static fan.sys.Type typeof\$() {").nl
+    w("  if (typeof\$cache == null)").nl
+    w("    typeof\$cache = fan.sys.Type.find(").str(t.qname).w(");").nl
+    w("  return typeof\$cache;").nl
+    w("}").nl
+    w("private static fan.sys.Type typeof\$cache;").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -560,13 +577,16 @@ internal class JavaPrinter : CodePrinter
 
   private This doTypeLiteral(CType t)
   {
-    w("fan.sys.Type.find(").str(t.qname).w(")")
+    if (t.pod.name == "sys")
+      return w("fan.sys.Sys.").w(t.name).w("Type")
+    else
+      return typeSig(t).w(".typeof\$()")
   }
 
   override This slotLiteral(SlotLiteralExpr x)
   {
-    find := x.slot is CField ? "findField" : "findMethod"
-    w("fan.sys.Slot.").w(find).w("(").str("${x.parent.qname}.${x.name}").w(")")
+    find := x.slot is CField ? "field" : "method"
+    doTypeLiteral(x.parent).w(".").w(find).w("(").str(x.name).w(")")
     return this
   }
 
