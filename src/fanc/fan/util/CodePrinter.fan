@@ -253,10 +253,9 @@ abstract class CodePrinter
   ** Shortcut special handling for comparison, otherwise route to callExpr
   virtual This shortcutExpr(ShortcutExpr x)
   {
-    if (x.isCompare)
-      return compareExpr(x.target, x.opToken, x.args.first)
-    else
-      return callExpr(x)
+    if (x.isCompare)      return compareExpr(x.target, x.opToken, x.args.first)
+    if (x.isPostfixLeave) return postfixLeaveExpr(x)
+    return callExpr(x)
   }
 
   ** Write unary expression with optional grouping parens
@@ -297,6 +296,9 @@ abstract class CodePrinter
 
   ** Constructor call expression
   abstract This ctorExpr(CallExpr x)
+
+  ** Handle postfix ++ or --
+  abstract This postfixLeaveExpr(ShortcutExpr x)
 
 //////////////////////////////////////////////////////////////////////////
 // Utils

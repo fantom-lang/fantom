@@ -110,9 +110,13 @@ internal class JavaUtil
   static once Str:Str unaryOperators()
   {
     [
-    "sys::Bool.not":     "!",
-    "sys::Int.negate":   "-",
-    "sys::Float.negate": "-",
+    "sys::Bool.not":        "!",
+    "sys::Int.negate":      "-",
+    "sys::Float.negate":    "-",
+    "sys::Int.increment":   "++",
+    "sys::Float.increment": "++",
+    "sys::Int.decrement":   "--",
+    "sys::Float.decrement": "++",
 
     ].toImmutable
   }

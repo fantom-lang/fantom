@@ -700,6 +700,22 @@ internal class JavaPrinter : CodePrinter
     typeSig(x.ctype)
   }
 
+  override This postfixLeaveExpr(ShortcutExpr x)
+  {
+    // only support Int/Float
+    parent := x.method.parent
+    ok := parent.isInt || parent.isFloat
+    if (!ok) throw Err("Postfix not supported: $x.method.qname")
+
+    // incremnet or decrement
+    name := x.method.name
+    oparen.expr(x.target).cparen
+    if (name == "increment") w("++")
+    else if (name == "decrment") w("--")
+    else throw Err("Postfix $x.method.qname")
+    return this
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
