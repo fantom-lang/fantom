@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.sql.*;
 import fan.sys.*;
+import fan.util.FloatArray;
 
 public class SqlUtil
 {
@@ -80,6 +81,11 @@ public class SqlUtil
       if (conv == null)
         throw SqlErr.make("Cannot create array from " + list.of());
       return conv.toArray(list);
+    }
+    // Use FloatArray primitive array
+    else if (value instanceof FloatArray)
+    {
+      return ((FloatArray) value).array();
     }
 
     return jobj;
@@ -420,7 +426,11 @@ public class SqlUtil
     public Object toObj(ResultSet rs, int col)
       throws SQLException
     {
-      Object obj = ((java.sql.Array) rs.getObject(col)).getArray();
+      Object obj = rs.getObject(col);
+      if (obj == null)
+        return null;
+
+      obj = ((java.sql.Array) obj).getArray();
 
       ArrayToFanList conv = arrayToList.get(obj.getClass());
       if (conv == null)

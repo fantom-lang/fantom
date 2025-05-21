@@ -7,6 +7,7 @@
 //
 
 using concurrent
+using util
 
 **
 ** SqlTest
@@ -704,6 +705,10 @@ class SqlTest : Test
       "insert into list (texts, ints, longs, bools, floats, doubles, times)
        values (@texts, @ints, @longs, @bools, @floats, @doubles, @times)").prepare
 
+    //----------------------------------------------
+    // non-nullable lists
+    //----------------------------------------------
+
     insert.execute([
       "texts":   Str["a", "b", "c"],
       "ints":    Int[1, 2, 3],
@@ -728,7 +733,9 @@ class SqlTest : Test
     rows = db.sql("select * from list").query
     verifyEq(rows.size, 0)
 
+    //----------------------------------------------
     // nullable lists
+    //----------------------------------------------
 
     insert.execute([
       "texts":   Str?["a", "b", "c", null],
@@ -749,6 +756,47 @@ class SqlTest : Test
     verifyEq(rows[0]->floats,  Float?[1.0f, 2.0f, 3.0f, null])
     verifyEq(rows[0]->doubles, Float?[4.0f, 5.0f, 6.0f, null])
     verifyEq(rows[0]->times,   DateTime?[now.plus(1hr), now.plus(2hr), now.plus(3hr), null])
+
+    db.sql("delete from list").execute
+    rows = db.sql("select * from list").query
+    verifyEq(rows.size, 0)
+
+    //----------------------------------------------
+    // float array
+    //----------------------------------------------
+
+    insert = db.sql(
+      "insert into list (floats, doubles)
+       values (@floats, @doubles)").prepare
+
+    floats := FloatArray.makeF4(3)
+    floats.set(0, 1.0f)
+    floats.set(1, 2.0f)
+    floats.set(2, 3.0f)
+
+    doubles := FloatArray.makeF8(3)
+    doubles.set(0, 4.0f)
+    doubles.set(1, 5.0f)
+    doubles.set(2, 6.0f)
+
+    insert.execute([
+      "floats":  floats,
+      "doubles": doubles,
+    ])
+
+    rows = db.sql("select * from list").query
+    verifyEq(rows.size, 1)
+    verifyNull(rows[0]->texts)
+    verifyNull(rows[0]->ints)
+    verifyNull(rows[0]->longs)
+    verifyNull(rows[0]->bools)
+    verifyEq(rows[0]->floats,  Float[1.0f, 2.0f, 3.0f])
+    verifyEq(rows[0]->doubles, Float[4.0f, 5.0f, 6.0f])
+    verifyNull(rows[0]->times)
+
+    db.sql("delete from list").execute
+    rows = db.sql("select * from list").query
+    verifyEq(rows.size, 0)
   }
 
 //////////////////////////////////////////////////////////////////////////
