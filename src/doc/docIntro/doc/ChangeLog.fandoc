@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.82 (working)*
+- New fanc tool for transpiling to Java source
 - Java make List/Map generic types
 - Compiler: rename CParam.paramType to type
 - Compiler: rename CParam.returnType to returns

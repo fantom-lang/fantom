@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#
+# fanc: Fan Compiler tools
+#
+
+. "${0%/*}/fanlaunch"
+fanlaunch Fan fanc "$@"
+

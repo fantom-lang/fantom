@@ -29,6 +29,7 @@ class Build : BuildGroup
       `fandoc/build.fan`,
       `concurrent/build.fan`,
       `util/build.fan`,
+      `fanc/build.fan`,
       `markdown/build.fan`,
       `nodeJs/build.fan`,
       `math/build.fan`,
@@ -62,3 +63,4 @@ class Build : BuildGroup
   }
 
 }
+
