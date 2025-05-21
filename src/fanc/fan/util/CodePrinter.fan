@@ -254,6 +254,7 @@ abstract class CodePrinter
   virtual This shortcutExpr(ShortcutExpr x)
   {
     if (x.isCompare)      return compareExpr(x.target, x.opToken, x.args.first)
+    if (x.isAssign)       return assignShortcutExpr(x)
     if (x.isPostfixLeave) return postfixLeaveExpr(x)
     return callExpr(x)
   }
@@ -296,6 +297,9 @@ abstract class CodePrinter
 
   ** Constructor call expression
   abstract This ctorExpr(CallExpr x)
+
+  ** Handle special assign+math operators: += -= *= /=
+  abstract This assignShortcutExpr(ShortcutExpr x)
 
   ** Handle postfix ++ or --
   abstract This postfixLeaveExpr(ShortcutExpr x)

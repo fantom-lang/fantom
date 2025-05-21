@@ -700,12 +700,25 @@ internal class JavaPrinter : CodePrinter
     typeSig(x.ctype)
   }
 
+
+  override This assignShortcutExpr(ShortcutExpr x)
+  {
+    // only support Int/Float
+    if (!isJavaNumVal(x.method.parent))
+      throw Err("Postfix not supported: $x.method.qname")
+
+    lhs := x.target
+    rhs := x.args[0]
+    op := JavaUtil.binaryOperators.getChecked(x.method.qname)
+
+    return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
+  }
+
   override This postfixLeaveExpr(ShortcutExpr x)
   {
     // only support Int/Float
-    parent := x.method.parent
-    ok := parent.isInt || parent.isFloat
-    if (!ok) throw Err("Postfix not supported: $x.method.qname")
+    if (!isJavaNumVal(x.method.parent))
+      throw Err("Postfix not supported: $x.method.qname")
 
     // incremnet or decrement
     name := x.method.name
@@ -715,6 +728,8 @@ internal class JavaPrinter : CodePrinter
     else throw Err("Postfix $x.method.qname")
     return this
   }
+
+  private Bool isJavaNumVal(CType t) { t.isInt || t.isFloat }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
