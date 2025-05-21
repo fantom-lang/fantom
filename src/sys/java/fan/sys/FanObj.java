@@ -167,16 +167,20 @@ public class FanObj
   {
     if (self instanceof FanObj)
       return ((FanObj)self).trap(name, (List)null);
-    else
+    else if (self != null)
       return doTrap(self, name, null, typeof(self));
+    else
+      return null;
   }
 
   public static Object trap(Object self, String name, List args)
   {
     if (self instanceof FanObj)
       return ((FanObj)self).trap(name, args);
-    else
+    else if (self != null)
       return doTrap(self, name, args, typeof(self));
+    else
+      return null;
   }
 
   public Object trap(String name) { return doTrap(this, name, null, typeof()); }

@@ -39,6 +39,11 @@ public final class List<V>
     return new List(Sys.ObjType.toNullable(), (int)capacity);
   }
 
+  public static List makeObj(Object[] values)
+  {
+    return new List(Sys.ObjType.toNullable(), values, values.length);
+  }
+
   public static List make(Type of, Object[] values)
   {
     if (values == null) return null;

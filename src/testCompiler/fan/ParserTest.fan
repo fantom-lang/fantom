@@ -442,7 +442,7 @@ class ParserTest : CompilerTest
     m := (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "make")
     verifyEq(m.flags, FConst.Public.or(FConst.Ctor))
-    verifyEq(m.ret.qname, "sys::Void")
+    verifyEq(m.returns.qname, "sys::Void")
     verifyEq(m.paramDefs.size, 0)
     verifyEq(m.ctorChain, null)
 
@@ -468,14 +468,14 @@ class ParserTest : CompilerTest
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "a")
     verifyEq(m.flags, FConst.Public)
-    verifyEq(m.ret.qname, "sys::Void")
+    verifyEq(m.returns.qname, "sys::Void")
     verifyEq(m.params.size, 0)
 
     // static Void b(Int x)
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "b")
     verifyEq(m.flags, FConst.Public.or(FConst.Static))
-    verifyEq(m.ret.qname, "sys::Void")
+    verifyEq(m.returns.qname, "sys::Void")
     verifyEq(m.params.size, 1)
     verifyParam(m.paramDefs[0], "sys::Int", "x")
 
@@ -483,7 +483,7 @@ class ParserTest : CompilerTest
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "c")
     verifyEq(m.flags, FConst.Internal)
-    verifyEq(m.ret.qname, "sys::Bool")
+    verifyEq(m.returns.qname, "sys::Bool")
     verifyEq(m.params.size, 2)
     verifyParam(m.paramDefs[0], "sys::Int", "x")
     verifyParam(m.paramDefs[1], "sys::Str", "y")
@@ -492,7 +492,7 @@ class ParserTest : CompilerTest
     m = (MethodDef)t.slotDefs[n++]
     verifyEq(m.name, "static\$init")
     verifyEq(m.flags, FConst.Private.or(FConst.Static).or(FConst.Synthetic))
-    verifyEq(m.ret.qname, "sys::Void")
+    verifyEq(m.returns.qname, "sys::Void")
     verifyEq(m.params.size, 0)
   }
 

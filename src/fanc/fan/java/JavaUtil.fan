@@ -131,19 +131,23 @@ internal class JavaUtil
     "sys::Int.minus":       "-",
     "sys::Int.mult":        "*",
     "sys::Int.div":         "/",
+    "sys::Int.mod":         "%",
     "sys::Int.plusFloat":   "+",
     "sys::Int.minusFloat":  "-",
     "sys::Int.multFloat":   "*",
     "sys::Int.divFloat":    "/",
+    "sys::Int.modFloat":    "%",
 
     "sys::Float.plus":      "+",
     "sys::Float.minus":     "-",
     "sys::Float.mult":      "*",
     "sys::Float.div":       "/",
+    "sys::Float.mod":       "%",
     "sys::Float.plusInt":   "+",
     "sys::Float.minusInt":  "-",
     "sys::Float.multInt":   "*",
     "sys::Float.divInt":    "/",
+    "sys::Float.modInt":    "%",
 
     ].toImmutable
   }

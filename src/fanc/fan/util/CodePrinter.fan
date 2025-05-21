@@ -233,6 +233,8 @@ abstract class CodePrinter
   ** Call expression handling
   virtual This callExpr(CallExpr x)
   {
+    if (x.isDynamic) return trapExpr(x)
+
     if (x.isSafe) return safeCallExpr(x)
 
     if (x.target != null && x.args.size == 1)
@@ -291,6 +293,9 @@ abstract class CodePrinter
 
   ** Normal call method
   abstract This callMethodExpr(CallExpr x)
+
+  ** Trap call expression handling
+  abstract This trapExpr(CallExpr x)
 
   ** Null safe call expression handling
   abstract This safeCallExpr(CallExpr x)

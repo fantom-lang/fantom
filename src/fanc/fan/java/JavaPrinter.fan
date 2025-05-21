@@ -663,6 +663,18 @@ internal class JavaPrinter : CodePrinter
     return this
   }
 
+  override This trapExpr(CallExpr x)
+  {
+    w("fan.sys.FanObj.trap(").expr(x.target).w(", ").str(x.name)
+    if (!x.args.isEmpty)
+    {
+      w(", fan.sys.List.makeObj(new Object[] {")
+      x.args.each |arg, i| { if (i > 0) w(", "); expr(arg) }
+      w("})")
+    }
+    return w(")")
+  }
+
   override This safeCallExpr(CallExpr x)
   {
     // uh Java is fun isn't it?
@@ -708,10 +720,18 @@ internal class JavaPrinter : CodePrinter
       throw Err("Postfix not supported: $x.method.qname")
 
     lhs := x.target
-    rhs := x.args[0]
-    op := JavaUtil.binaryOperators.getChecked(x.method.qname)
+    rhs := x.args.first
 
-    return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
+    if (rhs == null)
+    {
+      op := JavaUtil.unaryOperators.getChecked(x.method.qname)
+      return oparen.w(op).expr(lhs).cparen
+    }
+    else
+    {
+      op := JavaUtil.binaryOperators.getChecked(x.method.qname)
+      return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
+    }
   }
 
   override This postfixLeaveExpr(ShortcutExpr x)
