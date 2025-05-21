@@ -135,6 +135,13 @@ internal class JavaPrinter : CodePrinter
     typeSig(selfType).sp.methodName(x)
     params(x)
 
+    // if static ctor its just a static method
+    if (x.isStatic)
+    {
+      sp.block(x.code).nl
+      return
+    }
+
     // static factory side
     implName := JavaUtil.ctorImplName(x)
     w(" { ").nl
@@ -420,7 +427,33 @@ internal class JavaPrinter : CodePrinter
     return this
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Switch
+//////////////////////////////////////////////////////////////////////////
+
   override This switchStmt(SwitchStmt x)
+  {
+    if (isJavaSwitch(x))
+      javaSwitch(x)
+    else
+      ifElseSwitch(x)
+    return this
+  }
+
+  private Bool isJavaSwitch(SwitchStmt x)
+  {
+    x.cases.all |c|
+    {
+      c.cases.all |e| { isJavaSwitchCase(e) }
+    }
+  }
+
+  private Bool isJavaSwitchCase(Expr expr)
+  {
+    expr.id === ExprId.intLiteral || expr.id === ExprId.strLiteral
+  }
+
+  private Void javaSwitch(SwitchStmt x)
   {
     w("switch(").switchCondition(x.condition).w(") {").nl
     indent
@@ -442,9 +475,38 @@ internal class JavaPrinter : CodePrinter
     return this
   }
 
+  private Void ifElseSwitch(SwitchStmt x)
+  {
+    condVar := "_switch"
+    cond := x.condition
+    typeSig(cond.ctype).sp.w(condVar).w(" = ").expr(cond).eos
+    x.cases.each |c, i|
+    {
+      if (i > 0) w("else ")
+      w(" if (")
+      c.cases.each |caseExpr, j|
+      {
+        if  (j > 0) w(" || ")
+        w("fanx.util.OpUtil.compareEQ(").w(condVar).w(", ").expr(caseExpr).w(")")
+      }
+      w(")")
+      if (c.block == null) w(" {}").nl
+      else block(c.block)
+      nl
+    }
+    if (x.defaultBlock != null)
+    {
+      w("else ").block(x.defaultBlock).nl
+    }
+  }
+
   private This switchCondition(Expr x)
   {
-    if (x.ctype.isInt) w("(int)")
+    if (x.ctype.isInt)
+    {
+      if (x.ctype.isNullable) return w("((Long)").expr(x).w(").intValue()")
+      w("(int)")
+    }
     return expr(x)
   }
 
@@ -460,6 +522,7 @@ internal class JavaPrinter : CodePrinter
     if (b == null) return this
     indent
     b.stmts.each |s| { stmt(s) }
+    if (!b.isExit) w("break").eos
     unindent
     return this
   }
