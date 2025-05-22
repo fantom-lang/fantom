@@ -56,7 +56,14 @@ const boot = async function(opts={}) {
     "node.path": node_path
   });
 
-  await checkPathEnv();
+  try
+  {
+    await checkPathEnv();
+  }
+  catch (err)
+  {
+    console.log("PathEnv not available; make sure 'util' pod is installed");
+  }
 
   // handle polyfills
   for (const lib of (opts["polyfill"] ?? [])) {
