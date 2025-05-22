@@ -128,6 +128,16 @@ class MethodDef : SlotDef, CMethod
     return var
   }
 
+  ** Generate unique varaible name for transpiler.
+  ** This name is **not** mapped into Fantom as local var like addLocalVar.
+  Str transpileTempVar()
+  {
+    n := "_temp" + transpileTempCount
+    transpileTempCount++
+    return n
+  }
+  private Int transpileTempCount
+
 //////////////////////////////////////////////////////////////////////////
 // CMethod
 //////////////////////////////////////////////////////////////////////////

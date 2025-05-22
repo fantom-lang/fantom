@@ -511,7 +511,7 @@ internal class JavaPrinter : CodePrinter
 
   private Void ifElseSwitch(SwitchStmt x)
   {
-    condVar := "_switch"
+    condVar := curMethod.transpileTempVar
     cond := x.condition
     typeSig(cond.ctype).sp.w(condVar).w(" = ").expr(cond).eos
     x.cases.each |c, i|
