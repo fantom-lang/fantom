@@ -29,9 +29,9 @@ internal class JavaCmd : TranspileCmd
   {
     ret := super.usage(out)
     out.printLine("Examples:")
-    out.printLine("  fanc java sys foo               // generate Java source for list of pods")
-    out.printLine("  fanc java sys foo -javac        // generate Java and run javac")
-    out.printLine("  fanc java sys foo -jar foo.jar  // generate Java, run javac, build jar file")
+    out.printLine("  fanc java foo               // generate Java source for 'foo' pod and its depends")
+    out.printLine("  fanc java foo -javac        // generate Java and run javac")
+    out.printLine("  fanc java foo -jar foo.jar  // generate Java, run javac, build jar file")
     return ret
   }
 
@@ -98,14 +98,13 @@ internal class JavaCmd : TranspileCmd
     cmd.add("-d").add(jvmDir.osPath)
 
     // source for each target
-    pods.each |podName|
+    pods.each |p|
     {
-      addJavaFiles(cmd, JavaUtil.podDir(outDir, podName))
+      addJavaFiles(cmd, JavaUtil.podDir(outDir, p.name))
     }
 
     // fanx
-    includeSys := pods.any { it == "sys" }
-    if (includeSys) JavaUtil.fanxDirs(outDir).each |dir| { addJavaFiles(cmd, dir) }
+    JavaUtil.fanxDirs(outDir).each |dir| { addJavaFiles(cmd, dir) }
 
     // execute
     r := Process(cmd, Env.cur.workDir).run.join
@@ -148,9 +147,9 @@ internal class JavaCmd : TranspileCmd
     }
 
     // copy reflect info for each pod
-    pods.each |podName|
+    pods.each |p|
     {
-      JarDist.doReflect(podName) |path, file|
+      JarDist.doReflect(p.name, p.podFile) |path, file|
       {
         file.copyTo(jvmDir + path)
       }

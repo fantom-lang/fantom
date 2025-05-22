@@ -20,7 +20,7 @@ abstract class TranspileCmd : FancCmd
   File outDir := Env.cur.workDir + `gen/$name/`
 
   @Arg { help = "Target pod(s)" }
-  Str[] pods := [,]
+  Str[] podNames := [,]
 
 //////////////////////////////////////////////////////////////////////////
 // Run
@@ -29,16 +29,42 @@ abstract class TranspileCmd : FancCmd
   ** Call compilePod on every target
   override Int run()
   {
+    // flatten depends
+    flattenPods
+
     // always start fresh
     outDir.delete
 
     // generate code for every target pod
-    pods.each |n|
-    {
-      build := buildScriptMap.get(n) ?: throw Err("No build script found for pod: $n")
-      compilePod(n, build)
-    }
+    pods.each |pod| { compilePod(pod) }
     return 0
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Pods
+//////////////////////////////////////////////////////////////////////////
+
+  ** Expand command line pod names to their full dependency chain.
+  ** We require all podNames to be pre-compiled using normal Fantom compilation
+  Void flattenPods()
+  {
+    // resolve pod names to installed precompiled pods
+    Pod[] pods := podNames.map |name->Pod| { Pod.find(name) }
+    pods = Pod.flattenDepends(pods)
+    pods = Pod.orderByDepends(pods)
+
+    // map Pods to TranspilePod instances
+    pods.each |pod| { this.pods.add(transpilePod(pod)) }
+  }
+
+  ** Load transpile pod
+  private TranspilePod transpilePod(Pod pod)
+  {
+    TranspilePod {
+      it.name        = pod.name
+      it.podFile     = pod->loadFile
+      it.buildScript = buildScriptMap[pod.name] ?: throw Err("No build script found for pod: $pod.name")
+    }
   }
 
   ** Map of pod name to build scripts for environment
@@ -66,16 +92,16 @@ abstract class TranspileCmd : FancCmd
 //////////////////////////////////////////////////////////////////////////
 
   ** Compile build script into AST
-  virtual Void compilePod(Str podName, File build)
+  virtual Void compilePod(TranspilePod pod)
   {
     // info
-    info("\n## Transpile $name [$podName]")
+    info("\n## Transpile $this.name [$pod.name]")
 
     // use the build script to generate compiler input
-    pod := Env.cur.compileScript(build).pod
-    type := pod.types.find |t| { t.fits(BuildPod#) }
-    script := (BuildPod)type.make
-    input := script.stdFanCompilerInput
+    buildPod    := Env.cur.compileScript(pod.buildScript).pod
+    buildType   := buildPod.types.find |t| { t.fits(BuildPod#) }
+    buildScript := (BuildPod)buildType.make
+    input       := buildScript.stdFanCompilerInput
 
     // run only the front end
     this.compiler = Compiler(input)
@@ -110,8 +136,29 @@ abstract class TranspileCmd : FancCmd
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  ** Pod data with flattened dependency chain
+  TranspilePod[] pods := [,]
+
   ** Compiler for current pod
   Compiler? compiler
 
+}
+
+**************************************************************************
+** TranspilePod
+**************************************************************************
+
+**
+** Pod data for every pod to comile
+**
+class TranspilePod
+{
+  new make(|This| f) { f(this) }
+
+  const Str name           // pod name
+  const File podFile       // precompiled "foo.pod" file
+  const File buildScript   // "build.fan" file
+
+  override Str toStr() { "$name [$podFile.osPath]" }
 }
 

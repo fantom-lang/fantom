@@ -156,16 +156,16 @@ class JarDist : JdkTask
   private Void reflect(Str podName)
   {
     copyOpts := ["overwrite":true]
-    doReflect(podName) |path, file|
+    podFile := Env.cur.findPodFile(podName) ?: throw Err("Pod file not found: $podName")
+    doReflect(podName, podFile) |path, file|
     {
       file.copyTo(tempDir + path, copyOpts)
     }
   }
 
-  static Void doReflect(Str podName, |Uri path, File| onFile)
+  static Void doReflect(Str podName, File podFile, |Uri path, File| onFile)
   {
     resources := Str[,]
-    podFile := Env.cur.findPodFile(podName) ?: throw Err("Pod file not found: $podName")
     zip := Zip.open(podFile)
     zip.contents.each |f|
     {
