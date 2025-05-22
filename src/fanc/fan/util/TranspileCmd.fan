@@ -97,20 +97,26 @@ abstract class TranspileCmd : FancCmd
     // info
     info("\n## Transpile $this.name [$pod.name]")
 
-    // use the build script to generate compiler input
-    buildPod    := Env.cur.compileScript(pod.buildScript).pod
-    buildType   := buildPod.types.find |t| { t.fits(BuildPod#) }
-    buildScript := (BuildPod)buildType.make
-    input       := buildScript.stdFanCompilerInput
-
     // run only the front end
-    this.compiler = Compiler(input)
+    this.compiler = Compiler(stdCompilerInput(pod))
     compiler.frontend
 
     // transpile the pod
     genPod(compiler.pod)
 
     this.compiler = null
+  }
+
+  ** Use the build script to generate the standard compiler input and then
+  ** inovke the callback on it for additonal configuration.
+  protected CompilerInput stdCompilerInput(TranspilePod pod, |CompilerInput|? f := null)
+  {
+    buildPod    := Env.cur.compileScript(pod.buildScript).pod
+    buildType   := buildPod.types.find |t| { t.fits(BuildPod#) }
+    buildScript := (BuildPod)buildType.make
+    input       := buildScript.stdFanCompilerInput
+    if (f != null) input.with(f)
+    return input
   }
 
 //////////////////////////////////////////////////////////////////////////
