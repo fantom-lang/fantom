@@ -26,6 +26,7 @@ internal class JavaPrinter : CodePrinter
     w(" {").nl
     indent
     typeOf(t)
+    enumOrdinals(t)
     slots(t)
     syntheticClasses(t)
     unindent
@@ -75,6 +76,19 @@ internal class JavaPrinter : CodePrinter
     w("  return typeof\$cache;").nl
     w("}").nl
     w("private static fan.sys.Type typeof\$cache;").nl
+  }
+
+  Void enumOrdinals(TypeDef t)
+  {
+    if (!t.isEnum) return
+
+    nl
+    t.enumDefs.each |e|
+    {
+      name := e.name.upper
+      if (t.slot(name) != null) throw Err("Enum name conflict: $t.qname $name")
+      w("public static final int ").w(name).w(" = ").w(e.ordinal).eos
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -473,11 +487,6 @@ internal class JavaPrinter : CodePrinter
     }
   }
 
-  private Bool isJavaSwitchCase(Expr expr)
-  {
-    expr.id === ExprId.intLiteral || expr.id === ExprId.strLiteral
-  }
-
   private Void javaSwitch(SwitchStmt x)
   {
     w("switch(").switchCondition(x.condition).w(") {").nl
@@ -532,13 +541,30 @@ internal class JavaPrinter : CodePrinter
       if (x.ctype.isNullable) return w("((Long)").expr(x).w(").intValue()")
       w("(int)")
     }
+    else if (x.ctype.isEnum)
+    {
+      return w("(int)").expr(x).w(".ordinal()")
+    }
     return expr(x)
+  }
+
+  private Bool isJavaSwitchCase(Expr x)
+  {
+    if (x.id === ExprId.intLiteral) return true
+    if (x.id === ExprId.strLiteral) return true
+    if (x.id === ExprId.field) return ((FieldExpr)x).field.isEnum
+    return false
   }
 
   private This caseCondition(Expr x)
   {
-    if (x.id == ExprId.intLiteral) return w(((LiteralExpr)x).val)
-    if (x.id == ExprId.strLiteral) return str(((LiteralExpr)x).val)
+    if (x.id === ExprId.intLiteral) return w(((LiteralExpr)x).val)
+    if (x.id === ExprId.strLiteral) return str(((LiteralExpr)x).val)
+    if (x.id === ExprId.field)
+    {
+      f := ((FieldExpr)x).field
+      return typeSig(f.parent).w(".").w(f.name.upper)
+    }
     throw Err("TODO: $x.id $x")
   }
 

@@ -223,6 +223,55 @@ class SwitchTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Sys Enum
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSysEnum()
+  {
+    verifyEq(enumSysSwitch(Weekday.tue, Month.aug, Endian.little, LogLevel.err),
+             "weekday,summer,little,bad")
+    verifyEq(enumSysSwitch(Weekday.sat, Month.nov, Endian.big, LogLevel.info),
+             "weekend,big,ok")
+  }
+
+  Str enumSysSwitch(Weekday w, Month m, Endian e, LogLevel v)
+  {
+    s := StrBuf()
+    switch (w)
+    {
+      case Weekday.mon:
+      case Weekday.tue:
+      case Weekday.wed:
+      case Weekday.thu:
+      case Weekday.fri: s.join("weekday", ",")
+      case Weekday.sat:
+      case Weekday.sun: s.join("weekend", ",")
+    }
+
+    switch (m)
+    {
+      case Month.jun:
+      case Month.jul:
+      case Month.aug: s.join("summer", ",")
+    }
+
+    switch (e)
+    {
+      case Endian.little: s.join("little", ",")
+      case Endian.big:    s.join("big", ",")
+    }
+
+    switch (v)
+    {
+      case LogLevel.err:
+      case LogLevel.warn: s.join("bad", ",")
+      default: s.join("ok", ",")
+    }
+
+    return s.toStr
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Fall Thru
 //////////////////////////////////////////////////////////////////////////
 
