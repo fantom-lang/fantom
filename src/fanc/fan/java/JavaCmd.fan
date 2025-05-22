@@ -66,7 +66,12 @@ internal class JavaCmd : TranspileCmd
 
   override Void genType(TypeDef t)
   {
-    JavaUtil.typeFile(outDir, t).withOut(null) |out| { JavaPrinter(out).type(t) }
+    if (t.isSynthetic) return
+
+    JavaUtil.typeFile(outDir, t).withOut(null) |out|
+    {
+      JavaPrinter(out).type(t)
+    }
   }
 
 //////////////////////////////////////////////////////////////////////////

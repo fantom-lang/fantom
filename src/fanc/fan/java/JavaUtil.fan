@@ -86,6 +86,20 @@ internal class JavaUtil
     ["fanx/emit", "fanx/fcode", "fanx/interop", "fanx/serial", "fanx/tools", "fanx/util"]
   }
 
+  ** Is x a synthetic under the given parent
+  static Bool isSyntheticInner(TypeDef parent, TypeDef x)
+  {
+    x.isSynthetic && x.qname.startsWith(parent.qname) && x.qname.getSafe(parent.qname.size) == '$'
+  }
+
+  ** Map synthetic to inner class name
+  static Str syntheticInnerClass(TypeDef x)
+  {
+    i := x.qname.index("\$") ?: throw ArgErr(x.qname)
+    n := x.qname[i+1..-1]
+    return n.capitalize
+  }
+
   ** Is this a native java type: Obj, Str, Int, Float, Bool, Num
   static Bool isJavaNative(CType t)
   {

@@ -13,7 +13,7 @@ using util
 **
 ** Base class for transpiler commands
 **
-internal abstract class TranspileCmd : FancCmd
+abstract class TranspileCmd : FancCmd
 {
 
   @Opt { help = "Output directory" }

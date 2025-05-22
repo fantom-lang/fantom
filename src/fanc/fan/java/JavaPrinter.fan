@@ -27,6 +27,7 @@ internal class JavaPrinter : CodePrinter
     indent
     typeOf(t)
     slots(t)
+    syntheticClasses(t)
     unindent
     w("}").nl
   }
@@ -48,10 +49,16 @@ internal class JavaPrinter : CodePrinter
     w(t.isMixin ? "interface" : "class").sp.typeName(t)
 
     // extends
+    extends(t)
+  }
+
+  This extends(TypeDef t)
+  {
     w(" extends ")
     if (t.base.isObj) w("fan.sys.FanObj")
     else if (t.isClosure) w(JavaUtil.closureBase(t))
     else typeSig(t.base)
+    return this
   }
 
   Void typeOf(TypeDef t)
@@ -324,6 +331,7 @@ internal class JavaPrinter : CodePrinter
   Void javaMain(MethodDef x)
   {
     nl
+    w("/** Java main */").nl
     w("public static void main(String[] args) {").nl
     indent
     if (!x.isStatic) w("make().")
@@ -876,12 +884,35 @@ internal class JavaPrinter : CodePrinter
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Closures
+// Closures & Synthetics
 //////////////////////////////////////////////////////////////////////////
 
   override This closureExpr(ClosureExpr x)
   {
     callMethodExpr(x.substitute)
+  }
+
+  private Void syntheticClasses(TypeDef parent)
+  {
+    // gen synthetic classes associated with TypeDef as inner classes
+    prefix := parent.qname + "\$"
+    parent.podDef.typeDefs.each |x|
+    {
+      if (JavaUtil.isSyntheticInner(parent, x))
+        syntheticClass(x)
+    }
+  }
+
+  private Void syntheticClass(TypeDef x)
+  {
+    name := JavaUtil.syntheticInnerClass(x)
+    nl
+    w("/** Synthetic closure support */").nl
+    w("static final class ").w(name).extends(x).w(" {").nl
+    indent
+    slots(x)
+    unindent
+    w("}").nl
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -917,6 +948,7 @@ internal class JavaPrinter : CodePrinter
 
   This typeSig(CType t)
   {
+    // speical handling for system types
     if (t.pod.name == "sys")
     {
       if (t.isVoid)    return w("void")
@@ -935,12 +967,17 @@ internal class JavaPrinter : CodePrinter
         return w(t.name)
       }
     }
+
+    // assume synthetics are my own inner classes
+    if (t.isSynthetic) return w(JavaUtil.syntheticInnerClass(t))
+
+    // qname
     return w("fan.").w(t.pod.name).w(".").typeName(t)
   }
 
   This listSig(ListType t)
   {
-    w("fan.sys.List<").typeSig(t.v).w(">")
+    w("fan.sys.List<").typeSigNullable(t.v).w(">")
   }
 
   This typeSigNullable(CType t)

@@ -22,6 +22,7 @@ class TypeDef : DefNode, CType
   {
     this.ns          = ns
     this.pod         = unit.pod
+    this.podDef      = unit.pod
     this.unit        = unit
     this.name        = name
     this.qname       = pod.name + "::" + name
@@ -351,6 +352,7 @@ class TypeDef : DefNode, CType
 
   override CNamespace ns           // compiler's namespace
   CompilationUnit unit             // parent unit
+  PodDef podDef                    // pod as PodDef
   override CPod pod                // parent pod
   override const Str name          // simple class name
   override const Str qname         // podName::name
@@ -367,3 +369,4 @@ class TypeDef : DefNode, CType
   FacetDef[]? indexedFacets        // used by WritePod
 
 }
+
