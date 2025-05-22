@@ -612,9 +612,16 @@ internal class JavaPrinter : CodePrinter
   private This doTypeLiteral(CType t)
   {
     if (t.pod.name == "sys")
-      return w("fan.sys.Sys.").w(t.name).w("Type")
+    {
+      if (t.isParameterized)
+        return w("fan.sys.Type.find(").str(t.signature).w(")")
+      else
+        return w("fan.sys.Sys.").w(t.name).w("Type")
+    }
     else
+    {
       return typeSig(t).w(".typeof\$()")
+    }
   }
 
   override This slotLiteral(SlotLiteralExpr x)
@@ -673,17 +680,17 @@ internal class JavaPrinter : CodePrinter
 
   override This isExpr(TypeCheckExpr x)
   {
-    oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check).cparen
+    oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).cparen
   }
 
   override This isnotExpr(TypeCheckExpr x)
   {
-    w("!(").expr(x.target).w(" instanceof ").typeSigNullable(x.check).w(")")
+    w("!(").expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).w(")")
   }
 
   override This asExpr(TypeCheckExpr x)
   {
-    w("as(").typeSigNullable(x.check).w(".class, ").expr(x.target).w(")")
+    w("as(").typeSigNullable(x.check, false).w(".class, ").expr(x.target).w(")")
   }
 
   override This coerceExpr(TypeCheckExpr x)
@@ -894,7 +901,7 @@ internal class JavaPrinter : CodePrinter
   {
     if (curMethod.isGetter || curMethod.isSetter) return true
     if (x.field.isSynthetic) return false
-    if (x.field.parent.pod.name == "sys") return false
+    if (x.field.parent.pod.name == "sys" && !x.useAccessor) return false
     return true
   }
 
@@ -972,20 +979,21 @@ internal class JavaPrinter : CodePrinter
     w(JavaUtil.varName(x))
   }
 
-  This typeSig(CType t)
+  This typeSig(CType t, Bool parameterize := true)
   {
     // speical handling for system types
     if (t.pod.name == "sys")
     {
-      if (t.isVoid)    return w("void")
-      if (t.isObj)     return w("Object")
-      if (t.isStr)     return w("String")
-      if (t.isBool)    return t.isNullable ? w("Boolean") : w("boolean")
-      if (t.isInt)     return t.isNullable ? w("Long") : w("long")
-      if (t.isFloat)   return t.isNullable ? w("Double") : w("double")
-      if (t.isDecimal) return w("java.math.BigDecimal")
-      if (t.isNum)     return w("java.lang.Number")
-      if (t is ListType) return listSig(t)
+      if (t.isVoid)      return w("void")
+      if (t.isObj)       return w("Object")
+      if (t.isStr)       return w("String")
+      if (t.isBool)      return t.isNullable ? w("Boolean") : w("boolean")
+      if (t.isInt)       return t.isNullable ? w("Long") : w("long")
+      if (t.isFloat)     return t.isNullable ? w("Double") : w("double")
+      if (t.isDecimal)   return w("java.math.BigDecimal")
+      if (t.isNum)       return w("java.lang.Number")
+      if (t is ListType) return listSig(t, parameterize)
+      //if (t is MapType)  return mapSig(t, parameterize)
       if (t.isGenericParameter)
       {
         if (t.name == "L") return w("fan.sys.List<V>")
@@ -1001,12 +1009,21 @@ internal class JavaPrinter : CodePrinter
     return w("fan.").w(t.pod.name).w(".").typeName(t)
   }
 
-  This listSig(ListType t)
+  This listSig(ListType t, Bool parameterize)
   {
-    w("fan.sys.List<").typeSigNullable(t.v).w(">")
+    w("fan.sys.List")
+    if (parameterize) w("<").typeSigNullable(t.v).w(">")
+    return this
   }
 
-  This typeSigNullable(CType t)
+  This mapSig(MapType t, Bool parameterize)
+  {
+    w("fan.sys.Map")
+    if (parameterize) w("<").typeSigNullable(t.k).w(",").typeSigNullable(t.v).w(">")
+    return this
+  }
+
+  This typeSigNullable(CType t, Bool parameterize := true)
   {
     if (t.isVal)
     {
@@ -1014,7 +1031,7 @@ internal class JavaPrinter : CodePrinter
       if (t.isInt)     return w("Long")
       if (t.isFloat)   return w("Double")
     }
-    return typeSig(t)
+    return typeSig(t, parameterize)
   }
 
   This str(Obj x) { w(x.toStr.toCode) }
