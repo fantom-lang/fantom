@@ -14,8 +14,11 @@ public final class Endian
   extends Enum
 {
 
-  public static final Endian big    = new Endian(0, "big");
-  public static final Endian little = new Endian(1, "little");
+  public static final int BIG    = 0;
+  public static final int LITTLE = 1;
+
+  public static final Endian big    = new Endian(BIG, "big");
+  public static final Endian little = new Endian(LITTLE, "little");
 
   static final Endian[] array = { big, little };
 

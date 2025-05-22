@@ -13,19 +13,31 @@ package fan.sys;
 public final class Month
   extends Enum
 {
+  public static final int JAN = 0;
+  public static final int FEB = 1;
+  public static final int MAR = 2;
+  public static final int APR = 3;
+  public static final int MAY = 4;
+  public static final int JUN = 5;
+  public static final int JUL = 6;
+  public static final int AUG = 7;
+  public static final int SEP = 8;
+  public static final int OCT = 9;
+  public static final int NOV = 10;
+  public static final int DEC = 11;
 
-  public static final Month jan = new Month(0,  "jan", 1);
-  public static final Month feb = new Month(1,  "feb", 1);
-  public static final Month mar = new Month(2,  "mar", 1);
-  public static final Month apr = new Month(3,  "apr", 2);
-  public static final Month may = new Month(4,  "may", 2);
-  public static final Month jun = new Month(5,  "jun", 2);
-  public static final Month jul = new Month(6,  "jul", 3);
-  public static final Month aug = new Month(7,  "aug", 3);
-  public static final Month sep = new Month(8,  "sep", 3);
-  public static final Month oct = new Month(9,  "oct", 4);
-  public static final Month nov = new Month(10, "nov", 4);
-  public static final Month dec = new Month(11, "dec", 4);
+  public static final Month jan = new Month(JAN, "jan", 1);
+  public static final Month feb = new Month(FEB, "feb", 1);
+  public static final Month mar = new Month(MAR, "mar", 1);
+  public static final Month apr = new Month(APR, "apr", 2);
+  public static final Month may = new Month(MAY, "may", 2);
+  public static final Month jun = new Month(JUN, "jun", 2);
+  public static final Month jul = new Month(JUL, "jul", 3);
+  public static final Month aug = new Month(AUG, "aug", 3);
+  public static final Month sep = new Month(SEP, "sep", 3);
+  public static final Month oct = new Month(OCT, "oct", 4);
+  public static final Month nov = new Month(NOV, "nov", 4);
+  public static final Month dec = new Month(DEC, "dec", 4);
 
   static final Month[] array =
   {

@@ -18,11 +18,17 @@ public class LogLevel
 // Range
 //////////////////////////////////////////////////////////////////////////
 
-  public static final LogLevel debug  = new LogLevel(0, "debug");
-  public static final LogLevel info   = new LogLevel(1, "info");
-  public static final LogLevel warn   = new LogLevel(2, "warn");
-  public static final LogLevel err    = new LogLevel(3, "err");
-  public static final LogLevel silent = new LogLevel(4, "silent");
+  public static final int DEBUG  = 0;
+  public static final int INFO   = 1;
+  public static final int WARN   = 2;
+  public static final int ERR    = 3;
+  public static final int SILENT = 4;
+
+  public static final LogLevel debug  = new LogLevel(DEBUG,  "debug");
+  public static final LogLevel info   = new LogLevel(INFO,   "info");
+  public static final LogLevel warn   = new LogLevel(WARN,   "warn");
+  public static final LogLevel err    = new LogLevel(ERR,    "err");
+  public static final LogLevel silent = new LogLevel(SILENT, "silent");
 
   static final LogLevel[] array = { debug, info, warn, err, silent };
 
