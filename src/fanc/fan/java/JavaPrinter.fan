@@ -655,7 +655,8 @@ internal class JavaPrinter : CodePrinter
     w("fan.sys.Map.makeKV(").doTypeLiteral(type.k).w(", ").doTypeLiteral(type.v).w(")")
     x.keys.each |key, i|
     {
-      w(".set(").expr(key).w(", ").expr(x.vals[i]).w(")")
+      val := x.vals[i]
+      w(".set(").expr(key).w(", ").expr(val).w(")")
     }
     return this
   }
@@ -993,7 +994,7 @@ internal class JavaPrinter : CodePrinter
       if (t.isDecimal)   return w("java.math.BigDecimal")
       if (t.isNum)       return w("java.lang.Number")
       if (t is ListType) return listSig(t, parameterize)
-      //if (t is MapType)  return mapSig(t, parameterize)
+      if (t is MapType)  return mapSig(t, parameterize)
       if (t.isGenericParameter)
       {
         if (t.name == "L") return w("fan.sys.List<V>")

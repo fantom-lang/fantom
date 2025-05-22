@@ -1769,7 +1769,7 @@ class CheckErrors : CompilerStep
   private Expr box(Expr expr)
   {
     if (expr.ctype.isVal)
-      return TypeCheckExpr.coerce(expr, ns.objType.toNullable)
+      return TypeCheckExpr.coerce(expr, expr.ctype.toNullable)
     else
       return expr
   }
