@@ -21,6 +21,7 @@ internal class JavaPrinter : CodePrinter
 
   Void type(TypeDef t)
   {
+    curType = t
     prelude(t)
     typeHeader(t)
     w(" {").nl
@@ -31,6 +32,7 @@ internal class JavaPrinter : CodePrinter
     syntheticClasses(t)
     unindent
     w("}").nl
+    curType = null
   }
 
   Void prelude(TypeDef t)
@@ -614,14 +616,16 @@ internal class JavaPrinter : CodePrinter
     if (t.pod.name == "sys")
     {
       if (t.isParameterized)
-        return w("fan.sys.Type.find(").str(t.signature).w(")")
+        w("fan.sys.Type.find(").str(t.signature).w(")")
       else
-        return w("fan.sys.Sys.").w(t.name).w("Type")
+        w("fan.sys.Sys.").w(t.name).w("Type")
     }
     else
     {
-      return typeSig(t).w(".typeof\$()")
+      typeSig(t).w(".typeof\$()")
     }
+    if (t.isNullable) w(".toNullable()")
+    return this
   }
 
   override This slotLiteral(SlotLiteralExpr x)
@@ -681,12 +685,17 @@ internal class JavaPrinter : CodePrinter
 
   override This isExpr(TypeCheckExpr x)
   {
-    oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).cparen
+    check := x.check
+    if (check.isParameterized)
+      w("fanx.util.OpUtil.is(").expr(x.target).w(", ").doTypeLiteral(check).w(")")
+    else
+      oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).cparen
+    return this
   }
 
   override This isnotExpr(TypeCheckExpr x)
   {
-    w("!(").expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).w(")")
+    w("!(").isExpr(x).w(")")
   }
 
   override This asExpr(TypeCheckExpr x)
@@ -1037,6 +1046,7 @@ internal class JavaPrinter : CodePrinter
       if (t.isFloat)     return t.isNullable ? w("Double") : w("double")
       if (t.isDecimal)   return w("java.math.BigDecimal")
       if (t.isNum)       return w("java.lang.Number")
+      if (t.isThis)      return typeSig(curType)
       if (t is ListType) return listSig(t, parameterize)
       if (t is MapType)  return mapSig(t, parameterize)
       if (t.isGenericParameter)
@@ -1087,6 +1097,7 @@ internal class JavaPrinter : CodePrinter
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  private TypeDef? curType
   private MethodDef? curMethod
   private Str? selfVar
 }
