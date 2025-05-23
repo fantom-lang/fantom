@@ -839,11 +839,34 @@ internal class JavaPrinter : CodePrinter
   }
 
 
-  override This assignShortcutExpr(ShortcutExpr x)
+  override This shortcutAssignExpr(ShortcutExpr x)
   {
-    // only support Int/Float
-    if (!isJavaNumVal(x.method.parent))
-      throw Err("Postfix not supported: $x.method.qname")
+    // get the variable
+    var := x.target
+
+    // if var is a coercion set that aside and get real variable
+    TypeCheckExpr? coerce := null
+    if (var.id == ExprId.coerce)
+    {
+      coerce = (TypeCheckExpr)var
+      var = coerce.target
+    }
+
+    // now we have three variables: local, field, or indexed
+    switch (var.id)
+    {
+      case ExprId.localVar: return shortcutAssignLocal(x)
+      case ExprId.field:    return shortcutAssignField(x, var)
+      case ExprId.shortcut: return shortcutAssignIndexed(x, var)
+      default:              throw Err("$var.id | $x [$x.loc.toLocStr]")
+    }
+  }
+
+  private This shortcutAssignLocal(ShortcutExpr x)
+  {
+    // only support Int/Float or Str +=
+    if (!isJavaNumVal(x.method.parent) && x.method.qname != "sys::Str.plus")
+      throw Err("Shortcut not supported: $x.method.qname [$x.loc.toLocStr]")
 
     lhs := x.target
     rhs := x.args.first
@@ -858,6 +881,27 @@ internal class JavaPrinter : CodePrinter
       op := JavaUtil.binaryOperators.getChecked(x.method.qname)
       return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
     }
+  }
+
+  private This shortcutAssignField(ShortcutExpr x, FieldExpr fe)
+  {
+    // NOTE: this assumes idempotent field access
+    loc := fe.loc
+    getAndCall := CallExpr(loc, fe, x.method, x.args)
+    fieldAssign(fe, getAndCall)
+    return this
+  }
+
+  private This shortcutAssignIndexed(IndexedAssignExpr x, ShortcutExpr indexing)
+  {
+    // NOTE: this assumes idempotent indexing access and key expression
+    // given expression like coll[key] += arg
+    loc     := x.loc
+    coll    := indexing.target   // collection
+    key     := indexing.args[0]  // index key
+    getAndCall := CallExpr(loc, indexing, x.method, x.args)
+    expr(coll).w(".set(").expr(key).w(", ").expr(getAndCall).w(")")
+    return this
   }
 
   override This postfixLeaveExpr(ShortcutExpr x)
