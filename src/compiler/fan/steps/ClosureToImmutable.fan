@@ -188,9 +188,8 @@ class ClosureToImmutable : CompilerStep
 
     // temp = make
     temp := m.addLocalVar(cls, "temp", m.code)
-    m.code.add(BinaryExpr.makeAssign(
-      LocalVarExpr(loc, temp),
-      makeCall).toStmt)
+    init := BinaryExpr.makeAssign(LocalVarExpr(loc, temp), makeCall)
+    m.code.add(LocalDefStmt(init))
 
     // temp.immutable = true
     m.code.add(BinaryExpr.makeAssign(

@@ -326,9 +326,8 @@ class ClosureVars : CompilerStep
     field := addToClosure(closure, name, LocalVarExpr.makeNoUnwrap(loc, var.shadows), "wrapper for $var.name.toCode")
 
     // load from field to local in beginning of doCall
-    localDef := LocalDefStmt(loc, var.ctype, var.name)
-    localDef.init = BinaryExpr.makeAssign(LocalVarExpr.makeNoUnwrap(loc, var), fieldExpr(loc, ThisExpr(loc), field))
-    closure.doCall.code.stmts.insert(0, localDef)
+    init := BinaryExpr.makeAssign(LocalVarExpr.makeNoUnwrap(loc, var), fieldExpr(loc, ThisExpr(loc), field))
+    closure.doCall.code.stmts.insert(0, LocalDefStmt(init))
   }
 
   **

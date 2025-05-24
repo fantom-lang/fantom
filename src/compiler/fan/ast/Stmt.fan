@@ -164,6 +164,15 @@ class LocalDefStmt : Stmt
     this.name = name
   }
 
+  new makeAssign(BinaryExpr init)
+    : super.make(init.loc, StmtId.localDef)
+  {
+    var := (LocalVarExpr)init.lhs
+    this.ctype = var.ctype
+    this.name  = var.name
+    this.init  = init
+  }
+
   override Bool isExit() { false }
 
   override Bool isDefiniteAssign(|Expr lhs->Bool| f)
