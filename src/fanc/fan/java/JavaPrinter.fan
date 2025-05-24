@@ -37,9 +37,24 @@ internal class JavaPrinter : CodePrinter
 
   Void prelude(TypeDef t)
   {
+    // NOTE: we use non-qualified names for the following imported types
+    // because we expect they would never be used in typical Fantom code;
+    // but the Java code will not compile if there is a duplicate class
+
     w("// Transpiled $Date.today").nl
     nl
     w("package fan.").w(t.pod.name).eos
+    nl
+    w("import fan.sys.FanObj").eos
+    w("import fan.sys.FanBool").eos
+    w("import fan.sys.FanInt").eos
+    w("import fan.sys.FanFloat").eos
+    w("import fan.sys.FanStr").eos
+    w("import fan.sys.List").eos
+    w("import fan.sys.Map").eos
+    w("import fan.sys.Type").eos
+    w("import fan.sys.Sys").eos
+    w("import fanx.util.OpUtil").eos
     nl
   }
 
@@ -58,7 +73,7 @@ internal class JavaPrinter : CodePrinter
   This extends(TypeDef t)
   {
     w(" extends ")
-    if (t.base.isObj) w("fan.sys.FanObj")
+    if (t.base.isObj) qnFanObj
     else if (t.isClosure) w(JavaUtil.closureBase(t))
     else typeSig(t.base)
     return this
@@ -69,15 +84,15 @@ internal class JavaPrinter : CodePrinter
     if (t.isSynthetic) return
 
     w("/** Reflect type of this object */").nl
-    w("public fan.sys.Type typeof() { return typeof\$(); }").nl
+    w("public ").qnType.w(" typeof() { return typeof\$(); }").nl
     nl
     w("/** Type literal for $t.qname */").nl
-    w("public static fan.sys.Type typeof\$() {").nl
+    w("public static ").qnType.w(" typeof\$() {").nl
     w("  if (typeof\$cache == null)").nl
-    w("    typeof\$cache = fan.sys.Type.find(").str(t.qname).w(");").nl
+    w("    typeof\$cache = ").qnType.w(".find(").str(t.qname).w(");").nl
     w("  return typeof\$cache;").nl
     w("}").nl
-    w("private static fan.sys.Type typeof\$cache;").nl
+    w("private static ").qnType.w(" typeof\$cache;").nl
   }
 
   Void enumOrdinals(TypeDef t)
@@ -351,7 +366,7 @@ internal class JavaPrinter : CodePrinter
     w("public static void main(String[] args) {").nl
     indent
     if (!x.isStatic) w("make().")
-    w("main(fan.sys.List.make(fan.sys.Sys.StrType, args));").nl
+    w("main(").qnList.w(".make(").qnSys.w(".StrType, args));").nl
     unindent
     w("}").nl
   }
@@ -523,7 +538,7 @@ internal class JavaPrinter : CodePrinter
       c.cases.each |caseExpr, j|
       {
         if  (j > 0) w(" || ")
-        w("fanx.util.OpUtil.compareEQ(").w(condVar).w(", ").expr(caseExpr).w(")")
+        qnOpUtil.w(".compareEQ(").w(condVar).w(", ").expr(caseExpr).w(")")
       }
       w(")")
       if (c.block == null) w(" {}").nl
@@ -616,9 +631,9 @@ internal class JavaPrinter : CodePrinter
     if (t.pod.name == "sys")
     {
       if (t.isParameterized)
-        w("fan.sys.Type.find(").str(t.signature).w(")")
+        qnType.w(".find(").str(t.signature).w(")")
       else
-        w("fan.sys.Sys.").w(t.name).w("Type")
+        qnSys.w(".").w(t.name).w("Type")
     }
     else
     {
@@ -645,7 +660,7 @@ internal class JavaPrinter : CodePrinter
   override This listLiteral(ListLiteralExpr x)
   {
     type := (ListType)x.ctype
-    w("fan.sys.List.make(").doTypeLiteral(type.v).w(", ").w(x.vals.size).w(")")
+    qnList.w(".make(").doTypeLiteral(type.v).w(", ").w(x.vals.size).w(")")
     x.vals.each |item|
     {
       w(".add(").expr(item).w(")")
@@ -656,7 +671,7 @@ internal class JavaPrinter : CodePrinter
   override This mapLiteral(MapLiteralExpr x)
   {
     type := (MapType)x.ctype
-    w("fan.sys.Map.makeKV(").doTypeLiteral(type.k).w(", ").doTypeLiteral(type.v).w(")")
+    qnMap.w(".makeKV(").doTypeLiteral(type.k).w(", ").doTypeLiteral(type.v).w(")")
     x.keys.each |key, i|
     {
       val := x.vals[i]
@@ -687,7 +702,7 @@ internal class JavaPrinter : CodePrinter
   {
     check := x.check
     if (check.isParameterized)
-      w("fanx.util.OpUtil.is(").expr(x.target).w(", ").doTypeLiteral(check).w(")")
+      qnOpUtil.w(".is(").expr(x.target).w(", ").doTypeLiteral(check).w(")")
     else
       oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).cparen
     return this
@@ -700,7 +715,7 @@ internal class JavaPrinter : CodePrinter
 
   override This asExpr(TypeCheckExpr x)
   {
-    w("as(").typeSigNullable(x.check, false).w(".class, ").expr(x.target).w(")")
+    qnOpUtil.w(".as(").typeSigNullable(x.check, false).w(".class, ").expr(x.target).w(")")
   }
 
   override This coerceExpr(TypeCheckExpr x)
@@ -750,7 +765,7 @@ internal class JavaPrinter : CodePrinter
 
   override This compareExpr(Expr lhs, Token op, Expr rhs)
   {
-    w("fanx.util.OpUtil.")
+    qnOpUtil.w(".")
     switch (op)
     {
       case Token.eq:    w("compareEQ")
@@ -789,7 +804,7 @@ internal class JavaPrinter : CodePrinter
     // special handling for Obj.compare => fan.sys.FanObj.compare, etc
     if (targetType != null && JavaUtil.isJavaNative(targetType))
     {
-      w("fan.sys.Fan").w(targetType.name).w(".").w(methodName).w("(")
+      qnFanVal(targetType).w(".").w(methodName).w("(")
       if (!method.isStatic) expr(target).args(args, true)
       else this.args(args)
       w(")")
@@ -811,30 +826,51 @@ internal class JavaPrinter : CodePrinter
 
   override This trapExpr(CallExpr x)
   {
-    w("fan.sys.FanObj.trap(").expr(x.target).w(", ").str(x.name)
+    qnFanObj.w(".trap(").expr(x.target).w(", ").str(x.name)
     if (!x.args.isEmpty)
     {
-      w(", fan.sys.List.makeObj(new Object[] {").args(x.args).w("})")
+      w(", ").qnList.w(".makeObj(new Object[] {").args(x.args).w("})")
     }
     return w(")")
   }
 
   override This safeCallExpr(CallExpr x)
   {
-    // uh Java is fun isn't it?
-    w("java.util.Optional.<").typeSig(x.target.ctype).w(">ofNullable(").expr(x.target).w(")")
-    w(".<").typeSig(x.ctype).w(">map(").w("it -> ")
-    call(ItExpr(x.loc, x.target.ctype), x.method, x.args)
-    w(").orElse(null)")
+    // NOTE: this only works if closure only uses effectively final locals
+    safe(x.target, x.ctype) |me|
+    {
+      me.call(ItExpr(x.loc, x.target.ctype), x.method, x.args)
+    }
+  }
+
+  ** Common code for "?.method()" and "?.field"
+  ** NOTE: this requires a Java closure, so only works for effectively final locals
+  private This safe(Expr target, CType returns, |This| restViaItArg)
+  {
+    qnOpUtil.w(".<").typeSig(target.ctype)
+    if (returns.isVal)
+    {
+      // value types use safeBool(), safeInt(), or safeFloat()
+      w(">safe${returns.name}(")
+    }
+    else
+    {
+      // Ojects use safe()
+      w(",").typeSig(returns).w(">safe(")
+    }
+    expr(target).w(", (it)->")
+    restViaItArg(this)
+    w(")")
     return this
   }
 
   override This elvisExpr(BinaryExpr x)
   {
-    // uh Java is fun isn't it?
-    w("java.util.Optional.<").typeSig(x.ctype).w(">ofNullable(").expr(x.lhs).w(")")
-    w(".orElse(").expr(x.rhs).w(")")
-    return this
+    // NOTE: this only works if closure only uses effectively final locals
+    qnOpUtil.w(".<").typeSig(x.ctype).w(">elvis(")
+      .expr(x.lhs)
+      .w(", ()->").expr(x.rhs)
+      .w(")")
   }
 
   override This ctorExpr(CallExpr x)
@@ -936,18 +972,35 @@ internal class JavaPrinter : CodePrinter
 
   override This fieldExpr(FieldExpr x)
   {
+    f := x.field
+    if (x.isSafe)
+    {
+      return safe(x.target, f.fieldType) |me|
+      {
+        me.w("(").typeSig(f.fieldType).w(")").getField(x)
+      }
+    }
+    else
+    {
+      return getField(x)
+    }
+  }
+
+  private This getField(FieldExpr x)
+  {
     // special handling for fan.sys.FanBool.xxx
     field := x.field
     targetType := x.target?.ctype
     if (targetType != null && JavaUtil.isJavaNative(targetType))
     {
-      w("fan.sys.Fan").w(targetType.name).w(".").fieldName(field)
+      qnFanVal(targetType).w(".").fieldName(field)
       return this
     }
 
     if (x.target != null) expr(x.target).w(".")
     fieldName(field)
     if (useFieldCall(x)) w("()")
+
     return this
   }
 
@@ -1003,6 +1056,24 @@ internal class JavaPrinter : CodePrinter
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Choke point for qualified names
+//////////////////////////////////////////////////////////////////////////
+
+  This qnOpUtil() { w("OpUtil") }
+
+  This qnFanObj() { w("FanObj") }
+
+  This qnFanVal(CType t) { w("Fan").w(t.name) } // FanStr, FanInt, FanBool, etc
+
+  This qnList() { w("List") }
+
+  This qnMap() { w("Map") }
+
+  This qnType() { w("Type") }
+
+  This qnSys() { w("Sys") }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -1046,13 +1117,14 @@ internal class JavaPrinter : CodePrinter
       if (t.isFloat)     return t.isNullable ? w("Double") : w("double")
       if (t.isDecimal)   return w("java.math.BigDecimal")
       if (t.isNum)       return w("java.lang.Number")
+      if (t.isType)      return qnType
       if (t.isThis)      return typeSig(curType)
       if (t is ListType) return listSig(t, parameterize)
       if (t is MapType)  return mapSig(t, parameterize)
       if (t.isGenericParameter)
       {
-        if (t.name == "L") return w("fan.sys.List<V>")
-        if (t.name == "M") return w("fan.sys.Map<K,V>")
+        if (t.name == "L") return qnList.w("<V>")
+        if (t.name == "M") return qnMap.w("<K,V>")
         return w(t.name)
       }
     }
@@ -1066,14 +1138,14 @@ internal class JavaPrinter : CodePrinter
 
   This listSig(ListType t, Bool parameterize)
   {
-    w("fan.sys.List")
+    qnList
     if (parameterize) w("<").typeSigNullable(t.v).w(">")
     return this
   }
 
   This mapSig(MapType t, Bool parameterize)
   {
-    w("fan.sys.Map")
+    qnMap
     if (parameterize) w("<").typeSigNullable(t.k).w(",").typeSigNullable(t.v).w(">")
     return this
   }

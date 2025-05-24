@@ -189,4 +189,35 @@ public class OpUtil
     throw NotImmutableErr.make(FanObj.typeof(obj).toStr());
   }
 
+  public static <T> T as(Class<T> cls, Object obj)
+  {
+    return cls.isInstance(obj) ? cls.cast(obj) : null;
+  }
+
+  public static <T,R> R safe(T target, java.util.function.Function<T,R> f)
+  {
+    return target == null ? null : f.apply(target);
+  }
+
+  public static <T> boolean safeBool(T target, java.util.function.Predicate<T> f)
+  {
+    return target == null ? null : f.test(target);
+  }
+
+  public static <T> long safeInt(T target, java.util.function.ToLongFunction<T> f)
+  {
+    return target == null ? null : f.applyAsLong(target);
+  }
+
+  public static <T> double safeFloat(T target, java.util.function.ToDoubleFunction<T> f)
+  {
+    return target == null ? null : f.applyAsDouble(target);
+  }
+
+  public static <T> T elvis(T target, java.util.function.Supplier<T> f)
+  {
+    return target != null ? target : f.get();
+  }
+
 }
+
