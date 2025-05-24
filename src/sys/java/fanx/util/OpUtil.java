@@ -199,17 +199,17 @@ public class OpUtil
     return target == null ? null : f.apply(target);
   }
 
-  public static <T> boolean safeBool(T target, java.util.function.Predicate<T> f)
+  public static <T> Boolean safeBool(T target, java.util.function.Predicate<T> f)
   {
     return target == null ? null : f.test(target);
   }
 
-  public static <T> long safeInt(T target, java.util.function.ToLongFunction<T> f)
+  public static <T> Long safeInt(T target, java.util.function.ToLongFunction<T> f)
   {
     return target == null ? null : f.applyAsLong(target);
   }
 
-  public static <T> double safeFloat(T target, java.util.function.ToDoubleFunction<T> f)
+  public static <T> Double safeFloat(T target, java.util.function.ToDoubleFunction<T> f)
   {
     return target == null ? null : f.applyAsDouble(target);
   }
