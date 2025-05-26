@@ -1054,7 +1054,7 @@ class FieldExpr : NameExpr
     {
       this.name  = field.name
       this.field = field
-      this.ctype = field.fieldType
+      this.ctype = field.type
     }
   }
 

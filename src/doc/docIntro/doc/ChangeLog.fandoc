@@ -10,7 +10,8 @@
 - New fanc tool for transpiling to Java source
 - Java make List/Map generic types
 - Compiler: rename CParam.paramType to type
-- Compiler: rename CParam.returnType to returns
+- Compiler: rename CMethod.returnType to returns
+- Compiler: rename CField.fieldType to type
 - Compiler: rename MethodDef.ret to returns
 - Compiler: rename FuncType.ret to returns
 - Win.devicePixelRatio

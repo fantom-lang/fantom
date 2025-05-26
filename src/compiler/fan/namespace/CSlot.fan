@@ -93,7 +93,9 @@ mixin CSlot : CNode
 **
 mixin CField : CSlot
 {
-  abstract CType fieldType()
+  @Deprecated CType fieldType() { type }
+
+  abstract CType type()
   abstract CMethod? getter()
   abstract CMethod? setter()
 
@@ -105,12 +107,12 @@ mixin CField : CSlot
   **
   ** Does this field covariantly override a method?
   **
-  Bool isCovariant() { isOverride && fieldType != inheritedReturns }
+  Bool isCovariant() { isOverride && type != inheritedReturns }
 
   **
   ** Is this field typed with a generic parameter.
   **
-  Bool isGeneric() { fieldType.isGenericParameter }
+  Bool isGeneric() { type.isGenericParameter }
 
   **
   ** Is this field the parameterization of a generic field,
@@ -125,7 +127,7 @@ mixin CField : CSlot
   override CBridge? usesBridge()
   {
     if (bridge != null) return bridge
-    return fieldType.bridge
+    return type.bridge
   }
 }
 

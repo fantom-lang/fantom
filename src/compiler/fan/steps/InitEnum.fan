@@ -180,7 +180,7 @@ class InitEnum : CompilerStep
     f.facets    = def.facets
     f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage + FConst.Enum
     f.name      = def.name
-    f.fieldType = curType
+    f.type      = curType
     f.init      = init
     f.enumDef   = def
     return f
@@ -216,7 +216,7 @@ class InitEnum : CompilerStep
     f := FieldDef(loc, curType)
     f.flags     = FConst.Public + FConst.Static + FConst.Const + FConst.Storage
     f.name      = "vals"
-    f.fieldType = listType
+    f.type      = listType
     f.init      = init
     f.docDef    = DocDef(loc, ["List of $curType.name values indexed by ordinal"])
     return f

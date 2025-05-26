@@ -152,7 +152,7 @@ internal class JavaPrinter : CodePrinter
   {
     slotScope(x)
     if (x.isStatic) w("static ")
-    typeSig(x.fieldType).sp.fieldName(x)
+    typeSig(x.type).sp.fieldName(x)
     w("() { return ").fieldName(x).w("; }").nl
   }
 
@@ -160,7 +160,7 @@ internal class JavaPrinter : CodePrinter
   {
     if (!x.isSynthetic) w("private ")
     if (x.isStatic) w("static ")
-    typeSig(x.fieldType).sp.fieldName(x).eos
+    typeSig(x.type).sp.fieldName(x).eos
     return this
   }
 
@@ -980,9 +980,9 @@ internal class JavaPrinter : CodePrinter
     f := x.field
     if (x.isSafe)
     {
-      return safe(x.target, f.fieldType) |me|
+      return safe(x.target, f.type) |me|
       {
-        me.w("(").typeSig(f.fieldType).w(")").getField(x)
+        me.w("(").typeSig(f.type).w(")").getField(x)
       }
     }
     else

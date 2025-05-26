@@ -239,7 +239,7 @@ class JsType : JsNode
     if (f.isOnce) return "undefined"
 
     defVal    := "null"
-    fieldType := f.fieldType
+    fieldType := f.type
     if (!fieldType.isNullable)
     {
       switch (fieldType.signature)

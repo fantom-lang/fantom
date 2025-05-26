@@ -41,7 +41,7 @@ class ReflectField : ReflectSlot, CField
     this.ns = ns
     this.parent = parent
     this.f = f
-    this.fieldType = ns.importType(f.type)
+    this.type = ns.importType(f.type)
     get := (Method?)f->getter; if (get != null) this.getter = ns.importMethod(get)
     set := (Method?)f->setter; if (set != null) this.setter = ns.importMethod(set)
   }
@@ -53,11 +53,11 @@ class ReflectField : ReflectSlot, CField
 
   override CType inheritedReturns()
   {
-    if (!isOverride || getter == null) return fieldType
+    if (!isOverride || getter == null) return type
     else return getter.inheritedReturns
   }
 
-  override CType fieldType { private set }
+  override CType type      { private set }
   override CMethod? getter { private set }
   override CMethod? setter { private set }
   Field f                  { private set }

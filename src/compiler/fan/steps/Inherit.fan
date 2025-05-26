@@ -161,7 +161,7 @@ class Inherit : CompilerStep
     mb := b as CMethod
 
     if (fa != null && fb != null)
-      return fa.fieldType == fb.fieldType
+      return fa.type == fb.type
 
     if (ma != null && mb != null)
       return ma.returns == mb.returns &&
@@ -169,13 +169,13 @@ class Inherit : CompilerStep
              ma.hasSameParams(mb)
 
     if (fa != null && mb != null)
-      return fa.fieldType == mb.returns &&
-             fa.fieldType == mb.inheritedReturns &&
+      return fa.type == mb.returns &&
+             fa.type == mb.inheritedReturns &&
              mb.params.size == 0
 
     if (ma != null && fb != null)
-      return ma.returns == fb.fieldType &&
-             ma.inheritedReturns == fb.fieldType &&
+      return ma.returns == fb.type &&
+             ma.inheritedReturns == fb.type &&
              ma.params.size == 0
 
     return false
@@ -327,7 +327,7 @@ class Inherit : CompilerStep
     loc := def.loc
 
     // check that types match
-    ft := def.fieldType
+    ft := def.type
     rt := base.returns
     if (ft != rt)
     {
@@ -360,8 +360,8 @@ class Inherit : CompilerStep
     loc := def.loc
 
     // check that types match
-    if (base.fieldType != def.fieldType)
-      throw err("Type mismatch in override of '$base.qname' - '$base.fieldType' != '$def.fieldType'", loc)
+    if (base.type != def.type)
+      throw err("Type mismatch in override of '$base.qname' - '$base.type' != '$def.type'", loc)
 
     // if overriding a field which has storage, then don't duplicate storage
     if (!base.isAbstract)

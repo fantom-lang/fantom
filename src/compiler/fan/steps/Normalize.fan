@@ -200,7 +200,7 @@ class Normalize : CompilerStep
     f := FieldDef(loc, curType)
     f.flags     = fieldFlags
     f.name      = m.name + "\$Store"
-    f.fieldType = ns.objType.toNullable
+    f.type      = ns.objType.toNullable
     f.init      = Expr.makeForLiteral(loc, ns, "_once_")
     curType.addSlot(f)
     if (isStatic)
@@ -277,7 +277,7 @@ class Normalize : CompilerStep
   private Void normalizeField(FieldDef f)
   {
     // validate type of field
-    t := f.fieldType
+    t := f.type
     if (t.isThis)   { err("Cannot use This as field type", f.loc); return }
     if (t.isVoid)   { err("Cannot use Void as field type", f.loc); return }
     if (!t.isValid) { err("Invalid type '$t'", f.loc); return }
@@ -313,7 +313,7 @@ class Normalize : CompilerStep
     if (init.explicitType != null) return
 
     // force explicit type to be defined type of field
-    init.explicitType = f.fieldType.toNonNullable as ListType
+    init.explicitType = f.type.toNonNullable as ListType
   }
 
   private Void inferFieldMapType(FieldDef f)
@@ -323,7 +323,7 @@ class Normalize : CompilerStep
     if (init.explicitType != null) return
 
     // force explicit type to be defined type of field
-    init.explicitType = f.fieldType.toNonNullable as MapType
+    init.explicitType = f.type.toNonNullable as MapType
   }
 
   private Void genSyntheticOverrideGet(FieldDef f)

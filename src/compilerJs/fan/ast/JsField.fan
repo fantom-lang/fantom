@@ -15,7 +15,7 @@ class JsField : JsSlot
 {
   new make(JsCompilerSupport s, FieldDef f) : super(s, f)
   {
-    this.ftype = JsTypeRef(s, f.fieldType, f.loc)
+    this.ftype = JsTypeRef(s, f.type, f.loc)
   }
 
   override FieldDef? node() { super.node }
@@ -56,3 +56,4 @@ class JsFieldRef : JsSlotRef
 {
   new make(JsCompilerSupport s, CField f) : super(s, f) {}
 }
+

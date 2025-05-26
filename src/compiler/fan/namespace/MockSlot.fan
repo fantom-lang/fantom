@@ -37,13 +37,13 @@ class MockField : MockSlot, CField
   new make(CType parent, Str name, Int flags, CType of)
     : super(parent, name, flags)
   {
-    this.fieldType = of
+    this.type = of
   }
 
-  override CType fieldType
+  override CType type
   override CMethod? getter() { null }
   override CMethod? setter() { null }
-  override CType inheritedReturns() { fieldType }
+  override CType inheritedReturns() { type }
 }
 
 **************************************************************************

@@ -688,7 +688,7 @@ class JavaBridge : CBridge
     field := FieldDef(loc, cls)
     ((SlotDef)field).name = "_func"
     ((DefNode)field).flags = FConst.Private + FConst.Storage + FConst.Synthetic
-    field.fieldType = funcType
+    field.type = funcType
     cls.addSlot(field)
 
     // generate FuncWrapper.make constructor

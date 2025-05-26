@@ -375,7 +375,7 @@ class ClosureVars : CompilerStep
     field := FieldDef(loc, implType)
     field.name  = name
     field.flags = syntheticFieldFlags
-    field.fieldType = ctype
+    field.type = ctype
     field.closureInfo = info
     implType.addSlot(field)
 
@@ -450,7 +450,7 @@ class ClosureVars : CompilerStep
     // generate val field
     f := FieldDef(loc, w)
     f.name = "val"
-    f.fieldType = ctype
+    f.type = ctype
     f.flags = syntheticFieldFlags
     w.addSlot(f)
 

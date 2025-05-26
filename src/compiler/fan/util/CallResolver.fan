@@ -234,7 +234,7 @@ class CallResolver : CompilerSupport
     if (found is CField && !isVar)
     {
       field := (CField)found
-      if (field.fieldType.isFunc)
+      if (field.type.isFunc)
         isFuncFieldCall = true
       else
         throw err("Expected method, not field '$errSig'", loc)
@@ -305,7 +305,7 @@ class CallResolver : CompilerSupport
       result = resolveToFieldExpr
       if (isFuncFieldCall)
       {
-        callMethod := ((CField)found).fieldType.method("call")
+        callMethod := ((CField)found).type.method("call")
         result = CallExpr.makeWithMethod(loc, result, callMethod, args)
       }
     }
@@ -347,7 +347,7 @@ class CallResolver : CompilerSupport
     field.target = target
     field.name   = name
     field.field  = f
-    field.ctype  = f.fieldType
+    field.ctype  = f.type
     field.isSafe = expr.isSafe
 
     return field

@@ -117,7 +117,7 @@ final class FPod : CPod, FConst
   {
     p := addTypeRef(field.parent)
     n := addName(field.name)
-    t := addTypeRef(field.fieldType)
+    t := addTypeRef(field.type)
     return fieldRefs.add(FFieldRef(p, n, t))
   }
 

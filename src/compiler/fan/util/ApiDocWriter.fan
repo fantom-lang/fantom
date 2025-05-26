@@ -71,7 +71,7 @@ class ApiDocWriter
 
   private Void writeFieldStart(FieldDef f)
   {
-    w(slotPrefix).w(f.name).w(" ").w(f.fieldType.signature)
+    w(slotPrefix).w(f.name).w(" ").w(f.type.signature)
     if (f.init != null) w(":=").w(encodeExpr(f.init))
     w("\n")
 

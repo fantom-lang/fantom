@@ -69,7 +69,7 @@ abstract class GenericType : CType
     else
     {
       f := (CField)slot
-      if (!f.fieldType.isGenericParameter) return slot
+      if (!f.type.isGenericParameter) return slot
       return ParameterizedField(this, f)
     }
   }
@@ -441,7 +441,7 @@ class ParameterizedField : CField
   {
     this.parent = parent
     this.generic = generic
-    this.fieldType = parent.parameterize(generic.fieldType)
+    this.type   = parent.parameterize(generic.type)
     this.getter = ParameterizedMethod(parent, generic.getter)
     this.setter = ParameterizedMethod(parent, generic.setter)
   }
@@ -453,10 +453,10 @@ class ParameterizedField : CField
   override Int flags() { generic.flags }
   override CFacet? facet(Str qname) { generic.facet(qname) }
 
-  override CType fieldType
+  override CType type
   override CMethod? getter
   override CMethod? setter
-  override CType inheritedReturns() { fieldType }
+  override CType inheritedReturns() { type }
 
   override Bool isParameterized() { true }
 

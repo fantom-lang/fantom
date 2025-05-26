@@ -468,7 +468,7 @@ public class Parser : CompilerSupport
     field.facets = facets
     field.flags  = flags
     field.name   = name
-    if (type != null) field.fieldType = type
+    if (type != null) field.type = type
 
     // const always has storage, otherwise assume no storage
     // until proved otherwise in ResolveExpr step or we
@@ -538,7 +538,7 @@ public class Parser : CompilerSupport
     get.accessorFor = f
     get.flags   = f.flags.or(FConst.Getter)
     get.name    = f.name
-    get.returns = f.fieldType
+    get.returns = f.type
     f.get = get
   }
 
@@ -551,7 +551,7 @@ public class Parser : CompilerSupport
     set.flags   = f.flags.or(FConst.Setter)
     set.name    = f.name
     set.returns = ns.voidType
-    set.params.add(ParamDef(loc, f.fieldType, "it"))
+    set.params.add(ParamDef(loc, f.type, "it"))
     f.set = set
   }
 

@@ -1074,9 +1074,9 @@ class CodeAsm : CompilerSupport
 
       // if parameterized or covariant, then coerce
       if (field.isParameterized)
-        coerceOp(ns.objType, field.fieldType)
+        coerceOp(ns.objType, field.type)
       else if (field.isCovariant)
-        coerceOp(field.inheritedReturns, field.fieldType)
+        coerceOp(field.inheritedReturns, field.type)
     }
     // load field directly from storage
     else
@@ -1101,7 +1101,7 @@ class CodeAsm : CompilerSupport
     // if safe, handle null case
     if (fexpr.isSafe)
     {
-      if (field.fieldType.isVal) coerceOp(field.fieldType, field.fieldType.toNullable)
+      if (field.type.isVal) coerceOp(field.type, field.type.toNullable)
       endLabel := jump(FOp.Jump)
       backpatch(isNullLabel)
       opType(FOp.Pop, fexpr.ctype)

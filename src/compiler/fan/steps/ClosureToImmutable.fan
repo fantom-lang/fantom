@@ -79,7 +79,7 @@ class ClosureToImmutable : CompilerStep
   **
   Bool isAlwaysImmutable(TypeDef cls)
   {
-    cls.fieldDefs.all |f| { f.fieldType.isConst }
+    cls.fieldDefs.all |f| { f.type.isConst }
   }
 
   **
@@ -88,7 +88,7 @@ class ClosureToImmutable : CompilerStep
   **
   Str? isNeverImmutable(TypeDef cls)
   {
-    field := cls.fieldDefs.find |f| { !f.fieldType.isConstFieldType }
+    field := cls.fieldDefs.find |f| { !f.type.isConstFieldType }
     if (field == null) return null
     return "Closure field not const: " + (field.closureInfo ?: field.name)
   }
@@ -156,7 +156,7 @@ class ClosureToImmutable : CompilerStep
     // Bool immutable
     immutableField := FieldDef(loc, cls)
     immutableField.name = "immutable"
-    immutableField.fieldType = ns.boolType
+    immutableField.type = ns.boolType
     immutableField.flags = FConst.Private + FConst.Storage + FConst.Synthetic
     cls.addSlot(immutableField)
 
@@ -174,14 +174,14 @@ class ClosureToImmutable : CompilerStep
       field := cls.field(param.name)
       if (field == null) throw Err("Closure param missing matched field $param.name")
       fieldGet := FieldExpr(loc, ThisExpr(loc, cls), field, false)
-      if (field.fieldType.isConst)
+      if (field.type.isConst)
       {
         args.add(fieldGet)
       }
       else
       {
         call := CallExpr.makeWithMethod(loc, fieldGet, ns.objToImmutable)
-        args.add(TypeCheckExpr.coerce(call, field.fieldType))
+        args.add(TypeCheckExpr.coerce(call, field.type))
       }
     }
     makeCall := CallExpr.makeWithMethod(loc, null, ctor, args)

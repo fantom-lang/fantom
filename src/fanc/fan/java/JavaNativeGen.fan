@@ -261,7 +261,7 @@ internal class JavaNativeGen
     if (slot is FieldDef)
     {
       field := (FieldDef)slot
-      hasGenerics = isParameterizedListOrMap(field.fieldType)
+      hasGenerics = isParameterizedListOrMap(field.type)
     }
     else
     {

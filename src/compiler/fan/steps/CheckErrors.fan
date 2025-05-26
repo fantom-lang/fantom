@@ -234,11 +234,11 @@ class CheckErrors : CompilerStep
       err("Abstract field '$f.name' cannot have getter or setter", f.loc)
 
     // check internal type
-    checkTypeProtection(f.fieldType, f.loc)
+    checkTypeProtection(f.type, f.loc)
 
     // check that public field isn't using internal type
-    if (curType.isPublic && (f.isPublic || f.isProtected) && !f.fieldType.isPublic)
-      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.fieldType'", f.loc)
+    if (curType.isPublic && (f.isPublic || f.isProtected) && !f.type.isPublic)
+      err("Public field '${curType.name}.${f.name}' cannot use internal type '$f.type'", f.loc)
   }
 
   private Void checkFieldFlags(FieldDef f)
@@ -270,8 +270,8 @@ class CheckErrors : CompilerStep
       else if (flags.and(FConst.Virtual) != 0 && flags.and(FConst.Override) == 0) err("Invalid combination of 'const' and 'virtual' modifiers", loc)
 
       // invalid type
-      if (!f.fieldType.isConstFieldType)
-        err("Const field '$f.name' has non-const type '$f.fieldType'", loc)
+      if (!f.type.isConstFieldType)
+        err("Const field '$f.name' has non-const type '$f.type'", loc)
     }
     else
     {
@@ -514,7 +514,7 @@ class CheckErrors : CompilerStep
       f.isStatic == isStaticInit &&
       !f.isAbstract && !f.isNative && f.isStorage &&
       (!f.isOverride || f.concreteBase == null) &&
-      !f.fieldType.isNullable && !f.fieldType.isVal && f.init == null
+      !f.type.isNullable && !f.type.isVal && f.init == null
     }
     if (fields.isEmpty) return
 
@@ -620,15 +620,15 @@ class CheckErrors : CompilerStep
       // if null literal
       if (val.id == ExprId.nullLiteral)
       {
-        if (!field.fieldType.isNullable)
-          err("Cannot assign null to non-nullable facet field '$name': '$field.fieldType'", val.loc)
+        if (!field.type.isNullable)
+          err("Cannot assign null to non-nullable facet field '$name': '$field.type'", val.loc)
       }
 
       // otherwise check field type (no coersion allowed)
       else
       {
-        if (!val.ctype.fits(field.fieldType.inferredAs))
-          err("Invalid type for facet field '$name': expected '$field.fieldType' not '$val.ctype'", val.loc)
+        if (!val.ctype.fits(field.type.inferredAs))
+          err("Invalid type for facet field '$name': expected '$field.type' not '$val.ctype'", val.loc)
       }
     }
   }
@@ -1175,7 +1175,7 @@ class CheckErrors : CompilerStep
     // any other errors should already be logged at this point (see isConstFieldType)
 
     // if non-const make an implicit call toImmutable
-    ftype := field.fieldType
+    ftype := field.type
     if (ftype.isConst)
       return rhs
     else
@@ -1345,9 +1345,9 @@ class CheckErrors : CompilerStep
     checkSlotProtection(field, f.loc)
 
     // if a FFI, then verify we aren't using unsupported types
-    if (!field.fieldType.isSupported)
+    if (!field.type.isSupported)
     {
-      err("Field '$field.name' has unsupported type '$field.fieldType'", f.loc)
+      err("Field '$field.name' has unsupported type '$field.type'", f.loc)
       return
     }
 

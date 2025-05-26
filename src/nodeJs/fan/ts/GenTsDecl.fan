@@ -227,7 +227,7 @@ class GenTsDecl
   {
     name := JsNode.methodToJs(field.name)
     staticStr := field.isStatic ? "static " : ""
-    typeStr := getJsType(field.fieldType, field.isStatic ? parent : null)
+    typeStr := getJsType(field.type, field.isStatic ? parent : null)
 
     printDoc(field, 2)
 

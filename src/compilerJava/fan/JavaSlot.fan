@@ -50,17 +50,17 @@ class JavaField : JavaSlot, CField
   new make(CType parent, Str name, Int flags, CType type)
     : super(parent, name, flags)
   {
-    this.fieldType = type
+    this.type = type
   }
 
-  override This dup() { make(parent, name, flags, fieldType) }
+  override This dup() { make(parent, name, flags, type) }
 
-  override CType fieldType
+  override CType type
   override CMethod? getter
   override CMethod? setter
 
-  override Str signature() { return "$fieldType $name" }
-  override CType inheritedReturns() { return fieldType }
+  override Str signature() { return "$type $name" }
+  override CType inheritedReturns() { type }
 
 }
 

@@ -80,8 +80,8 @@ class UnitTest : Test
     verifyEq(u.hash, u.toStr.hash)
     verifyEq(u.toStr, u.symbol)
     zeroes := ["kg", "m", "sec", "K", "A", "mol", "cd"].exclude |k| { dim.keys.contains(k) }
-    zeroes.each |Str x| { verifyEq(u.trap(x, null), 0) }
-    dim.each |Int v, Str x| { verifyEq(u.trap(x, null), v) }
+    zeroes.each |Str x| { verifyEq(u.trap(x, Obj[,]), 0) }
+    dim.each |Int v, Str x| { verifyEq(u.trap(x, Obj[,]), v) }
 
     // verify additional definitions throw
     if (Env.cur.runtime != "js")
@@ -331,3 +331,4 @@ class UnitTest : Test
   }
 
 }
+

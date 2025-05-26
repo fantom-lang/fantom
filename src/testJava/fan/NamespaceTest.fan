@@ -41,7 +41,7 @@ class NamespaceTest : JavaTest
     verifySame(out.parent, sys)
     verifyEq(out.name, "out")
     verifyEq(out.qname, "[java]java.lang::System.out")
-    verifyEq(out.fieldType.qname, "[java]java.io::PrintStream")
+    verifyEq(out.type.qname, "[java]java.io::PrintStream")
     verifyEq(out.isPublic, true)
     verifyEq(out.isStatic, true)
 
@@ -78,7 +78,7 @@ class NamespaceTest : JavaTest
     verifyEq(t.method("booleanArray").returns.isNullable, true)
     verifyEq(t.method("booleanArray").returns.signature, "[java]fanx.interop::BooleanArray?")
     verifyEq(t.method("booleanArray").returns.toNonNullable.signature, "[java]fanx.interop::BooleanArray")
-    verifyEq(t.field("numb").fieldType.signature, "[java]::byte")
+    verifyEq(t.field("numb").type.signature, "[java]::byte")
 
     // protected
     util := ns.resolvePod("[java]java.util", null)

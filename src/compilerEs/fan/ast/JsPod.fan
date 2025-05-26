@@ -163,10 +163,10 @@ class JsPod : JsNode
       t.fields.each |FieldDef f|
       {
         // don't write for FFI
-        if (f.isForeign || f.fieldType.isForeign) return
+        if (f.isForeign || f.type.isForeign) return
 
         facets := toFacets(f.facets)
-        js.w(".af\$('${f.name}',${f->flags},'${f.fieldType.signature}',{${facets}})")
+        js.w(".af\$('${f.name}',${f->flags},'${f.type.signature}',{${facets}})")
       }
       t.methods.each |MethodDef m|
       {

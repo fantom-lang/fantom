@@ -81,7 +81,7 @@ class Assembler : CompilerSupport, FConst
     f := FField(fparent)
     f.nameIndex = name(def.name)
     f.flags     = def.flags
-    f.typeRef   = typeRef(def.fieldType)
+    f.typeRef   = typeRef(def.type)
 
     attrs := AttrAsm(compiler, fpod)
     attrs.lineNumber(def.loc.line)
