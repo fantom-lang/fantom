@@ -47,6 +47,13 @@ internal class JavaCmd : TranspileCmd
     return 0
   }
 
+  override CompilerInput stdCompilerInput(TranspilePod pod, |CompilerInput|? f := null)
+  {
+    input := super.stdCompilerInput(pod, f)
+    input.wrapperPerParameterizedCollectionType = true
+    return input
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Gen
 //////////////////////////////////////////////////////////////////////////

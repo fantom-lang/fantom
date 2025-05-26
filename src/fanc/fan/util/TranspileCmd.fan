@@ -109,7 +109,7 @@ abstract class TranspileCmd : FancCmd
 
   ** Use the build script to generate the standard compiler input and then
   ** inovke the callback on it for additonal configuration.
-  protected CompilerInput stdCompilerInput(TranspilePod pod, |CompilerInput|? f := null)
+  virtual CompilerInput stdCompilerInput(TranspilePod pod, |CompilerInput|? f := null)
   {
     buildPod    := Env.cur.compileScript(pod.buildScript).pod
     buildType   := buildPod.types.find |t| { t.fits(BuildPod#) }

@@ -1042,16 +1042,15 @@ internal class JavaPrinter : CodePrinter
     prefix := parent.qname + "\$"
     parent.podDef.typeDefs.each |x|
     {
-      if (JavaUtil.isSyntheticInner(parent, x))
-        syntheticClass(x,  JavaUtil.syntheticInnerClass(x))
+      if (JavaUtil.isSyntheticClosure(parent, x))
+        syntheticClass(x,  JavaUtil.syntheticClosureName(x))
     }
 
     // also generate every wrapper used as an inner class
     wrappers.each |x|
     {
-      syntheticClass(x, x.name)
+      syntheticClass(x, JavaUtil.syntheticWrapperName(x))
     }
-
   }
 
   private Void syntheticClass(TypeDef x, Str name)
@@ -1145,13 +1144,15 @@ internal class JavaPrinter : CodePrinter
       if (JavaUtil.isSyntheticWrapper(t))
       {
         // keep track of synthetic wrappers used by parent type
-        wrappers[t.name] = t
-        return w(t.name)
+        name := JavaUtil.syntheticWrapperName(t)
+        wrappers[name] = t
+        return w(name)
       }
       else
       {
         // closure synthetic
-        return w(JavaUtil.syntheticInnerClass(t))
+        name := JavaUtil.syntheticClosureName(t)
+        return w(name)
       }
     }
 

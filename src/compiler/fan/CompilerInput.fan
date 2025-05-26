@@ -133,6 +133,14 @@ class CompilerInput
   **
   Bool docTests := false
 
+  **
+  ** Generate a unique wrapper type per parameterized List/Map.
+  ** By default we generate one acme::Wrap$List class per pod for all
+  ** List types. But when transpiling Java we need a different version
+  ** per parameterized List/Map.
+  **
+  Bool wrapperPerParameterizedCollectionType
+
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.file
 //////////////////////////////////////////////////////////////////////////
@@ -237,3 +245,4 @@ enum class CompilerInputMode
   file,
   str
 }
+

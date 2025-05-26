@@ -415,9 +415,26 @@ class ClosureVars : CompilerStep
   static CField genWrapper(CompilerSupport cs, CType ctype)
   {
     // build class name key
-    suffix := ctype.isNullable ? "\$n" : ""
     podName := ctype.pod.name != "sys" ? "\$" + toSafe(ctype.pod.name) : ""
-    name := "Wrap" + podName + "\$" + toSafe(ctype.name) + suffix
+    name := "Wrap" + podName + "\$" + toSafe(ctype.name)
+
+    // if this flag is set, we need to add param types to clas name key
+    if (cs.compiler.input.wrapperPerParameterizedCollectionType && ctype.isParameterized)
+    {
+      if (ctype.isList)
+      {
+        list := (ListType)ctype.toNonNullable
+        name += "\$" + toSafe(list.v.name)
+      }
+      else if (ctype.isMap)
+      {
+        map := (MapType)ctype.toNonNullable
+        name += "\$" + toSafe(map.k.name) + "\$" + toSafe(map.v.name)
+      }
+    }
+
+    // add $n if nullable
+    if (ctype.isNullable) name += "\$n"
 
     // reuse existing wrapper
     existing := cs.compiler.wrappers[name]

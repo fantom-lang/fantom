@@ -225,7 +225,7 @@ class TypeDef : DefNode, CType
   **
   ** Return FieldDef for specified name or null.
   **
-  FieldDef? fieldDef (Str name)
+  FieldDef? fieldDef(Str name)
   {
     return (FieldDef)slotDefMap[name]
   }
