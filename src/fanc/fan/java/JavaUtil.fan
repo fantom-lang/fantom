@@ -86,6 +86,12 @@ internal class JavaUtil
     ["fanx/emit", "fanx/fcode", "fanx/interop", "fanx/serial", "fanx/tools", "fanx/util"]
   }
 
+  ** Is x a synthetic wrappers such as acme::Wraper$List
+  static Bool isSyntheticWrapper(TypeDef x)
+  {
+    x.isSynthetic && x.name.startsWith("Wrap\$")
+  }
+
   ** Is x a synthetic under the given parent
   static Bool isSyntheticInner(TypeDef parent, TypeDef x)
   {

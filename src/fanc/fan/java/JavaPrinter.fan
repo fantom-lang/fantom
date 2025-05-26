@@ -22,6 +22,8 @@ internal class JavaPrinter : CodePrinter
   Void type(TypeDef t)
   {
     curType = t
+    wrappers.clear
+
     prelude(t)
     typeHeader(t)
     w(" {").nl
@@ -32,7 +34,9 @@ internal class JavaPrinter : CodePrinter
     syntheticClasses(t)
     unindent
     w("}").nl
+
     curType = null
+    wrappers.clear
   }
 
   Void prelude(TypeDef t)
@@ -1039,13 +1043,19 @@ internal class JavaPrinter : CodePrinter
     parent.podDef.typeDefs.each |x|
     {
       if (JavaUtil.isSyntheticInner(parent, x))
-        syntheticClass(x)
+        syntheticClass(x,  JavaUtil.syntheticInnerClass(x))
     }
+
+    // also generate every wrapper used as an inner class
+    wrappers.each |x|
+    {
+      syntheticClass(x, x.name)
+    }
+
   }
 
-  private Void syntheticClass(TypeDef x)
+  private Void syntheticClass(TypeDef x, Str name)
   {
-    name := JavaUtil.syntheticInnerClass(x)
     nl
     w("/** Synthetic closure support */").nl
     w("static final class ").w(name).extends(x).w(" {").nl
@@ -1130,7 +1140,20 @@ internal class JavaPrinter : CodePrinter
     }
 
     // assume synthetics are my own inner classes
-    if (t.isSynthetic) return w(JavaUtil.syntheticInnerClass(t))
+    if (t.isSynthetic)
+    {
+      if (JavaUtil.isSyntheticWrapper(t))
+      {
+        // keep track of synthetic wrappers used by parent type
+        wrappers[t.name] = t
+        return w(t.name)
+      }
+      else
+      {
+        // closure synthetic
+        return w(JavaUtil.syntheticInnerClass(t))
+      }
+    }
 
     // qname
     return w("fan.").w(t.pod.name).w(".").typeName(t)
@@ -1170,6 +1193,7 @@ internal class JavaPrinter : CodePrinter
 //////////////////////////////////////////////////////////////////////////
 
   private TypeDef? curType
+  private Str:TypeDef wrappers := [:]
   private MethodDef? curMethod
   private Str? selfVar
 }
