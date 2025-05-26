@@ -51,6 +51,7 @@ internal class JavaPrinter : CodePrinter
     nl
     w("import fan.sys.FanObj").eos
     w("import fan.sys.FanBool").eos
+    w("import fan.sys.FanNum").eos
     w("import fan.sys.FanInt").eos
     w("import fan.sys.FanFloat").eos
     w("import fan.sys.FanStr").eos
