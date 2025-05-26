@@ -122,6 +122,16 @@ public class Err
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
+  public boolean isImmutable() { return true; }
+
+  public Object toImmutable() { return this; }
+
+  public long hash() { return hashCode(); }
+
+  public long compare(Object obj) { return FanStr.compare(toStr(), FanObj.toStr(obj)); }
+
+  public Object with(Func f) { f.call(this); return this; }
+
   public String msg() { return msg; }
 
   public Err cause() { return cause; }
@@ -340,3 +350,4 @@ public class Err
   Err cause;
   Throwable actual;
 }
+
