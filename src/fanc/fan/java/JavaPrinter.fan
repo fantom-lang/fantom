@@ -187,13 +187,11 @@ internal class JavaPrinter : CodePrinter
     // variable to use for this in implementation
     this.selfVar = "self\$"
 
-    // flags
-    slotScope(x)
-    w("static ")
+    // param default conveniences
+    methodParamDefaults(x)
 
-    // static Self name(...)
-    typeSig(selfType).sp.methodName(x)
-    params(x)
+    // full parameter factory method
+    methodSig(x, x.params.size)
 
     // if static ctor its just a static method
     if (x.isStatic)
@@ -234,13 +232,11 @@ internal class JavaPrinter : CodePrinter
 
   Void stdMethod(MethodDef x)
   {
-    // flags
-    slotScope(x)
-    if (x.isStatic) w("static ")
+    // param default conveniences
+    methodParamDefaults(x)
 
-    // Returns name(...)
-    typeSig(x.returns).sp.methodName(x)
-    params(x)
+    // implementation signature
+    methodSig(x, x.params.size)
 
     // body
     if (x.isAbstract) return eos
@@ -248,6 +244,59 @@ internal class JavaPrinter : CodePrinter
 
     // generate a java main for all main(Str[] args) methods
     if (x.name == "main") javaMain(x)
+  }
+
+  This methodSig(MethodDef x, Int numParams)
+  {
+    // flags
+    slotScope(x)
+    if (x.isStatic || x.isCtor) w("static ")
+
+    // return type
+    if (x.isCtor)
+      typeSig(x.parent)
+    else
+      typeSig(x.returns)
+
+    // name(...)
+    sp.methodName(x)
+    params(x, numParams)
+    return this
+  }
+
+  Void methodParamDefaults(MethodDef x)
+  {
+    starti := x.params.findIndex |p| { p.hasDefault }
+    if (starti == null) return
+
+    for (i := starti; i<x.params.size; ++i)
+      methodParamDefault(x, i)
+  }
+
+  Void methodParamDefault(MethodDef x, Int numParams)
+  {
+    w("/** Convenience for $x.name */").nl
+    methodSig(x, numParams).w(" {").nl
+    indent
+    if (!x.returns.isVoid || x.isCtor) w("return ")
+    methodName(x).w("(")
+    first := true
+    x.paramDefs.eachRange(0..<numParams) |p|
+    {
+      if (first) first = false
+      else w(", ")
+      varName(p.name)
+    }
+    x.paramDefs.eachRange(numParams..-1) |p|
+    {
+      if (first) first = false
+      else w(", ")
+      expr(p.def)
+    }
+    w(")").eos
+    unindent
+    w("}").nl
+    nl
   }
 
   Void samMethod(MethodDef x, FuncType funcType, CType[] funcParams)
@@ -343,10 +392,10 @@ internal class JavaPrinter : CodePrinter
     w("}").nl
   }
 
-  This params(MethodDef x)
+  This params(MethodDef x, Int numParams)
   {
     w("(")
-    x.params.each |p, i|
+    x.params.eachRange(0..<numParams) |p, i|
     {
       if (i > 0) w(", ")
       param(p)
