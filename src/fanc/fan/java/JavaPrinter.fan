@@ -184,7 +184,7 @@ internal class JavaPrinter : CodePrinter
     selfType := x.parent
 
     // variable to use for this in implementation
-    this.selfVar = "it"
+    this.selfVar = "self\$"
 
     // flags
     slotScope(x)
@@ -205,11 +205,11 @@ internal class JavaPrinter : CodePrinter
     implName := JavaUtil.ctorImplName(x)
     w(" { ").nl
     indent
-    typeSig(selfType).w(" it = new ").typeSig(selfType).w("();").nl
-    w(implName).w("(it")
+    typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("();").nl
+    w(implName).w("(").w(selfVar)
     x.params.each |p| { w(", ").varName(p.name) }
     w(");").nl
-    w("return it;").nl
+    w("return ").w(selfVar).w(";").nl
     unindent
     w("}").nl.nl
 
@@ -224,7 +224,7 @@ internal class JavaPrinter : CodePrinter
       chain     := x.ctorChain
       chainType := chain.target.id == ExprId.superExpr ? selfType.base : selfType
       chainName := JavaUtil.ctorImplName(chain.method)
-      typeSig(chainType).w(".").w(chainName).w("(it").args(x.ctorChain.args, true).w(")").eos
+      typeSig(chainType).w(".").w(chainName).w("(").w(selfVar).args(x.ctorChain.args, true).w(")").eos
     }
     x.code.stmts.each |s| { stmt(s) }
     unindent
@@ -852,9 +852,9 @@ internal class JavaPrinter : CodePrinter
   private This safe(Expr target, CType returns, |This| restViaItArg)
   {
     qnOpUtil.w(".<").typeSig(target.ctype)
-    if (returns.isVal)
+    if (returns.isVal || returns.isVoid)
     {
-      // value types use safeBool(), safeInt(), or safeFloat()
+      // value types use safeVoid, safeBool(), safeInt(), or safeFloat()
       w(">safe${returns.name}(")
     }
     else

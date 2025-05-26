@@ -587,7 +587,7 @@ class ListTest : Test
   {
     if (expected != null)
     {
-echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
+      // echo("-- $list [$r] => " + list.getRange(r) + " ?= " + expected)
       verifyEq(list[r], expected)
       verifyEq(list.getRange(r), expected)
     }

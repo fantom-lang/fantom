@@ -199,6 +199,11 @@ public class OpUtil
     return target == null ? null : f.apply(target);
   }
 
+  public static <T> void safeVoid(T target, java.util.function.Consumer<T> f)
+  {
+    if (target != null) f.accept(target);
+  }
+
   public static <T> Boolean safeBool(T target, java.util.function.Predicate<T> f)
   {
     return target == null ? null : f.test(target);
