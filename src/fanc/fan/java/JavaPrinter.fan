@@ -108,7 +108,7 @@ internal class JavaPrinter : CodePrinter
     t.enumDefs.each |e|
     {
       name := e.name.upper
-      if (t.slot(name) != null) throw Err("Enum name conflict: $t.qname $name")
+      if (t.slot(name) != null) name = "_$name"
       w("public static final int ").w(name).w(" = ").w(e.ordinal).eos
     }
   }
