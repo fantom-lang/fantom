@@ -14,8 +14,14 @@ public final class BoolArray extends FanObj
 
   public static BoolArray make(long size) { return new BoolArray(size); }
 
-  public final Type typeof() { return typeof; }
-  private static final Type typeof = Type.find("util::BoolArray");
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
+  {
+    if (type == null) type = Type.find("util::BoolArray");
+    return type;
+  }
+  private static Type type;
 
   BoolArray(long size)
   {
@@ -93,3 +99,4 @@ public final class BoolArray extends FanObj
   private final long size;
   private final int[] words;
 }
+

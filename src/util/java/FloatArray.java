@@ -16,8 +16,14 @@ public abstract class FloatArray extends FanObj
   public static FloatArray makeF4(long size) { return new F4((int)size); }
   public static FloatArray makeF8(long size) { return new F8((int)size); }
 
-  public final Type typeof() { return typeof; }
-  private static final Type typeof = Type.find("util::FloatArray");
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
+  {
+    if (type == null) type = Type.find("util::FloatArray");
+    return type;
+  }
+  private static Type type;
 
   public abstract String kind();
   public abstract Object array();
@@ -87,3 +93,4 @@ public abstract class FloatArray extends FanObj
   }
 
 }
+

@@ -21,8 +21,14 @@ public abstract class IntArray extends FanObj
   public static IntArray makeU4(long size) { return new U4((int)size); }
   public static IntArray makeS8(long size) { return new S8((int)size); }
 
-  public final Type typeof() { return typeof; }
-  private static final Type typeof = Type.find("util::IntArray");
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
+  {
+    if (type == null) type = Type.find("util::IntArray");
+    return type;
+  }
+  private static Type type;
 
   public abstract String kind();
   public abstract Object array();
@@ -137,3 +143,4 @@ public abstract class IntArray extends FanObj
   }
 
 }
+

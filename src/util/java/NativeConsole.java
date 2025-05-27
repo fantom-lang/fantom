@@ -133,7 +133,9 @@ public abstract class NativeConsole extends Console
   public String promptPassword() { return promptPassword(""); }
   public abstract String promptPassword(String msg);
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("util::NativeConsole");
     return type;
