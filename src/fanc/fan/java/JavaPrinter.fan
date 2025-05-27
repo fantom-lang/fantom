@@ -72,7 +72,10 @@ internal class JavaPrinter : CodePrinter
     w(t.isMixin ? "interface" : "class").sp.typeName(t)
 
     // extends
-    extends(t)
+    if (t.isClass) extends(t)
+
+    // implements
+    if (!t.mixins.isEmpty) implements(t)
   }
 
   This extends(TypeDef t)
@@ -84,9 +87,21 @@ internal class JavaPrinter : CodePrinter
     return this
   }
 
+  This implements(TypeDef t)
+  {
+    w(" implements ")
+    t.mixins.each |m, i|
+    {
+      if (i > 0) w(", ")
+      typeSig(m)
+    }
+    return this
+  }
+
   Void typeOf(TypeDef t)
   {
     if (t.isSynthetic) return
+    if (t.isMixin) return
 
     w("/** Reflect type of this object */").nl
     w("public ").qnType.w(" typeof() { return typeof\$(); }").nl
@@ -240,6 +255,7 @@ internal class JavaPrinter : CodePrinter
 
     // body
     if (x.isAbstract) return eos
+    if (x.isNative)   return sp.nativeMethodCode(x).nl
     sp.block(x.code).nl
 
     // generate a java main for all main(Str[] args) methods
@@ -251,6 +267,8 @@ internal class JavaPrinter : CodePrinter
     // flags
     slotScope(x)
     if (x.isStatic || x.isCtor) w("static ")
+    if (x.isAbstract) w("abstract ")
+    else if (x.parent.isMixin && !x.isStatic) w("default ")
 
     // return type
     if (x.isCtor)
@@ -297,6 +315,13 @@ internal class JavaPrinter : CodePrinter
     unindent
     w("}").nl
     nl
+  }
+
+  This nativeMethodCode(MethodDef x)
+  {
+    w("{").nl
+    w("}")
+    return this
   }
 
   Void samMethod(MethodDef x, FuncType funcType, CType[] funcParams)
@@ -864,6 +889,10 @@ internal class JavaPrinter : CodePrinter
       w(")")
       return this
     }
+
+    // in Java static interface methods must be called on interface itself
+    if (method.parent.isMixin && method.isStatic)
+      target = StaticTargetExpr(target.loc, method.parent)
 
     return expr(target).w(".").w(methodName).w("(").args(args).w(")")
   }
