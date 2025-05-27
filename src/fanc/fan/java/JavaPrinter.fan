@@ -1060,7 +1060,7 @@ internal class JavaPrinter : CodePrinter
 
   private Bool useFieldCall(FieldExpr x)
   {
-    if (curMethod.isGetter || curMethod.isSetter) return true
+    if (curMethod.isGetter || curMethod.isSetter) return false
     if (x.field.isSynthetic) return false
     if (x.field.parent.pod.name == "sys" && !x.useAccessor) return false
     return true
@@ -1235,7 +1235,10 @@ internal class JavaPrinter : CodePrinter
     return typeSig(t, parameterize)
   }
 
-  This str(Obj x) { w(x.toStr.toCode) }
+  This str(Obj x)
+  {
+    w(x.toStr.toCode.replace("\\\$", "\$"))
+  }
 
   This eos() { w(";").nl }
 
