@@ -138,6 +138,7 @@ internal class JavaPrinter : CodePrinter
     methods  := MethodDef[,]
     consts   := FieldDef[,]
     storages := FieldDef[,]
+    MethodDef? staticInit
 
     t.slotDefs.each |x|
     {
@@ -146,6 +147,8 @@ internal class JavaPrinter : CodePrinter
         m := (MethodDef)x
         if (m.isCtor || m.isInstanceInit)
           ctors.add(m)
+        else if (m.isStaticInit)
+          staticInit = m
         else
           methods.add(m)
       }
@@ -160,7 +163,15 @@ internal class JavaPrinter : CodePrinter
     ctors.each    |x| { nl.method(x) }
     consts.each   |x| { nl.constGetter(x) }
     methods.each  |x| { nl.method(x) }
-    storages.each |x| { fieldStorage(x) }
+    if (t.isClass)
+    {
+      if (staticInit != null) nl.method(staticInit)
+      storages.each |x| { fieldStorage(x) }
+    }
+    else
+    {
+      mixinStaticFields(staticInit, storages)
+    }
   }
 
   Void constGetter(FieldDef x)
@@ -168,7 +179,10 @@ internal class JavaPrinter : CodePrinter
     slotScope(x)
     if (x.isStatic) w("static ")
     typeSig(x.type).sp.fieldName(x)
-    w("() { return ").fieldName(x).w("; }").nl
+
+    w("() { return ")
+    if (x.parent.isMixin) w(JavaUtil.mixinFieldsName).w(".")
+    fieldName(x).w("; }").nl
   }
 
   Void fieldStorage(FieldDef x)
@@ -177,6 +191,20 @@ internal class JavaPrinter : CodePrinter
     if (x.isStatic) w("static ")
     typeSig(x.type).sp.fieldName(x).eos
     return this
+  }
+
+  Void mixinStaticFields(MethodDef? init, FieldDef[] fields)
+  {
+    // Java interfaces don't support static fields nor initializers;
+    // so generate an inner class named Fields that declares storage
+    // and handles static initilizer.  We swizzle get via constGetter()
+    // and set in fieldAssign()
+    nl.w("static class ").w(JavaUtil.mixinFieldsName).w(" {").nl
+    indent
+    fields.each |f| { fieldStorage(f) }
+    if (init != null) method(init)
+    unindent
+    w("}").nl
   }
 
   Void method(MethodDef x)
@@ -966,7 +994,6 @@ internal class JavaPrinter : CodePrinter
     typeSig(x.ctype)
   }
 
-
   override This shortcutAssignExpr(ShortcutExpr x)
   {
     // get the variable
@@ -1073,14 +1100,19 @@ internal class JavaPrinter : CodePrinter
   {
     // special handling for fan.sys.FanBool.xxx
     field := x.field
-    targetType := x.target?.ctype
+    target := x.target
+    targetType := target?.ctype
     if (targetType != null && JavaUtil.isJavaNative(targetType))
     {
       qnFanVal(targetType).w(".").fieldName(field)
       return this
     }
 
-    if (x.target != null) expr(x.target).w(".")
+    // in Java static interface methods must be called on interface itself
+    if (field.parent.isMixin && field.isStatic)
+      target = StaticTargetExpr(x.loc, field.parent)
+
+    if (target != null) expr(target).w(".")
     fieldName(field)
     if (useFieldCall(x)) w("()")
 
@@ -1097,8 +1129,17 @@ internal class JavaPrinter : CodePrinter
 
   private This fieldAssign(FieldExpr x, Expr rhs)
   {
+    // if we are in the static init of a mixin, then our fields
+    // are declared on an inner class named Fields
+    field := x.field
+    if (curMethod.isStaticInit && curMethod.parent.isMixin)
+    {
+      fieldName(field).w(" = ").expr(rhs)
+      return this
+    }
+
     if (x.target != null) expr(x.target).w(".")
-    fieldName(x.field)
+    fieldName(field)
     if (x.useAccessor)
       w("(").expr(rhs).w(")")
     else

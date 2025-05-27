@@ -112,6 +112,12 @@ internal class JavaUtil
     return n.capitalize
   }
 
+  ** Inner class for mixin static fields
+  static Str mixinFieldsName()
+  {
+    "Fields"
+  }
+
   ** Is this a native java type: Obj, Str, Int, Float, Bool, Num
   static Bool isJavaNative(CType t)
   {
