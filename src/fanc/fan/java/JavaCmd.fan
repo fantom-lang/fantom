@@ -69,11 +69,15 @@ internal class JavaCmd : TranspileCmd
 
     // generate all non-synthetic types
     super.genPod(p)
+
+    // if we have native code copy it
+    JavaNativeGen(this).genPod(p)
   }
 
   override Void genType(TypeDef t)
   {
     if (t.isSynthetic) return
+    if (t.isNative) return
 
     JavaUtil.typeFile(outDir, t).withOut(null) |out|
     {

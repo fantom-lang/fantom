@@ -72,7 +72,7 @@ internal class JavaPrinter : CodePrinter
     w(t.isMixin ? "interface" : "class").sp.typeName(t)
 
     // extends
-    if (t.isClass) extends(t)
+    if (!t.isMixin) extends(t)
 
     // implements
     if (!t.mixins.isEmpty) implements(t)
@@ -163,7 +163,7 @@ internal class JavaPrinter : CodePrinter
     ctors.each    |x| { nl.method(x) }
     consts.each   |x| { nl.constGetter(x) }
     methods.each  |x| { nl.method(x) }
-    if (t.isClass)
+    if (!t.isMixin)
     {
       if (staticInit != null) nl.method(staticInit)
       storages.each |x| { fieldStorage(x) }
@@ -187,7 +187,7 @@ internal class JavaPrinter : CodePrinter
 
   Void fieldStorage(FieldDef x)
   {
-    if (!x.isSynthetic) w("private ")
+    if (!x.isSynthetic && !x.isEnum) w("private ")
     if (x.isStatic) w("static ")
     typeSig(x.type).sp.fieldName(x).eos
     return this
