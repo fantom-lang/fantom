@@ -25,7 +25,9 @@ public final class Lock
     this.java = java;
   }
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("concurrent::Lock");
     return type;
@@ -87,3 +89,4 @@ public final class Lock
   private final java.util.concurrent.locks.Lock java;
 
 }
+

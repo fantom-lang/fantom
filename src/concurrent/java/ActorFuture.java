@@ -38,7 +38,9 @@ public final class ActorFuture
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("concurrent::ActorFuture");
     return type;

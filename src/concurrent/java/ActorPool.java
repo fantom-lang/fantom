@@ -50,7 +50,9 @@ public class ActorPool
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("concurrent::ActorPool");
     return type;
@@ -182,11 +184,21 @@ public class ActorPool
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  public String name() { return  "ActorPool"; }
+  public String name = "ActorPool";
+
+  public long maxThreads() { return maxThreads; }
+  public long maxThreads = 100;
+
+  public long maxQueue() { return maxQueue; }
+  public long maxQueue = 100_000_000;
+
+  public Duration maxTimeBeforeYield() { return maxTimeBeforeYield; }
+  public Duration maxTimeBeforeYield = Duration.oneSec;
+
   private ThreadPool threadPool;
   private Scheduler scheduler;
   volatile boolean killed;
-  public String name = "ActorPool";
-  public long maxThreads = 100;
-  public long maxQueue = 100_000_000;
-  public Duration maxTimeBeforeYield = Duration.oneSec;
+
 }
+

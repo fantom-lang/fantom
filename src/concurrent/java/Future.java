@@ -36,7 +36,9 @@ public abstract class Future
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("concurrent::Future");
     return type;

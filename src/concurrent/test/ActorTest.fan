@@ -885,7 +885,7 @@ class ActorTest : Test
     verifyErr(QueueOverflowErr#) { f5.get }
 
     // sendWhenDone to full queue
-    f6 := actor.sendWhenDone(Future.makeCompletable.complete("foo"), "f")
+    f6 := actor.sendWhenComplete(Future.makeCompletable.complete("foo"), "f")
     verifyEq(actor.queueSize, 4)
     verifyEq(actor.isQueueFull, true)
     verifyEq(f6.status, FutureStatus.err)

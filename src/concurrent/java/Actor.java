@@ -76,7 +76,9 @@ public class Actor
 // Obj
 //////////////////////////////////////////////////////////////////////////
 
-  public Type typeof()
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
   {
     if (type == null) type = Type.find("concurrent::Actor");
     return type;
@@ -505,3 +507,4 @@ public class Actor
   private int receiveCount;              // total number of messages received
   private long receiveTicks;             // total ticks spend in receive
 }
+

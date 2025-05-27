@@ -23,8 +23,14 @@ public final class ConcurrentMap extends FanObj
 
   ConcurrentMap(int capacity) { this.map = new ConcurrentHashMap(capacity); }
 
-  public final Type typeof() { return typeof; }
-  private static final Type typeof = Type.find("concurrent::ConcurrentMap");
+  public Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
+  {
+    if (type == null) type = Type.find("concurrent::ConcurrentMap");
+    return type;
+  }
+  private static Type type;
 
   public boolean isEmpty() { return map.size() == 0; }
 
@@ -117,3 +123,4 @@ public final class ConcurrentMap extends FanObj
 
   final ConcurrentHashMap map;
 }
+
