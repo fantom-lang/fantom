@@ -566,10 +566,14 @@ internal class JavaPrinter : CodePrinter
     x.catches.each |c|
     {
       // remove first stmt which redeclares local var
-      first := c.block.stmts.removeAt(0)
-      if (first.id != StmtId.localDef) throw Err("try block $x.loc.toLocStr")
+      first := c.block.stmts.first as LocalDefStmt
+      if (first != null && first.isCatchVar)
+        c.block.stmts.removeAt(0)
 
-      w("catch (").typeSig(c.errType).w(" ").varName(c.errVariable).w(")").sp
+      if (c.errVariable == null)
+        w("catch (Throwable ignore)").sp
+      else
+        w("catch (").typeSig(c.errType).w(" ").varName(c.errVariable).w(")").sp
       block(c.block).nl
     }
     if (x.finallyBlock != null)
@@ -1055,22 +1059,27 @@ internal class JavaPrinter : CodePrinter
 
   private This shortcutAssignLocal(ShortcutExpr x)
   {
-    // only support Int/Float or Str +=
-    if (!isJavaNumVal(x.method.parent) && x.method.qname != "sys::Str.plus")
-      throw Err("Shortcut not supported: $x.method.qname [$x.loc.toLocStr]")
-
     lhs := x.target
     rhs := x.args.first
 
-    if (rhs == null)
+    if (isJavaNumVal(x.method.parent) || x.method.qname == "sys::Str.plus")
     {
-      op := JavaUtil.unaryOperators.getChecked(x.method.qname)
-      return oparen.w(op).expr(lhs).cparen
+      // Java operator support Int/Float or Str +=
+      if (rhs == null)
+      {
+        op := JavaUtil.unaryOperators.getChecked(x.method.qname)
+        return oparen.w(op).expr(lhs).cparen
+      }
+      else
+      {
+        op := JavaUtil.binaryOperators.getChecked(x.method.qname)
+        return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
+      }
     }
     else
     {
-      op := JavaUtil.binaryOperators.getChecked(x.method.qname)
-      return expr(lhs).sp.w(op).w("=").sp.expr(rhs)
+      // treat as normal call
+      return callMethodExpr(x)
     }
   }
 
@@ -1099,7 +1108,10 @@ internal class JavaPrinter : CodePrinter
   {
     // only support Int/Float
     if (!isJavaNumVal(x.method.parent))
-      throw Err("Postfix not supported: $x.method.qname")
+    {
+      warn("Postfix leave unsupported: $x", x.loc)
+      return shortcutAssignLocal(x)
+    }
 
     // incremnet or decrement
     name := x.method.name
@@ -1355,6 +1367,11 @@ internal class JavaPrinter : CodePrinter
   }
 
   This eos() { w(";").nl }
+
+  Void warn(Str msg, Loc loc)
+  {
+    echo("WARN: $msg [$loc.toLocStr]")
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

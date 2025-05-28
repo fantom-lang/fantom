@@ -256,8 +256,8 @@ abstract class CodePrinter
   virtual This shortcutExpr(ShortcutExpr x)
   {
     if (x.isCompare)      return compareExpr(x.target, x.opToken, x.args.first)
-    if (x.isAssign)       return shortcutAssignExpr(x)
     if (x.isPostfixLeave) return postfixLeaveExpr(x)
+    if (x.isAssign)       return shortcutAssignExpr(x)
     return callExpr(x)
   }
 
