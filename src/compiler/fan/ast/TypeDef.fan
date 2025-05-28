@@ -63,6 +63,22 @@ class TypeDef : DefNode, CType
     return closure != null
   }
 
+  **
+  ** Does this class have any native slots (false if entire class is native)
+  **
+  once Bool hasNativePeer()
+  {
+    slotDefs.any |x| { x.isNative }
+  }
+
+  **
+  ** Does this class have any it block constructors
+  **
+  once Bool hasItBlockCtor()
+  {
+    slotDefs.any |x| { x is MethodDef && ((MethodDef)x).isItBlockCtor }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Slots
 //////////////////////////////////////////////////////////////////////////
