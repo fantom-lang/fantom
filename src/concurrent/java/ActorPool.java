@@ -184,16 +184,20 @@ public class ActorPool
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  public String name() { return  "ActorPool"; }
+  public String name() { return name; }
+  public void name(String x) { name = x; }
   public String name = "ActorPool";
 
   public long maxThreads() { return maxThreads; }
+  public void maxThreads(long x) { maxThreads = x; }
   public long maxThreads = 100;
 
   public long maxQueue() { return maxQueue; }
+  public void maxQueue(long x) { maxQueue = x; }
   public long maxQueue = 100_000_000;
 
   public Duration maxTimeBeforeYield() { return maxTimeBeforeYield; }
+  public void maxTimeBeforeYield(Duration x) { maxTimeBeforeYield = x; }
   public Duration maxTimeBeforeYield = Duration.oneSec;
 
   private ThreadPool threadPool;
