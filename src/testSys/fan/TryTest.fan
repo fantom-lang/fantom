@@ -18,11 +18,12 @@ class TryTest : Test
 
   Void testCatchAll()
   {
+    flag := true
     s := "start"
     try
     {
       s += " before "
-      throw Err.make
+      if (flag) throw Err.make
       s += " wrong "
     }
     catch
@@ -38,11 +39,12 @@ class TryTest : Test
 
   Void testCatchSameType()
   {
+    flag := true
     s := "start"
     try
     {
       s += " before "
-      throw IndexErr.make
+      if (flag) throw IndexErr.make
       s += " wrong "
     }
     catch (IndexErr err)
@@ -58,11 +60,12 @@ class TryTest : Test
 
   Void testCatchSuperType()
   {
+    flag := true
     s := "start"
     try
     {
       s += " before "
-      throw CatchTestIOErr.make("foo")
+      if (flag) throw CatchTestIOErr.make("foo")
       s += " wrong "
     }
     catch (IOErr err)
@@ -129,6 +132,7 @@ class TryTest : Test
 
   Void testNested()
   {
+    flag := true
     s := "";
     try
     {
@@ -136,7 +140,7 @@ class TryTest : Test
       try
       {
         s += " b";
-        throw IndexErr.make
+        if (flag) throw IndexErr.make
         s += " c";
       }
       catch (IndexErr e)
@@ -159,7 +163,7 @@ class TryTest : Test
       try
       {
         s += " b";
-        throw NullErr.make
+        if (flag) throw NullErr.make
         s += " c";
       }
       catch (IndexErr e)
@@ -181,7 +185,7 @@ class TryTest : Test
       try
       {
         s += " b";
-        throw NullErr.make
+        if (flag) throw NullErr.make
         s += " c";
       }
       catch (NullErr e)
@@ -245,3 +249,4 @@ const class CatchTestIOErr : IOErr
 {
   new make(Str msg, Err? cause := null) : super(msg, cause) {}
 }
+
