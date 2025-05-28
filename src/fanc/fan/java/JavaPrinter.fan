@@ -69,6 +69,8 @@ internal class JavaPrinter : CodePrinter
   {
     // scope
     if (t.isPublic) w("public ")
+    if (t.isAbstract) w("abstract ")
+    if (t.isFinal) w("final ")
 
     // interface vs class
     w(t.isMixin ? "interface" : "class").sp.typeName(t)
@@ -260,39 +262,44 @@ internal class JavaPrinter : CodePrinter
     // variable to use for this in implementation
     this.selfVar = "self\$"
 
-    // param default conveniences
-    methodParamDefaults(x)
-
-    // full parameter factory method
-    methodSig(x, x.params.size)
-
-    // if static ctor its just a static method
-    if (x.isStatic)
-    {
-      sp.block(x.code).nl
-      return
-    }
+    // make$ method name
+    implName := JavaUtil.ctorImplName(x)
 
     // static factory side
-    implName := JavaUtil.ctorImplName(x)
-    w(" { ").nl
-    indent
+    if (!curType.isAbstract || x.isStatic)
+    {
+      // param default conveniences
+      methodParamDefaults(x)
 
-    // fan.acme.Foo self$ = new fan.acmeFoo()
-    typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
+      // full parameter factory method
+      methodSig(x, x.params.size)
 
-    // self$.peer$ = FooPeer.make(self$)
-    if (curTypeHasNativePeer)
-      w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
+      // if static ctor its just a static method
+      if (x.isStatic)
+      {
+        sp.block(x.code).nl
+        return
+      }
 
-    // make$(self$, ....)
-    w(implName).w("(").w(selfVar)
-    x.params.each |p| { w(", ").varName(p.name) }
-    w(")").eos
+      w(" { ").nl
+      indent
 
-    w("return ").w(selfVar).eos
-    unindent
-    w("}").nl.nl
+      // fan.acme.Foo self$ = new fan.acmeFoo()
+      typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
+
+      // self$.peer$ = FooPeer.make(self$)
+      if (curTypeHasNativePeer)
+        w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
+
+      // make$(self$, ....)
+      w(implName).w("(").w(selfVar)
+      x.params.each |p| { w(", ").varName(p.name) }
+      w(")").eos
+
+      w("return ").w(selfVar).eos
+      unindent
+      w("}").nl.nl
+    }
 
     // instance implementation side
     w("protected static void ").w(implName).w("(")
@@ -361,7 +368,10 @@ internal class JavaPrinter : CodePrinter
   Void methodParamDefault(MethodDef x, Int numParams)
   {
     w("/** Convenience for $x.name */").nl
-    methodSig(x, numParams).w(" {").nl
+    methodSig(x, numParams)
+    if (x.isAbstract) return eos.nl
+
+    w(" {").nl
     indent
     if (!x.returns.isVoid || x.isCtor) w("return ")
     methodName(x).w("(")
