@@ -118,6 +118,12 @@ internal class JavaUtil
     "Fields"
   }
 
+  ** Field name to store native peer
+  static Str peerFieldName() { "peer\$" }
+
+  ** Type name for native peer
+  static Str peerTypeName(TypeDef t) { t.name + "Peer" }
+
   ** Is this a native java type: Obj, Str, Int, Float, Bool, Num
   static Bool isJavaNative(CType t)
   {

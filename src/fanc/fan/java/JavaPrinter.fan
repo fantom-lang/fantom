@@ -23,6 +23,7 @@ internal class JavaPrinter : CodePrinter
   {
     curType = t
     wrappers.clear
+    curTypeHasNativePeer = t.slotDefs.any { it.isNative }
 
     prelude(t)
     typeHeader(t)
@@ -32,6 +33,7 @@ internal class JavaPrinter : CodePrinter
     enumOrdinals(t)
     slots(t)
     syntheticClasses(t)
+    nativePeer(t)
     unindent
     w("}").nl
 
@@ -126,6 +128,13 @@ internal class JavaPrinter : CodePrinter
       if (t.slot(name) != null) name = "_$name"
       w("public static final int ").w(name).w(" = ").w(e.ordinal).eos
     }
+  }
+
+  Void nativePeer(TypeDef t)
+  {
+    if (!curTypeHasNativePeer) return
+
+    nl.w("private ").w(JavaUtil.peerTypeName(t)).sp.w(JavaUtil.peerFieldName).eos
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -247,11 +256,20 @@ internal class JavaPrinter : CodePrinter
     implName := JavaUtil.ctorImplName(x)
     w(" { ").nl
     indent
-    typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("();").nl
+
+    // fan.acme.Foo self$ = new fan.acmeFoo()
+    typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
+
+    // self$.peer$ = FooPeer.make(self$)
+    if (curTypeHasNativePeer)
+      w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
+
+    // make$(self$, ....)
     w(implName).w("(").w(selfVar)
     x.params.each |p| { w(", ").varName(p.name) }
-    w(");").nl
-    w("return ").w(selfVar).w(";").nl
+    w(")").eos
+
+    w("return ").w(selfVar).eos
     unindent
     w("}").nl.nl
 
@@ -348,6 +366,26 @@ internal class JavaPrinter : CodePrinter
   This nativeMethodCode(MethodDef x)
   {
     w("{").nl
+    indent
+    if (!x.returns.isVoid) w("return ")
+    first := true
+    if (x.isStatic)
+    {
+      w(JavaUtil.peerTypeName(curType)).w(".").methodName(x).w("(")
+    }
+    else
+    {
+      w(JavaUtil.peerFieldName).w(".").methodName(x).w("(this")
+      first = false
+    }
+    x.paramDefs.each |p|
+    {
+      if (first) first = false
+      else w(", ")
+      varName(p.name)
+    }
+    w(")").eos
+    unindent
     w("}")
     return this
   }
@@ -958,6 +996,8 @@ internal class JavaPrinter : CodePrinter
   ** NOTE: this requires a Java closure, so only works for effectively final locals
   private This safe(Expr target, CType returns, |This| restViaItArg)
   {
+    if (returns.isThis) returns = target.ctype
+
     qnOpUtil.w(".<").typeSig(target.ctype)
     if (returns.isVal || returns.isVoid)
     {
@@ -1319,6 +1359,7 @@ internal class JavaPrinter : CodePrinter
   private TypeDef? curType
   private Str:TypeDef wrappers := [:]
   private MethodDef? curMethod
+  private Bool curTypeHasNativePeer
   private Str? selfVar
 }
 
