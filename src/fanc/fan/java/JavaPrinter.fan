@@ -106,18 +106,36 @@ internal class JavaPrinter : CodePrinter
   Void typeOf(TypeDef t)
   {
     if (t.isSynthetic) return
-    if (t.isMixin) return
 
-    w("/** Reflect type of this object */").nl
-    w("public ").qnType.w(" typeof() { return typeof\$(); }").nl
-    nl
-    w("/** Type literal for $t.qname */").nl
-    w("public static ").qnType.w(" typeof\$() {").nl
-    w("  if (typeof\$cache == null)").nl
-    w("    typeof\$cache = ").qnType.w(".find(").str(t.qname).w(");").nl
-    w("  return typeof\$cache;").nl
-    w("}").nl
-    w("private static ").qnType.w(" typeof\$cache;").nl
+    if (t.isMixin)
+    {
+      // for mixins:
+      // - don't generate typeof()
+      // - don't generate cache static variable; lookup every call
+      w("/** Type literal for $t.qname */").nl
+      w("public static ").qnType.w(" typeof\$() { return ")
+      qnType.w(".find(").str(t.qname).w("); }").nl
+    }
+    else
+    {
+      // normal classes:
+      //   public Type typeof() { typeof$() }
+      //   public static Type typeof$() {
+      //     if (typeof$cache == null)
+      //       typeof$cache = Type.find("foo::Foo");
+      //     return typeof$cache;
+      //   }
+      //   private static Type typeof$cache;      w("/** Type literal for $t.qname */").nl
+      w("/** Reflect type of this object */").nl
+      w("public ").qnType.w(" typeof() { return typeof\$(); }").nl
+      nl
+      w("public static ").qnType.w(" typeof\$() {").nl
+      w("  if (typeof\$cache == null)").nl
+      w("    typeof\$cache = ").qnType.w(".find(").str(t.qname).w(");").nl
+      w("  return typeof\$cache;").nl
+      w("}").nl
+      w("private static ").qnType.w(" typeof\$cache;").nl
+    }
   }
 
   Void enumOrdinals(TypeDef t)
@@ -1279,7 +1297,8 @@ internal class JavaPrinter : CodePrinter
 
   This slotScope(SlotDef x)
   {
-    if (x.isPublic)  return w("public ")
+    if (x.isPublic) return w("public ")
+    if (x.isProtected) return w("public ")
     if (x.isPrivate && !x.parent.isMixin) return w("private ")
     return this
   }

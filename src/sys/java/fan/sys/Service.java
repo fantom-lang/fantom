@@ -12,20 +12,29 @@ package fan.sys;
  */
 public interface Service
 {
-  public boolean isInstalled();
+  public static List<Service> list() { return Service$.list(); }
 
-  public boolean isRunning();
+  public static Service find(Type t) { return Service$.find(t); }
 
-  public Service install();
+  public static Service find(Type t, boolean checked) { return Service$.find(t, checked); }
 
-  public Service uninstall();
+  public static List<Service> findAll(Type t) { return Service$.findAll(t); }
 
-  public Service start();
+  public default boolean isInstalled() { return Service$.isInstalled(this); }
 
-  public Service stop();
+  public default boolean isRunning() { return Service$.isRunning(this); }
 
-  public void onStart();
+  public default Service install() { return Service$.install(this); }
 
-  public void onStop();
+  public default Service uninstall() { return Service$.uninstall(this); }
+
+  public default Service start() { return Service$.start(this); }
+
+  public default Service stop() { return Service$.stop(this); }
+
+  public default void onStart() {}
+
+  public default void onStop() {}
 
 }
+

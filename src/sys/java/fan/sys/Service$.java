@@ -44,7 +44,7 @@ public class Service$
     }
   }
 
-  public static List findAll(Type t)
+  public static List<Service> findAll(Type t)
   {
     String qname = t.qname();
     List list = new List(Sys.ServiceType);
