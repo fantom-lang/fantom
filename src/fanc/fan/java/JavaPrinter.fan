@@ -894,10 +894,6 @@ internal class JavaPrinter : CodePrinter
     w("throw ").expr(x.exception)
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Assign
-//////////////////////////////////////////////////////////////////////////
-
   override This assignExpr(BinaryExpr x)
   {
     if (x.lhs.id === ExprId.field) return fieldAssign(x.lhs, x.rhs)
@@ -1180,11 +1176,19 @@ internal class JavaPrinter : CodePrinter
 
     if (x.target != null) expr(x.target).w(".")
     fieldName(field)
-    if (x.useAccessor)
+    if (assignViaSetter(x))
       w("(").expr(rhs).w(")")
     else
       w(" = ").expr(rhs)
     return this
+  }
+
+  private Bool assignViaSetter(FieldExpr x)
+  {
+    if (x.useAccessor) return true
+    if (x.field.parent.isSynthetic) return false
+    if (curType == x.field.parent) return false
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
