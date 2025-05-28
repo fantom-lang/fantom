@@ -23,7 +23,6 @@ internal class JavaPrinter : CodePrinter
   {
     curType = t
     wrappers.clear
-    curTypeHasNativePeer = t.slotDefs.any { it.isNative }
 
     prelude(t)
     typeHeader(t)
@@ -60,6 +59,7 @@ internal class JavaPrinter : CodePrinter
     w("import fan.sys.List").eos
     w("import fan.sys.Map").eos
     w("import fan.sys.Type").eos
+    w("import fan.sys.Func").eos
     w("import fan.sys.Sys").eos
     w("import fanx.util.OpUtil").eos
     nl
@@ -155,7 +155,7 @@ internal class JavaPrinter : CodePrinter
 
   Void nativePeer(TypeDef t)
   {
-    if (!curTypeHasNativePeer) return
+    if (!curType.hasNativePeer) return
 
     nl.w("private ").w(JavaUtil.peerTypeName(t)).sp.w(JavaUtil.peerFieldName).eos
   }
@@ -193,7 +193,7 @@ internal class JavaPrinter : CodePrinter
     }
 
     ctors.each    |x| { nl.method(x) }
-    consts.each   |x| { nl.constGetter(x) }
+    consts.each   |x| { nl.constAccessors(x) }
     methods.each  |x| { nl.method(x) }
     if (!t.isMixin)
     {
@@ -206,7 +206,7 @@ internal class JavaPrinter : CodePrinter
     }
   }
 
-  Void constGetter(FieldDef x)
+  Void constAccessors(FieldDef x)
   {
     slotScope(x)
     if (x.isStatic) w("static ")
@@ -215,6 +215,18 @@ internal class JavaPrinter : CodePrinter
     w("() { return ")
     if (x.parent.isMixin) w(JavaUtil.mixinFieldsName).w(".")
     fieldName(x).w("; }").nl
+
+    // if the current class has an it-block ctor then
+    // generate special setting that takes the it-block func
+    if (curType.hasItBlockCtor)
+    {
+      nl
+      w("/** Initialize const field $x.name - DO NOT USE DIRECTLY */").nl
+      slotScope(x)
+      if (x.isStatic) w("static ")
+      w("void ").fieldName(x).w("\$init(").qnFunc.w(" f, ").typeSig(x.type).w(" it) {")
+      w("}").nl
+    }
   }
 
   Void fieldStorage(FieldDef x)
@@ -288,7 +300,7 @@ internal class JavaPrinter : CodePrinter
       typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
 
       // self$.peer$ = FooPeer.make(self$)
-      if (curTypeHasNativePeer)
+      if (curType.hasNativePeer)
         w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
 
       // make$(self$, ....)
@@ -347,6 +359,8 @@ internal class JavaPrinter : CodePrinter
     // return type
     if (x.isCtor)
       typeSig(x.parent)
+    else if (x.name == "doCall" && x.parent.isFunc && !x.returns.isVoid)
+      w("Object") // just return object in closure doCall
     else
       typeSig(x.returns)
 
@@ -1028,10 +1042,22 @@ internal class JavaPrinter : CodePrinter
 
   override This safeCallExpr(CallExpr x)
   {
-    // NOTE: this only works if closure only uses effectively final locals
-    safe(x.target, x.ctype) |me|
+    target := x.target
+    itExpr := ItExpr(x.loc, x.target.ctype)
+
+    // we add cast in (Cast)target to (it)->(Cast)call(...)
+    TypeCheckExpr? cast := null
+    if (x.target.id === ExprId.coerce)
     {
-      me.call(ItExpr(x.loc, x.target.ctype), x.method, x.args)
+      cast = (TypeCheckExpr)target
+      //target = cast.target
+    }
+
+    // NOTE: this only works if closure only uses effectively final locals
+    return safe(target, x.ctype) |me|
+    {
+      if (cast != null) w("(").typeSig(cast.check).w(")")
+      me.call(itExpr, x.method, x.args)
     }
   }
 
@@ -1231,7 +1257,9 @@ internal class JavaPrinter : CodePrinter
 
     if (x.target != null) expr(x.target).w(".")
     fieldName(field)
-    if (assignViaSetter(x))
+    if (closure != null && field.isConst && field.parent != closure)
+      w("\$init(this, ").expr(rhs).w(")")
+    else if (assignViaSetter(x))
       w("(").expr(rhs).w(")")
     else
       w(" = ").expr(rhs)
@@ -1262,7 +1290,11 @@ internal class JavaPrinter : CodePrinter
     parent.podDef.typeDefs.each |x|
     {
       if (JavaUtil.isSyntheticClosure(parent, x))
+      {
+        closure = x
         syntheticClass(x,  JavaUtil.syntheticClosureName(x))
+        closure = null
+      }
     }
 
     // also generate every wrapper used as an inner class
@@ -1298,6 +1330,8 @@ internal class JavaPrinter : CodePrinter
   This qnMap() { w("Map") }
 
   This qnType() { w("Type") }
+
+  This qnFunc() { w("Func") }
 
   This qnSys() { w("Sys") }
 
@@ -1347,6 +1381,7 @@ internal class JavaPrinter : CodePrinter
       if (t.isDecimal)   return w("java.math.BigDecimal")
       if (t.isNum)       return w("java.lang.Number")
       if (t.isType)      return qnType
+      if (t.isFunc)      return qnFunc
       if (t.isThis)      return typeSig(curType)
       if (t is ListType) return listSig(t, parameterize)
       if (t is MapType)  return mapSig(t, parameterize)
@@ -1424,7 +1459,7 @@ internal class JavaPrinter : CodePrinter
   private TypeDef? curType
   private Str:TypeDef wrappers := [:]
   private MethodDef? curMethod
-  private Bool curTypeHasNativePeer
+  private TypeDef? closure
   private Str? selfVar
 }
 
