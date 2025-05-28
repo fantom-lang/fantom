@@ -110,7 +110,7 @@ public class ActorPool
     return super.trap(name, args);
   }
 
-  public Actor balance(List actors)
+  public Actor balance(List<Actor> actors)
   {
     Actor best = (Actor)actors.get(0);
     long bestSize = best.queueSize();
