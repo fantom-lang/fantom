@@ -270,7 +270,7 @@ class ClosureVars : CompilerStep
       if (var.paramWrapper == null) return
       loc := method.loc
       initWrap := initWrapper(loc, var.paramWrapper, LocalVarExpr.makeNoUnwrap(loc, var))
-      method.code.stmts.insert(0, initWrap.toStmt)
+      method.code.stmts.insert(0, LocalDefStmt(initWrap))
     }
   }
 
