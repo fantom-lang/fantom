@@ -36,8 +36,8 @@ internal class JavaUtil
   {
     funcType := (FuncType)t.base
     size := funcType.params.size
-    if (size > 8) throw Err("Closure size unsupported: $t")
-    return "fan.sys.Func.Indirect" + size
+    suffix := size > 8 ? "X" : size.toStr
+    return "fan.sys.Func.Indirect" + suffix
   }
 
   ** Fantom varaible to Java name

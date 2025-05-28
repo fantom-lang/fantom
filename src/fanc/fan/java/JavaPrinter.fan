@@ -91,7 +91,10 @@ internal class JavaPrinter : CodePrinter
 
   This implements(TypeDef t)
   {
-    w(" implements ")
+    if (t.isMixin)
+      w(" extends ")
+    else
+      w(" implements ")
     t.mixins.each |m, i|
     {
       if (i > 0) w(", ")
@@ -598,7 +601,7 @@ internal class JavaPrinter : CodePrinter
       }
     }
     w("; ")
-    expr(x.condition)
+    if (x.condition != null) expr(x.condition)
     w("; ")
     if (x.update != null) expr(x.update)
     w(")").sp
@@ -943,13 +946,12 @@ internal class JavaPrinter : CodePrinter
 
   private This call(Expr target, CMethod method, Expr[] args)
   {
-    targetType := target.ctype
     methodName := JavaUtil.methodName(method)
 
     // special handling for Obj.compare => fan.sys.FanObj.compare, etc
-    if (targetType != null && JavaUtil.isJavaNative(targetType))
+    if (useFanValCall(target, method))
     {
-      qnFanVal(targetType).w(".").w(methodName).w("(")
+      qnFanVal(target.ctype).w(".").w(methodName).w("(")
       if (!method.isStatic) expr(target).args(args, true)
       else this.args(args)
       w(")")
@@ -961,6 +963,19 @@ internal class JavaPrinter : CodePrinter
       target = StaticTargetExpr(target.loc, method.parent)
 
     return expr(target).w(".").w(methodName).w("(").args(args).w(")")
+  }
+
+  private Bool useFanValCall(Expr target, CMethod method)
+  {
+    targetType := target.ctype
+    if (targetType == null) return false
+    if (!JavaUtil.isJavaNative(targetType)) return false
+    if (method.name == "trap")
+    {
+      // don't use FanObj.trap for super.trap
+      if (target.id === ExprId.superExpr) return false
+    }
+    return true
   }
 
   private This args(Expr[] args, Bool forceComma := false)
@@ -1117,7 +1132,7 @@ internal class JavaPrinter : CodePrinter
     name := x.method.name
     oparen.expr(x.target).cparen
     if (name == "increment") w("++")
-    else if (name == "decrment") w("--")
+    else if (name == "decrement") w("--")
     else throw Err("Postfix $x.method.qname")
     return this
   }
@@ -1265,7 +1280,7 @@ internal class JavaPrinter : CodePrinter
   This slotScope(SlotDef x)
   {
     if (x.isPublic)  return w("public ")
-    if (x.isPrivate) return w("private ")
+    if (x.isPrivate && !x.parent.isMixin) return w("private ")
     return this
   }
 
