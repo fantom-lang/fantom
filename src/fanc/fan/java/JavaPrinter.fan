@@ -385,24 +385,37 @@ internal class JavaPrinter : CodePrinter
     methodSig(x, numParams)
     if (x.isAbstract) return eos.nl
 
-    w(" {").nl
-    indent
+     w(" {").nl
+     indent
+
+    thrus   := x.paramDefs[0..<numParams]
+    defs    := x.paramDefs[numParams..-1]
+
+    // if a param uses a previous param, then the compiler addsan assign expr;
+    // this requires us to generate these are local varaible definitions
+    defs.each |p|
+    {
+      if (p.isAssign) typeSig(p.type).sp.expr(p.def).eos
+    }
+
     if (!x.returns.isVoid || x.isCtor) w("return ")
     methodName(x).w("(")
     first := true
-    x.paramDefs.eachRange(0..<numParams) |p|
+    thrus.each |p|
     {
       if (first) first = false
       else w(", ")
       varName(p.name)
     }
-    x.paramDefs.eachRange(numParams..-1) |p|
+    defs.each |p|
     {
       if (first) first = false
       else w(", ")
-      expr(p.def)
+      if (p.isAssign) varName(p.name) // use local variable
+      else expr(p.def) // inline expression
     }
     w(")").eos
+
     unindent
     w("}").nl
     nl

@@ -30,6 +30,10 @@ class ParamDef : Node, CParam
 
   override Bool hasDefault() { def != null }
 
+  ** Does this param have a def that uses an assign store instruction
+  ** because CheckParamDefs detected it used previous parameters
+  Bool isAssign() { def != null && def.id === ExprId.assign }
+
 //////////////////////////////////////////////////////////////////////////
 // Debug
 //////////////////////////////////////////////////////////////////////////
