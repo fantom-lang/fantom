@@ -54,7 +54,7 @@ abstract class CBridge : CompilerSupport
   **
   virtual Expr coerce(Expr expr, CType expected, |->| onErr)
   {
-    return CheckErrors.doCoerce(expr, expected, onErr)
+    return Coercer(compiler).doCoerce(expr, expected, onErr)
   }
 
   **
@@ -105,3 +105,4 @@ abstract class CBridge : CompilerSupport
   virtual Void cleanup() {}
 
 }
+

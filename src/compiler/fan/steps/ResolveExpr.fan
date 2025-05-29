@@ -25,6 +25,7 @@ class ResolveExpr : CompilerStep
   new make(Compiler compiler)
     : super(compiler)
   {
+    this.coercer = Coercer(compiler)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -617,7 +618,7 @@ class ResolveExpr : CompilerStep
 
       // check that each parameter fits
       for (i:=0; i<args.size; ++i)
-        if (!CheckErrors.canCoerce(args[i], params[i].type))
+        if (!coercer.canCoerce(args[i], params[i].type))
           return
 
       // its a match!
@@ -706,7 +707,7 @@ class ResolveExpr : CompilerStep
       {
         if (m.params.size != 1) return false
         paramType := m.params.first.type
-        return CheckErrors.canCoerce(rhs, paramType)
+        return coercer.canCoerce(rhs, paramType)
       }
     }
 
@@ -994,6 +995,6 @@ class ResolveExpr : CompilerStep
   Stmt[] stmtStack  := Stmt[,]    // statement stack
   Block[] blockStack := Block[,]  // block stack used for scoping
   Bool inClosure := false         // are we inside a closure's block
-
+  Coercer coercer                 // coerce utilities
 }
 
