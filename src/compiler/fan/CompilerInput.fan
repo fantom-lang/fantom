@@ -141,6 +141,16 @@ class CompilerInput
   **
   Bool wrapperPerParameterizedCollectionType
 
+  **
+  ** Generate a type cast coercion between collections with different
+  ** parameterized types. For example normal Fantom we can use 'Str[]'
+  ** where 'Obj[]' it expected with no cast.  But when transpiling
+  ** Java, these must be explicitly cast. The compiler actually generates
+  ** a proper parameterized type cast such as 'Obj[]', but in Java this
+  ** isn't valid so we always just cast to the generic type 'List'.
+  **
+  Bool coerceParameterizedCollectionTypes
+
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.file
 //////////////////////////////////////////////////////////////////////////

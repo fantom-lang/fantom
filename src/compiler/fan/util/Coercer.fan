@@ -101,7 +101,7 @@ class Coercer
     if (actual.fits(expected))
     {
       // if we have any nullable/value difference we need a coercion
-      if (needCoerce(actual, expected))
+      if (forceCoerce(actual, expected))
         return TypeCheckExpr.coerce(expr, expected)
       else
         return expr
@@ -125,7 +125,7 @@ class Coercer
     return expr
   }
 
-  Bool isFuncAutoCoerce(CType actualType, CType expectedType)
+  private Bool isFuncAutoCoerce(CType actualType, CType expectedType)
   {
     // check if both are function types
     if (!actualType.isFunc || !expectedType.isFunc) return false
@@ -153,7 +153,7 @@ class Coercer
     return true
   }
 
-  Bool isFuncAutoCoerceMatch(CType actual, CType expected)
+  private Bool isFuncAutoCoerceMatch(CType actual, CType expected)
   {
     if (actual.fits(expected)) return true
     if (expected.fits(actual)) return true
@@ -161,18 +161,25 @@ class Coercer
     return false
   }
 
-  Bool needCoerce(CType from, CType to)
+  **
+  ** Force a coercion even *after* we have determined that 'from.fits(to)'
+  **
+  private Bool forceCoerce(CType from, CType to)
   {
     // if either side is a value type and we got past
-    // the equals check then we definitely need a coercion
+    // the ctype equals check then we definitely need a coercion
     if (from.isVal || to.isVal) return true
+
+    // configurable handling for parameterized collection types
+    if (compiler.input.coerceParameterizedCollectionTypes &&
+        from.isParameterized && to.isParameterized && !from.isFunc)
+      return true
 
     // if going from Obj? -> Obj we need a nullable coercion
     if (!to.isNullable) return from.isNullable
 
     return false
   }
-
 
   Compiler compiler
 }
