@@ -1129,12 +1129,11 @@ internal class JavaPrinter : CodePrinter
 
   private This shortcutAssignLocal(ShortcutExpr x)
   {
-    lhs := x.target
-    rhs := x.args.first
-
-    if (isJavaNumVal(x.method.parent) || x.method.qname == "sys::Str.plus")
+    if (useJavaNumOp(x) || x.method.qname == "sys::Str.plus")
     {
       // Java operator support Int/Float or Str +=
+      lhs := x.target
+      rhs := x.args.first
       if (rhs == null)
       {
         op := JavaUtil.unaryOperators.getChecked(x.method.qname)
@@ -1158,6 +1157,7 @@ internal class JavaPrinter : CodePrinter
     // NOTE: this assumes idempotent field access
     loc := fe.loc
     getAndCall := CallExpr(loc, fe, x.method, x.args)
+    getAndCall.synthetic = true // don't route thru unary/binary operators
     fieldAssign(fe, getAndCall)
     return this
   }
@@ -1170,6 +1170,7 @@ internal class JavaPrinter : CodePrinter
     coll    := indexing.target   // collection
     key     := indexing.args[0]  // index key
     getAndCall := CallExpr(loc, indexing, x.method, x.args)
+    getAndCall.synthetic = true  // don't route thru unary/binary operators
     expr(coll).w(".set(").expr(key).w(", ").expr(getAndCall).w(")")
     return this
   }
@@ -1177,7 +1178,7 @@ internal class JavaPrinter : CodePrinter
   override This postfixLeaveExpr(ShortcutExpr x)
   {
     // only support Int/Float
-    if (!isJavaNumVal(x.method.parent))
+    if (!useJavaNumOp(x))
     {
       warn("Postfix leave unsupported: $x", x.loc)
       return shortcutAssignLocal(x)
@@ -1190,6 +1191,11 @@ internal class JavaPrinter : CodePrinter
     else if (name == "decrement") w("--")
     else throw Err("Postfix $x.method.qname")
     return this
+  }
+
+  private Bool useJavaNumOp(ShortcutExpr x)
+  {
+    isJavaNumVal(x.method.parent) && x.target.id === ExprId.localVar
   }
 
   private Bool isJavaNumVal(CType t) { t.isInt || t.isFloat }

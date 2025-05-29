@@ -237,16 +237,19 @@ abstract class CodePrinter
 
     if (x.isSafe) return safeCallExpr(x)
 
-    if (x.target != null && x.args.size == 1)
+    if (x.target != null && !x.synthetic)
     {
-      op := binaryOperator(x.method.qname)
-      if (op != null) return binaryExpr(x.target, op, x.args.first)
-    }
+      if (x.args.size == 0)
+      {
+        op := unaryOperator(x.method.qname)
+        if (op != null) return unaryExpr(op, x.target)
+      }
 
-    if (x.target != null && x.args.size == 0)
-    {
-      op := unaryOperator(x.method.qname)
-      if (op != null) return unaryExpr(op, x.target)
+      if (x.args.size == 1)
+      {
+        op := binaryOperator(x.method.qname)
+        if (op != null) return binaryExpr(x.target, op, x.args.first)
+      }
     }
 
     return callMethodExpr(x)

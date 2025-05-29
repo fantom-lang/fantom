@@ -30,7 +30,7 @@ class ConcurrentMapTest : Test
     verifyConcurrentMap(m, Str:Int["a":10, "b":30, "c":40])
 
     count := 0
-    r := m.eachWhile |x| { count++; return count >= 2 ? "break" : null }
+    r := m.eachWhile |x| { ++count; return count >= 2 ? "break" : null }
     verifyEq(r, "break")
     verifyEq(count, 2)
 
@@ -91,3 +91,4 @@ class ConcurrentMapTest : Test
     verifyEq(vals.sort, expected.vals.sort)
   }
 }
+
