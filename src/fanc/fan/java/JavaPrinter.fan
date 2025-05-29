@@ -11,9 +11,12 @@ using compiler
 **
 ** Java transpiler pretty print
 **
-internal class JavaPrinter : CodePrinter
+internal class JavaPrinter : CodePrinter, StmtPrinter, ExprPrinter
 {
-  new make(OutStream out) : super(out) {}
+  new make(OutStream out)
+  {
+    m = JavaPrinterState(out)
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Type
@@ -21,7 +24,7 @@ internal class JavaPrinter : CodePrinter
 
   Void type(TypeDef t)
   {
-    curType = t
+    m.curType = t
     wrappers.clear
 
     prelude(t)
@@ -36,7 +39,7 @@ internal class JavaPrinter : CodePrinter
     unindent
     w("}").nl
 
-    curType = null
+    m.curType = null
     wrappers.clear
   }
 
@@ -253,7 +256,7 @@ internal class JavaPrinter : CodePrinter
 
   Void method(MethodDef x)
   {
-    this.curMethod = x
+    m.curMethod = x
 
     if (x.isStaticInit)
       w("static ").block(x.code).nl.nl
@@ -262,8 +265,8 @@ internal class JavaPrinter : CodePrinter
     else
       stdMethod(x)
 
-    this.curMethod = null
-    this.selfVar   = null
+    m.curMethod = null
+    m.selfVar   = null
   }
 
   Void ctor(MethodDef x)
@@ -272,7 +275,7 @@ internal class JavaPrinter : CodePrinter
     selfType := x.parent
 
     // variable to use for this in implementation
-    this.selfVar = "self\$"
+    m.selfVar = "self\$"
 
     // make$ method name
     implName := JavaUtil.ctorImplName(x)
@@ -1311,9 +1314,9 @@ internal class JavaPrinter : CodePrinter
     {
       if (JavaUtil.isSyntheticClosure(parent, x))
       {
-        closure = x
+        m.closure = x
         syntheticClass(x,  JavaUtil.syntheticClosureName(x))
-        closure = null
+        m.closure = null
       }
     }
 
@@ -1489,13 +1492,30 @@ internal class JavaPrinter : CodePrinter
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Fields
+// State
 //////////////////////////////////////////////////////////////////////////
 
-  private TypeDef? curType
-  private Str:TypeDef wrappers := [:]
-  private MethodDef? curMethod
-  private TypeDef? closure
-  private Str? selfVar
+  override JavaPrinterState m
+
+  TypeDef? curType() { m.curType }
+  MethodDef? curMethod() { m.curMethod }
+  TypeDef? closure() { m.closure }
+  Str:TypeDef wrappers() { m.wrappers }
+  Str? selfVar() { m.selfVar }
+}
+
+**************************************************************************
+** JavaPrinterState
+**************************************************************************
+
+class JavaPrinterState : CodePrinterState
+{
+  new make(OutStream out) : super(out) {}
+
+  TypeDef? curType
+  Str:TypeDef wrappers := [:]
+  MethodDef? curMethod
+  TypeDef? closure
+  Str? selfVar
 }
 
