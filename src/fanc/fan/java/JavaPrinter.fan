@@ -58,25 +58,13 @@ internal class JavaPrinter : CodePrinter
 // Identifier Handling
 //////////////////////////////////////////////////////////////////////////
 
-  This typeName(CType t)
-  {
-    w(JavaUtil.typeName(t))
-  }
+  This typeName(CType t) { w(JavaUtil.typeName(t)) }
 
-  This fieldName(CField x)
-  {
-    w(JavaUtil.fieldName(x))
-  }
+  This fieldName(CField x) { w(JavaUtil.fieldName(x)) }
 
-  This methodName(CMethod x)
-  {
-    w(JavaUtil.methodName(x))
-  }
+  This methodName(CMethod x) { w(JavaUtil.methodName(x)) }
 
-  This varName(Str x)
-  {
-    w(JavaUtil.varName(x))
-  }
+  This varName(Str x) { w(JavaUtil.varName(x)) }
 
 //////////////////////////////////////////////////////////////////////////
 // Type Signatures
@@ -166,8 +154,16 @@ internal class JavaPrinter : CodePrinter
   }
 
 //////////////////////////////////////////////////////////////////////////
-// Utils
+// Misc Utils
 //////////////////////////////////////////////////////////////////////////
+
+  This slotScope(SlotDef x)
+  {
+    if (x.isPublic) return w("public ")
+    if (x.isProtected) return w("public ")
+    if (x.isPrivate && !x.parent.isMixin) return w("private ")
+    return this
+  }
 
   This str(Obj x)
   {
@@ -189,9 +185,13 @@ internal class JavaPrinter : CodePrinter
   private JavaPrinterState mRef
 
   TypeDef? curType() { m.curType }
+
   MethodDef? curMethod() { m.curMethod }
+
   TypeDef? closure() { m.closure }
+
   Str:TypeDef wrappers() { m.wrappers }
+
   Str? selfVar() { m.selfVar }
 }
 
