@@ -127,7 +127,7 @@ internal class JavaUtil
   ** Is this a native java type: Obj, Str, Int, Float, Bool, Num
   static Bool isJavaNative(CType t)
   {
-    t.isObj || t.isStr || t.isVal || t.isNum
+    t.isObj || t.isStr || t.isVal || t.isNum || t.isDecimal
   }
 
   ** Map of method qname to binary operators

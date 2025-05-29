@@ -1324,7 +1324,13 @@ internal class JavaPrinter : CodePrinter
 
   This qnFanObj() { w("FanObj") }
 
-  This qnFanVal(CType t) { w("Fan").w(t.name) } // FanStr, FanInt, FanBool, etc
+  This qnFanVal(CType t)
+  {
+    // decimal rare, always use full qname
+    if (t.isDecimal) return w("fan.sys.FanDecimal")
+    // FanStr, FanInt, FanBool, etc
+    return w("Fan").w(t.name)
+  }
 
   This qnList() { w("List") }
 
@@ -1420,15 +1426,24 @@ internal class JavaPrinter : CodePrinter
   This listSig(ListType t, Bool parameterize)
   {
     qnList
-    if (parameterize) w("<").typeSigNullable(t.v).w(">")
+    if (parameterizeSig(parameterize))
+      w("<").typeSigNullable(t.v).w(">")
     return this
   }
 
   This mapSig(MapType t, Bool parameterize)
   {
     qnMap
-    if (parameterize) w("<").typeSigNullable(t.k).w(",").typeSigNullable(t.v).w(">")
+    if (parameterizeSig(parameterize))
+      w("<").typeSigNullable(t.k).w(",").typeSigNullable(t.v).w(">")
     return this
+  }
+
+  Bool parameterizeSig(Bool flag)
+  {
+    if (!flag) return false
+    if (closure != null && curMethod?.name == "callList") return false
+    return true
   }
 
   This typeSigNullable(CType t, Bool parameterize := true)
