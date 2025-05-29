@@ -914,7 +914,8 @@ internal class JavaPrinter : CodePrinter
 
   override This coerceExpr(TypeCheckExpr x)
   {
-    oparen.w("(").typeSig(x.check).w(")(").expr(x.target).w(")").cparen
+    // Java will not cast between parameterized List/Map
+    oparen.w("(").typeSig(x.check, false).w(")(").expr(x.target).w(")").cparen
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1372,6 +1373,7 @@ internal class JavaPrinter : CodePrinter
     // speical handling for system types
     if (t.pod.name == "sys")
     {
+      base := t.toNonNullable
       if (t.isVoid)      return w("void")
       if (t.isObj)       return w("Object")
       if (t.isStr)       return w("String")
@@ -1383,9 +1385,9 @@ internal class JavaPrinter : CodePrinter
       if (t.isType)      return qnType
       if (t.isFunc)      return qnFunc
       if (t.isThis)      return typeSig(curType)
-      if (t is ListType) return listSig(t, parameterize)
-      if (t is MapType)  return mapSig(t, parameterize)
-      if (t.isGenericParameter)
+      if (base is ListType) return listSig(base, parameterize)
+      if (base is MapType)  return mapSig(base, parameterize)
+      if (base.isGenericParameter)
       {
         if (t.name == "L") return qnList.w("<V>")
         if (t.name == "M") return qnMap.w("<K,V>")

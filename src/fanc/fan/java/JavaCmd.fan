@@ -51,6 +51,7 @@ internal class JavaCmd : TranspileCmd
   {
     input := super.stdCompilerInput(pod, f)
     input.wrapperPerParameterizedCollectionType = true
+    input.coerceParameterizedCollectionTypes = true
     return input
   }
 
