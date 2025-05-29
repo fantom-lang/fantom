@@ -395,7 +395,7 @@ internal class JavaNativeGen
     for (i := 0; i<funcType.params.size; ++i)
     {
       funcParams := funcType.params[0..i]
-      JavaPrinter(s.out).indent.nl.samMethod(m, funcType, funcParams)
+      //JavaPrinter(s.out).indent.nl.samMethod(m, funcType, funcParams)
     }
   }
 

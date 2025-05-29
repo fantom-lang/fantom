@@ -82,7 +82,7 @@ internal class JavaCmd : TranspileCmd
 
     JavaUtil.typeFile(outDir, t).withOut(null) |out|
     {
-      JavaPrinter(out).type(t)
+      JavaTypePrinter(out).type(t)
     }
   }
 
