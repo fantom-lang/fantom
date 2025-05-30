@@ -253,7 +253,7 @@ internal class JavaTypePrinter : JavaPrinter
   {
     m.curMethod = x
 
-    JavaMethodPrinter(this).method(x)
+    JavaMethodPrinter(this, x).print
 
     m.curMethod = null
     m.selfVar   = null

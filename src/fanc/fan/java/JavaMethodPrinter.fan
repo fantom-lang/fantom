@@ -13,49 +13,79 @@ using compiler
 **
 internal class JavaMethodPrinter : JavaPrinter
 {
-  new make(JavaPrinter parent) : super(parent) {}
+  new make(JavaPrinter parent, MethodDef def) : super(parent)
+  {
+    this.def  = def
+    this.name = JavaUtil.methodName(def)
+  }
 
   override JavaPrinterState m() { super.m }
 
-  Void method(MethodDef x)
+//////////////////////////////////////////////////////////////////////////
+// Top
+//////////////////////////////////////////////////////////////////////////
+
+  Void print()
   {
-    m.curMethod = x
-
-    if (x.isStaticInit)
-      w("static ").block(x.code).nl.nl
-    else if (x.isCtor)
-      ctor(x)
+    // Fantom implementation
+    if (isStaticInit)
+      staticInit
+    else if (isCtor)
+      ctor
     else
-      stdMethod(x)
+      method
 
-    m.curMethod = null
-    m.selfVar   = null
+    // Java main for all main(Str[] args) methods
+    if (isJavaMain) javaMain
   }
 
-  private Void ctor(MethodDef x)
+  private Void staticInit()
+  {
+     w("static ").block(code).nl.nl
+  }
+
+  private Void method()
+  {
+    // param default conveniences
+    paramDefaults
+
+    // implementation signature
+    methodSig
+
+    // body
+    if (isAbstract) return eos
+    if (isNative)   return sp.nativeCode.nl
+    sp.block(code).nl
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Constructor
+//////////////////////////////////////////////////////////////////////////
+
+  private Void ctor()
   {
     // type of constructor
-    selfType := x.parent
+    selfType := def.parent
 
     // variable to use for this in implementation
     m.selfVar = "self\$"
 
     // make$ method name
-    implName := JavaUtil.ctorImplName(x)
+    implName := JavaUtil.ctorImplName(def)
 
     // static factory side
-    if (!curType.isAbstract || x.isStatic)
+    if (!curType.isAbstract || isStatic)
     {
       // param default conveniences
-      methodParamDefaults(x)
+      paramDefaults
 
       // full parameter factory method
-      methodSig(x, x.params.size)
+      methodSig
 
       // if static ctor its just a static method
-      if (x.isStatic)
+      if (isStatic)
       {
-        sp.block(x.code).nl
+        sp.block(code).nl
         return
       }
 
@@ -71,7 +101,7 @@ internal class JavaMethodPrinter : JavaPrinter
 
       // make$(self$, ....)
       w(implName).w("(").w(selfVar)
-      x.params.each |p| { w(", ").varName(p.name) }
+      paramDefs.each |p| { w(", ").varName(p.name) }
       w(")").eos
 
       w("return ").w(selfVar).eos
@@ -82,80 +112,45 @@ internal class JavaMethodPrinter : JavaPrinter
     // instance implementation side
     w("protected static void ").w(implName).w("(")
     typeSig(selfType).sp.w(selfVar)
-    x.params.each |p| { w(", ").param(p) }
+    paramDefs.each |p| { w(", ").paramSig(p) }
     w(") {").nl
     indent
-    if (x.ctorChain != null)
+    if (def.ctorChain != null)
     {
-      chain     := x.ctorChain
+      chain     := def.ctorChain
       chainType := chain.target.id == ExprId.superExpr ? selfType.base : selfType
       chainName := JavaUtil.ctorImplName(chain.method)
-      typeSig(chainType).w(".").w(chainName).w("(").w(selfVar).args(x.ctorChain.args, true).w(")").eos
+      typeSig(chainType).w(".").w(chainName).w("(").w(selfVar).args(def.ctorChain.args, true).w(")").eos
     }
-    x.code.stmts.each |s| { stmt(s) }
+    code.stmts.each |s| { stmt(s) }
     unindent
     w("}").nl
   }
 
-  private Void stdMethod(MethodDef x)
+//////////////////////////////////////////////////////////////////////////
+// Param Default Conveniences
+//////////////////////////////////////////////////////////////////////////
+
+  private Void paramDefaults()
   {
-    // param default conveniences
-    methodParamDefaults(x)
-
-    // implementation signature
-    methodSig(x, x.params.size)
-
-    // body
-    if (x.isAbstract) return eos
-    if (x.isNative)   return sp.nativeMethodCode(x).nl
-    sp.block(x.code).nl
-
-    // generate a java main for all main(Str[] args) methods
-    if (x.name == "main") javaMain(x)
-  }
-
-  private This methodSig(MethodDef x, Int numParams)
-  {
-    // flags
-    slotScope(x)
-    if (x.isStatic || x.isCtor) w("static ")
-    if (x.isAbstract) w("abstract ")
-    else if (x.parent.isMixin && !x.isStatic) w("default ")
-
-    // return type
-    if (x.isCtor)
-      typeSig(x.parent)
-    else if (x.name == "doCall" && x.parent.isFunc && !x.returns.isVoid)
-      w("Object") // just return object in closure doCall
-    else
-      typeSig(x.returns)
-
-    // name(...)
-    sp.methodName(x)
-    params(x, numParams)
-    return this
-  }
-
-  private Void methodParamDefaults(MethodDef x)
-  {
-    starti := x.params.findIndex |p| { p.hasDefault }
+    starti := paramDefs.findIndex |p| { p.hasDefault }
     if (starti == null) return
 
-    for (i := starti; i<x.params.size; ++i)
-      methodParamDefault(x, i)
+    for (i := starti; i<paramDefs.size; ++i)
+      paramDefault(i)
   }
 
-  Void methodParamDefault(MethodDef x, Int numParams)
+  private Void paramDefault(Int numParams)
   {
-    w("/** Convenience for $x.name */").nl
-    methodSig(x, numParams)
-    if (x.isAbstract) return eos.nl
+    w("/** Convenience for $name */").nl
+    methodSig(numParams)
+    if (isAbstract) return eos.nl
 
-     w(" {").nl
-     indent
+    w(" {").nl
+    indent
 
-    thrus   := x.paramDefs[0..<numParams]
-    defs    := x.paramDefs[numParams..-1]
+    thrus := paramDefs[0..<numParams]
+    defs  := paramDefs[numParams..-1]
 
     // if a param uses a previous param, then the compiler addsan assign expr;
     // this requires us to generate these are local varaible definitions
@@ -164,8 +159,8 @@ internal class JavaMethodPrinter : JavaPrinter
       if (p.isAssign) typeSig(p.type).sp.expr(p.def).eos
     }
 
-    if (!x.returns.isVoid || x.isCtor) w("return ")
-    methodName(x).w("(")
+    if (!returns.isVoid || isCtor) w("return ")
+    w(name).w("(")
     first := true
     thrus.each |p|
     {
@@ -187,22 +182,61 @@ internal class JavaMethodPrinter : JavaPrinter
     nl
   }
 
-  private This nativeMethodCode(MethodDef x)
+//////////////////////////////////////////////////////////////////////////
+// Signature
+//////////////////////////////////////////////////////////////////////////
+
+  private This methodSig(Int numParams := paramDefs.size)
+  {
+    // flags
+    slotScope(def)
+    if (isStatic || isCtor) w("static ")
+    if (isAbstract) w("abstract ")
+    else if (parent.isMixin && !isStatic) w("default ")
+
+    // return type
+    if (isCtor)
+      typeSig(parent)
+    else if (name == "doCall" && parent.isFunc && !returns.isVoid)
+      w("Object") // just return object in closure doCall
+    else
+      typeSig(returns)
+
+    // name(...)
+    sp.w(name).w("(")
+    paramDefs.eachRange(0..<numParams) |p, i|
+    {
+      if (i > 0) w(", ")
+      paramSig(p)
+    }
+    return w(")")
+  }
+
+  private Void paramSig(ParamDef p)
+  {
+    typeSig(p.type).sp.varName(p.name)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Native Code
+//////////////////////////////////////////////////////////////////////////
+
+  private This nativeCode()
   {
     w("{").nl
     indent
-    if (!x.returns.isVoid) w("return ")
+    if (!returns.isVoid) w("return ")
     first := true
-    if (x.isStatic)
+    if (isStatic)
     {
-      w(JavaUtil.peerTypeName(curType)).w(".").methodName(x).w("(")
+      w(JavaUtil.peerTypeName(curType)).w(".").w(name).w("(")
     }
     else
     {
-      w(JavaUtil.peerFieldName).w(".").methodName(x).w("(this")
+      w(JavaUtil.peerFieldName).w(".").w(name).w("(this")
       first = false
     }
-    x.paramDefs.each |p|
+    paramDefs.each |p|
     {
       if (first) first = false
       else w(", ")
@@ -213,6 +247,10 @@ internal class JavaMethodPrinter : JavaPrinter
     w("}")
     return this
   }
+
+//////////////////////////////////////////////////////////////////////////
+// SAM
+//////////////////////////////////////////////////////////////////////////
 
   private Void samMethod(MethodDef x, FuncType funcType, CType[] funcParams)
   {
@@ -239,20 +277,20 @@ internal class JavaMethodPrinter : JavaPrinter
     // params
     w("(")
     needComma := false
-    x.params.eachRange(0..-2) |p|
+    paramDefs.eachRange(0..-2) |p|
     {
       if (needComma) w(", "); else needComma = true
-      param(p)
+      paramSig(p)
     }
     if (needComma) w(", ")
-    w(samSig).sp.varName(x.params.last.name).w(") {").nl
+    w(samSig).sp.varName(paramDefs.last.name).w(") {").nl
 
     // generate unique names for call that don't conflict with method params
     callNames := Str[,]
     funcParams.each |p, i|
     {
       name := 'a'.plus(i).toChar
-      if (x.params.any { it.name == name }) name = "_$name"
+      if (paramDefs.any { it.name == name }) name = "_$name"
       callNames.add(name)
     }
 
@@ -266,10 +304,10 @@ internal class JavaMethodPrinter : JavaPrinter
     if (x.isStatic) typeSig(x.parent).w("."); else w("this.")
     methodName(x).w("(")
     needComma = false
-    x.params.eachRange(0..-2) |p|
+    paramDefs.eachRange(0..-2) |p|
     {
       if (needComma) w(", "); else needComma = true
-      param(p)
+      paramSig(p)
     }
     if (needComma) w(", ")
     w("new Func.Sam").w(funcParams.size).w("() {").nl
@@ -279,7 +317,7 @@ internal class JavaMethodPrinter : JavaPrinter
       w(") {").nl
         indent
         if (!isVoid) w("return ")
-        w(x.params.last.name).w(".call(")
+        w(paramDefs.last.name).w(".call(")
         callNames.each |n, i| { if (i > 0) w(", "); w("(").typeSig(funcParams[i]).w(")").w(n) }
         w(");")
         if (isVoid) w(" return null;")
@@ -307,38 +345,52 @@ internal class JavaMethodPrinter : JavaPrinter
     w("}").nl
   }
 
-  private This params(MethodDef x, Int numParams)
+//////////////////////////////////////////////////////////////////////////
+// Java Main
+//////////////////////////////////////////////////////////////////////////
+
+  Bool isJavaMain()
   {
-    w("(")
-    x.params.eachRange(0..<numParams) |p, i|
-    {
-      if (i > 0) w(", ")
-      param(p)
-    }
-    return w(")")
+    name == "main" && paramDefs.size == 1 && paramDefs[0].type.isList
   }
 
-  Void param(ParamDef p)
-  {
-    typeSig(p.type).sp.varName(p.name)
-  }
-
-  Bool isJavaMain(MethodDef x)
-  {
-    x.name == "main" && x.params.size == 1 && x.params[0].type.isList
-  }
-
-  Void javaMain(MethodDef x)
+  Void javaMain()
   {
     nl
     w("/** Java main */").nl
     w("public static void main(String[] args) {").nl
     indent
-    if (!x.isStatic) w("make().")
+    if (!isStatic) w("make().")
     w("main(").qnList.w(".make(").qnSys.w(".StrType, args));").nl
     unindent
     w("}").nl
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Method Access
+//////////////////////////////////////////////////////////////////////////
+
+  MethodDef def
+
+  const Str name
+
+  CType parent() { def.parent }
+
+  CType returns() { def.returns }
+
+  ParamDef[] paramDefs() { def.params }
+
+  Block? code() { def.code }
+
+  Bool isStaticInit() { def.isStaticInit }
+
+  Bool isStatic() { def.isStatic }
+
+  Bool isCtor() { def.isCtor }
+
+  Bool isAbstract() { def.isAbstract }
+
+  Bool isNative() { def.isNative }
 
 //////////////////////////////////////////////////////////////////////////
 // Utils
@@ -367,6 +419,7 @@ internal class JavaMethodPrinter : JavaPrinter
     JavaExprPrinter(this).args(args, forceComma)
     return this
   }
+
 
 }
 
