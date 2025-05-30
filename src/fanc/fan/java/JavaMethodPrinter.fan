@@ -58,63 +58,67 @@ internal class JavaMethodPrinter : JavaPrinter
     sp.block(code).nl
   }
 
+  private Void ctor()
+  {
+    // use this varaiable instead of this in expressions
+    m.selfVar = "self\$"
+
+    // static factory side of constructor
+    if (isStatic || !curType.isAbstract) ctorFactory
+
+    // instance initialization implementation side of constructor
+    if (!isStatic) ctorImpl
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  private Void ctor()
+  private Void ctorFactory()
   {
-    // type of constructor
-    selfType := def.parent
+    // param default conveniences
+    paramDefaults
 
-    // variable to use for this in implementation
-    m.selfVar = "self\$"
+    // full parameter factory method
+    methodSig
 
-    // make$ method name
-    implName := JavaUtil.ctorImplName(def)
-
-    // static factory side
-    if (!curType.isAbstract || isStatic)
+    // if static ctor its just a static method
+    if (isStatic)
     {
-      // param default conveniences
-      paramDefaults
-
-      // full parameter factory method
-      methodSig
-
-      // if static ctor its just a static method
-      if (isStatic)
-      {
-        sp.block(code).nl
-        return
-      }
-
-      w(" { ").nl
-      indent
-
-      // fan.acme.Foo self$ = new fan.acmeFoo()
-      typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
-
-      // self$.peer$ = FooPeer.make(self$)
-      if (curType.hasNativePeer)
-        w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
-
-      // make$(self$, ....)
-      w(implName).w("(").w(selfVar)
-      paramDefs.each |p| { w(", ").varName(p.name) }
-      w(")").eos
-
-      w("return ").w(selfVar).eos
-      unindent
-      w("}").nl.nl
+      sp.block(code).nl
+      return
     }
 
-    // instance implementation side
+    w(" { ").nl
+    indent
+
+    // fan.acme.Foo self$ = new fan.acmeFoo()
+    typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
+
+    // self$.peer$ = FooPeer.make(self$)
+    if (curType.hasNativePeer)
+      w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
+
+    // make$(self$, ....)
+    w(implName).w("(").w(selfVar)
+    paramDefs.each |p| { w(", ").varName(p.name) }
+    w(")").eos
+
+    w("return ").w(selfVar).eos
+    unindent
+    w("}").nl.nl
+  }
+
+  private Void ctorImpl()
+  {
+    // signature
     w("protected static void ").w(implName).w("(")
     typeSig(selfType).sp.w(selfVar)
     paramDefs.each |p| { w(", ").paramSig(p) }
     w(") {").nl
     indent
+
+    // this or super chain
     if (def.ctorChain != null)
     {
       chain     := def.ctorChain
@@ -122,10 +126,17 @@ internal class JavaMethodPrinter : JavaPrinter
       chainName := JavaUtil.ctorImplName(chain.method)
       typeSig(chainType).w(".").w(chainName).w("(").w(selfVar).args(def.ctorChain.args, true).w(")").eos
     }
+
+    // rest of code
     code.stmts.each |s| { stmt(s) }
+
     unindent
     w("}").nl
   }
+
+  private CType selfType() { parent }
+
+  private Str implName() {  JavaUtil.ctorImplName(def) }
 
 //////////////////////////////////////////////////////////////////////////
 // Param Default Conveniences
