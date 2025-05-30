@@ -111,11 +111,13 @@ internal class JavaMethodPrinter : JavaPrinter
 
   private Void ctorImpl()
   {
+    // param default conveniences
+    paramDefaults(true)
+
     // signature
-    w("protected static void ").w(implName).w("(")
-    typeSig(selfType).sp.w(selfVar)
-    paramDefs.each |p| { w(", ").paramSig(p) }
-    w(") {").nl
+    ctorImplSig
+
+    sp.w("{").nl
     indent
 
     // this or super chain
@@ -142,19 +144,22 @@ internal class JavaMethodPrinter : JavaPrinter
 // Param Default Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  private Void paramDefaults()
+  private Void paramDefaults(Bool isCtorImpl := false)
   {
     starti := paramDefs.findIndex |p| { p.hasDefault }
     if (starti == null) return
 
     for (i := starti; i<paramDefs.size; ++i)
-      paramDefault(i)
+      paramDefault(isCtorImpl, i)
   }
 
-  private Void paramDefault(Int numParams)
+  private Void paramDefault(Bool isCtorImpl, Int numParams)
   {
     w("/** Convenience for $name */").nl
-    methodSig(numParams)
+    if (isCtorImpl)
+      ctorImplSig(numParams)
+    else
+      methodSig(numParams)
     if (isAbstract) return eos.nl
 
     w(" {").nl
@@ -163,22 +168,35 @@ internal class JavaMethodPrinter : JavaPrinter
     thrus := paramDefs[0..<numParams]
     defs  := paramDefs[numParams..-1]
 
-    // if a param uses a previous param, then the compiler addsan assign expr;
+    // if a param uses previous param, then the compiler adds an assign expr;
     // this requires us to generate these are local varaible definitions
     defs.each |p|
     {
       if (p.isAssign) typeSig(p.type).sp.expr(p.def).eos
     }
 
-    if (!returns.isVoid || isCtor) w("return ")
-    w(name).w("(")
+    // call implementation version
     first := true
+    if (isCtorImpl)
+    {
+      w(implName).w("(").w(selfVar)
+      first = false
+    }
+    else
+    {
+      if (!returns.isVoid || isCtor) w("return ")
+      w(name).w("(")
+    }
+
+    // pass thru arguments
     thrus.each |p|
     {
       if (first) first = false
       else w(", ")
       varName(p.name)
     }
+
+    // default expression arguments
     defs.each |p|
     {
       if (first) first = false
@@ -214,13 +232,28 @@ internal class JavaMethodPrinter : JavaPrinter
       typeSig(returns)
 
     // name(...)
-    sp.w(name).w("(")
+    sp.w(name).w("(").paramsSig(true, numParams).w(")")
+    return this
+  }
+
+  private This ctorImplSig(Int numParams := paramDefs.size)
+  {
+    w("protected static void ").w(implName).w("(")
+    typeSig(selfType).sp.w(selfVar)
+    paramsSig(false, numParams)
+    w(")")
+    return this
+  }
+
+  private This paramsSig(Bool first, Int numParams)
+  {
     paramDefs.eachRange(0..<numParams) |p, i|
     {
-      if (i > 0) w(", ")
+      if (first) first = false
+      else w(", ")
       paramSig(p)
     }
-    return w(")")
+    return this
   }
 
   private Void paramSig(ParamDef p)
