@@ -460,7 +460,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   private This getField(Expr? target, FieldExpr x)
   {
-    // special handling for fan.sys.FanBool.xxx
+    // special handling for ie fan.sys.FanBool.xxx
     field := x.field
     targetType := target?.ctype
     if (targetType != null && JavaUtil.isJavaNative(targetType))
@@ -482,7 +482,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   private Bool useFieldCall(FieldExpr x)
   {
-    if (curMethod.isGetter || curMethod.isSetter) return false
+    if (curMethod.isGetter || curMethod.isSetter) return x.target.id === ExprId.superExpr
     if (x.field.isSynthetic) return false
     if (x.field.parent.pod.name == "sys" && !x.useAccessor) return false
     return true

@@ -184,7 +184,7 @@ public class FanObj
   }
 
   public Object trap(String name) { return doTrap(this, name, null, typeof()); }
-  public Object trap(String name, List args) { return doTrap(this, name, args, typeof()); }
+  public Object trap(String name, List<Object> args) { return doTrap(this, name, args, typeof()); }
 
   private static Object doTrap(Object self, String name, List args, Type type)
   {

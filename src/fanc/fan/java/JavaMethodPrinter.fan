@@ -202,6 +202,7 @@ internal class JavaMethodPrinter : JavaPrinter
       if (first) first = false
       else w(", ")
       if (p.isAssign) varName(p.name) // use local variable
+      else if (name == "trap" && p.name == "args") w("(").qnList.w(")null") // special case for amibiguity
       else expr(p.def) // inline expression
     }
     w(")").eos

@@ -262,6 +262,13 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void method(MethodDef x)
   {
+    // we cannot generate mixin object in Java
+    if (x.parent.isMixin && x.name == "equals")
+    {
+      warn("Cannot generate mixin equals() in Java", x.loc)
+      return
+    }
+
     m.curMethod = x
 
     JavaMethodPrinter(this, x).print
