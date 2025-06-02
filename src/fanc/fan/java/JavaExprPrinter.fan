@@ -212,7 +212,13 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This callMethodExpr(CallExpr x)
   {
-    call(x.targetx, x.method, x.args)
+    // if using Func.call always need a cast
+    m := x.method
+    if (x.leave && m.parent.isFunc && m.name == "call" &&
+        !m.returns.isVoid && !m.returns.isGenericParameter)
+      w("(").typeSig(m.returns).w(")")
+
+    return call(x.targetx, x.method, x.args)
   }
 
   private This call(Expr target, CMethod method, Expr[] args)

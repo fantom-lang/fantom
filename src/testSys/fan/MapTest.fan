@@ -1168,8 +1168,8 @@ class MapTest : Test
     verifyEq(t, 2)
     verifyEq(x["two"], 3)
 
-    t = ++x["two"]
-    verifyEq(t, 4)
+    Obj y := ++x["two"]
+    verifyEq(y, 4)
     verifyEq(x["two"], 4);
 
     ++x["two"]
