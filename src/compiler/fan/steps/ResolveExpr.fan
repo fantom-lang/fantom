@@ -883,6 +883,10 @@ class ResolveExpr : CompilerStep
         binding.method.usesCvars = true
         binding.usedInClosure = true
 
+        // check if we already have shadow varaible
+        dupShadow := curMethod.vars.find |v| { v.name == name }
+        if (dupShadow != null) return dupShadow
+
         // create new "shadow" local var in closure body which
         // shadows the enclosed variable from parent scope,
         // we'll do further processing in ClosureVars
