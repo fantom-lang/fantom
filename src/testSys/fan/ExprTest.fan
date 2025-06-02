@@ -92,6 +92,23 @@ class ExprTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Elvis
+//////////////////////////////////////////////////////////////////////////
+
+  Void testElvis()
+  {
+    Str? x := "x"
+    y := null
+    verifyEq(x ?: "nil", "x")
+    y = x ?: throw ArgErr("boom")
+    verifyEq(y, "x")
+
+    x = null
+    verifyEq(x ?: "nil", "nil")
+    verifyErrMsg(ArgErr#, "boom") { y = x ?: throw ArgErr("boom") }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Safe Call
 //////////////////////////////////////////////////////////////////////////
 
@@ -224,3 +241,4 @@ class ExprTest : Test
 class ExprX { This add(ExprX? k) { kids.add(k); return this } ExprX?[] kids := ExprX?[,]  }
 class ExprY : ExprX { ExprX? a }
 class ExprZ : ExprX  {}
+

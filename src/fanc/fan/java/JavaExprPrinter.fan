@@ -335,8 +335,12 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     // NOTE: this only works if closure only uses effectively final locals
     qnOpUtil.w(".<").typeSig(x.ctype).w(">elvis(")
       .expr(x.lhs)
-      .w(", ()->").expr(x.rhs)
-      .w(")")
+      .w(", ()->")
+    if (x.rhs.id === ExprId.throwExpr)
+      w("{ ").expr(x.rhs).w("; }")
+    else
+      expr(x.rhs)
+    return w(")")
   }
 
   override This ctorExpr(CallExpr x)
