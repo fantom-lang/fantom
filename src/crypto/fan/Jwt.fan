@@ -89,17 +89,17 @@ const class Jwt
 
   private Obj? checkHeaderMap(Str parameter, Type type)
   {
-    if (header[parameter] == null) return null
-    val := (header[parameter]).typeof == type ? header[parameter] :
-                throw ArgErr("JWT (${parameter}) header parameter must be ${type.name}")
+    val := header[parameter]
+    if (val != null && val.typeof != type)
+      throw ArgErr("JWT (${parameter}) header parameter must be ${type.name}")
     return val
   }
 
   private Obj? checkClaimMap(Str claim, Type type)
   {
-    if (claims[claim] == null) return null
-    val := (claims[claim]).typeof == type ? claims[claim] :
-                throw ArgErr("JWT (${claim}) claim must be ${type.name}")
+    val := claims[claim]
+    if (val != null && val.typeof != type)
+      throw ArgErr("JWT (${claim}) claim must be ${type.name}")
     return val
   }
 
@@ -643,7 +643,7 @@ enum class JwsAlgorithm
     alg := params[JwtConst.AlgorithmHeader]
     if (alg == null) throw Err("Missing (${JwtConst.AlgorithmHeader}) Parameter: ${params}")
     algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool| { return v.name.equalsIgnoreCase(alg) }
-    return algorithm == null ? throw Err("Unsupported or Invalid JWS (alg) Parameter: ${alg}") : algorithm
+    return algorithm ?: throw Err("Unsupported or Invalid JWS (alg) Parameter: ${alg}")
   }
 
   static new fromKeyAndDigest(Str keyType, Str digest)
@@ -653,7 +653,7 @@ enum class JwsAlgorithm
       if (keyType != "none") { return v.keyType == keyType && v.digest == digest }
       else { return v.keyType == keyType }
     }
-    return algorithm == null ? throw Err("Unsupported or Invalid JWS Key/Digest: ${keyType}/${digest}") : algorithm
+    return algorithm ?: throw Err("Unsupported or Invalid JWS Key/Digest: ${keyType}/${digest}")
   }
 
   public Str digest()
