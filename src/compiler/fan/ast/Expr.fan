@@ -1172,7 +1172,7 @@ class LocalVarExpr : Expr
 
   virtual Int register() { var.register }
 
-  Str name() { var.name }
+  virtual Str name() { var.name }
 
   override Str toStr()
   {
@@ -1258,6 +1258,8 @@ class ItExpr : LocalVarExpr
   override Bool isAssignable() { false }
 
   override Int register() { 1 }  // Void doCall(Type it)
+
+  override Str name() { "it" }
 
   override Str toStr() { "it" }
 }

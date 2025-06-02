@@ -156,7 +156,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This superExpr(LocalVarExpr x) { w("super") }
 
-  override This itExpr(LocalVarExpr x) { w("it") }
+  override This itExpr(LocalVarExpr x) { w(x.name) }
 
 //////////////////////////////////////////////////////////////////////////
 // Misc Expr
@@ -272,9 +272,9 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
   override This safeCallExpr(CallExpr x)
   {
     target := x.target
-    itExpr := ItExpr(x.loc, x.target.ctype)
+    itExpr := SafeLocalVar(x.loc, x.target.ctype)
 
-    // we add cast in (Cast)target to (it)->(Cast)call(...)
+    // we add cast in (Cast)target to (it$)->(Cast)call(...)
     TypeCheckExpr? cast := null
     if (x.target.id === ExprId.coerce)
     {
@@ -307,7 +307,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
       // Ojects use safe()
       w(",").typeSig(returns).w(">safe(")
     }
-    expr(target).w(", (it)->")
+    expr(target).w(", (it\$)->")
     restViaItArg(this)
     w(")")
     return this
@@ -439,20 +439,20 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     {
       return safe(x.target, f.type) |me|
       {
-        me.w("(").typeSig(f.type).w(")").getField(x)
+        itExpr := SafeLocalVar(x.loc, x.target.ctype)
+        me.w("(").typeSig(f.type).w(")").getField(itExpr, x)
       }
     }
     else
     {
-      return getField(x)
+      return getField(x.target, x)
     }
   }
 
-  private This getField(FieldExpr x)
+  private This getField(Expr? target, FieldExpr x)
   {
     // special handling for fan.sys.FanBool.xxx
     field := x.field
-    target := x.target
     targetType := target?.ctype
     if (targetType != null && JavaUtil.isJavaNative(targetType))
     {
@@ -514,5 +514,15 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     callMethodExpr(x.substitute)
   }
 
+}
+
+**************************************************************************
+** SafeLocalVar
+**************************************************************************
+
+class SafeLocalVar : ItExpr
+{
+  new make(Loc loc, CType type) : super(loc, type) {}
+  override Str name() { "it\$" }
 }
 
