@@ -16,7 +16,7 @@ import fanx.serial.*;
  *   sys::Int   =&gt;  long primitive
  *   sys::Int?  =&gt;  java.lang.Long
  */
-public final class FanInt
+public final class FanInt extends FanNum
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -536,3 +536,4 @@ public final class FanInt
   static { for (int i=0; i<pos.length; ++i) pos[i] = Long.valueOf(i); }
 
 }
+

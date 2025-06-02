@@ -16,7 +16,7 @@ import fanx.serial.*;
  *   sys::Float   =&gt;  double primitive
  *   sys::Float?  =&gt;  java.lang.Double
  */
-public final class FanFloat
+public final class FanFloat extends FanNum
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -414,3 +414,4 @@ public final class FanFloat
   public static final String NaNStr    = "NaN";
 
 }
+

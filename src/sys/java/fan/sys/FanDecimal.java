@@ -15,7 +15,7 @@ import fanx.serial.*;
  * FanDecimal defines the methods for sys::Decimal.  The actual
  * class used for representation is java.math.BigDecimal.
  */
-public final class FanDecimal
+public final class FanDecimal extends FanNum
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -187,3 +187,4 @@ public final class FanDecimal
   private static final int DIVISION_MIN_SCALE = 10;
 
 }
+
