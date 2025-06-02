@@ -283,16 +283,20 @@ internal class JavaTypePrinter : JavaPrinter
 
   private Void syntheticClasses(TypeDef parent)
   {
-    // gen synthetic classes associated with TypeDef as inner classes
+    // find my closures
     prefix := parent.qname + "\$"
+    closures := TypeDef[,]
     parent.podDef.typeDefs.each |x|
     {
-      if (JavaUtil.isSyntheticClosure(parent, x))
-      {
-        m.closure = x
-        syntheticClass(x,  JavaUtil.syntheticClosureName(x))
-        m.closure = null
-      }
+      if (JavaUtil.isSyntheticClosure(parent, x)) closures.add(x)
+    }
+
+    // sort by inner class name and generate
+    closures.sort.each |x|
+    {
+      m.closure = x
+      syntheticClass(x,  JavaUtil.syntheticClosureName(x))
+      m.closure = null
     }
 
     // also generate every wrapper used as an inner class

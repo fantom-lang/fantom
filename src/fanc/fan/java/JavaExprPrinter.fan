@@ -314,7 +314,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     if (returns.isThis) returns = target.ctype
 
     qnOpUtil.w(".<").typeSig(target.ctype)
-    if (returns.isVal || returns.isVoid)
+    if ((returns.isVal && !returns.isNullable) || returns.isVoid)
     {
       // value types use safeVoid, safeBool(), safeInt(), or safeFloat()
       w(">safe${returns.name}(")
