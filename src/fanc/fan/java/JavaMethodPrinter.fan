@@ -64,7 +64,7 @@ internal class JavaMethodPrinter : JavaPrinter
     m.selfVar = "self\$"
 
     // static factory side of constructor
-    if (isStatic || !curType.isAbstract) ctorFactory
+    if (isStatic || !parent.isAbstract) ctorFactory
 
     // instance initialization implementation side of constructor
     if (!isStatic) ctorImpl
