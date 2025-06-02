@@ -222,7 +222,9 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     // special handling for Obj.compare => fan.sys.FanObj.compare, etc
     if (useFanValCall(target, method))
     {
-      qnFanVal(target.ctype).w(".").w(methodName).w("(")
+      if (method.parent.isObj) qnFanObj
+      else qnFanVal(target.ctype)
+      w(".").w(methodName).w("(")
       if (!method.isStatic) expr(target).args(args, true)
       else this.args(args)
       w(")")
@@ -240,6 +242,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
   {
     targetType := target.ctype
     if (targetType == null) return false
+    if (targetType.isMixin && method.parent.isObj) return true
     if (!JavaUtil.isJavaNative(targetType)) return false
     if (method.name == "trap")
     {
