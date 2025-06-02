@@ -25,7 +25,8 @@ internal class JavaTypePrinter : JavaPrinter
     prelude(t)
     typeHeader(t)
     w(" {").nl
-    indent
+    indent.nl
+    javaCtor(t, JavaUtil.typeName(t)) { this.w("{}") }
     typeOf(t)
     enumOrdinals(t)
     slots(t)
@@ -103,10 +104,19 @@ internal class JavaTypePrinter : JavaPrinter
     return this
   }
 
+  Void javaCtor(TypeDef t, Str name, |This| code)
+  {
+    if (t.isMixin) return
+
+    w("/** Constructor for Fantom use only */").nl
+    w(t.isFinal ? "private" : "protected").sp.w(name).w("()").sp
+    code(this)
+    nl
+  }
+
   Void typeOf(TypeDef t)
   {
-    if (t.isSynthetic) return
-
+    nl
     if (t.isMixin)
     {
       // for mixins:
@@ -129,6 +139,7 @@ internal class JavaTypePrinter : JavaPrinter
       w("/** Reflect type of this object */").nl
       w("public ").qnType.w(" typeof() { return typeof\$(); }").nl
       nl
+      w("/** Type literal for $t.qname */").nl
       w("public static ").qnType.w(" typeof\$() {").nl
       w("  if (typeof\$cache == null)").nl
       w("    typeof\$cache = ").qnType.w(".find(").str(t.qname).w(");").nl
@@ -290,10 +301,25 @@ internal class JavaTypePrinter : JavaPrinter
     w("/** Synthetic closure support */").nl
     w("static final class ").w(name).extends(x).w(" {").nl
     indent
+    if (x.isClosure) syntheticClosureSupport(x, name)
     slots(x)
     unindent
     w("}").nl
   }
 
+  private Void syntheticClosureSupport(TypeDef x, Str name)
+  {
+    // constructor that calls super with type signature
+    javaCtor(x, name)
+    {
+      it.w("{").nl
+      it.w("  super(typeof\$)").eos
+      it.w("}")
+    }
+
+    // generate typeof and tyepof$
+    nl.w("private static final fan.sys.FuncType typeof\$ = (fan.sys.FuncType)")
+      .qnType.w(".find(").str(x.base.signature).w(")").eos
+  }
 }
 
