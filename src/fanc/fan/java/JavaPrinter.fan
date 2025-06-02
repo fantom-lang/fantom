@@ -115,6 +115,14 @@ internal class JavaPrinter : CodePrinter
       }
     }
 
+    // Java FFI
+    if (t.isForeign)
+    {
+      pod := t.pod.name
+      if (!pod.startsWith("[java]")) throw Err("Invalid FFI type: $t")
+      return w(pod[6..-1]).w(".").w(t.name)
+    }
+
     // qname
     return w("fan.").w(t.pod.name).w(".").typeName(t)
   }

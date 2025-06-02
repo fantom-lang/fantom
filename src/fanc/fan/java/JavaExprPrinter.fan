@@ -212,8 +212,16 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This callMethodExpr(CallExpr x)
   {
-    // if using Func.call always need a cast
     m := x.method
+    if (m.parent.isForeign)
+    {
+      // JAVA FFI constructor is Foo.<new>.<init>(...)
+      if (x.method.name == "<new>") return this
+      if (x.method.name == "<init>")
+        return w("new ").typeSig(x.method.parent).w("(").args(x.args).w(")")
+    }
+
+    // if using Func.call always need a cast
     if (x.leave && m.parent.isFunc && m.name == "call" &&
         !m.returns.isVoid && !m.returns.isGenericParameter)
       w("(").typeSig(m.returns).w(")")
@@ -333,7 +341,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This ctorExpr(CallExpr x)
   {
-    expr(x.target).w(".").methodName(x.method).w("(").args(x.args).w(")")
+    callMethodExpr(x)
   }
 
   override This staticTargetExpr(StaticTargetExpr x)
