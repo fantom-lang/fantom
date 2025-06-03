@@ -525,8 +525,11 @@ public class ClassType
     }
     catch (Exception e)
     {
-      System.out.println("ERROR: Invalid precompiled class missing aux: " + qname);
-      e.printStackTrace();
+      if (!Sys.isJarDist)
+      {
+        System.out.println("ERROR: Invalid precompiled class missing aux: " + qname);
+        e.printStackTrace();
+      }
     }
   }
 
@@ -554,7 +557,7 @@ public class ClassType
         // mixin then we do this for both the interface and
         // the static methods only of the implementation class
         finishSlots(cls, false);
-        if (isMixin()) finishSlots(auxCls, true);
+        if (auxCls != null) finishSlots(auxCls, true);
 
         finished = true;
 
