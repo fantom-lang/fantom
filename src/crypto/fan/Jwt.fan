@@ -438,8 +438,6 @@ const class Jwt
       return unique.findType(Str#)
     }
     else throw ArgErr("JWT (aud) claim must be a Str or Str[]")
-
-    return null
   }
 
   private DateTime? fromNumericDate(Int? val)

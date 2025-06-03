@@ -292,17 +292,20 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     itExpr := SafeLocalVar(x.loc, x.target.ctype)
 
     // we add cast in (Cast)target to (it$)->(Cast)call(...)
-    TypeCheckExpr? cast := null
+    CType? cast := null
     if (x.target.id === ExprId.coerce)
     {
-      cast = (TypeCheckExpr)target
-      //target = cast.target
+      cast = ((TypeCheckExpr)target).check
+    }
+    else if (x.method.returns.isThis)
+    {
+      cast = target.ctype
     }
 
     // NOTE: this only works if closure only uses effectively final locals
     return safe(target, x.ctype) |me|
     {
-      if (cast != null) w("(").typeSig(cast.check).w(")")
+      if (cast != null) w("(").typeSig(cast).w(")")
       me.call(itExpr, x.method, x.args)
     }
   }
