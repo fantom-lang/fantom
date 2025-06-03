@@ -119,7 +119,7 @@ internal class JavaUtil
   }
 
   ** Field name to store native peer
-  static Str peerFieldName() { "peer\$" }
+  static Str peerFieldName() { "peer" }
 
   ** Type name for native peer
   static Str peerTypeName(TypeDef t) { t.name + "Peer" }

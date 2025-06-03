@@ -148,6 +148,7 @@ internal class JavaCmd : TranspileCmd
     // execute
     r := Process(cmd, Env.cur.workDir).run.join
     if (r != 0) throw Err("Jar failed")
+    echo("Jar size: " + jarFile.size.toLocale("B"))
   }
 
   Void prepJar()

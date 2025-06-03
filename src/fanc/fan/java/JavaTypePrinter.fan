@@ -26,7 +26,7 @@ internal class JavaTypePrinter : JavaPrinter
     typeHeader(t)
     w(" {").nl
     indent.nl
-    javaCtor(t, JavaUtil.typeName(t)) { this.w("{}") }
+    javaCtor(t, JavaUtil.typeName(t))
     typeOf(t)
     enumOrdinals(t)
     slots(t)
@@ -104,14 +104,18 @@ internal class JavaTypePrinter : JavaPrinter
     return this
   }
 
-  Void javaCtor(TypeDef t, Str name, |This| code)
+  Void javaCtor(TypeDef t, Str name, |This|? onCode := null)
   {
     if (t.isMixin) return
 
     w("/** Constructor for Fantom use only */").nl
-    w(t.isFinal ? "private" : "protected").sp.w(name).w("()").sp
-    code(this)
-    nl
+    w(t.isFinal ? "private" : "protected").sp.w(name).w("()").sp.w("{").nl
+    indent
+    if (onCode != null) onCode(this)
+    if (t.hasNativePeer)
+      w("this.").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(t)).w(".make(this)").eos
+    unindent
+    w("}").nl
   }
 
   Void typeOf(TypeDef t)
@@ -164,9 +168,9 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void nativePeer(TypeDef t)
   {
-    if (!curType.hasNativePeer) return
+    if (!t.hasNativePeer) return
 
-    nl.w("private ").w(JavaUtil.peerTypeName(t)).sp.w(JavaUtil.peerFieldName).eos
+    nl.w(JavaUtil.peerTypeName(t)).sp.w(JavaUtil.peerFieldName).eos
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -326,12 +330,7 @@ internal class JavaTypePrinter : JavaPrinter
   private Void syntheticClosureSupport(TypeDef x, Str name)
   {
     // constructor that calls super with type signature
-    javaCtor(x, name)
-    {
-      it.w("{").nl
-      it.w("  super(typeof\$)").eos
-      it.w("}")
-    }
+    javaCtor(x, name) { it.w("super(typeof\$)").eos }
 
     // generate typeof and tyepof$
     nl.w("private static final fan.sys.FuncType typeof\$ = (fan.sys.FuncType)")

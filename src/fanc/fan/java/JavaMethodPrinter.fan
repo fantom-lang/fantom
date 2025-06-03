@@ -13,7 +13,7 @@ using compiler
 **
 internal class JavaMethodPrinter : JavaPrinter
 {
-  new make(JavaPrinter parent, MethodDef def) : super(parent)
+  new make(JavaPrinter base, MethodDef def) : super(base)
   {
     this.def  = def
     this.name = JavaUtil.methodName(def)
@@ -94,10 +94,6 @@ internal class JavaMethodPrinter : JavaPrinter
 
     // fan.acme.Foo self$ = new fan.acmeFoo()
     typeSig(selfType).sp.w(selfVar).w(" = new ").typeSig(selfType).w("()").eos
-
-    // self$.peer$ = FooPeer.make(self$)
-    if (curType.hasNativePeer)
-      w(selfVar).w(".").w(JavaUtil.peerFieldName).w(" = ").w(JavaUtil.peerTypeName(curType)).w(".make(").w(selfVar).w(")").eos
 
     // make$(self$, ....)
     w(implName).w("(").w(selfVar)
@@ -419,7 +415,7 @@ internal class JavaMethodPrinter : JavaPrinter
 
   const Str name
 
-  CType parent() { def.parent }
+  TypeDef parent() { def.parentDef }
 
   CType returns() { def.returns }
 
