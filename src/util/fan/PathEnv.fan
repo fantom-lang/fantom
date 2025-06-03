@@ -21,7 +21,7 @@ const class PathEnv : Env
   **
   new make() : super(Env.cur)
   {
-    vars := super.vars
+    vars := superVars
     path := parsePath(null, vars["FAN_ENV_PATH"] ?: "") |msg, err|
     {
       log.warn("Parsing FAN_ENV_PATH: $msg", err)
@@ -39,7 +39,7 @@ const class PathEnv : Env
   {
     props := file.readProps
 
-    vars := super.vars.rw
+    vars := superVars.rw
     props.each |v, n|
     {
       if (n.startsWith("env.") && n.size > 5) vars[n[4..-1]] = v
@@ -54,6 +54,8 @@ const class PathEnv : Env
     this.vars = vars
     this.pathRef = AtomicRef(path.toImmutable)
   }
+
+  private Str:Str superVars() { super.vars }
 
   **
   ** Parse path string from env var or props file.

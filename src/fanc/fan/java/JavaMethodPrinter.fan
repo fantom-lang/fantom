@@ -396,7 +396,7 @@ internal class JavaMethodPrinter : JavaPrinter
 
   Bool isJavaMain()
   {
-    name == "main" && paramDefs.size == 1 && paramDefs[0].type.isList
+    !parent.isAbstract && name == "main" && paramDefs.size == 1 && paramDefs[0].type.isList
   }
 
   Void javaMain()

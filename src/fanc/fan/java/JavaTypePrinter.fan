@@ -202,7 +202,7 @@ internal class JavaTypePrinter : JavaPrinter
     }
 
     ctors.each    |x| { nl.method(x) }
-    consts.each   |x| { nl.constAccessors(x) }
+    consts.each   |x| { constAccessors(x) }
     methods.each  |x| { nl.method(x) }
     if (!t.isMixin)
     {
@@ -217,13 +217,18 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void constAccessors(FieldDef x)
   {
-    slotScope(x)
-    if (x.isStatic) w("static ")
-    typeSig(x.type).sp.fieldName(x)
+    // getter
+    if (!x.isOverride)
+    {
+      nl
+      slotScope(x)
+      if (x.isStatic) w("static ")
+      typeSig(x.type).sp.fieldName(x)
 
-    w("() { return ")
-    if (x.parent.isMixin) w(JavaUtil.mixinFieldsName).w(".")
-    fieldName(x).w("; }").nl
+      w("() { return ")
+      if (x.parent.isMixin) w(JavaUtil.mixinFieldsName).w(".")
+      fieldName(x).w("; }").nl
+    }
 
     // if the current class has an it-block ctor then
     // generate special setting that takes the it-block func
@@ -240,7 +245,7 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void fieldStorage(FieldDef x)
   {
-    if (!x.isSynthetic && !x.isEnum) w("private ")
+    if (!x.isSynthetic && !x.isEnum && !curType.hasNativePeer) w("private ")
     if (x.isStatic) w("static ")
     typeSig(x.type).sp.fieldName(x).eos
     return this
