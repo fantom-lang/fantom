@@ -883,16 +883,10 @@ class ResolveExpr : CompilerStep
         binding.method.usesCvars = true
         binding.usedInClosure = true
 
-        // check if we already have shadow varaible
-        dupShadow := curMethod.vars.find |v| { v.name == name }
-        if (dupShadow != null) return dupShadow
-
         // create new "shadow" local var in closure body which
         // shadows the enclosed variable from parent scope,
         // we'll do further processing in ClosureVars
-        shadow := curMethod.addLocalVar(binding.ctype, binding.name, currentBlock)
-        shadow.usedInClosure = true
-        shadow.shadows = binding
+        shadow := curMethod.getOrAddShadowVar(binding, currentBlock)
 
         // if there are intervening closure scopes between
         // the original scope and current scope, then we need to
@@ -901,10 +895,7 @@ class ResolveExpr : CompilerStep
         for (p := closure.enclosingClosure; p != null; p = p.enclosingClosure)
         {
           if (binding.method === p.doCall) break
-          passThru := p.doCall.addLocalVar(binding.ctype, binding.name, p.doCall.code)
-          passThru.usedInClosure = true
-          passThru.shadows = binding
-          passThru.usedInClosure = true
+          passThru := p.doCall.getOrAddShadowVar(binding, p.doCall.code)
           last.shadows = passThru
           last = passThru
         }

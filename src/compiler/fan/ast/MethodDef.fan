@@ -114,6 +114,22 @@ class MethodDef : SlotDef, CMethod
   }
 
   **
+  ** Get or create a shadow variable in this closure method to shadow
+  ** a variable from an outer scope
+  **
+  MethodVar getOrAddShadowVar(MethodVar binding, Block? scope)
+  {
+    name := binding.name
+    dup := vars.find |v| { v.name == name }
+    if (dup != null) return dup
+
+    shadow := addLocalVar(binding.ctype, name, scope)
+    shadow.usedInClosure = true
+    shadow.shadows = binding
+    return shadow
+  }
+
+  **
   ** Add a parameter to the end of the method signature and
   ** initialize the param MethodVar.
   ** Note: currently this only works if no locals are defined.
