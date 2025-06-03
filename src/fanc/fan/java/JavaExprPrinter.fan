@@ -430,19 +430,39 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
   override This postfixLeaveExpr(ShortcutExpr x)
   {
     // only support Int/Float
-    if (!useJavaNumOp(x))
+    if (isJavaNumVal(x.method.parent))
     {
-      warn("Postfix leave unsupported: $x", x.loc)
-      return shortcutAssignLocal(x)
+      switch (x.target.id)
+      {
+        case ExprId.localVar: if (postfixLeaveLocal(x)) return this
+        case ExprId.field:    if (postfixLeaveField(x)) return this
+      }
     }
 
-    // incremnet or decrement
+    // fallback to shortcut - this generates invalid code!
+    warn("Postfix leave unsupported: $x", x.loc)
+    return shortcutAssignLocal(x)
+  }
+
+  private Bool postfixLeaveLocal(ShortcutExpr x)
+  {
+    oparen.expr(x.target).cparen.postfixOperator(x)
+    return true
+  }
+
+  private Bool postfixLeaveField(ShortcutExpr x)
+  {
+    fe := (FieldExpr)x.target
+    expr(fe.target).w(".").fieldName(fe.field).postfixOperator(x)
+    return true
+  }
+
+  private This postfixOperator(ShortcutExpr x)
+  {
     name := x.method.name
-    oparen.expr(x.target).cparen
-    if (name == "increment") w("++")
-    else if (name == "decrement") w("--")
+    if (name == "increment") return w("++")
+    if (name == "decrement") return w("--")
     else throw Err("Postfix $x.method.qname")
-    return this
   }
 
   private Bool useJavaNumOp(ShortcutExpr x)

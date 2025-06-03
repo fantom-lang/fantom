@@ -236,9 +236,50 @@ class ExprTest : Test
   Int? fIntQ
   Str? fStr
   ExprTest? chain
+
+//////////////////////////////////////////////////////////////////////////
+// Assign Shortcuts
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAssignShortcuts()
+  {
+    // local prefix/postfix
+    x := 3
+    x++; verifyEq(x, 4)
+    ++x; verifyEq(x, 5)
+    x--; verifyEq(x, 4)
+    --x; verifyEq(x, 3)
+
+    // my own field
+    fInt := 3
+    fInt++; verifyEq(fInt, 4)
+    ++fInt; verifyEq(fInt, 5)
+    fInt--; verifyEq(fInt, 4)
+    --fInt; verifyEq(fInt, 3)
+
+    // another field of my own type
+    o := make
+    o.fInt = 3
+    o.fInt++; verifyEq(o.fInt, 4)
+    ++o.fInt; verifyEq(o.fInt, 5)
+    o.fInt--; verifyEq(o.fInt, 4)
+    --o.fInt; verifyEq(o.fInt, 3)
+
+    // another field of my differnet type
+    q := ExprQ()
+    q.x = 3
+    ++q.x; verifyEq(q.x, 4)
+    --q.x; verifyEq(q.x, 3)
+    /* not supported by Java transpiler
+    q.x++; verifyEq(q.x, 4)
+    q.x--; verifyEq(q.x, 4)
+    */
+  }
+
 }
 
 class ExprX { This add(ExprX? k) { kids.add(k); return this } ExprX?[] kids := ExprX?[,]  }
 class ExprY : ExprX { ExprX? a }
 class ExprZ : ExprX  {}
+class ExprQ { Int x }
 
