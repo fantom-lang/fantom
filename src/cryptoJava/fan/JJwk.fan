@@ -200,7 +200,7 @@ internal enum class JwsKeyType
     kty := key[JwkConst.KeyTypeHeader]
     if (kty == null) return null
     type := JwsKeyType.vals.find |JwsKeyType v->Bool| { return v.toStr == kty }
-    return type == null ? throw Err("JWK kty invalid type") : type
+    return type ?: throw Err("JWK kty invalid type")
   }
 
   override Str toStr()

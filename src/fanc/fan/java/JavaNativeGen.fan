@@ -152,8 +152,18 @@ internal class JavaNativeGen
   ** Parse type into slot parts; trailing slash is removed
   static JavaNativePart[] parseNativeParts(TypeDef type, File f)
   {
-    // this code relies on convention of slot indentation of two spaces
+    // first strip commented out blocks
     lines := f.readAllLines
+    while (true)
+    {
+      start := lines.findIndex |line| { line.trim == "/*" }
+      if (start == null) break
+      end := lines.findIndex |line, i| { line.trim == "*/" && i > start}
+      if (end == null) throw Err("$f [$start $end]")
+      lines = lines[0..<start].addAll(lines[end+1..-1])
+    }
+
+    // this code relies on convention of slot indentation of two spaces
     parts := JavaNativePart[,]
     start := 0
     for (i := 0; i<lines.size; ++i)
