@@ -8,6 +8,12 @@
 
 class MMatrixTest : Test
 {
+  Void testIdentity()
+  {
+    m := Math.matrix(2,2)
+    verifyEq(m.typeof, MMatrix#)
+  }
+
   Void testGetSet()
   {
     m := Math.matrix(2,2)
@@ -131,3 +137,4 @@ class MMatrixTest : Test
     }
   }
 }
+

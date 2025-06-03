@@ -53,8 +53,14 @@ public final class BigInt extends FanObj
 // Type
 //////////////////////////////////////////////////////////////////////////
 
-  public final Type typeof() { return typeof; }
-  private static final Type typeof = Type.find("math::BigInt");
+  public final Type typeof() { return typeof$(); }
+
+  public static Type typeof$()
+  {
+    if (type == null) type = Type.find("math::BigInt");
+    return type;
+  }
+  private static Type type;
 
 //////////////////////////////////////////////////////////////////////////
 // Operators
@@ -207,10 +213,16 @@ public final class BigInt extends FanObj
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
+  public static BigInt defVal() { return defVal; }
   public static final BigInt defVal = new BigInt(BigInteger.ZERO);
-  public static final BigInt zero   = defVal;
-  public static final BigInt one    = new BigInt(BigInteger.ONE);
+
+  public static BigInt zero() { return zero; }
+  public static final BigInt zero = defVal;
+
+  public static BigInt one() { return one; }
+  public static final BigInt one = new BigInt(BigInteger.ONE);
 
   private BigInteger self;
 
 }
+
