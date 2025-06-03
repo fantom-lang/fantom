@@ -51,7 +51,7 @@ public class UdpSocketPeer
     this.socket = socket;
   }
 
-  public SocketConfig config() { return this.config; }
+  public SocketConfig config(UdpSocket fan) { return this.config; }
 
 //////////////////////////////////////////////////////////////////////////
 // State
@@ -400,3 +400,4 @@ public class UdpSocketPeer
   private SocketOptions options;
 
 }
+

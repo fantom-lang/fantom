@@ -36,7 +36,6 @@ public class MulticastSocketPeer extends UdpSocketPeer
 //////////////////////////////////////////////////////////////////////////
 
   public IpInterface getInterface(MulticastSocket fan)
-    throws IOException
   {
     try
     {
@@ -50,7 +49,6 @@ public class MulticastSocketPeer extends UdpSocketPeer
 
 
   public void  setInterface(MulticastSocket fan, IpInterface iface)
-    throws IOException
   {
     try
     {
@@ -63,7 +61,6 @@ public class MulticastSocketPeer extends UdpSocketPeer
   }
 
   public long timeToLive(MulticastSocket fan)
-    throws IOException
   {
     try
     {
@@ -88,7 +85,6 @@ public class MulticastSocketPeer extends UdpSocketPeer
   }
 
   public boolean loopbackMode(MulticastSocket fan)
-    throws IOException
   {
     try
     {
@@ -155,3 +151,4 @@ public class MulticastSocketPeer extends UdpSocketPeer
   private final java.net.MulticastSocket socket;
 
 }
+

@@ -44,7 +44,7 @@ public class IpAddrPeer
     try
     {
       InetAddress[] addr = InetAddress.getAllByName(str);
-      List list = new List(IpAddr.$Type, addr.length);
+      List list = new List(type, addr.length);
       for (int i=0; i<addr.length; ++i)
         list.add(make(str, addr[i]));
       return list;
@@ -187,3 +187,4 @@ public class IpAddrPeer
   public InetAddress java;
 
 }
+

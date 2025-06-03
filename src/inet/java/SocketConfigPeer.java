@@ -45,6 +45,8 @@ public class SocketConfigPeer
 // SSLContext
 //////////////////////////////////////////////////////////////////////////
 
+  public void force_peer(SocketConfig self) {}
+
   SSLContext sslContext()
   {
     if (this._sslContext == null)
@@ -111,3 +113,4 @@ public class SocketConfigPeer
     return this._sslContext;
   }
 }
+
