@@ -517,9 +517,25 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   private Bool useFieldCall(FieldExpr x)
   {
-    if (curMethod.isGetter || curMethod.isSetter) return x.target.id === ExprId.superExpr
+    // if inside a setter
+    if (curMethod.isGetter || curMethod.isSetter)
+    {
+      // just in case
+      if (x.useAccessor) return true
+
+      // always use call syntax for super.myField
+      if  (x.target.id === ExprId.superExpr) return true
+
+      // if its my own field itself then we can skip
+      if (x.target.ctype == curMethod.parent) return false
+    }
+
+    // don't use calls on synthetic fields
     if (x.field.isSynthetic) return false
-    if (x.field.parent.pod.name == "sys" && !x.useAccessor) return false
+
+    // allow direct field access for sys
+    if (x.field.parent.pod.name == "sys") return x.useAccessor
+
     return true
   }
 
