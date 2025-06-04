@@ -146,7 +146,6 @@ class BerWriter
       case AsnTag.univAny:      return writeAny(obj, buf)
       default: throw AsnErr("No writer for $obj")
     }
-    return buf
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -173,8 +172,7 @@ class BerWriter
 
   @NoDoc Buf writeInt(Obj val, Buf buf := Buf())
   {
-    if (val is Int) val = BigInt.makeInt(val)
-    int := val as BigInt ?: throw ArgErr("Not an int: $val ($val.typeof)")
+    int := val as BigInt ?: BigInt.makeInt(val)
     if (int == BigInt.zero) return buf.write(0)
     return buf.writeBuf(int.toBuf)
   }
@@ -331,3 +329,4 @@ class BerWriter
   private new make(Int mask) { this.mask = mask }
   const Int mask
 }
+
