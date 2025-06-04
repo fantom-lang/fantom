@@ -50,9 +50,19 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
   {
     if (curMethod.isStaticInit) return this
 
-    w("return")
-    if (x.expr != null) sp.expr(x.expr)
-    return eos
+    if (curMethod.returns.isVoid)
+    {
+      // in fantom we allow return of anything in void
+      if (x.expr != null) sp.expr(x.expr).w("; ")
+      return w("return").eos
+    }
+    else
+    {
+      // normal return
+      w("return")
+      if (x.expr != null) sp.expr(x.expr)
+      return eos
+    }
   }
 
   override This throwStmt(ThrowStmt x)

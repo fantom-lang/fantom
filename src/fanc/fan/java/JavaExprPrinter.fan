@@ -154,7 +154,11 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This thisExpr(LocalVarExpr x) { w(selfVar ?: "this") }
 
-  override This superExpr(LocalVarExpr x) { w("super") }
+  override This superExpr(LocalVarExpr x)
+  {
+    if (x.ctype.isMixin) typeSig(x.ctype).w(".")
+    return w("super")
+  }
 
   override This itExpr(LocalVarExpr x) { w(x.name) }
 
