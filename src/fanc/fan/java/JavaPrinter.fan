@@ -70,7 +70,7 @@ internal class JavaPrinter : CodePrinter
 // Type Signatures
 //////////////////////////////////////////////////////////////////////////
 
-  This typeSig(CType t, Bool parameterize := true)
+  This typeSig(CType t, JavaParameterize parameterize := JavaParameterize.yes)
   {
     // speical handling for system types
     if (t.pod.name == "sys")
@@ -127,30 +127,36 @@ internal class JavaPrinter : CodePrinter
     return w("fan.").w(t.pod.name).w(".").typeName(t)
   }
 
-  This listSig(ListType t, Bool parameterize)
+  This listSig(ListType t, JavaParameterize p)
   {
     qnList
-    if (parameterizeSig(parameterize))
-      w("<").typeSigNullable(t.v).w(">")
+    if (isParameterizeSig(p))
+      w("<").parameterSig(t.v, p).w(">")
     return this
   }
 
-  This mapSig(MapType t, Bool parameterize)
+  This mapSig(MapType t,JavaParameterize p)
   {
     qnMap
-    if (parameterizeSig(parameterize))
-      w("<").typeSigNullable(t.k).w(",").typeSigNullable(t.v).w(">")
+    if (isParameterizeSig(p))
+      w("<").parameterSig(t.k, p).w(",").parameterSig(t.v, p).w(">")
     return this
   }
 
-  Bool parameterizeSig(Bool flag)
+  Bool isParameterizeSig(JavaParameterize mode)
   {
-    if (!flag) return false
+    if (mode == JavaParameterize.no) return false
     if (closure != null && curMethod?.name == "callList") return false
     return true
   }
 
-  This typeSigNullable(CType t, Bool parameterize := true)
+  This parameterSig(CType t, JavaParameterize mode)
+  {
+    if (mode === JavaParameterize.wildcard) w("? extends ")
+    return typeSigNullable(t)
+  }
+
+  This typeSigNullable(CType t, JavaParameterize parameterize := JavaParameterize.yes)
   {
     if (t.isVal)
     {
@@ -201,6 +207,17 @@ internal class JavaPrinter : CodePrinter
   Str:TypeDef wrappers() { m.wrappers }
 
   Str? selfVar() { m.selfVar }
+}
+
+**************************************************************************
+** JavaParameterize
+**************************************************************************
+
+enum class JavaParameterize
+{
+  no,
+  yes,
+  wildcard
 }
 
 **************************************************************************

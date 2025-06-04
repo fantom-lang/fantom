@@ -220,17 +220,28 @@ internal class JavaMethodPrinter : JavaPrinter
     if (isAbstract) w("abstract ")
     else if (parent.isMixin && !isStatic) w("default ")
 
-    // return type
-    if (isCtor)
-      typeSig(parent)
-    else if (name == "doCall" && parent.isFunc && !returns.isVoid)
-      w("Object") // just return object in closure doCall
-    else
-      typeSig(returns)
-
-    // name(...)
-    sp.w(name).w("(").paramsSig(true, numParams).w(")")
+    // return name(...)
+    returnsSig.sp.w(name).w("(").paramsSig(true, numParams).w(")")
     return this
+  }
+
+  private This returnsSig()
+  {
+    // ctor always returns parent type
+    if (isCtor) return typeSig(parent)
+
+    // always return just return Object in closure doCall
+    if (name == "doCall" && parent.isFunc && !returns.isVoid)
+      return w("Object")
+
+    // special handling for List/Map virtual methods that
+    // might be covariantly overridden
+    if ((def.isVirtual || def.isAbstract) &&
+        (returns.isParameterized) &&
+        (returns.isList || returns.isMap))
+      return typeSig(returns, JavaParameterize.wildcard)
+
+    return typeSig(returns)
   }
 
   private This ctorImplSig(Int numParams := paramDefs.size)

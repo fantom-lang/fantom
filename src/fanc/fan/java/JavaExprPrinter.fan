@@ -126,7 +126,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     if (check.isParameterized)
       qnOpUtil.w(".is(").expr(x.target).w(", ").doTypeLiteral(check).w(")")
     else
-      oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, false).cparen
+      oparen.expr(x.target).w(" instanceof ").typeSigNullable(x.check, JavaParameterize.no).cparen
     return this
   }
 
@@ -137,13 +137,13 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This asExpr(TypeCheckExpr x)
   {
-    qnOpUtil.w(".as(").typeSigNullable(x.check, false).w(".class, ").expr(x.target).w(")")
+    qnOpUtil.w(".as(").typeSigNullable(x.check, JavaParameterize.no).w(".class, ").expr(x.target).w(")")
   }
 
   override This coerceExpr(TypeCheckExpr x)
   {
     // Java will not cast between parameterized List/Map
-    oparen.w("(").typeSig(x.check, false).w(")(").expr(x.target).w(")").cparen
+    oparen.w("(").typeSig(x.check, JavaParameterize.no).w(")(").expr(x.target).w(")").cparen
   }
 
 //////////////////////////////////////////////////////////////////////////
