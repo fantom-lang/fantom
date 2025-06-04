@@ -70,7 +70,7 @@ internal class JavaPrinter : CodePrinter
 // Type Signatures
 //////////////////////////////////////////////////////////////////////////
 
-  This typeSig(CType t, JavaParameterize parameterize := JavaParameterize.yes)
+  This typeSig(CType t, JavaParameterize p := JavaParameterize.yes)
   {
     // speical handling for system types
     if (t.pod.name == "sys")
@@ -87,8 +87,8 @@ internal class JavaPrinter : CodePrinter
       if (t.isType)      return qnType
       if (t.isFunc)      return qnFunc
       if (t.isThis)      return typeSig(curType)
-      if (base is ListType) return listSig(base, parameterize)
-      if (base is MapType)  return mapSig(base, parameterize)
+      if (base is ListType) return listSig(base, p)
+      if (base is MapType)  return mapSig(base, p)
       if (base.isGenericParameter)
       {
         if (t.name == "L") return qnList.w("<V>")
@@ -127,36 +127,7 @@ internal class JavaPrinter : CodePrinter
     return w("fan.").w(t.pod.name).w(".").typeName(t)
   }
 
-  This listSig(ListType t, JavaParameterize p)
-  {
-    qnList
-    if (isParameterizeSig(p))
-      w("<").parameterSig(t.v, p).w(">")
-    return this
-  }
-
-  This mapSig(MapType t,JavaParameterize p)
-  {
-    qnMap
-    if (isParameterizeSig(p))
-      w("<").parameterSig(t.k, p).w(",").parameterSig(t.v, p).w(">")
-    return this
-  }
-
-  Bool isParameterizeSig(JavaParameterize mode)
-  {
-    if (mode == JavaParameterize.no) return false
-    if (closure != null && curMethod?.name == "callList") return false
-    return true
-  }
-
-  This parameterSig(CType t, JavaParameterize mode)
-  {
-    if (mode === JavaParameterize.wildcard) w("? extends ")
-    return typeSigNullable(t)
-  }
-
-  This typeSigNullable(CType t, JavaParameterize parameterize := JavaParameterize.yes)
+  This typeSigNullable(CType t, JavaParameterize p := JavaParameterize.yes)
   {
     if (t.isVal)
     {
@@ -164,7 +135,45 @@ internal class JavaPrinter : CodePrinter
       if (t.isInt)     return w("Long")
       if (t.isFloat)   return w("Double")
     }
-    return typeSig(t, parameterize)
+    return typeSig(t, p)
+  }
+
+  private This listSig(ListType t, JavaParameterize p)
+  {
+    qnList
+    if (isParameterizeSig(p))
+      w("<").parameterSig(t.v, p).w(">")
+    return this
+  }
+
+  private This mapSig(MapType t, JavaParameterize p)
+  {
+    qnMap
+    if (isParameterizeSig(p))
+      w("<").parameterSig(t.k, p).w(",").parameterSig(t.v, p).w(">")
+    return this
+  }
+
+  private Bool isParameterizeSig(JavaParameterize mode)
+  {
+    if (mode.isNo) return false
+    if (closure != null && curMethod?.name == "callList") return false
+    return true
+  }
+
+  private This parameterSig(CType t, JavaParameterize p)
+  {
+    if (p.isWildcard && useWildcardForParameter(t)) w("? extends ")
+    return typeSigNullable(t)
+  }
+
+  private Bool useWildcardForParameter(CType x)
+  {
+    // don't use wildcards for final types
+    if (x.isFinal) return false
+    if (x.qname == "sys::File") return false  // treat file as final
+    if (x.isList || x.isMap) return false     // nested parameterized types
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -218,6 +227,10 @@ enum class JavaParameterize
   no,
   yes,
   wildcard
+
+  Bool isNo() { this === no }
+  Bool isYes() { this === yes }
+  Bool isWildcard() { this === wildcard }
 }
 
 **************************************************************************

@@ -236,12 +236,22 @@ internal class JavaMethodPrinter : JavaPrinter
 
     // special handling for List/Map virtual methods that
     // might be covariantly overridden
-    if ((def.isVirtual || def.isAbstract) &&
-        (returns.isParameterized) &&
-        (returns.isList || returns.isMap))
+    if (useWildcardReturns)
       return typeSig(returns, JavaParameterize.wildcard)
 
     return typeSig(returns)
+  }
+
+  private Bool useWildcardReturns()
+  {
+    // don't bother if not virtual
+    if (!def.isVirtual && !def.isAbstract) return false
+
+    // don't bother if not parameterized
+    if (!returns.isParameterized) return false
+
+    // only parameterize list/map
+    return returns.isList || returns.isMap
   }
 
   private This ctorImplSig(Int numParams := paramDefs.size)
