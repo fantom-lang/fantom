@@ -9,7 +9,7 @@
 **
 ** Field is a slot which models the ability to get and set a value.
 **
-const class Field : Slot
+final const class Field : Slot
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,3 +65,4 @@ const class Field : Slot
   virtual Void set(Obj? instance, Obj? value)
 
 }
+

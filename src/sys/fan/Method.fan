@@ -10,7 +10,7 @@
 ** Method models a function with a formal parameter list and
 ** return value (or Void if no return).
 **
-const class Method : Slot
+final const class Method : Slot
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -66,3 +66,4 @@ const class Method : Slot
             Obj? e := null, Obj? f := null, Obj? g := null, Obj? h := null)
 
 }
+

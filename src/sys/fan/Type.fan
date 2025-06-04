@@ -11,7 +11,7 @@
 ** Types model the inheritance relationships and provide a mapping
 ** for all the slots both inherited and declared.
 **
-const class Type
+final const class Type
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -417,3 +417,4 @@ const class Type
   Str toLocale()
 
 }
+
