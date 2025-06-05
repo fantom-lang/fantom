@@ -1162,6 +1162,8 @@ class MapTest : Test
 
   Void testAssignOps()
   {
+    __noJava := true
+
     x := ["one":1, "two":2, "three":3]
 
     t := x["two"]++

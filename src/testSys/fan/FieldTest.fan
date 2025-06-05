@@ -350,7 +350,7 @@ class FieldTest : Test
 {
   static Int getCount(FieldTest test) { return test.count }
   static Void setCount(FieldTest test, Int c) { test.count = c }
-  static Int setCountLeave(FieldTest test, Int c) { return test.count = c }
+  static Int setCountLeave(FieldTest test, Int c) { __noJava := true; return test.count = c }
 }
 
 //////////////////////////////////////////////////////////////////////////

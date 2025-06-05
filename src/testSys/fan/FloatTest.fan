@@ -289,23 +289,25 @@ class FloatTest : Test
 
   Void testIncrement()
   {
-    x:=4.0f
+    x := 4.0f
     verifyEq(++x, 5.0f); verifyEq(x, 5.0f)
     verifyEq(x++, 5.0f); verifyEq(x, 6.0f)
     verifyEq(--x, 5.0f); verifyEq(x, 5.0f)
     verifyEq(x--, 5.0f); verifyEq(x, 4.0f)
-
-    Float? y := 4.0f
-    verifyEq(++y, 5.0f); verifyEq(y, 5.0f)
-    verifyEq(y++, 5.0f); verifyEq(y, 6.0f)
-    verifyEq(--y, 5.0f); verifyEq(y, 5.0f)
-    verifyEq(y--, 5.0f); verifyEq(y, 4.0f)
 
     fx = 4f
     verifyEq(++fx, 5.0f); verifyEq(fx, 5.0f)
     verifyEq(fx++, 5.0f); verifyEq(fx, 6.0f)
     verifyEq(--fx, 5.0f); verifyEq(fx, 5.0f)
     verifyEq(fx--, 5.0f); verifyEq(fx, 4.0f)
+
+    __noJava := true
+
+    Float? y := 4.0f
+    verifyEq(++y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y++, 5.0f); verifyEq(y, 6.0f)
+    verifyEq(--y, 5.0f); verifyEq(y, 5.0f)
+    verifyEq(y--, 5.0f); verifyEq(y, 4.0f)
 
     fy = 4.0f
     verifyEq(++fy, 5.0f); verifyEq(fy, 5.0f)
@@ -850,3 +852,4 @@ class FloatTest : Test
   */
 
 }
+

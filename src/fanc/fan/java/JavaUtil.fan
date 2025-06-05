@@ -170,7 +170,7 @@ internal class JavaUtil
     "sys::Int.increment":   "++",
     "sys::Float.increment": "++",
     "sys::Int.decrement":   "--",
-    "sys::Float.decrement": "++",
+    "sys::Float.decrement": "--",
 
     ].toImmutable
   }

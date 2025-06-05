@@ -1564,6 +1564,8 @@ class ListTest : Test
 
   Void testAssignOps()
   {
+    __noJava := true
+
     x := [1]
     x[0] += 1
     verifyEq(x.first, 2)

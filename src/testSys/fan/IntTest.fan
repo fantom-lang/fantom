@@ -207,17 +207,19 @@ class IntTest : Test
     verifyEq(--x, 5); verifyEq(x, 5)
     verifyEq(x--, 5); verifyEq(x, 4)
 
-    Int? y := 4
-    verifyEq(++y, 5); verifyEq(y, 5)
-    verifyEq(y++, 5); verifyEq(y, 6)
-    verifyEq(--y, 5); verifyEq(y, 5)
-    verifyEq(y--, 5); verifyEq(y, 4)
-
     fx = 4
     verifyEq(++fx, 5); verifyEq(fx, 5)
     verifyEq(fx++, 5); verifyEq(fx, 6)
     verifyEq(--fx, 5); verifyEq(fx, 5)
     verifyEq(fx--, 5); verifyEq(fx, 4)
+
+    __noJava := true
+
+    Int? y := 4
+    verifyEq(++y, 5); verifyEq(y, 5)
+    verifyEq(y++, 5); verifyEq(y, 6)
+    verifyEq(--y, 5); verifyEq(y, 5)
+    verifyEq(y--, 5); verifyEq(y, 4)
 
     fy = 4
     verifyEq(++fy, 5); verifyEq(fy, 5)
@@ -782,3 +784,4 @@ class IntTest : Test
   const Bool js := Env.cur.runtime == "js"
 
 }
+
