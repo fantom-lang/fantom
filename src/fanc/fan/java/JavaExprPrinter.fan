@@ -168,7 +168,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
   override This ternaryExpr(TernaryExpr x)
   {
-    oparen.expr(x.condition).w(" ? ").expr(x.trueExpr).w(" : ").expr(x.falseExpr).cparen
+    w("(").expr(x.condition).w(" ? ").expr(x.trueExpr).w(" : ").expr(x.falseExpr).w(")")
   }
 
   override This throwExpr(ThrowExpr x)

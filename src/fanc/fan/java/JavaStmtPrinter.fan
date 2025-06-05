@@ -216,11 +216,11 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
     if (x.ctype.isInt)
     {
       if (x.ctype.isNullable) return w("((Long)").expr(x).w(").intValue()")
-      w("(int)")
+      return w("(int)(").expr(x).w(")")
     }
     else if (x.ctype.isEnum)
     {
-      return w("(int)").expr(x).w(".ordinal()")
+      return w("(int)(").expr(x).w(").ordinal()")
     }
     return expr(x)
   }
