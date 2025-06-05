@@ -249,7 +249,6 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void fieldStorage(FieldDef x)
   {
-    if (!x.isSynthetic && !x.isEnum && !curType.hasNativePeer) w("private ")
     if (x.isStatic) w("static ")
     typeSig(x.type).sp.fieldName(x).eos
     return this
