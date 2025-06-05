@@ -378,14 +378,14 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     // now we have three variables: local, field, or indexed
     switch (var.id)
     {
-      case ExprId.localVar: return shortcutAssignLocal(x)
+      case ExprId.localVar: return shortcutAssignLocal(x, var, coerce)
       case ExprId.field:    return shortcutAssignField(x, var)
       case ExprId.shortcut: return shortcutAssignIndexed(x, var)
       default:              throw Err("$var.id | $x [$x.loc.toLocStr]")
     }
   }
 
-  private This shortcutAssignLocal(ShortcutExpr x)
+  private This shortcutAssignLocal(ShortcutExpr x, LocalVarExpr local, TypeCheckExpr? coerce)
   {
     if (useJavaNumOp(x) || x.method.qname == "sys::Str.plus")
     {
@@ -406,7 +406,10 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     else
     {
       // treat as normal call
-      return callMethodExpr(x)
+      w(local.name).w(" = ")
+      if (coerce != null) w("(").typeSig(coerce.check).w(")")
+      callMethodExpr(x)
+      return this
     }
   }
 
@@ -447,7 +450,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
 
     // fallback to shortcut - this generates invalid code!
     warn("Postfix leave unsupported: $x", x.loc)
-    return shortcutAssignLocal(x)
+    return shortcutAssignExpr(x)
   }
 
   private Bool postfixLeaveLocal(ShortcutExpr x)
