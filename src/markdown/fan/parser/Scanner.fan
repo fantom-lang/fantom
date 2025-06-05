@@ -160,7 +160,8 @@ class Scanner
   Int whitespace()
   {
     count := 0
-    while (true)
+    done := false
+    while (!done)
     {
       switch (peek)
       {
@@ -174,7 +175,7 @@ class Scanner
           ++count
           next
         default:
-          break
+          done = true
       }
     }
     return count
@@ -327,3 +328,4 @@ const class Position
 
   override Str toStr() { "pos(line=${lineIndex}, index=${index})" }
 }
+

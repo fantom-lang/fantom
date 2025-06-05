@@ -101,7 +101,7 @@ mixin PostProcessor
     else
     {
       // seen this anchor before, so append auto-incrementing integer
-      id++
+      id = id + 1
       ids[anchor] = id
       anchor = "${anchor}-${id}"
     }
@@ -110,3 +110,4 @@ mixin PostProcessor
     heading.anchor = anchor
   }
 }
+

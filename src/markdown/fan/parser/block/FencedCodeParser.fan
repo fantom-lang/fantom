@@ -122,12 +122,14 @@ internal const class FencedCodeParserFactory : BlockParserFactory
     len := line.size
     for (i := index; i < len; ++i)
     {
+      done := false
       switch (line[i])
       {
         case '`': ++backticks
         case '~': ++tildes
-        default: break
+        default:  done = true
       }
+      if (done) break
     }
     if (backticks >= 3 && tildes == 0)
     {
@@ -145,3 +147,4 @@ internal const class FencedCodeParserFactory : BlockParserFactory
 
   }
 }
+

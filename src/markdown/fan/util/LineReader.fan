@@ -41,8 +41,8 @@ internal class LineReader
   {
     StrBuf? sb := null
     cr := false
-
-    while (true)
+    flag := true
+    while (flag)
     {
       if (pos >= limit) fill
 
@@ -151,3 +151,4 @@ internal class LineReader
       : sb.add(cbuf[start..<end]).toStr
   }
 }
+

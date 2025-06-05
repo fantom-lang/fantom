@@ -32,7 +32,7 @@
 
   private |Int->Bool| textEsc
   private |Int->Bool| textEscInHeading
-  private static const |Int->Bool| linkDestNeedsAngleBrackets := |c->Bool| {
+  private static const |Int->Bool| linkDestNeedsAngleBrackets := |Int c->Bool| {
     switch (c)
     {
       case ' ':
@@ -211,7 +211,8 @@
       fenceCharsInLiteral := findMaxRunLen(fenceChar, literal)
       openingFenceLen = 3.max(fenceCharsInLiteral+1)
     }
-    closingFenceLen := code.closingFenceLen ?: openingFenceLen
+    closingFenceLen := code.closingFenceLen
+    if (closingFenceLen == null) closingFenceLen = openingFenceLen
 
     openingFence := fenceChar.mult(openingFenceLen)
     closingFence := fenceChar.mult(closingFenceLen)
@@ -534,3 +535,4 @@ internal class LineBreakVisitor : Visitor
   override Void visitHardLineBreak(HardLineBreak b)
   { visitChildren(b); this.hasLineBreak = true }
 }
+
