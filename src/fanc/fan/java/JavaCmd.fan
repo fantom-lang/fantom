@@ -105,6 +105,9 @@ internal class JavaCmd : TranspileCmd
     // always assume UTF-8
     cmd.add("-encoding").add("utf-8")
 
+    // need big stack size for some pods like markdown
+    cmd.add("-J-Xss4m")
+
     // -d outDir
     jvmDir.create
     cmd.add("-d").add(jvmDir.osPath)

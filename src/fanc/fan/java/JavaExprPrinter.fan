@@ -226,11 +226,13 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     }
 
     // if using Func.call always need a cast
-    if (x.leave && m.parent.isFunc && m.name == "call" &&
-        !m.returns.isVoid && !m.returns.isGenericParameter)
-      w("(").typeSig(m.returns).w(")")
+    needCast := x.leave && m.parent.isFunc && m.name == "call" &&
+                !m.returns.isVoid && !m.returns.isGenericParameter
 
-    return call(x.targetx, x.method, x.args)
+    if (needCast) w("((").typeSig(m.returns).w(")")
+    call(x.targetx, x.method, x.args)
+    if (needCast) w(")")
+    return this
   }
 
   private This call(Expr target, CMethod method, Expr[] args)

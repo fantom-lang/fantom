@@ -49,7 +49,7 @@ internal class JavaUtil
   ** Fantom slot to Java type name
   static Str fieldName(CField x)
   {
-    checkKeyword(x.name)
+    checkKeywordOrMethod(x.name)
   }
 
   ** Fantom slot to Java type name
@@ -57,13 +57,21 @@ internal class JavaUtil
   {
     n := x.name
     if (n.startsWith("instance\$init\$")) return "instance\$init"
-    return checkKeyword(n)
+    return checkKeywordOrMethod(n)
   }
 
   ** If name is Java keyword prefix it
   static Str checkKeyword(Str name)
   {
     if (javaKeywords[name] != null) return "_$name"
+    return name
+  }
+
+  ** If name is Java keyword prefix it
+  static Str checkKeywordOrMethod(Str name)
+  {
+    if (javaKeywords[name] != null) return "_$name"
+    if (javaObjMethods[name] != null) return "_$name"
     return name
   }
 
@@ -128,6 +136,14 @@ internal class JavaUtil
   static Bool isJavaNative(CType t)
   {
     t.isObj || t.isStr || t.isVal || t.isNum || t.isDecimal
+  }
+
+  ** Java Object methods we can't override
+  static once Str:Str javaObjMethods()
+  {
+    Str:Str[:].addList([
+      "finalize", "getClass", "hashCode", "notify",
+      "notifyAll", "toString", "wait"])
   }
 
   ** Map of method qname to binary operators

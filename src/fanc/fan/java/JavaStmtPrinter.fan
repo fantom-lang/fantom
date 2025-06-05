@@ -250,9 +250,18 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
     if (b == null) return this
     indent
     b.stmts.each |s| { stmt(s) }
-    if (!b.isExit) w("break").eos
+    if (switchNeedBreak(b)) w("break").eos
     unindent
     return this
+  }
+
+  private Bool switchNeedBreak(Block b)
+  {
+    if (b.isExit) return false
+    last := b.stmts.last
+    if (last.id == StmtId.continueStmt) return false
+    if (last.id == StmtId.breakStmt) warn("Switch block cannot use break", b.loc)
+    return true
   }
 
 //////////////////////////////////////////////////////////////////////////
