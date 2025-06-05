@@ -87,6 +87,11 @@ abstract class Expr : Node
   virtual Bool isAlwaysNullable() { false }
 
   **
+  ** If this an instance of CallExpr return it otherwise null
+  **
+  virtual CallExpr? asCall() { null }
+
+  **
   ** Assignments to instance fields require a temporary local variable.
   **
   virtual Bool assignRequiresTempVar() { false }
@@ -841,6 +846,8 @@ class CallExpr : NameExpr
     // consider any other call a stand alone stmt
     return true
   }
+
+  override CallExpr? asCall() { this }
 
   virtual Bool isCompare() { false }
 

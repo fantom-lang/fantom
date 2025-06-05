@@ -74,7 +74,15 @@ class Coercer
     if ((Obj?)actual == null) throw NullErr("null ctype: ${expr}")
 
     // if the same type this is easy
-    if (actual == expected) return expr
+    if (actual == expected)
+    {
+      // unless the expr is a method call with covariant override
+      call := expr.asCall
+      if (call != null && call.method.isCovariant)
+        return coerceInheritedReturns(call, expected)
+
+      return expr
+    }
 
     // if actual type is nothing, then its of no matter
     if (actual.isNothing) return expr
@@ -125,6 +133,16 @@ class Coercer
     return expr
   }
 
+  private Expr coerceInheritedReturns(CallExpr call, CType expected)
+  {
+    // check force coersion that Java transpiler might require
+    // for a covariant overridden method with parameterized collection
+    if (forceParameterizedCollectionCoerce(call.method.inheritedReturns, expected))
+      return TypeCheckExpr.coerce(call, expected)
+    else
+      return call
+  }
+
   private Bool isFuncAutoCoerce(CType actualType, CType expectedType)
   {
     // check if both are function types
@@ -171,14 +189,24 @@ class Coercer
     if (from.isVal || to.isVal) return true
 
     // configurable handling for parameterized collection types
-    if (compiler.input.coerceParameterizedCollectionTypes &&
-        from.isParameterized && to.isParameterized && !from.isFunc)
+    if (forceParameterizedCollectionCoerce(from, to))
       return true
 
     // if going from Obj? -> Obj we need a nullable coercion
     if (!to.isNullable) return from.isNullable
 
     return false
+  }
+
+  **
+  ** Configurable handling for parameterized collection types
+  **
+  private Bool forceParameterizedCollectionCoerce(CType from, CType to)
+  {
+    compiler.input.coerceParameterizedCollectionTypes &&
+      from.isParameterized &&
+      to.isParameterized &&
+      !from.isFunc
   }
 
   Compiler compiler
