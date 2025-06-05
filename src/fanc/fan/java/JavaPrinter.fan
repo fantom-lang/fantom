@@ -163,17 +163,7 @@ internal class JavaPrinter : CodePrinter
 
   private This parameterSig(CType t, JavaParameterize p)
   {
-    if (p.isWildcard && useWildcardForParameter(t)) w("? extends ")
-    return typeSigNullable(t)
-  }
-
-  private Bool useWildcardForParameter(CType x)
-  {
-    // don't use wildcards for final types
-    if (x.isFinal) return false
-    if (x.qname == "sys::File") return false  // treat file as final
-    if (x.isList || x.isMap) return false     // nested parameterized types
-    return true
+    typeSigNullable(t)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -225,12 +215,10 @@ internal class JavaPrinter : CodePrinter
 enum class JavaParameterize
 {
   no,
-  yes,
-  wildcard
+  yes
 
   Bool isNo() { this === no }
   Bool isYes() { this === yes }
-  Bool isWildcard() { this === wildcard }
 }
 
 **************************************************************************

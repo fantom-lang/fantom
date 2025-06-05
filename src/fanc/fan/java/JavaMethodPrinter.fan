@@ -234,24 +234,13 @@ internal class JavaMethodPrinter : JavaPrinter
     if (name == "doCall" && parent.isFunc && !returns.isVoid)
       return w("Object")
 
-    // special handling for List/Map virtual methods that
-    // might be covariantly overridden
-    if (useWildcardReturns)
-      return typeSig(returns, JavaParameterize.wildcard)
+    // parameterized list/map cannot be covariant
+    if (returns.isParameterized && (returns.isList || returns.isMap))
+    {
+      return typeSig(def.inheritedRet ?: returns)
+    }
 
     return typeSig(returns)
-  }
-
-  private Bool useWildcardReturns()
-  {
-    // don't bother if not virtual
-    if (!def.isVirtual && !def.isAbstract) return false
-
-    // don't bother if not parameterized
-    if (!returns.isParameterized) return false
-
-    // only parameterize list/map
-    return returns.isList || returns.isMap
   }
 
   private This ctorImplSig(Int numParams := paramDefs.size)
