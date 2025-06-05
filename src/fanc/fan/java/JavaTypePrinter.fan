@@ -236,14 +236,14 @@ internal class JavaTypePrinter : JavaPrinter
 
     // if the current class has an it-block ctor then
     // generate special setting that takes the it-block func
-    if (curType.hasItBlockCtor)
+    if (curType.hasItBlockCtor && !x.isStatic)
     {
       nl
       w("/** Initialize const field $x.name - DO NOT USE DIRECTLY */").nl
       slotScope(x)
       if (x.isStatic) w("static ")
       w("void ").fieldName(x).w("\$init(").qnFunc.w(" f, ").typeSig(x.type).w(" it) {")
-      w("}").nl
+      w(" this.").fieldName(x).w(" = it; }").nl
     }
   }
 
