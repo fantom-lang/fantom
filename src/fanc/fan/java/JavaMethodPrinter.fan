@@ -41,7 +41,7 @@ internal class JavaMethodPrinter : JavaPrinter
 
   private Void staticInit()
   {
-     w("static ").block(code).nl.nl
+     w("static ").code.nl
   }
 
   private Void method()
@@ -55,7 +55,7 @@ internal class JavaMethodPrinter : JavaPrinter
     // body
     if (isAbstract) return eos
     if (isNative)   return sp.nativeCode.nl
-    sp.block(code).nl
+    sp.code.nl
   }
 
   private Void ctor()
@@ -85,7 +85,7 @@ internal class JavaMethodPrinter : JavaPrinter
     // if static ctor its just a static method
     if (isStatic)
     {
-      sp.block(code).nl
+      sp.code.nl
       return
     }
 
@@ -126,7 +126,7 @@ internal class JavaMethodPrinter : JavaPrinter
     }
 
     // rest of code
-    code.stmts.each |s| { stmt(s) }
+    def.code.stmts.each |s| { stmt(s) }
 
     unindent
     w("}").nl
@@ -198,7 +198,7 @@ internal class JavaMethodPrinter : JavaPrinter
       if (first) first = false
       else w(", ")
       if (p.isAssign) varName(p.name) // use local variable
-      else if (name == "trap" && p.name == "args") w("(").qnList.w(")null") // special case for amibiguity
+      else if (name == "trap") w("(").qnList.w(")null") // special case for amibiguity
       else expr(p.def) // inline expression
     }
     w(")").eos
@@ -297,6 +297,40 @@ internal class JavaMethodPrinter : JavaPrinter
     unindent
     w("}")
     return this
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Code
+//////////////////////////////////////////////////////////////////////////
+
+  private This code()
+  {
+    code := def.code ?: throw Err("No code")
+    w("{").nl
+    indent
+    if (isNoJava(code.stmts.first))
+    {
+      // backdoor hook to skip code generation if first line is:
+      // __noJava := xxx
+      if (!returns.isVoid) w("  throw fan.sys.UnsupportedErr.make(\"no java\")").eos
+    }
+    else
+    {
+      // otherwise generate code until we hit a __noJava def
+      sp := JavaStmtPrinter(this)
+      code.stmts.eachWhile |x|
+      {
+        if (isNoJava(x)) return "break"
+        sp.stmt(x)
+        return null
+      }
+    }
+    return unindent.w("}")
+ }
+
+  private Bool isNoJava(Stmt x)
+  {
+    x.id === StmtId.localDef && ((LocalDefStmt)x).name == "__noJava"
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -431,8 +465,6 @@ internal class JavaMethodPrinter : JavaPrinter
 
   ParamDef[] paramDefs() { def.params }
 
-  Block? code() { def.code }
-
   Bool isStaticInit() { def.isStaticInit }
 
   Bool isStatic() { def.isStatic }
@@ -450,12 +482,6 @@ internal class JavaMethodPrinter : JavaPrinter
   This stmt(Stmt stmt)
   {
     JavaStmtPrinter(this).stmt(stmt)
-    return this
-  }
-
-  This block(Block block)
-  {
-    JavaStmtPrinter(this).block(block)
     return this
   }
 
