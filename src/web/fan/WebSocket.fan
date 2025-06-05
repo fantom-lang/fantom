@@ -130,7 +130,8 @@ class WebSocket
   **
   @NoDoc Obj? receiveBuf(Buf? buf)
   {
-    while (true)
+    loop := true
+    while (loop)
     {
       msg := doReceive(buf)
       if (msg === receiveAgain) continue
