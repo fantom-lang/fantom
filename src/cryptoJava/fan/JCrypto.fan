@@ -30,12 +30,12 @@ const class JCrypto : Crypto
     JKeyPair.genKeyPair(algorithm, bits)
   }
 
-  override X509[] loadX509(InStream in)
+  override Cert[] loadX509(InStream in)
   {
     X509.load(in)
   }
 
-  override X509[] loadCertsForUri(Uri uri)
+  override Cert[] loadCertsForUri(Uri uri)
   {
     X509.loadCertsForUri(uri)
   }
@@ -61,3 +61,4 @@ const class JCrypto : Crypto
   }
 
 }
+

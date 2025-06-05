@@ -24,27 +24,41 @@ public class JwRsaPubKeyPeer
 {
   public static JwRsaPubKeyPeer make(JwRsaPubKey self) { return new JwRsaPubKeyPeer(); }
 
-  public static Buf jwkToBuf(String modBase64, String expBase64) throws NoSuchAlgorithmException, InvalidKeySpecException
+  public static Buf jwkToBuf(String modBase64, String expBase64)
   {
-    byte[] modBytes = Base64.getUrlDecoder().decode(modBase64);
-    byte[] expBytes = Base64.getUrlDecoder().decode(expBase64);
-    RSAPublicKeySpec spec = new RSAPublicKeySpec(new BigInteger(1, modBytes), new BigInteger(1, expBytes));
-    return new MemBuf(KeyFactory.getInstance("RSA").generatePublic(spec).getEncoded());
+    try
+    {
+      byte[] modBytes = Base64.getUrlDecoder().decode(modBase64);
+      byte[] expBytes = Base64.getUrlDecoder().decode(expBase64);
+      RSAPublicKeySpec spec = new RSAPublicKeySpec(new BigInteger(1, modBytes), new BigInteger(1, expBytes));
+      return new MemBuf(KeyFactory.getInstance("RSA").generatePublic(spec).getEncoded());
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
 
-  public static Map bufToJwk(Buf key) throws NoSuchAlgorithmException, InvalidKeySpecException
+  public static Map bufToJwk(Buf key)
   {
-    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.unsafeArray());
-    RSAPublicKey rsaPub = (RSAPublicKey) keyFactory.generatePublic(keySpec);
+    try
+    {
+      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.unsafeArray());
+      RSAPublicKey rsaPub = (RSAPublicKey) keyFactory.generatePublic(keySpec);
 
-    byte[] modBytes = rsaPub.getModulus().toByteArray();
-    byte[] expBytes = rsaPub.getPublicExponent().toByteArray();
+      byte[] modBytes = rsaPub.getModulus().toByteArray();
+      byte[] expBytes = rsaPub.getPublicExponent().toByteArray();
 
-    Map jwk = new Map(Sys.StrType, Sys.ObjType);
-    jwk.set("n", Base64.getUrlEncoder().encodeToString(modBytes));
-    jwk.set("e", Base64.getUrlEncoder().encodeToString(expBytes));
-    return jwk;
+      Map jwk = new Map(Sys.StrType, Sys.ObjType);
+      jwk.set("n", Base64.getUrlEncoder().encodeToString(modBytes));
+      jwk.set("e", Base64.getUrlEncoder().encodeToString(expBytes));
+      return jwk;
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
 }
 

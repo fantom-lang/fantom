@@ -34,7 +34,7 @@ final public class X509 extends FanObj implements fan.crypto.Cert
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  public static List load(InStream in)
+  public static List<X509> load(InStream in)
   {
     InputStream is = null;
     try
@@ -42,7 +42,10 @@ final public class X509 extends FanObj implements fan.crypto.Cert
       is = Interop.toJava(in);
       return List.make(typeof, load(is).toArray());
     }
-    catch (Exception e)           { throw Err.make(e); }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
     finally
     {
       if (is != null) try { is.close(); } catch (Exception e) { }
@@ -70,7 +73,7 @@ final public class X509 extends FanObj implements fan.crypto.Cert
     }
   }
 
-  public static List loadCertsForUri(Uri uri)
+  public static List<X509> loadCertsForUri(Uri uri)
   {
     return new CertChainLoader(uri).load();
   }
@@ -218,3 +221,4 @@ final public class X509 extends FanObj implements fan.crypto.Cert
 
   public String toStr() { return pem(); }
 }
+

@@ -259,12 +259,16 @@ class JCertSigner : CertSigner
 const class V3Ext : AsnSeq
 {
   new makeSpec(AsnOid extnId, AsnObj val, Bool critical := false)
-    : super.make([AsnTag.univSeq], AsnItem#.emptyList)
+    : super.make([AsnTag.univSeq], toMakeSpecVal(extnId, val, critical))
+  {
+  }
+
+  private static AsnItem[] toMakeSpecVal(AsnOid extnId, AsnObj val, Bool critical)
   {
     vals := AsnObj[extnId]
     if (critical) vals.add(Asn.bool(true))
     vals.add(Asn.octets(BerWriter.toBuf(val)))
-    this.val = AsnColl.toItems(vals)
+    return AsnColl.toItems(vals)
   }
 
   new make(AsnObj[] items) : super([AsnTag.univSeq], items)
@@ -332,3 +336,4 @@ const class BasicConstraints : V3Ext
     return vals.getSafe(1)?.int
   }
 }
+

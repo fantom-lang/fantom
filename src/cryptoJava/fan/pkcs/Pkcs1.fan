@@ -50,7 +50,7 @@ const class AlgId : AsnSeq
 {
   static new fromOpts(Str:Obj opts)
   {
-    optAlg := opts["algorithm"] ?: "sha256WithRSAEncryption"
+    Str optAlg := opts["algorithm"] ?: "sha256WithRSAEncryption"
     switch(optAlg)
     {
       case "sha256WithRSAEncryption": return AlgId(Pkcs1.sha256WithRSAEncryption)
@@ -61,11 +61,15 @@ const class AlgId : AsnSeq
   }
 
   new makeSpec(AsnOid algorithm, AsnObj? parameters := Asn.Null)
-    : super.make([AsnTag.univSeq], AsnItem#.emptyList)
+    : super.make([AsnTag.univSeq], toMakeSpecVal(algorithm, parameters))
+  {
+  }
+
+  private static AsnItem[] toMakeSpecVal(AsnOid algorithm, AsnObj? parameters)
   {
     vals := AsnObj[algorithm]
     if (parameters != null) vals.add(parameters)
-    this.val = AsnColl.toItems(vals)
+    return AsnColl.toItems(vals)
   }
 
   new make(AsnObj[] items) : super([AsnTag.univSeq], items)

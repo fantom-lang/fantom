@@ -115,44 +115,58 @@ public class JwEcPubKeyPeer
 
   public static JwEcPubKeyPeer make(JwEcPubKey self) { return new JwEcPubKeyPeer(); }
 
-  public static Buf jwkToBuf(String xBase64, String yBase64, String curve) throws NoSuchAlgorithmException, InvalidKeySpecException
+  public static Buf jwkToBuf(String xBase64, String yBase64, String curve)
   {
-    byte[] xBytes = Base64.getUrlDecoder().decode(xBase64);
-    byte[] yBytes = Base64.getUrlDecoder().decode(yBase64);
-
-    ECParameterSpec spec = getSpec(curve);
-    if (spec == null)
+    try
     {
-      throw new InvalidKeySpecException("Unsupported value of (crv) Parameter: " + curve);
+      byte[] xBytes = Base64.getUrlDecoder().decode(xBase64);
+      byte[] yBytes = Base64.getUrlDecoder().decode(yBase64);
+
+      ECParameterSpec spec = getSpec(curve);
+      if (spec == null)
+      {
+        throw new InvalidKeySpecException("Unsupported value of (crv) Parameter: " + curve);
+      }
+
+      ECPoint ecPt = new ECPoint(new BigInteger(1, xBytes), new BigInteger(1, yBytes));
+      ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(ecPt, spec);
+
+      return new MemBuf(KeyFactory.getInstance("EC").generatePublic(ecPublicKeySpec).getEncoded());
     }
-
-    ECPoint ecPt = new ECPoint(new BigInteger(1, xBytes), new BigInteger(1, yBytes));
-    ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(ecPt, spec);
-
-    return new MemBuf(KeyFactory.getInstance("EC").generatePublic(ecPublicKeySpec).getEncoded());
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
 
-  public static fan.sys.Map bufToJwk(Buf key) throws NoSuchAlgorithmException, InvalidKeySpecException
+  public static fan.sys.Map bufToJwk(Buf key)
   {
-    KeyFactory keyFactory = KeyFactory.getInstance("EC");
-    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.unsafeArray());
-    ECPublicKey ecPub = (ECPublicKey) keyFactory.generatePublic(keySpec);
+    try
+    {
+      KeyFactory keyFactory = KeyFactory.getInstance("EC");
+      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.unsafeArray());
+      ECPublicKey ecPub = (ECPublicKey) keyFactory.generatePublic(keySpec);
 
-    ECPoint pt = ecPub.getW();
-    ECParameterSpec spec = ecPub.getParams();
-    EllipticCurve curve = spec.getCurve();
+      ECPoint pt = ecPub.getW();
+      ECParameterSpec spec = ecPub.getParams();
+      EllipticCurve curve = spec.getCurve();
 
-    BigInteger x = pt.getAffineX();
-    byte[] xBytes = x.toByteArray();
-    BigInteger y = pt.getAffineY();
-    byte[] yBytes = y.toByteArray();
+      BigInteger x = pt.getAffineX();
+      byte[] xBytes = x.toByteArray();
+      BigInteger y = pt.getAffineY();
+      byte[] yBytes = y.toByteArray();
 
-    fan.sys.Map jwk = new fan.sys.Map(Sys.StrType, Sys.ObjType);
-    jwk.set("x", Base64.getUrlEncoder().encodeToString(xBytes));
-    jwk.set("y", Base64.getUrlEncoder().encodeToString(yBytes));
-    jwk.set("crv", getName(curve));
+      fan.sys.Map jwk = new fan.sys.Map(Sys.StrType, Sys.ObjType);
+      jwk.set("x", Base64.getUrlEncoder().encodeToString(xBytes));
+      jwk.set("y", Base64.getUrlEncoder().encodeToString(yBytes));
+      jwk.set("crv", getName(curve));
 
-    return jwk;
+      return jwk;
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
 
   private static ECParameterSpec getSpec(String curve)
