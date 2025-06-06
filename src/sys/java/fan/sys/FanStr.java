@@ -318,7 +318,7 @@ public class FanStr
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-  public static List chars(String self)
+  public static List<Long> chars(String self)
   {
     int len = self.length();
     if (len == 0) return Sys.IntType.emptyList();
@@ -650,9 +650,9 @@ public class FanStr
     return trimmed.length() == 0 ? null : trimmed;
   }
 
-  public static List split(String self) { return split(self, null, true); }
-  public static List split(String self, Long separator) { return split(self, separator, true); }
-  public static List split(String self, Long separator, boolean trimmed)
+  public static List<String> split(String self) { return split(self, null, true); }
+  public static List<String> split(String self, Long separator) { return split(self, separator, true); }
+  public static List<String> split(String self, Long separator, boolean trimmed)
   {
     if (separator == null) return splitws(self);
     int sep = separator.intValue();
@@ -1018,3 +1018,4 @@ public class FanStr
   public static final String defVal = "";
 
 }
+
