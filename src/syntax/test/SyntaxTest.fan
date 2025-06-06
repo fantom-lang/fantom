@@ -257,8 +257,8 @@ class SyntaxTest : Test
     s := StrBuf()
     for (i:=0; i<styling.size; i+=2)
     {
-      type := styling[i] as SyntaxType ?: throw Err("$i ${styling[i]}")
-      text := styling[i+1] as Str ?: throw Err("$i+1 ${styling[i+1]}")
+      type := styling[i] as SyntaxType; if (type == null) throw Err("$i ${styling[i]}")
+      text := styling[i+1] as Str; if (text == null) throw Err("$i+1 ${styling[i+1]}")
       s.add(type === SyntaxType.literal ? "s" : type.toStr[0..0])
        .add(" ")
        .add(text.toCode)
