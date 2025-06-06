@@ -53,7 +53,7 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
     if (curMethod.returns.isVoid)
     {
       // in fantom we allow return of anything in void
-      if (x.expr != null) sp.expr(x.expr).w("; ")
+      if (x.expr != null && x.expr.isStmt) sp.expr(x.expr).w("; ")
       return w("return").eos
     }
     else
@@ -149,44 +149,34 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
 
   override This switchStmt(SwitchStmt x)
   {
-    if (isJavaSwitch(x))
-      javaSwitch(x)
-    else
-      ifElseSwitch(x)
-    return this
+    type := toSwitchType(x)
+    if (type == "empty") return emptySwitch(x)
+    if (type == "ifElse") return ifElseSwitch(x)
+    return javaSwitch(x, type)
   }
 
-  private Bool isJavaSwitch(SwitchStmt x)
+  private Str? toSwitchType(SwitchStmt x)
   {
-    x.cases.all |c|
-    {
-      c.cases.all |e| { isJavaSwitchCase(e) }
-    }
-  }
-
-  private Void javaSwitch(SwitchStmt x)
-  {
-    w("switch(").switchCondition(x.condition).w(") {").nl
-    indent
+    types := Str:Str[:]
     x.cases.each |c|
     {
-      c.cases.each |caseExpr|
+      c.cases.each |e|
       {
-        w("case ").caseCondition(caseExpr).w(": ").nl
+        type := toJavaSwitchCaseType(e) ?: "ifElse"
+        types[type] = type
       }
-      switchBlock(c.block)
     }
-    if (x.defaultBlock != null)
-    {
-      w("default:").nl
-      switchBlock(x.defaultBlock)
-    }
-    unindent
-    w("}").nl
-    return this
+    if (types.isEmpty) return "empty"
+    if (types.size == 1) return types.keys.first
+    return "ifElse"
   }
 
-  private Void ifElseSwitch(SwitchStmt x)
+  private This emptySwitch(SwitchStmt x)
+  {
+    block(x.defaultBlock).nl
+  }
+
+  private This ifElseSwitch(SwitchStmt x)
   {
     condVar := curMethod.transpileTempVar
     cond := x.condition
@@ -209,40 +199,79 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
     {
       w("else ").block(x.defaultBlock).nl
     }
+    return this
   }
 
-  private This switchCondition(Expr x)
+  private This javaSwitch(SwitchStmt x, Str type)
   {
-    if (x.ctype.isInt)
+    w("switch(").javaSwitchCondition(x.condition, type).w(") {").nl
+    indent
+    x.cases.each |c|
+    {
+      c.cases.each |caseExpr|
+      {
+        w("case ").javaSwitchCase(caseExpr).w(": ").nl
+      }
+      switchBlock(c.block)
+    }
+    if (x.defaultBlock != null)
+    {
+      w("default:").nl
+      switchBlock(x.defaultBlock)
+    }
+    unindent
+    w("}").nl
+    return this
+  }
+
+  private This javaSwitchCondition(Expr x, Str type)
+  {
+    if (type == "int")
     {
       if (x.ctype.isNullable) return w("((Long)").expr(x).w(").intValue()")
       return w("(int)(").expr(x).w(")")
     }
-    else if (x.ctype.isEnum)
+    else if (type == "enum")
     {
       return w("(int)(").expr(x).w(").ordinal()")
     }
-    return expr(x)
+    else if (x.ctype.isStr)
+    {
+      return expr(x)
+    }
+    else
+    {
+      return qnFanObj.w(".toStr(").expr(x).w(")")
+    }
   }
 
-  private Bool isJavaSwitchCase(Expr x)
+  private Str? toJavaSwitchCaseType(Expr x)
   {
-    if (x.id === ExprId.intLiteral) return true
-    if (x.id === ExprId.strLiteral) return true
-    if (x.id === ExprId.field) return ((FieldExpr)x).field.isEnum
-    return false
+    if (x.id === ExprId.intLiteral || isNegInt(x)) return "int"
+    if (x.id === ExprId.strLiteral) return "str"
+    if (x.id === ExprId.field && ((FieldExpr)x).field.isEnum) return "enum"
+    return null
   }
 
-  private This caseCondition(Expr x)
+  private This javaSwitchCase(Expr x)
   {
     if (x.id === ExprId.intLiteral) return w(((LiteralExpr)x).val)
     if (x.id === ExprId.strLiteral) return str(((LiteralExpr)x).val)
+    if (isNegInt(x)) return w(x.toStr)
     if (x.id === ExprId.field)
     {
       f := ((FieldExpr)x).field
       return typeSig(f.parent).w(".").w(f.name.upper)
     }
-    throw Err("TODO: $x.id $x")
+    warn("Cannot generate java case: $x", x.loc)
+    return expr(x)
+  }
+
+  private Bool isNegInt(Expr x)
+  {
+    if (x.id !== ExprId.shortcut) return false
+    sc := (ShortcutExpr)x
+    return sc.args.isEmpty && sc.target.id === ExprId.intLiteral
   }
 
   private This switchBlock(Block? b)

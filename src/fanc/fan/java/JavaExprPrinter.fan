@@ -264,11 +264,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     if (targetType == null) return false
     if (targetType.isMixin && method.parent.isObj) return true
     if (!JavaUtil.isJavaNative(targetType)) return false
-    if (method.name == "trap")
-    {
-      // don't use FanObj.trap for super.trap
-      if (target.id === ExprId.superExpr) return false
-    }
+    if (target.id === ExprId.superExpr) return false   // don't use FanObj.xxx for super.xxx
     return true
   }
 
