@@ -777,6 +777,11 @@ class CheckErrors : CompilerStep
     }
     else
     {
+      // if this a covariant override of a parameterized collection,
+      // we might need to cast it to the inheritedReturn
+      if (curMethod.isCovariant && needParameterizedCollectionCoerce(ret))
+        ret = curMethod.inheritedReturns
+
       stmt.expr = coerce(stmt.expr, ret) |->|
       {
         err("Cannot return '$stmt.expr.toTypeStr' as '$ret'", stmt.expr.loc)

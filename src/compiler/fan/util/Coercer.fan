@@ -9,15 +9,12 @@
 **
 ** Coercer handles all the logic for type casts
 **
-class Coercer
+class Coercer : CompilerSupport
 {
   **
   ** Constructor
   **
-  new make(Compiler compiler)
-  {
-    this.compiler = compiler
-  }
+  new make(Compiler c) : super(c) {}
 
   **
   ** Ensure the specified expression is boxed to an object reference.
@@ -203,12 +200,8 @@ class Coercer
   **
   private Bool forceParameterizedCollectionCoerce(CType from, CType to)
   {
-    compiler.input.coerceParameterizedCollectionTypes &&
-      from.isParameterized &&
-      to.isParameterized &&
-      !from.isFunc
+    needParameterizedCollectionCoerce(from) && needParameterizedCollectionCoerce(to)
   }
 
-  Compiler compiler
 }
 

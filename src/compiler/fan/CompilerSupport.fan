@@ -89,6 +89,16 @@ class CompilerSupport
     c.types.removeSame(t)
   }
 
+  **
+  ** Return if t is a parameterized collection type and the
+  ** input flag coerceParameterizedCollectionTypes is set
+  **
+  Bool needParameterizedCollectionCoerce(CType t)
+  {
+   compiler.input.coerceParameterizedCollectionTypes &&
+      t.isParameterized && (t.isList || t.isMap)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
@@ -150,3 +160,4 @@ internal const class SuppressedErr : Err
 {
   new make() : super("", null) {}
 }
+
