@@ -571,6 +571,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     if (x.useAccessor) return true
     if (x.field.parent.isSynthetic) return false
     if (curType == x.field.parent) return false
+    if (x.field.isConst && curMethod.isCtor) return false
     return true
   }
 
