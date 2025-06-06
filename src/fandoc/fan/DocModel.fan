@@ -227,7 +227,8 @@ abstract class DocElem : DocNode
       // if adding two text nodes, then merge them
       if (node.id === DocNodeId.text && last.id === DocNodeId.text)
       {
-        ((DocText)kids.last).str += ((DocText)node).str
+        lastText := (DocText)last
+        lastText.str = lastText.str + ((DocText)node).str
         return this
       }
 
@@ -612,3 +613,4 @@ class Hr : DocElem
   override Str htmlName() { return "hr" }
   override Bool isInline() { return false }
 }
+
