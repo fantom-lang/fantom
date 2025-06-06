@@ -392,15 +392,9 @@ public abstract class File
 
   public InStream in() { return in(FanInt.Chunk); }
   public abstract InStream in(Long bufSize);
-  public Object withIn(Map opts, Func f)
+  public Object withIn(Func f)
   {
-    Long bufSize = FanInt.Chunk;
-    if (opts != null)
-    {
-      bufSize = (Long)opts.get("bufferSize", bufSize);
-    }
-
-    final InStream in = this.in(bufSize);
+    final InStream in = this.in();
     try
     {
       return f.call(in);
@@ -414,17 +408,9 @@ public abstract class File
   public OutStream out() { return out(false, FanInt.Chunk); }
   public OutStream out(boolean append) { return out(append, FanInt.Chunk); }
   public abstract OutStream out(boolean append, Long bufSize);
-  public void withOut(Map opts, Func f)
+  public void withOut(Func f)
   {
-    boolean append = false;
-    Long bufSize   = FanInt.Chunk;
-    if (opts != null)
-    {
-      append  = (boolean)opts.get("append", append);
-      bufSize = (Long)opts.get("bufferSize", bufSize);
-    }
-
-    final OutStream out = this.out(append, bufSize);
+    final OutStream out = this.out();
     try
     {
       f.call(out);

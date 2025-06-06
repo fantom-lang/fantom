@@ -125,7 +125,7 @@ class FileWeblet : Weblet
       res.statusCode = 200
       res.headers["Content-Encoding"] = "gzip"
       out := Zip.gzipOutStream(res.out)
-      file.withIn(null) |in| { in.pipe(out, file.size) }
+      file.withIn |in| { in.pipe(out, file.size) }
       out.close
       return
     }
@@ -133,7 +133,7 @@ class FileWeblet : Weblet
     // service a normal 200 with no compression
     res.statusCode = 200
     res.headers["Content-Length"] = file.size.toStr
-    file.withIn(null) |in| { in.pipe(res.out, file.size) }
+    file.withIn |in| { in.pipe(res.out, file.size) }
   }
 
   **
@@ -204,3 +204,4 @@ class FileWeblet : Weblet
   }
 
 }
+

@@ -14,6 +14,7 @@
 - Compiler: rename CField.fieldType to type
 - Compiler: rename MethodDef.ret to returns
 - Compiler: rename FuncType.ret to returns
+- File withIn and withOut
 - Win.devicePixelRatio
 - Stroke.scale
 - Date convenience methods

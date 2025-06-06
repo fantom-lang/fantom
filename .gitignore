@@ -48,6 +48,7 @@ obj/Release/
 /doc/
 
 # src/
+/src/foo/
 /src/sys/java/temp/
 /src/testEs/
 

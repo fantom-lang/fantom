@@ -404,14 +404,11 @@ abstract const class File
 
   **
   ** Read the file's input stream using a callback. The input stream
-  ** is guaranteed to be closed when the callback exits. The following
-  ** options are supported:
-  **   - "bufferSize": The buffer size to use when opening the input stream.
-  **   Has the same semantics and default as `File.in`.
+  ** is guaranteed to be closed when the callback exits.
   **
   ** The method returns the value returned by the callback.
   **
-  virtual Obj? withIn([Str:Obj]? opts, |InStream->Obj?| f)
+  virtual Obj? withIn(|InStream->Obj?| f)
 
   **
   ** Open a new buffered OutStream used to write to this file.  If append is
@@ -423,12 +420,8 @@ abstract const class File
 
   **
   ** Write to the file's output stream using a callback. The output stream
-  ** is guaranteed to be closed when the callback exits. The following options
-  ** are supported:
-  **   - "append": true/false - has the same semantics and default as `File.out`.
-  **   - "bufferSize": The buffer size to use when opening the output stream.
-  **   Has the same semantics and default as `File.out`.
-  virtual Void withOut([Str:Obj]? opts, |OutStream| f)
+  ** is guaranteed to be closed when the callback exits.
+  virtual Void withOut(|OutStream| f)
 
   **
   ** Convenience for [in.readAllBuf]`InStream.readAllBuf`.
@@ -514,9 +507,7 @@ internal const class LocalFile : File
   override Buf open(Str mode := "rw")
   override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
   override InStream in(Int? bufferSize := 4096)
-  override Obj? withIn([Str:Obj]? opts, |InStream in->Obj?| f)
   override OutStream out(Bool append := false, Int? bufferSize := 4096)
-  override Void withOut([Str:Obj]? opts, |OutStream| f)
 }
 
 **************************************************************************
@@ -541,9 +532,7 @@ internal const class MemFile : File
   override Buf open(Str mode := "rw")
   override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
   override InStream in(Int? bufferSize := 4096)
-  override Obj? withIn([Str:Obj]? opts, |InStream in->Obj?| f)
   override OutStream out(Bool append := false, Int? bufferSize := 4096)
-  override Void withOut([Str:Obj]? opts, |OutStream| f)
 }
 
 **************************************************************************
@@ -568,9 +557,7 @@ internal const class ZipEntryFile : File
   override Buf open(Str mode := "rw")
   override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
   override InStream in(Int? bufferSize := 4096)
-  override Obj? withIn([Str:Obj]? opts, |InStream in->Obj?| f)
   override OutStream out(Bool append := false, Int? bufferSize := 4096)
-  override Void withOut([Str:Obj]? opts, |OutStream| f)
 }
 
 **************************************************************************
@@ -604,8 +591,6 @@ internal const class PathFile : File
   override Buf open(Str mode := "rw")
   override Buf mmap(Str mode := "rw", Int pos := 0, Int? size := this.size)
   override InStream in(Int? bufferSize := 4096)
-  override Obj? withIn([Str:Obj]? opts, |InStream in->Obj?| f)
   override OutStream out(Bool append := false, Int? bufferSize := 4096)
-  override Void withOut([Str:Obj]? opts, |OutStream| f)
 }
 

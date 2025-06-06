@@ -387,10 +387,10 @@ class FileTest : Test
   Void testWith()
   {
     f := tempDir + `testWith.txt`
-    f.withOut(null) |out| { out.writeChars("test with"); }
-    verifyEq("test with", f.withIn(null) |in->Obj?| { in.readAllStr })
+    f.withOut |out| { out.writeChars("test with"); }
+    verifyEq("test with", f.withIn |in->Obj?| { in.readAllStr })
 
-    verifyErr(IOErr#) { this.tempDir.plus(`missing.txt`).withIn(null) |in->Obj?| { in.readAllStr } }
+    verifyErr(IOErr#) { this.tempDir.plus(`missing.txt`).withIn |in->Obj?| { in.readAllStr } }
   }
 
   Void testAvail()

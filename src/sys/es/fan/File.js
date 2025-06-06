@@ -92,7 +92,7 @@ class File extends Obj {
       throw IOErr.make(`Not a directory: ${dir.toStr()}`);
     else if (!(dir instanceof LocalFile))
       throw IOErr.make(`Dir is not on local file system: ${dir.toStr()}`);
-    
+
     let f;
     do {
       f = LocalFile.make(
@@ -116,9 +116,9 @@ class File extends Obj {
   }
 
   hash() { return this.#uri.hash(); }
-  toStr() { 
+  toStr() {
     if (!this.#uri_str) this.#uri_str = this.#uri.toStr();
-    return this.#uri_str; 
+    return this.#uri_str;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -319,14 +319,8 @@ class File extends Obj {
   mmap(mode, pos, size) { this.#throwNotSupported("mmap"); }
 
   in(bufSize=4096) { this.#throwNotSupported("in"); }
-  withIn(opts, f) {
-    let bufSize = Int.__chunk;
-    if (opts)
-    {
-      bufSize = opts.get("bufferSize", bufSize);
-    }
-
-    const inStream = this.in(bufSize);
+  withIn(f) {
+    const inStream = this.in();
     try {
       return f(inStream);
     }
@@ -336,16 +330,8 @@ class File extends Obj {
   }
 
   out(append=false, bufSize=4096) { this.#throwNotSupported("out"); }
-  withOut(opts, f) {
-    let append  = false;
-    let bufSize = Int.__chunk;
-    if (opts)
-    {
-      append  = opts.get("append", append);
-      bufSize = opts.get("bufferSize", bufSize);
-    }
-
-    const outStream = this.out(append, bufSize);
+  withOut(f) {
+    const outStream = this.out();
     try {
       f(outStream);
     }
@@ -366,9 +352,9 @@ class File extends Obj {
 
   readProps() { return this.in(Int.__chunk).readProps(); }
 
-  writeProps(props) { 
+  writeProps(props) {
     this.create();
-    this.out(false, Int.__chunk).writeProps(props, true); 
+    this.out(false, Int.__chunk).writeProps(props, true);
   }
 
   readObj(options=null) {
@@ -402,7 +388,7 @@ class File extends Obj {
 // Helper functions
 //////////////////////////////////////////////////////////////////////////
 
-  #throwNotSupported(name) { 
+  #throwNotSupported(name) {
     throw UnsupportedErr.make(`File.${name} is not implemented in this environment.`);
   }
 
@@ -422,3 +408,4 @@ class File extends Obj {
   }
 
 }
+

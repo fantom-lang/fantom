@@ -80,7 +80,7 @@ internal class JavaCmd : TranspileCmd
     if (t.isSynthetic) return
     if (t.isNative) return
 
-    JavaUtil.typeFile(outDir, t).withOut(null) |out|
+    JavaUtil.typeFile(outDir, t).withOut |out|
     {
       JavaTypePrinter(out).type(t)
     }
