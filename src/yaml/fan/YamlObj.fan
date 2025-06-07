@@ -221,10 +221,16 @@ const class YamlList : YamlObj
   ** Content value as a list
   override YamlObj[] val() { valRef }
 
+  ** Content value as a list
+  private YamlObj[] list() { valRef }
+
+  ** Get item from the list
+  @Operator YamlObj get(Int index) { list.get(index) }
+
   ** Iterate the list items
   Void each(|YamlObj| f)
   {
-    ((YamlObj[])val).each(f)
+    list.each(f)
   }
 
   override internal Void writeInd(OutStream out, Int first, Int next := first)
@@ -358,3 +364,4 @@ const class YamlMap : YamlObj
     }
   }
 }
+

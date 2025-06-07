@@ -200,7 +200,7 @@ class Coercer : CompilerSupport
   **
   private Bool forceParameterizedCollectionCoerce(CType from, CType to)
   {
-    needParameterizedCollectionCoerce(from) && needParameterizedCollectionCoerce(to)
+    needParameterizedCollectionCoerce(from) || needParameterizedCollectionCoerce(to)
   }
 
 }

@@ -103,8 +103,8 @@ class YamlTokenTest : Test
     verifyEq(r.peekToken, "abcd")
     verifyEq(r.peekUntil |c| { c == 'c' }, "ab")
     verifyEq(r.peekUntil |c| { c == 'a' }, "")
-    verifyEq(r.peekPast  |_| { true }, null)
-    verifyEq(r.peekPast  |_| { false }, 'a')
+    verifyEq(r.peekPast  |x| { true }, null)
+    verifyEq(r.peekPast  |x| { false }, 'a')
     verifyEq(r.loc.col, fc - 1)
     r.eatToken
     verifyEq(r.peekNextNs, '\n')
@@ -199,3 +199,4 @@ class YamlTokenTest : Test
 
   Int fc := 2
 }
+

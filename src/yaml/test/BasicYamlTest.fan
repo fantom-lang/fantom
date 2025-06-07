@@ -28,7 +28,7 @@ class BasicYamlTest : Test
 
                          """.in).parse
     verifyEq(obj.decode, [,].add("And let them back\nout"))
-    verifyLoc(obj.val[0], 2, 2)
+    verifyLoc(obj[0], 2, 2)
 
     obj = YamlReader("""---
                          And let them
@@ -54,8 +54,8 @@ class BasicYamlTest : Test
 
                          # Completely empty node
                          """.in).parse
-    verifyEq(obj.val[0].tag, "tag:fantom.org,2022:test/1")
-    verifyLoc(obj.val[0], 5, 5)
+    verifyEq(obj[0].tag, "tag:fantom.org,2022:test/1")
+    verifyLoc(obj[0], 5, 5)
     verifyEq(obj.decode, [null])
 
     obj = YamlReader("""\uFFFE# No directives
@@ -65,8 +65,8 @@ class BasicYamlTest : Test
                         ...
                         # ..and even more!
                         ...""".in).parse
-    verifyEq(obj.val[0].tag, "tag:yaml.org,2002:1")
-    verifyLoc(obj.val[0], 2, 5)
+    verifyEq(obj[0].tag, "tag:yaml.org,2002:1")
+    verifyLoc(obj[0], 2, 5)
     verifyEq(obj.decode, [null])
 
     obj = YamlReader("""%TAG !! tag:fantom.org,2022:test1/    # Multi-document
@@ -75,10 +75,10 @@ class BasicYamlTest : Test
                         %TAG !! tag:fantom.org,2022:test2/
                         --- !!1
                         """.in).parse
-    verifyEq(obj.val[0].tag, "tag:fantom.org,2022:test1/1")
-    verifyEq(obj.val[1].tag, "tag:fantom.org,2022:test2/1")
-    verifyLoc(obj.val[0], 2, 5)
-    verifyLoc(obj.val[1], 5, 5)
+    verifyEq(obj[0].tag, "tag:fantom.org,2022:test1/1")
+    verifyEq(obj[1].tag, "tag:fantom.org,2022:test2/1")
+    verifyLoc(obj[0], 2, 5)
+    verifyLoc(obj[1], 5, 5)
     verifyEq(obj.decode, [null, null])
 
     // Error tests
@@ -112,8 +112,8 @@ class BasicYamlTest : Test
     obj := YamlReader("Test1
                        ---
                        Test2".in).parse
-    verifyLoc(obj.val[0], 1, 1)
-    verifyLoc(obj.val[1], 3, 1)
+    verifyLoc(obj[0], 1, 1)
+    verifyLoc(obj[1], 3, 1)
 
     verifyEq(
       obj.decode,
@@ -123,8 +123,8 @@ class BasicYamlTest : Test
     obj = YamlReader("Test1
                       ...
                       Test2".in).parse
-    verifyLoc(obj.val[0], 1, 1)
-    verifyLoc(obj.val[1], 3, 1)
+    verifyLoc(obj[0], 1, 1)
+    verifyLoc(obj[1], 3, 1)
 
     verifyEq(
       obj.decode,
@@ -451,9 +451,9 @@ class BasicYamlTest : Test
     verifyEq(obj.decode,
       [,].add(
         [,].addAll(["Two plastic bags drifting", "o'er the beach"])))
-    verifyLoc(obj.val[0], 1, 1)
-    verifyLoc(obj.val[0].val->get(0), 2, 3)
-    verifyLoc(obj.val[0].val->get(1), 4, 15)
+    verifyLoc(obj[0], 1, 1)
+    verifyLoc(obj[0].val->get(0), 2, 3)
+    verifyLoc(obj[0].val->get(1), 4, 15)
 
     verifyErr(FileLocErr#)
     {
@@ -541,10 +541,10 @@ class BasicYamlTest : Test
            .add("this is a test")
            .add("this is another test")
            .add("this is another test")))
-    verifyLoc(obj.val[0].val->get(0), 2, 3)
-    verifyLoc(obj.val[0].val->get(1), 3, 3)
-    verifyLoc(obj.val[0].val->get(2), 4, 3)
-    verifyLoc(obj.val[0].val->get(3), 5, 3)
+    verifyLoc(obj[0].val->get(0), 2, 3)
+    verifyLoc(obj[0].val->get(1), 3, 3)
+    verifyLoc(obj[0].val->get(2), 4, 3)
+    verifyLoc(obj[0].val->get(3), 5, 3)
 
     // But don't carry over between documents
     verifyErr(FileLocErr#)
@@ -586,11 +586,11 @@ class BasicYamlTest : Test
         [,].add([,].addAll(["Compact", "node"]))
            .add("yea"))
       )
-    verifyLoc(obj.val[0], 1, 3)
-    verifyLoc(obj.val[0].val->get(0), 1, 7)
-    verifyLoc(obj.val[0].val->get(0)->content->get(0), 1, 9)
-    verifyLoc(obj.val[0].val->get(0)->content->get(1), 3, 9)
-    verifyLoc(obj.val[0].val->get(1), 4, 5)
+    verifyLoc(obj[0], 1, 3)
+    verifyLoc(obj[0].val->get(0), 1, 7)
+    verifyLoc(obj[0].val->get(0)->content->get(0), 1, 9)
+    verifyLoc(obj[0].val->get(0)->content->get(1), 3, 9)
+    verifyLoc(obj[0].val->get(1), 4, 5)
 
     verifyEq(
       YamlReader("- First item
@@ -882,3 +882,4 @@ internal class Person
   Str name := ""
   @Transient private Person[] kids := Person[,]
 }
+

@@ -636,8 +636,13 @@ internal class YamlParser
     // [123] nb-ns-single-in-line
     readSingleLine := |->|
     {
-      while (r.peekNextNs(r.str) != '\n' && (c = r.str()()) != null)
+      while (true)
       {
+        // unroll: while (r.peekNextNs(r.str) != '\n' && (c = r.str()()) != null)
+        if (r.peekNextNs(r.str) == '\n') break
+        c = r.str()()
+        if (c == null) break
+
         if (c == '\'')
         {
           if (r.peek(r.any) == '\'') c = r.str()()
@@ -695,8 +700,13 @@ internal class YamlParser
     // [114] nb-ns-double-in-line
     readDoubleLine := |->|
     {
-      while (r.peekNextNs(r.str) != '\n' && (c = r.str()()) != null)
+      while (true)
       {
+        // unroll: while (r.peekNextNs(r.str) != '\n' && (c = r.str()()) != null)
+        if (r.peekNextNs(r.str) == '\n') break
+        c = r.str()()
+        if (c == null) break
+
         if (c == '"') { endFound = true; break }
         else if (c == '\\')
           switch (c = r.str()())
@@ -723,13 +733,13 @@ internal class YamlParser
 
             // Arbitrary unicode character insertion
             case 'x':   digs := [,]
-                        2.times |_| { digs.add(r.hex()()) }
+                        2.times { digs.add(r.hex()()) }
                         s.addChar(Int.fromStr(Str.fromChars(digs), 16))
             case 'u':   digs := [,]
-                        4.times |_| { digs.add(r.hex()()) }
+                        4.times { digs.add(r.hex()()) }
                         s.addChar(Int.fromStr(Str.fromChars(digs), 16))
             case 'U':   digs := [,]
-                        8.times |_| { digs.add(r.hex()()) }
+                        8.times { digs.add(r.hex()()) }
                         s.addChar(Int.fromStr(Str.fromChars(digs), 16))
 
             // Escaped newline
@@ -1326,3 +1336,4 @@ internal enum class Context
 
   Bool isFlow() { this == flowIn || this == flowOut || this == flowKey }
 }
+
