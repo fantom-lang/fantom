@@ -156,18 +156,19 @@ const final class Color : Paint
   {
     sub := s[1..-1]
     hex := sub.toInt(16)
+    Int r; Int g; Int b; Int a
     switch (sub.size)
     {
       case 3:
-        r := hex.shiftr(8).and(0xf); r = r.shiftl(4).or(r)
-        g := hex.shiftr(4).and(0xf); g = g.shiftl(4).or(g)
-        b := hex.shiftr(0).and(0xf); b = b.shiftl(4).or(b)
+        r = hex.shiftr(8).and(0xf); r = r.shiftl(4).or(r)
+        g = hex.shiftr(4).and(0xf); g = g.shiftl(4).or(g)
+        b = hex.shiftr(0).and(0xf); b = b.shiftl(4).or(b)
         return make(r.shiftl(16).or(g.shiftl(8)).or(b))
       case 4:
-        r := hex.shiftr(12).and(0xf); r = r.shiftl(4).or(r)
-        g := hex.shiftr(8).and(0xf);  g = g.shiftl(4).or(g)
-        b := hex.shiftr(4).and(0xf);  b = b.shiftl(4).or(b)
-        a := hex.shiftr(0).and(0xf);  a = a.shiftl(4).or(a)
+        r = hex.shiftr(12).and(0xf); r = r.shiftl(4).or(r)
+        g = hex.shiftr(8).and(0xf);  g = g.shiftl(4).or(g)
+        b = hex.shiftr(4).and(0xf);  b = b.shiftl(4).or(b)
+        a = hex.shiftr(0).and(0xf);  a = a.shiftl(4).or(a)
         return makeRgb(r, g, b, a/255f)
       case 6:
         return make(hex)

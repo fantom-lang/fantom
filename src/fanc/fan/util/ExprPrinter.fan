@@ -202,13 +202,13 @@ mixin ExprPrinter : CodePrinter
   ** Write unary expression with optional grouping parens
   virtual This unaryExpr(Str op, Expr operand)
   {
-    oparen.w(op).expr(operand).cparen
+    w("(").w(op).w("(").expr(operand).w("))")
   }
 
   ** Write binary expression with optional grouping parens
   virtual This binaryExpr(Expr lhs, Str op, Expr rhs)
   {
-    oparen.expr(lhs).sp.w(op).sp.expr(rhs).cparen
+    w("(").expr(lhs).w(")").sp.w(op).sp.w("(").expr(rhs).w(")")
   }
 
   ** Write list of cond with operator with optional grouping parens
