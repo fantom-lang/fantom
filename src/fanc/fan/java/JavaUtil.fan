@@ -64,6 +64,7 @@ internal class JavaUtil
   static Str checkKeyword(Str name)
   {
     if (javaKeywords[name] != null) return "_$name"
+    if (name == "fan") return "_fan" // havoc with qnames
     return name
   }
 

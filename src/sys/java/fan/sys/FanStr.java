@@ -700,7 +700,7 @@ public class FanStr
     return toks;
   }
 
-  public static List splitLines(String self)
+  public static List<String> splitLines(String self)
   {
     List lines = new List(Sys.StrType, 16);
     int len = self.length();
