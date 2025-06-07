@@ -95,6 +95,11 @@ final class StrBuf
   This join(Obj? x, Str sep := " ")
 
   **
+  ** Call `join` but only if x is non-null.
+  **
+  This joinNotNull(Obj? x, Str sep := " ")
+
+  **
   ** Insert x.toStr into this buffer at the specified index.
   ** If x is null then the string "null" is inserted.  Negative
   ** indexes may be used to access from the end of the string

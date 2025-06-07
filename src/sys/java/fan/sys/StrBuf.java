@@ -119,6 +119,13 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf joinNotNull(Object x) { return joinNotNull(x, " "); }
+  public StrBuf joinNotNull(Object x, String sep)
+  {
+    if (x != null) join(x, sep);
+    return this;
+  }
+
   public StrBuf insert(long index, Object x)
   {
     String s = (x == null) ? "null" : toStr(x);

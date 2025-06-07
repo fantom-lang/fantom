@@ -88,6 +88,11 @@ class StrBuf extends Obj {
     return this;
   }
 
+  joinNotNull(x, sep=" ") {
+    if (x != null) this.join(x, sep);
+    return this;
+  }
+
   insert(i, x) {
     const s = (x == null) ? "null" : ObjUtil.toStr(x);
     if (i < 0) i = this.#str.length+i;

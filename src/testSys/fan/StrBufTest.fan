@@ -160,6 +160,9 @@ class StrBufTest : Test
     s.clear
     s.join(3, "; "); verifyEq(s.toStr, "3")
     s.join(5, "; "); verifyEq(s.toStr, "3; 5")
+    s.joinNotNull(null, "; "); verifyEq(s.toStr, "3; 5")
+    s.joinNotNull(7, "; "); verifyEq(s.toStr, "3; 5; 7")
+    s.joinNotNull(8); verifyEq(s.toStr, "3; 5; 7 8")
   }
 
 //////////////////////////////////////////////////////////////////////////
