@@ -657,7 +657,7 @@ public class InStream
   }
 
   public Map<String,String> readProps() { return readProps(false); }
-  public Map<String,String> readPropsListVals() { return readProps(true); }
+  public Map<String,List<String>> readPropsListVals() { return readProps(true); }
 
   private Map readProps(boolean listVals)  // listVals is Str:Str[]
   {
