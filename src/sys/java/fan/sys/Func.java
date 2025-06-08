@@ -414,7 +414,7 @@ public abstract class Func
     public List params()
     {
       if (params == null)
-        this.params = orig.params().getRange(Range.makeInclusive(bound.size(), -1)).ro();
+        this.params = orig.params().getRange(Range.makeInclusive(bound._size(), -1)).ro();
       return params;
     }
 

@@ -505,7 +505,7 @@ public class Pod
   public static List<Pod> orderByDepends(List<Pod> pods)
   {
     List left = pods.dup().sort();
-    List ordered = List.make(Sys.PodType, pods.size());
+    List ordered = List.make(Sys.PodType, pods._size());
     while (!left.isEmpty())
     {
       // find next pod that doesn't have depends in left list

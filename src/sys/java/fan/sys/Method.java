@@ -172,7 +172,7 @@ public class Method
     public Type returns() { return returns; }
     private final Type returns;
 
-    public long arity() { return params().size(); }
+    public long arity() { return params()._size(); }
 
     public List params()
     {

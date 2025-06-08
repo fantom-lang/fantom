@@ -256,14 +256,14 @@ public class Test
     if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
     if (name.equals("verbose"))
     {
-      if (args != null && args.size() == 1)
+      if (args != null && args.sz() == 1)
       {
         verbose = ((Boolean)args.get(0)).booleanValue();
       }
       return Boolean.valueOf(verbose);
     }
 
-    if (name.equals("curTestMethod") && args != null && args.size() == 1)
+    if (name.equals("curTestMethod") && args != null && args.sz() == 1)
       this.curTestMethod = (Method) args.get(0);
 
     return super.trap(name, args);

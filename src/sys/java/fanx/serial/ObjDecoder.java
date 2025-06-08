@@ -262,7 +262,7 @@ public class ObjDecoder
     }
 
     // add
-    if (toAdd.size() > 0)
+    if (toAdd.sz() > 0)
     {
       Method addMethod = t.method("add", false);
       if (addMethod == null) throw err("Method not found: " + t.qname() + ".add", line);
@@ -788,3 +788,4 @@ public class ObjDecoder
   int numUsings = 0;      // number of using imports
 
 }
+

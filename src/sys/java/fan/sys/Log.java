@@ -201,7 +201,7 @@ public class Log
 
     synchronized (lock)
     {
-      List temp = new List(Sys.FuncType, handlers).add(func);
+      List temp = new List(Sys.FuncType, handlers)._add(func);
       handlers = (Func[])temp.toArray(new Func[temp.sz()]);
     }
   }

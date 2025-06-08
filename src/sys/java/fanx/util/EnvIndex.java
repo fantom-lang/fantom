@@ -105,7 +105,7 @@ public class EnvIndex
       String key  = (String)entry.getKey();
       List val    = (List)entry.getValue();
       addListVal(index, key, val);
-      addListVal(keyToPodNames, key, new List(Sys.StrType, 1).add(podName));
+      addListVal(keyToPodNames, key, new List(Sys.StrType, 1)._add(podName));
     }
   }
 

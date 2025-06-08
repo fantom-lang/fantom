@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import fanx.serial.*;
 import fanx.util.*;
 
@@ -118,6 +121,7 @@ public final class List<V>
     return size == 0;
   }
 
+  public final long _size() { return size; }
   public final long size()
   {
     return size;
@@ -398,6 +402,7 @@ public final class List<V>
     return set(index, value);
   }
 
+  public final List<V> _add(V value) { return add(value); }
   public final List<V> add(V value)
   {
     // modify in insert(int, Obj)
@@ -1254,19 +1259,6 @@ public final class List<V>
     return size;
   }
 
-  public final V get(int i)
-  {
-    try
-    {
-      if (i >= size) throw IndexErr.make(""+i);
-      return values[i];
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
-      throw IndexErr.make(""+i);
-    }
-  }
-
   private V[] newArray(int capacity) { return (V[])doNewArray(capacity); }
   private Object[] doNewArray(int capacity)
   {
@@ -1490,6 +1482,179 @@ public final class List<V>
       readonlyList.values = temp;
       readonlyList = null;
     }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// java.util.List
+//////////////////////////////////////////////////////////////////////////
+
+
+/*
+  public final int size()
+  {
+    return size;
+  }
+*/
+
+  public final V get(int index)
+  {
+    if (index < 0 || index >= size) throw IndexErr.make(""+index);
+    return values[index];
+  }
+
+  public final V set(int index, V value)
+  {
+    V old = get(index);
+    set((long)index, value);
+    return old;
+  }
+
+  public final int indexOf(Object value)
+  {
+    Long index = index((V)value);
+    return index == null ? -1 : index.intValue();
+  }
+
+  public final int lastIndexOf(Object value)
+  {
+    Long index = indexr((V)value);
+    return index == null ? -1 : index.intValue();
+  }
+
+  public final boolean containsAll(Collection<?> c)
+  {
+    return containsAll(new List(Sys.ObjType, c));
+  }
+
+  public final List<V> subList(int fromIndex, int toIndex)
+  {
+    return getRange(Range.makeExclusive(fromIndex, toIndex));
+  }
+
+/*
+  public final boolean add(V value)
+  {
+    _add(value);
+    return true;
+  }
+
+  public final void add(int index, V value)
+  {
+    insert(index, value);
+  }
+
+  public final boolean addAll(Collection<? extends V> c)
+  {
+    return addAll(size(), c);
+  }
+
+  public final boolean addAll(int index, Collection<? extends V> c)
+  {
+    insertAll(index, new List(Sys.ObjType, c));
+    return true;
+  }
+
+  public final boolean remove(Object value)
+  {
+    return _remove((V)value) == value;
+  }
+
+  public final V remove(int index)
+  {
+    return removeAt(index);
+  }
+
+  public final boolean removeAll(Collection<?> c)
+  {
+    removeAll(new List(Sys.ObjType, c));
+    return true;
+  }
+
+  public final boolean retainAll(Collection<?> c)
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  public final void clear()
+  {
+    _clear();
+  }
+*/
+
+  public final Iterator<V> iterator()
+  {
+    return new ListItr(0);
+  }
+
+  public final ListIterator<V> listIterator()
+  {
+    return new ListItr(0);
+  }
+
+  public final ListIterator<V> listIterator(int index)
+  {
+    return new ListItr(index);
+  }
+
+  private class ListItr implements ListIterator
+  {
+    ListItr(int index)
+    {
+      cursor = index;
+    }
+
+    public boolean hasNext()
+    {
+      return cursor != size;
+    }
+
+    public boolean hasPrevious()
+    {
+      return cursor != 0;
+    }
+
+    public Object next()
+    {
+      int i = cursor + 1;
+      if (i >= size) throw new NoSuchElementException();
+      cursor = i;
+      return (V) values[cursor];
+    }
+
+    public int nextIndex()
+    {
+      return cursor;
+    }
+
+    public int previousIndex()
+    {
+      return cursor - 1;
+    }
+
+    public Object previous()
+    {
+      int i = cursor - 1;
+      if (cursor < 0) throw new NoSuchElementException();
+      cursor = i;
+      return (V) values[cursor];
+    }
+
+    public void set(Object e)
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    public void add(Object e)
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    public void remove()
+    {
+      throw new UnsupportedOperationException();
+    }
+
+    private int cursor;
   }
 
 //////////////////////////////////////////////////////////////////////////
