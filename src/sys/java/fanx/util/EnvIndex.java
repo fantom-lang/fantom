@@ -77,8 +77,9 @@ public class EnvIndex
       String podName = (String)podNames.get(i);
       try
       {
-        File f = ((LocalFile)env.findPodFile(podName)).toJava();
-        loadPod(index, keyToPodNames, podName, f);
+        Map props = env.readIndexProps(podName);
+        if (props == null) continue;
+        addProps(index, keyToPodNames, podName, props);
       }
       catch (Throwable e)
       {
@@ -93,25 +94,6 @@ public class EnvIndex
     this.index = toImmutableListVals(index, keys);
     this.keyToPodNames = toImmutableListVals(keyToPodNames, null);
     this.keys = (List)keys.sort().toImmutable();
-  }
-
-  private static void loadPod(HashMap index, HashMap keyToPodNames, String podName, File f)
-    throws Exception
-  {
-    ZipFile zip = new ZipFile(f);
-    try
-    {
-      ZipEntry entry = zip.getEntry("index.props");
-      if (entry != null)
-      {
-        SysInStream in = new SysInStream(new BufferedInputStream(zip.getInputStream(entry)));
-        addProps(index, keyToPodNames, podName, in.readPropsListVals());
-      }
-    }
-    finally
-    {
-      zip.close();
-    }
   }
 
   private static void addProps(HashMap index, HashMap keyToPodNames, String podName, Map props)
@@ -179,3 +161,4 @@ public class EnvIndex
   private HashMap keyToPodNames;
 
 }
+

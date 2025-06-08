@@ -7,7 +7,10 @@
 //
 package fan.sys;
 
+import java.io.BufferedInputStream;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.zip.*;
 import fanx.util.*;
 
 /**
@@ -409,6 +412,31 @@ public abstract class Env
     props.reload();
   }
 
+  /**
+   * Load the index file for given pod without necessarily requiring
+   * the pod to be opened. In a standard environment we just open the
+   * zip to read out the "index.props".
+   */
+  public Map<String, List<String>> readIndexProps(String podName)
+    throws Exception
+  {
+    java.io.File f = ((LocalFile)findPodFile(podName)).toJava();
+    ZipFile zip = new ZipFile(f);
+    try
+    {
+      ZipEntry entry = zip.getEntry("index.props");
+      if (entry == null) return null;
+
+      SysInStream in = new SysInStream(new BufferedInputStream(zip.getInputStream(entry)));
+      Map props = in.readPropsListVals();
+      in.close();
+      return props;
+    }
+    finally
+    {
+      zip.close();
+    }
+  }
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

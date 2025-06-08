@@ -41,12 +41,11 @@ public class JarDistEnv
     Map props = (Map)propsCache.get(path);
     if (props == null)
     {
-      InputStream in = JarDistEnv.class.getClassLoader().getResourceAsStream(path);
+      InStream in = resInStream(pod.name(), uri.toStr());
       if (in != null)
       {
-        InStream sysIn = new SysInStream(in);
-        props = sysIn.readProps();
-        sysIn.close();
+        props = in.readProps();
+        in.close();
       }
       props = (props == null) ? Sys.emptyStrStrMap : (Map)props.toImmutable();
       propsCache.put(path, props);
@@ -104,6 +103,34 @@ public class JarDistEnv
     {
       return super.loadTypeClasses(t);
     }
+  }
+
+  /**
+   * Load the index file for given pod without necessarily requiring
+   * the pod to be opened. In a standard environment we just open the
+   * zip to read out the "index.props".
+   */
+  public Map<String, List<String>> readIndexProps(String podName)
+    throws Exception
+  {
+    InStream in = resInStream(podName, "index.props");
+    if (in == null) return null;
+    return in.readPropsListVals();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Given pod name and URI to file in pod return null or InStream to read it
+   */
+  private InStream resInStream(String podName, String uri)
+  {
+    String path = "res/" + podName + "/" + uri;
+    InputStream in = JarDistEnv.class.getClassLoader().getResourceAsStream(path);
+    if (in == null) return null;
+    return new SysInStream(in);
   }
 
 //////////////////////////////////////////////////////////////////////////

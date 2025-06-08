@@ -399,10 +399,11 @@ class EnvTest : Test
     verifyIndex("testSys.single", ["works!"])
 
     mult := ["testSys-1", "testSys-2"]
-    if (Pod.find("testNative", false) != null) mult.add("testNative")
+    hasNative := Pod.find("testNative", false) != null
+    if (hasNative) mult.add("testNative")
     verifyIndex("testSys.mult", mult)
 
-    verifyIndexPodNames("testSys.mult", ["testNative", "testSys"])
+    verifyIndexPodNames("testSys.mult", hasNative ? ["testNative", "testSys"] : ["testSys"])
     verifyIndexPodNames("testSys.bad", Str[,])
   }
 

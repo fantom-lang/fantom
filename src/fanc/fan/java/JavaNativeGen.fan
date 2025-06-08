@@ -93,6 +93,7 @@ internal class JavaNativeGen
     }
 
     s := StrBuf()
+    s.add("\n")
     lines.each |line| { s.add(line).add("\n") }
     jarDistFindAllPodNames(s)
     s.add("}\n")  // re-add trailing }
