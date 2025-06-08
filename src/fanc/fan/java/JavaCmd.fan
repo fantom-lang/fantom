@@ -170,6 +170,13 @@ internal class JavaCmd : TranspileCmd
         file.copyTo(jvmDir + path)
       }
     }
+
+    // reflect/pods.txt
+    podNames = pods.map |p->Str| { p.name}
+    JarDist.doReflectPodManifest(podNames) |path, file|
+    {
+      file.copyTo(jvmDir + path)
+    }
   }
 
   JdkTask jdk()

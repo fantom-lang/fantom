@@ -67,6 +67,19 @@ public class JarDistEnv
     return new List(Sys.FileType, new File[] { f });
   }
 
+  public List<String> findAllPodNames()
+  {
+    InStream in = jarInStream("reflect/pods.txt", true);
+    try
+    {
+      return in.readAllLines();
+    }
+    finally
+    {
+      in.close();
+    }
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Java Env
 //////////////////////////////////////////////////////////////////////////
@@ -123,14 +136,22 @@ public class JarDistEnv
 //////////////////////////////////////////////////////////////////////////
 
   /**
-   * Given pod name and URI to file in pod return null or InStream to read it
+   * Get pod resource file or null
    */
   private InStream resInStream(String podName, String uri)
   {
-    String path = "res/" + podName + "/" + uri;
+    return jarInStream("res/" + podName + "/" + uri, false);
+  }
+
+  /**
+   * Get resource file from my jar or null.
+   */
+  private InStream jarInStream(String path, boolean checked)
+  {
     InputStream in = JarDistEnv.class.getClassLoader().getResourceAsStream(path);
-    if (in == null) return null;
-    return new SysInStream(in);
+    if (in != null) return new SysInStream(in);
+    if (checked) throw Err.make("Missing jar file: " + path);
+    return null;
   }
 
 //////////////////////////////////////////////////////////////////////////

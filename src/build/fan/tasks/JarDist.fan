@@ -161,6 +161,10 @@ class JarDist : JdkTask
     {
       file.copyTo(tempDir + path, copyOpts)
     }
+    doReflectPodManifest(podNames.dup.add("sys")) |path, file|
+    {
+      file.copyTo(tempDir + path, copyOpts)
+    }
   }
 
   static Void doReflect(Str podName, File podFile, |Uri path, File| onFile)
@@ -193,6 +197,15 @@ class JarDist : JdkTask
     }
 
     zip.close
+  }
+
+  static Void doReflectPodManifest(Str[] podNames, |Uri path, File| onFile)
+  {
+    // this is the file read by JarDistEnv.findAllPodNames
+    buf := Buf()
+    buf.out.print(podNames.join("\n"))
+    uri := `reflect/pods.txt`
+    onFile(uri, buf.toFile(uri))
   }
 
   private Void etcFiles()
