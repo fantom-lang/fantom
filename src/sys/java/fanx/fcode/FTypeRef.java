@@ -201,6 +201,19 @@ public final class FTypeRef
   }
 
   /**
+   * Java slot name for Fantom slot name
+   */
+  public String jslot(String name)
+  {
+    if (isList())
+    {
+      String jname = FanUtil.listSwizzles.get(name);
+      if (jname != null) return jname;
+    }
+    return name;
+  }
+
+  /**
    * Java type name for member signatures:
    *   Lfan/sys/Duration;, Ljava/lang/Boolean;, Z
    */
@@ -350,3 +363,4 @@ public final class FTypeRef
   private String jname;            // fan/sys/Duration, java/lang/Boolean, Z
 
 }
+

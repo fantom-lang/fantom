@@ -25,7 +25,7 @@ import fanx.util.*;
  */
 public final class List<V>
   extends FanObj
-  implements Literal
+  implements Literal, java.util.List<V>
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -121,13 +121,12 @@ public final class List<V>
     return size == 0;
   }
 
-  public final long _size() { return size; }
-  public final long size()
+  public final long _size()
   {
     return size;
   }
 
-  public final void size(long s)
+  public final void _size(long s)
   {
     modify();
     int newSize = (int)s;
@@ -205,7 +204,7 @@ public final class List<V>
     return acc;
   }
 
-  public final boolean contains(V value)
+  public final boolean contains(Object value)
   {
     if (value == null) return containsSame(value);
     for (int i=0; i<size; ++i)
@@ -217,7 +216,7 @@ public final class List<V>
     return false;
   }
 
-  public final boolean containsSame(V value)
+  public final boolean containsSame(Object value)
   {
     for (int i=0; i<size; ++i)
       if (values[i] == value) return true;
@@ -402,8 +401,7 @@ public final class List<V>
     return set(index, value);
   }
 
-  public final List<V> _add(V value) { return add(value); }
-  public final List<V> add(V value)
+  public final List<V> _add(V value)
   {
     // modify in insert(int, Obj)
     return insert(size, value);
@@ -415,7 +413,7 @@ public final class List<V>
   public final List<V> addNotNull(V value)
   {
     if (value == null) return this;
-    return add(value);
+    return _add(value);
   }
 
   public final List<V> addAll(List<V> list)
@@ -474,7 +472,7 @@ public final class List<V>
     return this;
   }
 
-  public final V remove(V val)
+  public final V _remove(V val)
   {
     // modify in removeAt(Int)
     Long index = index(val);
@@ -566,7 +564,7 @@ public final class List<V>
     return this;
   }
 
-  public final List<V> clear()
+  public final List<V> _clear()
   {
     modify();
     for (int i=0; i<size; ++i)
@@ -605,7 +603,7 @@ public final class List<V>
   public final List<V> push(V obj)
   {
     // modify in add()
-    return add(obj);
+    return _add(obj);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -873,7 +871,7 @@ public final class List<V>
   {
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType.toNullable();
-    List acc = new List(r, (int)size());
+    List acc = new List(r, size);
     if (f.arity() == 1)
     {
       for (int i=0; i<size; ++i)
@@ -891,7 +889,7 @@ public final class List<V>
   {
     Type r = f.returns();
     if (r == Sys.VoidType) r = Sys.ObjType;
-    List acc = new List(r.toNonNullable(), (int)size());
+    List acc = new List(r.toNonNullable(), size);
     if (f.arity() == 1)
     {
       for (int i=0; i<size; ++i)
@@ -910,7 +908,7 @@ public final class List<V>
     Type r = f.returns();
     Type of = Sys.ObjType.toNullable();
     if (r instanceof ListType) of = ((ListType)r).v;
-    List acc = new List(of, (int)size());
+    List acc = new List(of, size);
     if (f.arity() == 1)
     {
       for (int i=0; i<size; ++i)
@@ -1051,7 +1049,7 @@ public final class List<V>
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  public final List<V> sort() { return sort(null); }
+  public final List<V> sort() { return sort((Func)null); }
   public final List<V> sort(final Func f)
   {
     modify();
@@ -1140,7 +1138,7 @@ public final class List<V>
     if (curIndex == null) return this;
     if (curIndex == toIndex) return this;
     removeAt(curIndex);
-    if (toIndex == -1) return add(item);
+    if (toIndex == -1) return _add(item);
     if (toIndex < 0) ++toIndex;
     return insert(toIndex, item);
   }
@@ -1489,12 +1487,10 @@ public final class List<V>
 //////////////////////////////////////////////////////////////////////////
 
 
-/*
   public final int size()
   {
     return size;
   }
-*/
 
   public final V get(int index)
   {
@@ -1531,7 +1527,6 @@ public final class List<V>
     return getRange(Range.makeExclusive(fromIndex, toIndex));
   }
 
-/*
   public final boolean add(V value)
   {
     _add(value);
@@ -1579,7 +1574,6 @@ public final class List<V>
   {
     _clear();
   }
-*/
 
   public final Iterator<V> iterator()
   {

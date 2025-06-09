@@ -622,6 +622,11 @@ catch (Exception e) { e.printStackTrace(); }
     if (pod == Sys.sysPod && !Modifier.isPublic(m.getModifiers())) return;
     this.finishing = m.getName();
     String name = m.getName();
+    if (name.charAt(0) == '_' && pod.name().equals("sys"))
+    {
+      // List/Map swizzles
+      name = name.substring(1, name.length());
+    }
     Slot slot = slot(name, false);
     if (slot == null) return;
     if (slot.parent() != this) return;

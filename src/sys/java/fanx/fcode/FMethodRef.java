@@ -135,7 +135,8 @@ public class FMethodRef
       StringBuilder s = new StringBuilder();
       String jname = parent.jname();
       String jimpl = parent.jimpl();
-      s.append(jimpl).append('.').append(name).append('(');
+      String jslot = parent.jslot(name);
+      s.append(jimpl).append('.').append(jslot).append('(');
       if (jname != jimpl)
       {
         // if the implementation class is different than the representation
@@ -255,7 +256,6 @@ public class FMethodRef
     if (parent.isBool())  return boolSpecials.get(name);
     if (parent.isInt())   return intSpecials.get(name);
     if (parent.isFloat()) return floatSpecials.get(name);
-    if (parent.isList())  return listSpecials.get(name);
     if (parent.isPrimitiveArray()) return arraySpecials.get(name);
     return null;
   }
@@ -263,38 +263,38 @@ public class FMethodRef
   /**
    * Special function which emits the method directly to custom bytecode
    */
-  static interface Special
+  static abstract class Special
   {
-    void emit(FMethodRef m, CodeEmit code);
+    abstract void emit(FMethodRef m, CodeEmit code);
   }
 
   /**
    * SpecialOp maps directly to a single no arg opcode.
    */
-  static class SpecialOp implements Special
+  static class SpecialOp extends Special
   {
     SpecialOp(int op) { this.op = op; }
-    public void emit(FMethodRef m, CodeEmit code) { code.op(op); }
+    void emit(FMethodRef m, CodeEmit code) { code.op(op); }
     private final int op;
   }
 
   /**
    * SpecialOp2 maps directly to two no arg opcodes.
    */
-  static class SpecialOp2 implements Special
+  static class SpecialOp2 extends Special
   {
     SpecialOp2(int op1, int op2) { this.op1 = op1; this.op2 = op2; }
-    public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); }
+    void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); }
     private final int op1, op2;
   }
 
   /**
    * SpecialOp4 maps directly to four no arg opcodes.
    */
-  static class SpecialOp4 implements Special
+  static class SpecialOp4 extends Special
   {
     SpecialOp4(int op1, int op2, int op3, int op4) { this.op1 = op1; this.op2 = op2; this.op3 = op3; this.op4 = op4; }
-    public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); code.op(op3); code.op(op4); }
+    void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); code.op(op3); code.op(op4); }
     private final int op1, op2, op3, op4;
   }
 
@@ -383,15 +383,6 @@ public class FMethodRef
     floatSpecials.put("mod",      new SpecialOp(DREM));
     floatSpecials.put("modInt",   new SpecialOp2(L2D, DREM));
     floatSpecials.put("negate",   new SpecialOp(DNEG));
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// List Specials
-//////////////////////////////////////////////////////////////////////////
-
-  static HashMap<String,Special> listSpecials = new HashMap<>();
-  static
-  {
   }
 
 //////////////////////////////////////////////////////////////////////////

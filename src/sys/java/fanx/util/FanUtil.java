@@ -449,4 +449,16 @@ public class FanUtil
     return flags;
   }
 
+  /**
+   * List type fantom slot name to Java slot name swizzles
+   */
+  public static final HashMap<String,String> listSwizzles = new HashMap<>();
+  static
+  {
+    listSwizzles.put("add",    "_add");
+    listSwizzles.put("clear",  "_clear");
+    listSwizzles.put("remove", "_remove");
+    listSwizzles.put("size",   "_size");
+  }
 }
+
