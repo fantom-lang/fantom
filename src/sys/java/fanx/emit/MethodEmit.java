@@ -44,7 +44,7 @@ public class MethodEmit
   }
 
   /**
-   * Get this field as a MethodRef constant pool index.
+   * Get this method as a MethodRef constant pool index.
    */
   public int ref()
   {
@@ -111,3 +111,4 @@ public class MethodEmit
   private CodeEmit code;
 
 }
+

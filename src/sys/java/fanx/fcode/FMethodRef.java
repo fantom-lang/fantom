@@ -252,10 +252,11 @@ public class FMethodRef
   {
     if (name.equals("<new>")) return newSpecial;
     if (name.equals("<class>")) return classLiteralSpecial;
-    if (parent.isBool())  return (Special)boolSpecials.get(name);
-    if (parent.isInt())   return (Special)intSpecials.get(name);
-    if (parent.isFloat()) return (Special)floatSpecials.get(name);
-    if (parent.isPrimitiveArray()) return (Special)arraySpecials.get(name);
+    if (parent.isBool())  return boolSpecials.get(name);
+    if (parent.isInt())   return intSpecials.get(name);
+    if (parent.isFloat()) return floatSpecials.get(name);
+    if (parent.isList())  return listSpecials.get(name);
+    if (parent.isPrimitiveArray()) return arraySpecials.get(name);
     return null;
   }
 
@@ -274,7 +275,7 @@ public class FMethodRef
   {
     SpecialOp(int op) { this.op = op; }
     public void emit(FMethodRef m, CodeEmit code) { code.op(op); }
-    int op;
+    private final int op;
   }
 
   /**
@@ -284,7 +285,7 @@ public class FMethodRef
   {
     SpecialOp2(int op1, int op2) { this.op1 = op1; this.op2 = op2; }
     public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); }
-    int op1, op2;
+    private final int op1, op2;
   }
 
   /**
@@ -294,7 +295,7 @@ public class FMethodRef
   {
     SpecialOp4(int op1, int op2, int op3, int op4) { this.op1 = op1; this.op2 = op2; this.op3 = op3; this.op4 = op4; }
     public void emit(FMethodRef m, CodeEmit code) { code.op(op1); code.op(op2); code.op(op3); code.op(op4); }
-    int op1, op2, op3, op4;
+    private final int op1, op2, op3, op4;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,86 +334,64 @@ public class FMethodRef
 // Bool Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static Special boolAnd = new SpecialOp(IAND);
-  static Special boolOr  = new SpecialOp(IOR);
-  static Special boolXor = new SpecialOp(IXOR);
-
-  static HashMap boolSpecials = new HashMap();
+  static HashMap<String,Special> boolSpecials = new HashMap<>();
   static
   {
-    boolSpecials.put("and", boolAnd);
-    boolSpecials.put("or",  boolOr);
-    boolSpecials.put("xor", boolXor);
+    boolSpecials.put("and", new SpecialOp(IAND));
+    boolSpecials.put("or",  new SpecialOp(IOR));
+    boolSpecials.put("xor", new SpecialOp(IXOR));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Int Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static Special intPlus       = new SpecialOp(LADD);
-  static Special intPlusFloat  = new SpecialOp4(DUP2_X2, POP2, L2D, DADD);
-  static Special intMinus      = new SpecialOp(LSUB);
-  static Special intMult       = new SpecialOp(LMUL);
-  static Special intMultFloat  = new SpecialOp4(DUP2_X2, POP2, L2D, DMUL);
-  static Special intDiv        = new SpecialOp(LDIV);
-  static Special intMod        = new SpecialOp(LREM);
-  static Special intAnd        = new SpecialOp(LAND);
-  static Special intOr         = new SpecialOp(LOR);
-  static Special intXor        = new SpecialOp(LXOR);
-  static Special intNegate     = new SpecialOp(LNEG);
-  static Special intShiftl     = new SpecialOp2(L2I, LSHL);
-  static Special intShiftr     = new SpecialOp2(L2I, LUSHR);
-  static Special intShifta     = new SpecialOp2(L2I, LSHR);
-
-  static HashMap intSpecials = new HashMap();
+  static HashMap<String,Special> intSpecials = new HashMap<>();
   static
   {
-    intSpecials.put("negate",     intNegate);
-    intSpecials.put("plus",       intPlus);
-    intSpecials.put("plusFloat",  intPlusFloat);
-    intSpecials.put("minus",      intMinus);
-    intSpecials.put("mult",       intMult);
-    intSpecials.put("multFloat",  intMultFloat);
-    intSpecials.put("div",        intDiv);
-    intSpecials.put("mod",        intMod);
-    intSpecials.put("and",        intAnd);
-    intSpecials.put("or",         intOr);
-    intSpecials.put("xor",        intXor);
-    intSpecials.put("shiftl",     intShiftl);
-    intSpecials.put("shiftr",     intShiftr);
-    intSpecials.put("shifta",     intShifta);
+    intSpecials.put("negate",     new SpecialOp(LNEG));
+    intSpecials.put("plus",       new SpecialOp(LADD));
+    intSpecials.put("plusFloat",  new SpecialOp4(DUP2_X2, POP2, L2D, DADD));
+    intSpecials.put("minus",      new SpecialOp(LSUB));
+    intSpecials.put("mult",       new SpecialOp(LMUL));
+    intSpecials.put("multFloat",  new SpecialOp4(DUP2_X2, POP2, L2D, DMUL));
+    intSpecials.put("div",        new SpecialOp(LDIV));
+    intSpecials.put("mod",        new SpecialOp(LREM));
+    intSpecials.put("and",        new SpecialOp(LAND));
+    intSpecials.put("or",         new SpecialOp(LOR));
+    intSpecials.put("xor",        new SpecialOp(LXOR));
+    intSpecials.put("shiftl",     new SpecialOp2(L2I, LSHL));
+    intSpecials.put("shiftr",     new SpecialOp2(L2I, LUSHR));
+    intSpecials.put("shifta",     new SpecialOp2(L2I, LSHR));
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Float Specials
 //////////////////////////////////////////////////////////////////////////
 
-  static Special floatPlus      = new SpecialOp(DADD);
-  static Special floatPlusInt   = new SpecialOp2(L2D, DADD);
-  static Special floatMinus     = new SpecialOp(DSUB);
-  static Special floatMinusInt  = new SpecialOp2(L2D, DSUB);
-  static Special floatMult      = new SpecialOp(DMUL);
-  static Special floatMultInt   = new SpecialOp2(L2D, DMUL);
-  static Special floatDiv       = new SpecialOp(DDIV);
-  static Special floatDivInt    = new SpecialOp2(L2D, DDIV);
-  static Special floatMod       = new SpecialOp(DREM);
-  static Special floatModInt    = new SpecialOp2(L2D, DREM);
-  static Special floatNegate = new SpecialOp(DNEG);
-
-  static HashMap floatSpecials = new HashMap();
+  static HashMap<String,Special> floatSpecials = new HashMap<>();
   static
   {
-    floatSpecials.put("plus",     floatPlus);
-    floatSpecials.put("plusInt",  floatPlusInt);
-    floatSpecials.put("minus",    floatMinus);
-    floatSpecials.put("minusInt", floatMinusInt);
-    floatSpecials.put("mult",     floatMult);
-    floatSpecials.put("multInt",  floatMultInt);
-    floatSpecials.put("div",      floatDiv);
-    floatSpecials.put("divInt",   floatDivInt);
-    floatSpecials.put("mod",      floatMod);
-    floatSpecials.put("modInt",   floatModInt);
-    floatSpecials.put("negate", floatNegate);
+    floatSpecials.put("plus",     new SpecialOp(DADD));
+    floatSpecials.put("plusInt",  new SpecialOp2(L2D, DADD));
+    floatSpecials.put("minus",    new SpecialOp(DSUB));
+    floatSpecials.put("minusInt", new SpecialOp2(L2D, DSUB));
+    floatSpecials.put("mult",     new SpecialOp(DMUL));
+    floatSpecials.put("multInt",  new SpecialOp2(L2D, DMUL));
+    floatSpecials.put("div",      new SpecialOp(DDIV));
+    floatSpecials.put("divInt",   new SpecialOp2(L2D, DDIV));
+    floatSpecials.put("mod",      new SpecialOp(DREM));
+    floatSpecials.put("modInt",   new SpecialOp2(L2D, DREM));
+    floatSpecials.put("negate",   new SpecialOp(DNEG));
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// List Specials
+//////////////////////////////////////////////////////////////////////////
+
+  static HashMap<String,Special> listSpecials = new HashMap<>();
+  static
+  {
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -478,7 +457,7 @@ public class FMethodRef
     }
   };
 
-  static HashMap arraySpecials = new HashMap();
+  static HashMap<String,Special> arraySpecials = new HashMap<>();
   static
   {
     arraySpecials.put("size", arraySize);
@@ -536,3 +515,4 @@ public class FMethodRef
   private int iiNumArgs = -1;  // invoke interface - lazy init when jsig is initialized
   private Special special;
 }
+
