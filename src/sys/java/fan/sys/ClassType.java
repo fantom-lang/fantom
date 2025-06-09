@@ -659,6 +659,11 @@ catch (Exception e) { e.printStackTrace(); }
       if (pod == Sys.sysPod)
       {
         if (!checkAllFan(params)) return;
+        if (this.name.equals("Map"))
+        {
+          // we overload Map.make
+          if (name.equals("make") && params.length == 2) return;
+        }
         if (javaRepr)
         {
           boolean javaStatic = Modifier.isStatic(m.getModifiers());
