@@ -75,7 +75,7 @@ public class ElemPeer
 
   public Map attrs(Elem self)
   {
-    Map map = new Map(new MapType(Sys.StrType, Sys.StrType));
+    Map map = Map.make(Sys.StrType, Sys.StrType);
 
     // collect props
     Iterator it = props.entrySet().iterator();
@@ -352,3 +352,4 @@ public class ElemPeer
 
   private static Err err() { return UnsupportedErr.make(); }
 }
+

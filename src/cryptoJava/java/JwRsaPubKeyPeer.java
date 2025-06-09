@@ -50,7 +50,7 @@ public class JwRsaPubKeyPeer
       byte[] modBytes = rsaPub.getModulus().toByteArray();
       byte[] expBytes = rsaPub.getPublicExponent().toByteArray();
 
-      Map jwk = new Map(Sys.StrType, Sys.ObjType);
+      Map jwk = Map.make(Sys.StrType, Sys.ObjType);
       jwk.set("n", Base64.getUrlEncoder().encodeToString(modBytes));
       jwk.set("e", Base64.getUrlEncoder().encodeToString(expBytes));
       return jwk;

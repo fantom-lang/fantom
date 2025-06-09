@@ -211,7 +211,7 @@ public class ObjDecoder
    */
   private Object readComplex(int line, Type t, boolean root)
   {
-    Map toSet = new Map(Sys.FieldType, Sys.ObjType.toNullable());
+    Map toSet = Map.make(Sys.FieldType, Sys.ObjType.toNullable());
     List toAdd = new List(Sys.ObjType.toNullable());
 
     // read fields/collection into toSet/toAdd
@@ -423,7 +423,7 @@ public class ObjDecoder
     {
       consume();
       consume(Token.RBRACKET, "Expecting ']'");
-      return new Map(toMapType(t, curField, false));
+      return toMapType(t, curField, false).x.makeMap(null);
     }
 
     // read first list item or first map key
@@ -501,7 +501,7 @@ public class ObjDecoder
       mapType = Type.makeMap(k, v);
     }
 
-    return new Map((MapType)mapType, map);
+    return mapType.x.makeMap(map);
   }
 
   /**
@@ -530,14 +530,14 @@ public class ObjDecoder
    *   3) if inferred is false, then drop back to Obj:Obj
    *   4) If inferred is true then return null and we'll infer the common key/val types
    */
-  private MapType toMapType(Type t, Field curField, boolean infer)
+  private Type toMapType(Type t, Field curField, boolean infer)
   {
-    if (t != null && t.x.isMap()) return (MapType)t;
+    if (t != null && t.x.isMap()) return t;
 
     if (curField != null)
     {
       Type ft = curField.type().toNonNullable();
-      if (ft.x.isMap()) return (MapType)ft;
+      if (ft.x.isMap()) return ft;
     }
 
     if (infer) return null;
@@ -547,7 +547,7 @@ public class ObjDecoder
     return defaultMapType;
   }
 
-  private static MapType defaultMapType;
+  private static Type defaultMapType;
 
 //////////////////////////////////////////////////////////////////////////
 // Type

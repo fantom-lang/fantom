@@ -64,9 +64,7 @@ public class StatementPeer
     else
     {
       this.translated = self.sql;
-      this.paramMap = new Map(
-        Sys.StrType,
-        Sys.IntType.toListOf());
+      this.paramMap = Map.make(Sys.StrType, Sys.IntType.toListOf());
     }
 
     try

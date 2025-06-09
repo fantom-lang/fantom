@@ -46,22 +46,23 @@ public final class Map<K,V>
     return new Map(t, new HashMap());
   }
 
-  public static Map makeKV(Type k, Type v)
+  /** Construct map with given key and value types */
+  public static Map make(Type k, Type v)
   {
     return new Map(k, v);
   }
 
-  public Map(Type k, Type v)
+  Map(Type k, Type v)
   {
     this(new MapType(k, v), new HashMap());
   }
 
-  public Map(MapType type)
+  Map(MapType type)
   {
     this(type, new HashMap());
   }
 
-  public Map(MapType type, HashMap map)
+  Map(MapType type, HashMap map)
   {
     if (type == null || map == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.type = type;

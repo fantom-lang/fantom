@@ -149,11 +149,11 @@ public class JKeyStorePeer
 // JKeyStore
 //////////////////////////////////////////////////////////////////////////
 
-  private static final MapType attrsType = new MapType(Type.find("sys::Str"), Type.find("sys::Str"));
+  private static final Type attrsType = Type.makeMap(Type.find("sys::Str"), Type.find("sys::Str"));
   private static final Map emptyAttrs = Map.make(attrsType);
 
   private static final Map emptyOpts = Map.make(
-    new MapType(Type.find("sys::Str"), Type.find("sys::Obj"))
+    Type.makeMap(Type.find("sys::Str"), Type.find("sys::Obj"))
   );
 
   public void save(JKeyStore self, OutStream fanOut) { save(self, fanOut, emptyOpts); }
@@ -213,3 +213,4 @@ public class JKeyStorePeer
     catch (Exception e) { throw Err.make(e); }
   }
 }
+

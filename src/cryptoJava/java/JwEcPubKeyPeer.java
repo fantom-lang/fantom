@@ -156,7 +156,7 @@ public class JwEcPubKeyPeer
       BigInteger y = pt.getAffineY();
       byte[] yBytes = y.toByteArray();
 
-      fan.sys.Map jwk = new fan.sys.Map(Sys.StrType, Sys.ObjType);
+      fan.sys.Map jwk = fan.sys.Map.make(Sys.StrType, Sys.ObjType);
       jwk.set("x", Base64.getUrlEncoder().encodeToString(xBytes));
       jwk.set("y", Base64.getUrlEncoder().encodeToString(yBytes));
       jwk.set("crv", getName(curve));

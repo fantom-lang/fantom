@@ -44,7 +44,8 @@ public abstract class Type
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
-  public static MapType makeMap(Type k, Type v)
+  /** Constructr map type for given key and value generic parameters */
+  public static Type makeMap(Type k, Type v)
   {
     return new MapType(k, v);
   }
@@ -386,6 +387,7 @@ public abstract class Type
     public boolean isJava() { return t.isJava(); }
     public Type k() { return t.k(); }
     public Type v() { return t.v(); }
+    public Map makeMap(HashMap map) { return t.makeMap(map); }
     final Type t;
   }
 
@@ -394,6 +396,7 @@ public abstract class Type
   boolean isJava() { return false; }
   Type k() { throw UnsupportedErr.make(); }
   Type v() { throw UnsupportedErr.make(); }
+  Map makeMap(HashMap map) { throw UnsupportedErr.make(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

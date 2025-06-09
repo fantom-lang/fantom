@@ -93,7 +93,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
   override This mapLiteral(MapLiteralExpr x)
   {
     type := (MapType)x.ctype
-    qnMap.w(".makeKV(").doTypeLiteral(type.k).w(", ").doTypeLiteral(type.v).w(")")
+    qnMap.w(".make(").doTypeLiteral(type.k).w(", ").doTypeLiteral(type.v).w(")")
     x.keys.each |key, i|
     {
       val := x.vals[i]

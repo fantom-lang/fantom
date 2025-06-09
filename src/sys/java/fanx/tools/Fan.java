@@ -109,7 +109,7 @@ public class Fan
   {
     LocalFile f = (LocalFile)(new LocalFile(file).normalize());
 
-    Map options = new Map(Sys.StrType, Sys.ObjType);
+    Map options = Map.make(Sys.StrType, Sys.ObjType);
     for (int i=0; args != null && i<args.length; ++i)
       if (args[i].equals("-fcodeDump")) options.add("fcodeDump", Boolean.TRUE);
 
