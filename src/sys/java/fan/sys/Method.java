@@ -506,7 +506,7 @@ public class Method
       // is static or not; this means that if a method is overloaded
       // with both an instance and static version that reflection may
       // not correctly work when using the callX methods
-      if (parent.x.isJava) return isStatic || isCallOn ? args : args - 1;
+      if (parent.isJava()) return isStatic || isCallOn ? args : args - 1;
 
       // compuate min/max parameters - reflect contains all the method versions
       // with full params at index zero, and full defaults at reflect.length-1
@@ -556,7 +556,7 @@ public class Method
     try
     {
       // if parent is FFI Java class, then route to JavaType for handling
-      if (parent.x.isJava) return JavaType.invoke(this, instance, args);
+      if (parent.isJava()) return JavaType.invoke(this, instance, args);
 
       // zero index is full signature up to using max defaults
       int index = params.sz()-args.length;

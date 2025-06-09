@@ -357,7 +357,7 @@ public class FanUtil
       if (t == Sys.BoolType)  return 'I';
       if (t == Sys.IntType)   return 'J';
       if (t == Sys.FloatType) return 'D';
-      if (t.x.isJava && t.podName().equals("[java]"))
+      if (t.x.isJava() && t.podName().equals("[java]"))
       {
         // FFI primitives
         if (t.name().equals("byte"))    return 'I';

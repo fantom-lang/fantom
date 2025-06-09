@@ -87,7 +87,7 @@ public class Field
     try
     {
       // if JavaType handle slot resolution
-      if (parent.x.isJava) return JavaType.get(this, instance);
+      if (parent.isJava()) return JavaType.get(this, instance);
 
       return reflect.get(instance);
     }
@@ -119,7 +119,7 @@ public class Field
     }
 
     // check static
-    if ((flags & FConst.Static) != 0 && !parent.x.isJava)
+    if ((flags & FConst.Static) != 0 && !parent.isJava())
       throw ReadonlyErr.make("Cannot set static field " + qname());
 
     // check generic type (the Java runtime will check non-generics)
@@ -141,7 +141,7 @@ public class Field
     try
     {
       // if JavaType handle slot resolution
-      if (parent.x.isJava) { JavaType.set(this, instance, value); return; }
+      if (parent.isJava()) { JavaType.set(this, instance, value); return; }
 
       reflect.set(instance, value);
     }

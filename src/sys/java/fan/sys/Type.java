@@ -44,6 +44,11 @@ public abstract class Type
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
+  public static MapType makeMap(Type k, Type v)
+  {
+    return new MapType(k, v);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Naming
 //////////////////////////////////////////////////////////////////////////
@@ -373,22 +378,22 @@ public abstract class Type
   /**
    * Fantom internal use only APIs
    */
-  public static class InternalOnly
+  public final static class InternalOnly
   {
-    InternalOnly(Type t)
-    {
-      this.t = t;
-      this.isJava = t instanceof JavaType;
-    }
-
-    /**
-     * Return if this is a JavaType which represents a Java
-     * class imported into the Fantom type system via the Java FFI.
-     */
-    public final boolean isJava;
-
+    InternalOnly(Type t) { this.t = t;  }
+    public boolean isList() { return t.isList(); }
+    public boolean isMap()  { return t.isMap(); }
+    public boolean isJava() { return t.isJava(); }
+    public Type k() { return t.k(); }
+    public Type v() { return t.v(); }
     final Type t;
   }
+
+  boolean isList() { return false; }
+  boolean isMap()  { return false; }
+  boolean isJava() { return false; }
+  Type k() { throw UnsupportedErr.make(); }
+  Type v() { throw UnsupportedErr.make(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields

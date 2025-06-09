@@ -121,6 +121,8 @@ class JavaType
 
   public boolean javaRepr() { return false; }
 
+  boolean isJava() { return true; }
+
   private RuntimeException unsupported() { return new UnsupportedOperationException(); }
 
 //////////////////////////////////////////////////////////////////////////

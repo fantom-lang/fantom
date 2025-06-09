@@ -17,7 +17,7 @@ import fanx.emit.*;
 /**
  * ListType is the GenericType for Lists: Foo[] -&gt; V = Foo
  */
-public class ListType
+class ListType
   extends GenericType
 {
 
@@ -73,6 +73,10 @@ public class ListType
   }
 
   public Class toClass() { return List.class; }
+
+  boolean isList() { return true; }
+
+  Type v() { return v; }
 
 //////////////////////////////////////////////////////////////////////////
 // GenericType

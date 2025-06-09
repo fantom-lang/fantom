@@ -235,10 +235,10 @@ public class ObjEncoder
   public void writeMap(Map map)
   {
     // get k,v type
-    MapType t = (MapType)map.typeof();
+    Type t = map.typeof();
 
     // decide if we're going output as single or multi-line format
-    boolean nl = isMultiLine(t.k) || isMultiLine(t.v);
+    boolean nl = isMultiLine(t.x.k()) || isMultiLine(t.x.v());
 
     // figure out if we can use an inferred type
     boolean inferred = false;
@@ -370,3 +370,4 @@ public class ObjEncoder
   Type curFieldType;
 
 }
+

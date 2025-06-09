@@ -182,7 +182,7 @@ public class TypeParser
     consume(':');
     Type val = load();
     consume(']');
-    return new MapType(key, val);
+    return Type.makeMap(key, val);
   }
 
   private Type loadFunc()
@@ -294,3 +294,4 @@ public class TypeParser
   private Pod loadingPod;      // used to map types within a loading pod
 
 }
+

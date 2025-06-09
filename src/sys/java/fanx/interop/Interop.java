@@ -258,7 +258,7 @@ public class Interop
    */
   public static Map toFan(HashMap map)
   {
-    return new Map(new MapType(Sys.ObjType, Sys.ObjType.toNullable()), map);
+    return new Map(Type.makeMap(Sys.ObjType, Sys.ObjType.toNullable()), map);
   }
 
   /**
@@ -284,3 +284,4 @@ public class Interop
   }
 
 }
+

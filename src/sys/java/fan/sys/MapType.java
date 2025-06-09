@@ -80,6 +80,12 @@ public class MapType
 
   public Class toClass() { return Map.class; }
 
+  boolean isMap() { return true; }
+
+  Type k() { return k; }
+
+  Type v() { return v; }
+
 //////////////////////////////////////////////////////////////////////////
 // GenericType
 //////////////////////////////////////////////////////////////////////////
@@ -111,3 +117,4 @@ public class MapType
   private String sig;
 
 }
+

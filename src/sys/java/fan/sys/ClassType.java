@@ -701,7 +701,7 @@ catch (Exception e) { e.printStackTrace(); }
       // try to map to non-FFI Fantom type - this handles
       // things like long, Long, String
       Type x = FanUtil.toFanType(p, false);
-      if (x == null || x.x.isJava) return false;
+      if (x == null || x.isJava()) return false;
     }
     return true;
   }
