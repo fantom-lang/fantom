@@ -9,21 +9,23 @@
 *Build 1.0.82 (working)*
 - New fanc tool for transpiling to Java source
 - Java make List/Map generic types
+- Java List implements java.util.List
+- Java Map implements java.util.Map
 - Compiler: rename CParam.paramType to type
 - Compiler: rename CMethod.returnType to returns
 - Compiler: rename CField.fieldType to type
 - Compiler: rename MethodDef.ret to returns
 - Compiler: rename FuncType.ret to returns
-- File.withIn and File.withOut
-- StrBuf.joinNotNull
-- Win.devicePixelRatio
-- Stroke.scale
-- Date convenience methods
-- ES support for IntArray and FloatArray
+- Add File.withIn and File.withOut
+- Add StrBuf.joinNotNull
+- Add Win.devicePixelRatio
+- Add Stroke.scale
 - Add Doc.hasFocus
 - Add Win.hisState
 - Add concurrent ActorContext
 - Add util::SyntheticFile
+- Date convenience methods for quarter, year
+- ES support for IntArray and FloatArray
 
 *Build 1.0.81 (6 Dec 2024)*
 - New markdown pod

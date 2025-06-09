@@ -460,5 +460,15 @@ public class FanUtil
     listSwizzles.put("remove", "_remove");
     listSwizzles.put("size",   "_size");
   }
+
+  /**
+   * Map type fantom slot name to Java slot name swizzles
+   */
+  public static final HashMap<String,String> mapSwizzles = new HashMap<>();
+  static
+  {
+    mapSwizzles.put("clear",  "_clear");
+    mapSwizzles.put("size",   "_size");
+  }
 }
 

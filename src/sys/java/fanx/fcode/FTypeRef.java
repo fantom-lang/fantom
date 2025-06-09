@@ -91,6 +91,9 @@ public final class FTypeRef
         case 'L':
           if (typeName.equals("List")) mask |= SYS_LIST;
           break;
+        case 'M':
+          if (typeName.equals("Map")) mask |= SYS_MAP;
+          break;
         case 'O':
           if (typeName.equals("Obj")) mask |= SYS_OBJ;
           break;
@@ -159,6 +162,16 @@ public final class FTypeRef
   public boolean isList() { return (mask & SYS_LIST) != 0; }
 
   /**
+   * Is this some type of sys::Map (nullable or parameterized)
+   */
+  public boolean isMap() { return (mask & SYS_MAP) != 0; }
+
+  /**
+   * Is this either sys::List or sys::Map
+   */
+  public boolean isCollection() { return (mask & (SYS_LIST|SYS_MAP)) != 0; }
+
+  /**
    * Is this a FFI direct java type?
    */
   public boolean isFFI() { return podName.startsWith("[java]"); }
@@ -205,10 +218,18 @@ public final class FTypeRef
    */
   public String jslot(String name)
   {
-    if (isList())
+    if (isCollection())
     {
-      String jname = FanUtil.listSwizzles.get(name);
-      if (jname != null) return jname;
+      if (isList())
+      {
+        String jname = FanUtil.listSwizzles.get(name);
+        if (jname != null) return jname;
+      }
+      if (isMap())
+      {
+        String jname = FanUtil.mapSwizzles.get(name);
+        if (jname != null) return jname;
+      }
     }
     return name;
   }
@@ -319,28 +340,29 @@ public final class FTypeRef
   public static final int SYS_FLOAT        = 0x0020;
   public static final int SYS_ERR          = 0x0040;
   public static final int SYS_LIST         = 0x0080;
+  public static final int SYS_MAP          = 0x0100;
 
   // mask primitive constants
-  public static final int PRIMITIVE        = 0xff00;
-  public static final int PRIMITIVE_BOOL   = 0x0100;
-  public static final int PRIMITIVE_BYTE   = 0x0200;
-  public static final int PRIMITIVE_SHORT  = 0x0400;
-  public static final int PRIMITIVE_CHAR   = 0x0800;
-  public static final int PRIMITIVE_INT    = 0x1000;
-  public static final int PRIMITIVE_LONG   = 0x2000;
-  public static final int PRIMITIVE_FLOAT  = 0x4000;
-  public static final int PRIMITIVE_DOUBLE = 0x8000;
+  public static final int PRIMITIVE        = 0xff_000;
+  public static final int PRIMITIVE_BOOL   = 0x01_000;
+  public static final int PRIMITIVE_BYTE   = 0x02_000;
+  public static final int PRIMITIVE_SHORT  = 0x04_000;
+  public static final int PRIMITIVE_CHAR   = 0x08_000;
+  public static final int PRIMITIVE_INT    = 0x10_000;
+  public static final int PRIMITIVE_LONG   = 0x20_000;
+  public static final int PRIMITIVE_FLOAT  = 0x40_000;
+  public static final int PRIMITIVE_DOUBLE = 0x80_000;
 
   // mask primitive array constants
-  public static final int PRIMITIVE_ARRAY  = 0xff0000;
-  public static final int ARRAY_BOOL       = 0x010000;
-  public static final int ARRAY_BYTE       = 0x020000;
-  public static final int ARRAY_SHORT      = 0x040000;
-  public static final int ARRAY_CHAR       = 0x080000;
-  public static final int ARRAY_INT        = 0x100000;
-  public static final int ARRAY_LONG       = 0x200000;
-  public static final int ARRAY_FLOAT      = 0x400000;
-  public static final int ARRAY_DOUBLE     = 0x800000;
+  public static final int PRIMITIVE_ARRAY  = 0xff_00_000;
+  public static final int ARRAY_BOOL       = 0x01_00_000;
+  public static final int ARRAY_BYTE       = 0x02_00_000;
+  public static final int ARRAY_SHORT      = 0x04_00_000;
+  public static final int ARRAY_CHAR       = 0x08_00_000;
+  public static final int ARRAY_INT        = 0x10_00_000;
+  public static final int ARRAY_LONG       = 0x20_00_000;
+  public static final int ARRAY_FLOAT      = 0x40_00_000;
+  public static final int ARRAY_DOUBLE     = 0x80_00_000;
 
   // stack type constants
   public static final int VOID   = 'V';

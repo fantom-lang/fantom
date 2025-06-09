@@ -10,6 +10,7 @@ package fan.sys;
 import java.lang.Thread;
 import java.util.AbstractSet;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.LinkedHashMap;
@@ -23,7 +24,7 @@ import fanx.util.OpUtil;
  */
 public final class Map<K,V>
   extends FanObj
-  implements Literal
+  implements Literal, java.util.Map<K,V>
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,12 +91,12 @@ public final class Map<K,V>
     return map.size() == 0;
   }
 
-  public final long size()
+  public final long _size()
   {
     return map.size();
   }
 
-  public final V get(K key)
+  public final V get(Object key)
   {
     V val = map.get(key);
     if (val != null) return val;
@@ -129,7 +130,7 @@ public final class Map<K,V>
     throw UnknownKeyErr.make(String.valueOf(key));
   }
 
-  public final boolean containsKey(K key)
+  public final boolean containsKey(Object key)
   {
     return map.containsKey(key);
   }
@@ -265,7 +266,7 @@ public final class Map<K,V>
     return this;
   }
 
-  public final V remove(K key)
+  public final V remove(Object key)
   {
     modify();
     return map.remove(key);
@@ -278,7 +279,7 @@ public final class Map<K,V>
     return dup;
   }
 
-  public final Map<K,V> clear()
+  public final Map<K,V> _clear()
   {
     modify();
     map.clear();
@@ -558,7 +559,7 @@ public final class Map<K,V>
   public final String join(String sep) { return join(sep, null); }
   public final String join(String sep, Func f)
   {
-    int size = (int)size();
+    int size = size();
     if (size == 0) return "";
     StringBuilder s = new StringBuilder(32+size*32);
     Iterator it = pairsIterator();
@@ -578,7 +579,7 @@ public final class Map<K,V>
 
   public final String toCode()
   {
-    int size = (int)size();
+    int size = size();
     StringBuilder s = new StringBuilder(32+size*32);
     s.append(type.signature());
     s.append('[');
@@ -807,6 +808,55 @@ public final class Map<K,V>
     public final String toString() { return key; }
     final String key;
     final int hash;
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// java.util.Map
+//////////////////////////////////////////////////////////////////////////
+
+  public final int size()
+  {
+    return map.size();
+  }
+
+  public boolean containsValue(Object val)
+  {
+    return map.containsValue(val);
+  }
+
+  public V put(K key, V val)
+  {
+    V old = get(key);
+    set(key, val);
+    return old;
+  }
+
+  public void putAll(java.util.Map<? extends K,? extends V> m)
+  {
+    for (Map.Entry<K,V> e : map.entrySet())
+    {
+      set(e.getKey(), e.getValue());
+    }
+  }
+
+  public final void clear()
+  {
+    _clear();
+  }
+
+  public Collection<V> values()
+  {
+    return map.values();
+  }
+
+  public Set<K> keySet()
+  {
+    return map.keySet();
+  }
+
+  public Set<Map.Entry<K,V>> entrySet()
+  {
+    return map.entrySet();
   }
 
 //////////////////////////////////////////////////////////////////////////
