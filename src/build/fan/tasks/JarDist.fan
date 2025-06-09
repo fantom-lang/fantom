@@ -160,6 +160,7 @@ class JarDist : JdkTask
     doReflect(podName, podFile) |path, file|
     {
       file.copyTo(tempDir + path, copyOpts)
+      return true
     }
     doReflectPodManifest(podNames.dup.add("sys")) |path, file|
     {
@@ -167,7 +168,7 @@ class JarDist : JdkTask
     }
   }
 
-  static Void doReflect(Str podName, File podFile, |Uri path, File| onFile)
+  static Void doReflect(Str podName, File podFile, |Uri path, File->Bool| onFile)
   {
     resources := Str[,]
     zip := Zip.open(podFile)
@@ -185,8 +186,8 @@ class JarDist : JdkTask
         if (f.ext == "apidoc") return
         if (f.ext == "fan") return
 
-        resources.add(f.pathStr)
-        onFile("res/${podName}${f.pathStr}".toUri, f)
+        wrote := onFile("res/${podName}${f.pathStr}".toUri, f)
+        if (wrote) resources.add(f.pathStr)
       }
     }
 

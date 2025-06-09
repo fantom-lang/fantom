@@ -185,9 +185,18 @@ internal class JavaCmd : TranspileCmd
       JarDist.doReflect(p.name, p.podFile) |path, file|
       {
         // fcode handled in assemble (without code section for reflect only)
-        if (path.path.first == "reflect") return
+        if (path.path.first == "reflect") return false
+
+        // skip js files
+        if (path.ext == "js") return false
+        if (path.ext == "mjs") return false
+        if (path.ext == "map") return false
+
+        // skip fandoc files
+        if (path.ext == "fandoc") return false
 
         file.copyTo(jvmDir + path)
+        return true
       }
     }
 
