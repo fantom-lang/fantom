@@ -44,6 +44,12 @@ class Assembler : CompilerSupport, FConst
     return fpod
   }
 
+  FPod assemblePodNoCode()
+  {
+    omitCode = true
+    return assemblePod
+  }
+
   private Str:Str assembleMeta()
   {
     meta := pod.meta
@@ -144,6 +150,8 @@ class Assembler : CompilerSupport, FConst
 
   private Buf? assembleCode(MethodDef def , AttrAsm attrs)
   {
+    if (omitCode) return null
+
     block := def.code
     if (block == null) return null
 
@@ -169,6 +177,7 @@ class Assembler : CompilerSupport, FConst
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  FPod? fpod
+  private FPod? fpod
+  private Bool omitCode
 }
 

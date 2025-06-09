@@ -62,6 +62,7 @@ abstract class TranspileCmd : FancCmd
   {
     TranspilePod {
       it.name        = pod.name
+      it.version     = pod.version
       it.podFile     = pod->loadFile
       it.buildScript = buildScriptMap[pod.name] ?: throw Err("No build script found for pod: $pod.name")
     }
@@ -115,6 +116,7 @@ abstract class TranspileCmd : FancCmd
     buildType   := buildPod.types.find |t| { t.fits(BuildPod#) }
     buildScript := (BuildPod)buildType.make
     input       := buildScript.stdFanCompilerInput
+    input.version = pod.version
     if (f != null) input.with(f)
     return input
   }
@@ -162,6 +164,7 @@ class TranspilePod
   new make(|This| f) { f(this) }
 
   const Str name           // pod name
+  const Version version    // version
   const File podFile       // precompiled "foo.pod" file
   const File buildScript   // "build.fan" file
 

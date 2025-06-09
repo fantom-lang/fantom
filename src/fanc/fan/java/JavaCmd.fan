@@ -61,6 +61,9 @@ internal class JavaCmd : TranspileCmd
 
   override Void genPod(PodDef p)
   {
+    // run assemble with no fcode
+    assemble
+
     // special handling for sys
     if (p.name == "sys")
     {
@@ -83,6 +86,20 @@ internal class JavaCmd : TranspileCmd
     JavaUtil.typeFile(outDir, t).withOut |out|
     {
       JavaTypePrinter(out).type(t)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Assemble
+//////////////////////////////////////////////////////////////////////////
+
+  private Void assemble()
+  {
+    fpod := Assembler(compiler).assemblePodNoCode
+    fpod.doWrite |uri|
+    {
+      file := jvmDir + `reflect/${compiler.pod.name}$uri`
+      return file.out
     }
   }
 
@@ -167,6 +184,9 @@ internal class JavaCmd : TranspileCmd
     {
       JarDist.doReflect(p.name, p.podFile) |path, file|
       {
+        // fcode handled in assemble (without code section for reflect only)
+        if (path.path.first == "reflect") return
+
         file.copyTo(jvmDir + path)
       }
     }
