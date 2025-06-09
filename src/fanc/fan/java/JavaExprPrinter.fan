@@ -85,7 +85,7 @@ internal class JavaExprPrinter : JavaPrinter, ExprPrinter
     qnList.w(".make(").doTypeLiteral(type.v).w(", ").w(x.vals.size).w(")")
     x.vals.each |item|
     {
-      w(".add(").expr(item).w(")")
+      w("._add(").expr(item).w(")")
     }
     return this
   }

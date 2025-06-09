@@ -49,7 +49,10 @@ internal class JavaUtil
   ** Fantom slot to Java type name
   static Str fieldName(CField x)
   {
-    checkKeywordOrMethod(x.name)
+    swizzle := javaSwizzles[x.qname]
+    if (swizzle != null) return swizzle
+
+    return checkKeywordOrMethod(x.name)
   }
 
   ** Fantom slot to Java type name
@@ -57,6 +60,10 @@ internal class JavaUtil
   {
     n := x.name
     if (n.startsWith("instance\$init\$")) return "instance\$init"
+
+    swizzle := javaSwizzles[x.qname]
+    if (swizzle != null) return swizzle
+
     return checkKeywordOrMethod(n)
   }
 
@@ -204,6 +211,20 @@ internal class JavaUtil
     "sys::Float.divInt":    "/",
     "sys::Float.modInt":    "%",
 
+    ].toImmutable
+  }
+
+  ** Map of Fantom qnames to Java slot names
+  static once Str:Str javaSwizzles()
+  {
+    // should be in sync with fanx.util.FanUtil
+    [
+      "sys::List.add":    "_add",
+      "sys::List.clear":  "_clear",
+      "sys::List.remove": "_remove",
+      "sys::List.size":   "_size",
+      "sys::Map.clear":   "clear",
+      "sys::Map.size":    "_size",
     ].toImmutable
   }
 

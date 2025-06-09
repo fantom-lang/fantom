@@ -455,6 +455,7 @@ public class FanUtil
   public static final HashMap<String,String> listSwizzles = new HashMap<>();
   static
   {
+    // keep in sync with fanc::JavaUtil
     listSwizzles.put("add",    "_add");
     listSwizzles.put("clear",  "_clear");
     listSwizzles.put("remove", "_remove");
@@ -467,6 +468,7 @@ public class FanUtil
   public static final HashMap<String,String> mapSwizzles = new HashMap<>();
   static
   {
+    // keep in sync with fanc::JavaUtil
     mapSwizzles.put("clear",  "_clear");
     mapSwizzles.put("size",   "_size");
   }
