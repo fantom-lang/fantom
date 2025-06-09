@@ -25,13 +25,16 @@ internal class JavaCmd : TranspileCmd
   @Opt { help = "Create jar for targets under outDir after transpile" }
   Str? jar
 
+  @Opt { help = "Print and confirm preview of compile plan" }
+  Bool preview
+
   override Int usage(OutStream out := Env.cur.out)
   {
     ret := super.usage(out)
     out.printLine("Examples:")
-    out.printLine("  fanc java foo               // generate Java source for 'foo' pod and its depends")
-    out.printLine("  fanc java foo -javac        // generate Java and run javac")
-    out.printLine("  fanc java foo -jar foo.jar  // generate Java, run javac, build jar file")
+    out.printLine("  fanc java foo              // generate Java source for 'foo' pod and its depends")
+    out.printLine("  fanc java -javac foo       // generate Java and run javac")
+    out.printLine("  fanc java -jar foo.jar foo // generate Java, run javac, build jar file")
     return ret
   }
 
@@ -39,10 +42,11 @@ internal class JavaCmd : TranspileCmd
 // Run
 //////////////////////////////////////////////////////////////////////////
 
-  override Int run()
+  override Int transpile()
   {
-    super.run
-    if (javac || jar != null) compileJava
+    if (preview) if (!showPreview) return 1
+    super.transpile
+    if (runJavac) compileJava
     if (jar != null) compileJar
     return 0
   }
@@ -53,6 +57,32 @@ internal class JavaCmd : TranspileCmd
     input.wrapperPerParameterizedCollectionType = true
     input.coerceParameterizedCollectionTypes = true
     return input
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Preview
+//////////////////////////////////////////////////////////////////////////
+
+  private Bool runJavac()
+  {
+    javac || jar != null
+  }
+
+  private Bool showPreview()
+  {
+    if (!preview) return true
+
+    OutStream out := Env.cur.out
+    out.printLine
+    out.printLine("=== Java Transpile ===")
+    out.printLine("pods:")
+    pods.each |p| { out.printLine("  $p.name [$p.version]") }
+    out.printLine("outDir: $outDir.osPath")
+    out.printLine("javac:  $runJavac")
+    out.printLine("jar:    " + jarFile?.osPath)
+    out.printLine
+
+    return promptConfirm("Continue?")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,11 +181,16 @@ internal class JavaCmd : TranspileCmd
     }
   }
 
-  Void compileJar()
+  private File? jarFile()
+  {
+    jar == null ? null : outDir + `$jar`
+  }
+
+  private Void compileJar()
   {
     prepJar
 
-    jarFile := outDir + `$jar`
+    jarFile := this.jarFile
     info("\n## Jar [$jarFile.osPath]")
 
     // javac

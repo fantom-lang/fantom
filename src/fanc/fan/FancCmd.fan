@@ -84,5 +84,12 @@ abstract class FancCmd : AbstractMain
   ** Print error message and return 1
   Int err(Str msg) { printLine("ERROR: $msg"); return 1 }
 
+  ** Prompt for a confirm yes/no
+  Bool promptConfirm(Str msg)
+  {
+    res := Env.cur.prompt("$msg (y/n)> ")
+    if (res.lower == "y") return true
+    return false
+  }
 }
 

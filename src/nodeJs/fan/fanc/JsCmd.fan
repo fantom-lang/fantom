@@ -37,9 +37,9 @@ internal class JsCmd : TranspileCmd
 
   private ModuleSystem? ms
 
-  override Int run()
+  override Int transpile()
   {
-    super.run
+    super.transpile
     writePackageJson
     writeFanJs
 
@@ -109,3 +109,4 @@ internal class JsCmd : TranspileCmd
     ).close
   }
 }
+

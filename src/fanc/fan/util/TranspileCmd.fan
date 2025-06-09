@@ -27,11 +27,22 @@ abstract class TranspileCmd : FancCmd
 //////////////////////////////////////////////////////////////////////////
 
   ** Call compilePod on every target
-  override Int run()
+  override final Int run()
+  {
+    init
+    return transpile
+  }
+
+  ** Standard initializaton
+  virtual Void init()
   {
     // flatten depends
     flattenPods
+  }
 
+  ** Delete outDir and run compilePod on all pods
+  virtual Int transpile()
+  {
     // always start fresh
     outDir.delete
 
