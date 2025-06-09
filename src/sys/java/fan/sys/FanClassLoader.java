@@ -19,7 +19,7 @@ import fanx.util.*;
  * FanClassLoader is used to emit fcode to Java bytecode.  It manages
  * the "fan." namespace to map to dynamically loaded Fantom classes.
  */
-public class FanClassLoader
+class FanClassLoader
   extends URLClassLoader
 {
 
@@ -319,3 +319,4 @@ public class FanClassLoader
   private CodeSource codeSource;
   private HashMap pendingClasses = new HashMap(); // name -> Box
 }
+

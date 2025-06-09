@@ -180,7 +180,7 @@ public class ObjDecoder
     if (m == null)
     {
       // fallback to valueOf for java.lang.Enums
-      if (t instanceof JavaType) m = t.method("valueOf", false);
+      if (t.isJava()) m = t.method("valueOf", false);
       if (m == null)
         throw err("Missing method: " + t.qname() + ".fromStr", line);
     }

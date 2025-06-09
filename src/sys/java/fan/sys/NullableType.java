@@ -10,7 +10,7 @@ package fan.sys;
 /**
  * NullableType wraps a type as nullable with trailing "?".
  */
-public class NullableType
+class NullableType
   extends Type
 {
 

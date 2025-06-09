@@ -16,7 +16,7 @@ import fanx.util.*;
  * JavaType wraps a Java class as a Fantom type for FFI reflection.
  * Use Env methods to load JavaTypes.
  */
-public class JavaType
+class JavaType
   extends Type
 {
 
