@@ -213,6 +213,7 @@ public abstract class Func
   public static abstract class Indirect5 extends Indirect
   {
     protected Indirect5(FuncType type) { super(type); }
+    protected Indirect5() { super(type5); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -228,6 +229,7 @@ public abstract class Func
   public static abstract class Indirect6 extends Indirect
   {
     protected Indirect6(FuncType type) { super(type); }
+    protected Indirect6() { super(type6); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -243,6 +245,7 @@ public abstract class Func
   public static abstract class Indirect7 extends Indirect
   {
     protected Indirect7(FuncType type) { super(type); }
+    protected Indirect7() { super(type7); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -258,6 +261,7 @@ public abstract class Func
   public static abstract class Indirect8 extends Indirect
   {
     protected Indirect8(FuncType type) { super(type); }
+    protected Indirect8() { super(type8); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }
@@ -285,70 +289,6 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { throw tooFewArgs(8); }
   }
 
-//////////////////////////////////////////////////////////////////////////
-// Support for SAM function interfaces by Java transpiler
-//////////////////////////////////////////////////////////////////////////
-
-  public static abstract class Sam0 extends Indirect1
-  {
-    private static final FuncType myFuncType = samFuncType(0);
-    public Sam0() { super(myFuncType); }
-  }
-
-  public static abstract class Sam1 extends Indirect1
-  {
-    private static final FuncType myFuncType = samFuncType(1);
-    public Sam1() { super(myFuncType); }
-  }
-
-  public static abstract class Sam2 extends Indirect2
-  {
-    private static final FuncType myFuncType =  samFuncType(2);
-    public Sam2() { super(myFuncType); }
-  }
-
-  public static abstract class Sam3 extends Indirect3
-  {
-    private static final FuncType myFuncType =  samFuncType(3);
-    public Sam3() { super(myFuncType); }
-  }
-
-  public static abstract class Sam4 extends Indirect4
-  {
-    private static final FuncType myFuncType =  samFuncType(4);
-    public Sam4() { super(myFuncType); }
-  }
-
-  public static abstract class Sam5 extends Indirect4
-  {
-    private static final FuncType myFuncType =  samFuncType(5);
-    public Sam5() { super(myFuncType); }
-  }
-
-  public static abstract class Sam6 extends Indirect6
-  {
-    private static final FuncType myFuncType =  samFuncType(6);
-    public Sam6() { super(myFuncType); }
-  }
-
-  public static abstract class Sam7 extends Indirect7
-  {
-    private static final FuncType myFuncType =  samFuncType(6);
-    public Sam7() { super(myFuncType); }
-  }
-
-  public static abstract class Sam8 extends Indirect8
-  {
-    private static final FuncType myFuncType =  samFuncType(8);
-    public Sam8() { super(myFuncType); }
-  }
-
-  static FuncType samFuncType(int size)
-  {
-    Type[] params = new Type[size];
-    for (int i=0; i<size; ++i) params[i] = Sys.ObjType.toNullable();
-    return new FuncType(params, Sys.ObjType.toNullable());
-  }
 
 //////////////////////////////////////////////////////////////////////////
 // Retype
@@ -487,11 +427,22 @@ public abstract class Func
 //////////////////////////////////////////////////////////////////////////
 
   static final Object[] noArgs = new Object[0];
-  static final FuncType type0 = new FuncType(new Type[] {}, Sys.ObjType);
-  static final FuncType type1 = new FuncType(new Type[] { Sys.ObjType }, Sys.ObjType);
-  static final FuncType type2 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType }, Sys.ObjType);
-  static final FuncType type3 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
-  static final FuncType type4 = new FuncType(new Type[] { Sys.ObjType, Sys.ObjType, Sys.ObjType, Sys.ObjType }, Sys.ObjType);
+  static final FuncType type0 = typeN(0);
+  static final FuncType type1 = typeN(1);
+  static final FuncType type2 = typeN(2);
+  static final FuncType type3 = typeN(3);
+  static final FuncType type4 = typeN(4);
+  static final FuncType type5 = typeN(5);
+  static final FuncType type6 = typeN(6);
+  static final FuncType type7 = typeN(7);
+  static final FuncType type8 = typeN(8);
 
+  private static FuncType typeN(int size)
+  {
+    Type x = Sys.ObjType.toNullable();
+    Type[] params = new Type[size];
+    for (int i=0; i<size; ++i) params[i] = x;
+    return new FuncType(params, x);
+  }
 }
 

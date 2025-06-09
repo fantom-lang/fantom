@@ -379,7 +379,7 @@ internal class JavaMethodPrinter : JavaPrinter
       callNames.add(name)
     }
 
-    // body creates Func.SamX:
+    // body creates Func.IndirectX:
     //   return foo(p, q, new Func.Sam2() {
     //     public Object call(Object a, Object b) { c.call((P)p, (Q)q) }
     //   });
@@ -395,7 +395,7 @@ internal class JavaMethodPrinter : JavaPrinter
       paramSig(p)
     }
     if (needComma) w(", ")
-    w("new Func.Sam").w(funcParams.size).w("() {").nl
+    w("new Func.Indirect").w(funcParams.size).w("() {").nl
       indent
       w("public final Object call(")
       callNames.each |n, i| { if (i > 0) w(", "); w("Object ").w(n) }
