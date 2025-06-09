@@ -46,7 +46,7 @@ public final class Facets
     {
       FAttrs.FFacet ff = ffacets[i];
       Type t = pod.type(ff.type);
-      if (!t.isJava()) map.put(t, ff.val);
+      if (!t.x.isJava) map.put(t, ff.val);
     }
     return new Facets(map);
   }
@@ -137,3 +137,4 @@ public final class Facets
   private List list;     // Facet[]
 
 }
+

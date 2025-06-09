@@ -180,7 +180,7 @@ public class ObjDecoder
     if (m == null)
     {
       // fallback to valueOf for java.lang.Enums
-      if (t.isJava()) m = t.method("valueOf", false);
+      if (t.x.isJava) m = t.method("valueOf", false);
       if (m == null)
         throw err("Missing method: " + t.qname() + ".fromStr", line);
     }
@@ -406,7 +406,7 @@ public class ObjDecoder
       }
 
       // if the type was a FFI JavaType, this isn't a collection
-      if (peekType != null && peekType.isJava())
+      if (peekType != null && peekType.x.isJava)
         return readObj(curField, peekType, false);
     }
 

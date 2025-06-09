@@ -342,12 +342,6 @@ public abstract class Type
   public void finish() {}
 
   /**
-   * Return if this is a JavaType which represents a Java
-   * class imported into the Fantom type system via the Java FFI.
-   */
-  public final boolean isJava() { return this instanceof JavaType; }
-
-  /**
    * Return if the Fantom Type is represented as a Java class
    * such as sys::Int as java.lang.Long.
    */
@@ -365,6 +359,35 @@ public abstract class Type
     throws Exception
   {
     throw UnsupportedErr.make();
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Framework
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Fantom internal use only APIs
+   */
+  public final InternalOnly x = new InternalOnly(this);
+
+  /**
+   * Fantom internal use only APIs
+   */
+  public static class InternalOnly
+  {
+    InternalOnly(Type t)
+    {
+      this.t = t;
+      this.isJava = t instanceof JavaType;
+    }
+
+    /**
+     * Return if this is a JavaType which represents a Java
+     * class imported into the Fantom type system via the Java FFI.
+     */
+    public final boolean isJava;
+
+    final Type t;
   }
 
 //////////////////////////////////////////////////////////////////////////

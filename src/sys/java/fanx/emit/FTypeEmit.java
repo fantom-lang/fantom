@@ -179,7 +179,7 @@ public abstract class FTypeEmit
     }
     else if (isCtor && !isStatic)
     {
-      if (parent.base().isJava())
+      if (parent.base().x.isJava)
         me = new FMethodEmit(this, m).emitCtorWithJavaSuper();
       else
         me = new FMethodEmit(this, m).emitCtor();
@@ -205,7 +205,7 @@ public abstract class FTypeEmit
   {
     // if base class is normal Java class imported via FFI, then
     // the Fantom constructors are the Java constructors
-    if (parent.base().isJava()) return;
+    if (parent.base().x.isJava) return;
 
     hasInstanceInit = true;
     MethodEmit me = emitMethod("<init>", "()V", EmitConst.PUBLIC);
@@ -490,3 +490,4 @@ public abstract class FTypeEmit
   int lineNum;                   // line number of current type (or zero)
 
 }
+
