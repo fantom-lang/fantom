@@ -35,7 +35,7 @@ import fanx.util.*;
  *     representations to the Slots for dynamic dispatch.  We delay this
  *     until needed by Method or Field for a reflection invocation
  */
-public class ClassType
+class ClassType
   extends Type
 {
 
@@ -255,6 +255,8 @@ public class ClassType
     }
     return doc;
   }
+
+  public void docSet(String d) { this.doc = d; }
 
 //////////////////////////////////////////////////////////////////////////
 // Conversion

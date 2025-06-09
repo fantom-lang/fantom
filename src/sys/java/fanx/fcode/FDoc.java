@@ -19,7 +19,7 @@ import fan.sys.*;
 public class FDoc
 {
 
-  public FDoc(InputStream in, ClassType type)
+  public FDoc(InputStream in, Type type)
     throws IOException
   {
     this.in   = new BufferedReader(new InputStreamReader(in, "UTF-8"));
@@ -32,7 +32,7 @@ public class FDoc
     consume();
     // == <type>
     if (!cur.startsWith("== ")) throw new IOException("Unexpected type line: " + cur);
-    type.doc = readAttrsToDoc();
+    type.docSet(readAttrsToDoc());
 
     // -- <slot> sections
     while (cur != null)
@@ -76,6 +76,7 @@ public class FDoc
   }
 
   private BufferedReader in;  // stream of lines to read
-  private ClassType type;     // type we are storing result to
+  private Type type;          // type we are storing result to
   private String cur;         // current line
 }
+

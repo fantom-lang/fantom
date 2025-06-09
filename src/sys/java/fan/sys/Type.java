@@ -312,6 +312,8 @@ public abstract class Type
 
   public abstract String doc();
 
+  public void docSet(String d) {}
+
 //////////////////////////////////////////////////////////////////////////
 // Conversion
 //////////////////////////////////////////////////////////////////////////
@@ -329,8 +331,14 @@ public abstract class Type
 // Reflection
 //////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Fantom use only
+   */
   protected Type reflect() { return this; }
 
+  /**
+   * Fantom use only
+   */
   public void finish() {}
 
   /**
@@ -349,6 +357,15 @@ public abstract class Type
    * Get the Java class which represents this type.
    */
   public abstract Class toClass();
+
+  /**
+   * Fantom use only for JStub
+   */
+  public FTypeEmit[] emitToClassFiles()
+    throws Exception
+  {
+    throw UnsupportedErr.make();
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
