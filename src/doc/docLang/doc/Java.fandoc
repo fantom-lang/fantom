@@ -8,4 +8,39 @@
 
 Overview [#overview]
 ********************
+Fantom pods can be used as a Java library using two different mechanism:
+  - JarDist: build task to build Fantom pods into a jar
+  - Fanc: command line to transpile Fantom pods into Java source
+
+The primary difference is that JarDict packages up the Fantom fcode
+and emits Java classfiles at runtime.  This makes is smaller and is
+guaranteed to work with all Fantom code. Using fanc to transpile Fantom
+into Java provides a Java codebase for Fantom that is easier to integrate
+into tool chains and IDE hints.  However fanc has restrictions on
+the Fantom code being transpiled discussed below.
+
+Java Transpile [#transpil]
+**************************
+Fantom transpiles to Java using the following conventions
+  - Any type/slot name with "$" is synthetic and should not be used
+  - Const fields are compiled into a Java getter method
+  - Mutable fields are compiled into a Java getter and setter method
+  - Contructors are compiled into static factory methods (never use
+    the Java constructors directly)
+  - Mixins are compiled to Java interfaces and will make use
+    of Java default methods (note Java interfaces do not support
+    anything than public scope which will expose unwanted details)
+
+Java Transpile Restrictions [#transpileRestrictions]
+****************************************************
+The following Fantom language features cannot be used when transpiling
+to Java code:
+  - Null safe and elvis expressions can only use effectively final
+    variables from their scope (since they must be compiled into Java
+    closures)
+  - Switch statements cannot use the same variable name in multiple cases
+  - Use of ++ and -- is restricted to simple variables and field (it cannot
+    be used with list indexing)
+  - Chained assignment expressions such as 'a = b = c' may not compile correctly
+  - Cannot override equals in a mixin
 
