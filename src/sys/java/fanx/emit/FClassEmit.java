@@ -41,8 +41,8 @@ public class FClassEmit
     FTypeRef ref = pod.typeRef(type.base);
     if (ref.isGenericInstance())
     {
-      this.funcType = (FuncType)Type.find(ref.signature, true);
-      int paramCount = funcType.params.length;
+      this.funcType = Type.find(ref.signature, true);
+      int paramCount = funcType.x.funcArity();
       if (paramCount  > Func.MaxIndirectParams)
         return "fan/sys/Func$IndirectX";
       else
@@ -62,3 +62,4 @@ public class FClassEmit
 //////////////////////////////////////////////////////////////////////////
 
 }
+

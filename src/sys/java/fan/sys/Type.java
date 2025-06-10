@@ -44,10 +44,16 @@ public abstract class Type
   public static Type find(String sig) { return TypeParser.load(sig, true, null); }
   public static Type find(String sig, boolean checked) { return TypeParser.load(sig, checked, null); }
 
-  /** Constructr map type for given key and value generic parameters */
+  /** Construct parameterized map type for given key and value */
   public static Type makeMap(Type k, Type v)
   {
     return new MapType(k, v);
+  }
+
+  /** Construct parameterized func type */
+  public static Type makeFunc(Type[] params, Type ret)
+  {
+    return new FuncType(params, ret);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -384,18 +390,22 @@ public abstract class Type
     InternalOnly(Type t) { this.t = t;  }
     public boolean isList() { return t.isList(); }
     public boolean isMap()  { return t.isMap(); }
+    public boolean isFunc() { return t.isFunc(); }
     public boolean isJava() { return t.isJava(); }
     public Type k() { return t.k(); }
     public Type v() { return t.v(); }
+    public int funcArity() { return t.funcArity(); }
     public Map makeMap(HashMap map) { return t.makeMap(map); }
     final Type t;
   }
 
   boolean isList() { return false; }
   boolean isMap()  { return false; }
+  boolean isFunc() { return false; }
   boolean isJava() { return false; }
   Type k() { throw UnsupportedErr.make(); }
   Type v() { throw UnsupportedErr.make(); }
+  int funcArity() { throw UnsupportedErr.make(); }
   Map makeMap(HashMap map) { throw UnsupportedErr.make(); }
 
 //////////////////////////////////////////////////////////////////////////

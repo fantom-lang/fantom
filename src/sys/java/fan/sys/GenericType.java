@@ -20,7 +20,7 @@ import fanx.emit.*;
  * as A-H, V, K).  Instances of GenericType are used to represent generic
  * instances (for example an instance of ListType is used to represent Str[]).
  */
-public abstract class GenericType
+abstract class GenericType
   extends Type
 {
 

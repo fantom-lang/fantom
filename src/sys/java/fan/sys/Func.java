@@ -119,6 +119,7 @@ public abstract class Func
     List params;
   }
 
+  /** Helper to create function with 0 parameters */
   public static abstract class Indirect0 extends Indirect
   {
     protected Indirect0(FuncType type) { super(type); }
@@ -135,6 +136,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(); }
   }
 
+  /** Helper to create function with 1 parameter */
   public static abstract class Indirect1 extends Indirect
   {
     protected Indirect1(FuncType type) { super(type); }
@@ -162,6 +164,7 @@ public abstract class Func
     Object inCtor;
   }
 
+  /** Helper to create function with 2 parameters */
   public static abstract class Indirect2 extends Indirect
   {
     protected Indirect2(FuncType type) { super(type); }
@@ -178,6 +181,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b); }
   }
 
+  /** Helper to create function with 3 parameters */
   public static abstract class Indirect3 extends Indirect
   {
     protected Indirect3(FuncType type) { super(type); }
@@ -194,6 +198,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b, c); }
   }
 
+  /** Helper to create function with 4 parameters */
   public static abstract class Indirect4 extends Indirect
   {
     protected Indirect4(FuncType type) { super(type); }
@@ -210,6 +215,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b, c, d); }
   }
 
+  /** Helper to create function with 5 parameters */
   public static abstract class Indirect5 extends Indirect
   {
     protected Indirect5(FuncType type) { super(type); }
@@ -226,6 +232,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b, c, d, e); }
   }
 
+  /** Helper to create function with 6 parameters */
   public static abstract class Indirect6 extends Indirect
   {
     protected Indirect6(FuncType type) { super(type); }
@@ -242,6 +249,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b, c, d, e, f); }
   }
 
+  /** Helper to create function with 7 parameters */
   public static abstract class Indirect7 extends Indirect
   {
     protected Indirect7(FuncType type) { super(type); }
@@ -258,6 +266,7 @@ public abstract class Func
     public final Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h) { return call(a, b, c, d, e, f, g); }
   }
 
+  /** Helper to create function with 8 parameters */
   public static abstract class Indirect8 extends Indirect
   {
     protected Indirect8(FuncType type) { super(type); }
@@ -274,6 +283,7 @@ public abstract class Func
     public abstract Object call(Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h);
   }
 
+  /** Helper to create function with 8+ parameters */
   public static abstract class IndirectX extends Indirect
   {
     protected IndirectX(FuncType type) { super(type); }

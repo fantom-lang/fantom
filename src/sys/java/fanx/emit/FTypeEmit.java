@@ -260,7 +260,7 @@ public abstract class FTypeEmit
     if (!parent.isMixin())
     {
       Type t = parent;
-      if (parent.base() instanceof FuncType) t = parent.base();
+      if (parent.base().x.isFunc()) t = parent.base();
 
       code.op2(LDC_W, strConst(t.signature()));
       code.op2(INVOKESTATIC, method("fan/sys/Type.find(Ljava/lang/String;)Lfan/sys/Type;"));
@@ -484,7 +484,7 @@ public abstract class FTypeEmit
   FieldEmit peerField;           // public static final TypePeer peer
   boolean hasInstanceInit;       // true if we already emitted <init>
   boolean hasStaticInit;         // true if we already emitted <clinit>
-  FuncType funcType;             // if type is a function
+  Type funcType;                 // if type is a function
   HashMap typeLiteralFields;     // signature Strings we need to turn into cached fields
   boolean isNative = false;      // do we have any native methods requiring a peer
   int lineNum;                   // line number of current type (or zero)

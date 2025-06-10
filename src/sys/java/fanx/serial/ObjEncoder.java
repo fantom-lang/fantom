@@ -168,11 +168,9 @@ public class ObjEncoder
     return it.first;
   }
 
-  static final FuncType eachIteratorType = new FuncType(new Type[] { Sys.ObjType }, Sys.VoidType);
-
   class EachIterator extends Func.Indirect1
   {
-    EachIterator (boolean first) { super(eachIteratorType); this.first = first; }
+    EachIterator (boolean first) { this.first = first; }
     public Object call(Object obj)
     {
       if (first) { w('\n').wIndent().w('{').w('\n'); level++; first = false; }
