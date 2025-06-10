@@ -317,7 +317,7 @@ internal class JavaTypePrinter : JavaPrinter
   private Void syntheticClass(TypeDef x, Str name)
   {
     nl
-    w("/** Synthetic closure support */").nl
+    w("/** NoDoc - synthetic closure support */").nl
     w("static final class ").w(name).extends(x).w(" {").nl
     indent
     if (x.isClosure) syntheticClosureSupport(x, name)
@@ -332,7 +332,7 @@ internal class JavaTypePrinter : JavaPrinter
     javaCtor(x, name) { it.w("super(typeof\$)").eos }
 
     // generate typeof and tyepof$
-    nl.w("private static final fan.sys.FuncType typeof\$ = (fan.sys.FuncType)")
+    nl.w("private static final ").qnType.w(" typeof\$ = ")
       .qnType.w(".find(").str(x.base.signature).w(")").eos
   }
 }
