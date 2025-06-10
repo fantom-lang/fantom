@@ -18,6 +18,7 @@
 - Compiler: rename CField.fieldType to type
 - Compiler: rename MethodDef.ret to returns
 - Compiler: rename FuncType.ret to returns
+- Default default WebJsMode to es
 - Add File.withIn and File.withOut
 - Add StrBuf.joinNotNull
 - Add Win.devicePixelRatio

@@ -34,5 +34,6 @@ using concurrent
   static Void setCur(WebJsMode cur) { curRef.val = cur }
 
   ** Global variable
-  private static const AtomicRef curRef := AtomicRef(WebJsMode.js)
+  private static const AtomicRef curRef := AtomicRef(WebJsMode.es)
 }
+

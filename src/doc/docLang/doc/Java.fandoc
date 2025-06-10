@@ -25,7 +25,7 @@ Fantom transpiles to Java using the following conventions
   - Any type/slot name with "$" is synthetic and should not be used
   - Const fields are compiled into a Java getter method
   - Mutable fields are compiled into a Java getter and setter method
-  - Contructors are compiled into static factory methods (never use
+  - Constructors are compiled into static factory methods (never use
     the Java constructors directly)
   - Mixins are compiled to Java interfaces and will make use
     of Java default methods (note Java interfaces do not support
