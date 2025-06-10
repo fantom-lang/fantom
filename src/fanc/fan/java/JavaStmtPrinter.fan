@@ -81,11 +81,24 @@ internal class JavaStmtPrinter : JavaPrinter, StmtPrinter
       if (first != null && first.isCatchVar)
         c.block.stmts.removeAt(0)
 
-      if (c.errVariable == null)
-        w("catch (Throwable ignore)").sp
+      var := c.errVariable
+      if (var == null)
+      {
+        w("catch (Throwable ignore) {").nl
+      }
+      else if (c.errType.qname == "sys::Err")
+      {
+        w("catch (Throwable").sp.varName(var).w("\$)").sp.w("{").nl
+        w("  ").typeSig(c.errType).sp.varName(var).w(" = fan.sys.Err.make(").w(var).w("\$)").eos
+      }
       else
-        w("catch (").typeSig(c.errType).w(" ").varName(c.errVariable).w(")").sp
-      block(c.block).nl
+      {
+        w("catch (").typeSig(c.errType).sp.varName(var).w(") {").nl
+      }
+      indent
+      c.block.stmts.each |s| { stmt(s) }
+      unindent
+      w("}").nl
     }
     if (x.finallyBlock != null)
     {
