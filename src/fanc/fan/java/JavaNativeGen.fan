@@ -349,6 +349,7 @@ internal class JavaNativeGen
   static Void printJavaDoc(StrBuf s, DefNode n, Int indent)
   {
     indentStr := Str.spaces(indent)
+    if (n.isNoDoc) return s.add(indentStr).add("/** NoDoc */\n")
     s.add(indentStr).add("/**\n")
     doc := n.docDef
     empty := doc == null || doc.lines.isEmpty || doc.lines.first.trim.isEmpty
@@ -357,13 +358,20 @@ internal class JavaNativeGen
     {
       doc.lines.each |line|
       {
-        line = line.replace("/*", "/ *")
-                   .replace("*/", "* /")
-                   .replace("\\uxxxx", "\\u1234")
-        s.add(indentStr).add(" * ").add(line).add("\n")
+        s.add(indentStr).add(" * ").add(escapeJavaDoc(line)).add("\n")
       }
     }
     s.add(indentStr).add(" */\n")
+  }
+
+  static Str escapeJavaDoc(Str line)
+  {
+    line.replace("/*", "/ *")
+        .replace("*/", "* /")
+        .replace("\\uxxxx", "\\u1234")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
   }
 
 //////////////////////////////////////////////////////////////////////////

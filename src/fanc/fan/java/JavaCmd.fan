@@ -25,6 +25,9 @@ internal class JavaCmd : TranspileCmd
   @Opt { help = "Create jar for targets under outDir after transpile" }
   Str? jar
 
+  @Opt { help = "Generate javadoc under outDir after transpile" }
+  Bool javadoc
+
   @Opt { help = "Print and confirm preview of compile plan" }
   Bool preview
 
@@ -48,6 +51,7 @@ internal class JavaCmd : TranspileCmd
     super.transpile
     if (runJavac) compileJava
     if (jar != null) compileJar
+    if (javadoc) compileJavadoc
     return 0
   }
 
@@ -59,14 +63,11 @@ internal class JavaCmd : TranspileCmd
     return input
   }
 
+  private Bool runJavac() { javac || jar != null }
+
 //////////////////////////////////////////////////////////////////////////
 // Preview
 //////////////////////////////////////////////////////////////////////////
-
-  private Bool runJavac()
-  {
-    javac || jar != null
-  }
 
   private Bool showPreview()
   {
@@ -77,9 +78,10 @@ internal class JavaCmd : TranspileCmd
     out.printLine("=== Java Transpile ===")
     out.printLine("pods:")
     pods.each |p| { out.printLine("  $p.name [$p.version]") }
-    out.printLine("outDir: $outDir.osPath")
-    out.printLine("javac:  $runJavac")
-    out.printLine("jar:    " + jarFile?.osPath)
+    out.printLine("outDir:  $outDir.osPath")
+    out.printLine("jar:     " + jarFile?.osPath)
+    out.printLine("javadoc: " + javadocDir?.osPath)
+    out.printLine("javac:   $runJavac")
     out.printLine
 
     return promptConfirm("Continue?")
@@ -137,12 +139,7 @@ internal class JavaCmd : TranspileCmd
 // Java Tools
 //////////////////////////////////////////////////////////////////////////
 
-  once File jvmDir()
-  {
-    outDir.plus(`out/`)
-  }
-
-  Void compileJava()
+  private Void compileJava()
   {
     info("\n## Javac [$jvmDir.osPath]")
 
@@ -181,10 +178,9 @@ internal class JavaCmd : TranspileCmd
     }
   }
 
-  private File? jarFile()
-  {
-    jar == null ? null : outDir + `$jar`
-  }
+//////////////////////////////////////////////////////////////////////////
+// Jar
+//////////////////////////////////////////////////////////////////////////
 
   private Void compileJar()
   {
@@ -206,7 +202,7 @@ internal class JavaCmd : TranspileCmd
     echo("Jar size: " + jarFile.size.toLocale("B"))
   }
 
-  Void prepJar()
+  private Void prepJar()
   {
     // etc files required
     JarDist.doEtcFiles(Env.cur.homeDir) |path, file|
@@ -243,7 +239,49 @@ internal class JavaCmd : TranspileCmd
     }
   }
 
-  JdkTask jdk()
+//////////////////////////////////////////////////////////////////////////
+// Javadoc
+//////////////////////////////////////////////////////////////////////////
+
+  private Void compileJavadoc()
+  {
+    dir := outDir + `doc/`
+    info("\n## Javadoc [$dir.osPath]")
+
+    // javadoc
+    cmd := [jdk.javadocExe]
+
+    cmd.add("-sourcepath").add(outDir.osPath)
+    cmd.add("-d").add(javadocDir.osPath)
+    cmd.add("-Xdoclint:-missing")
+    cmd.add("-quiet")
+    pods.each |p| { cmd.add("fan.$p.name") }
+
+    // execute
+    r := Process(cmd, Env.cur.workDir).run.join
+    if (r != 0) throw Err("Javadoc failed")
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Utils
+//////////////////////////////////////////////////////////////////////////
+
+  private once File jvmDir()
+  {
+    outDir.plus(`out/`)
+  }
+
+  private File? javadocDir()
+  {
+    !javadoc ? null : outDir + `doc/`
+  }
+
+  private File? jarFile()
+  {
+    jar == null ? null : outDir + `$jar`
+  }
+
+  private JdkTask jdk()
   {
     JdkTask(DummyBuildScript())
   }
