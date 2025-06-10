@@ -33,7 +33,7 @@ public class IpInterfacePeer
   {
     try
     {
-      List acc = new List(type);
+      List acc = List.make(type);
       Enumeration e = NetworkInterface.getNetworkInterfaces();
       while (e.hasMoreElements())
         acc.add(make((NetworkInterface)e.nextElement()));
@@ -125,7 +125,7 @@ public class IpInterfacePeer
 
   public List addrs(IpInterface fan)
   {
-    List acc = new List(IpAddrPeer.type);
+    List acc = List.make(IpAddrPeer.type);
     Enumeration e = java.getInetAddresses();
     while (e.hasMoreElements())
       acc.add(IpAddrPeer.make((InetAddress)e.nextElement()));
@@ -134,7 +134,7 @@ public class IpInterfacePeer
 
   public List broadcastAddrs(IpInterface fan)
   {
-    List acc = new List(IpAddrPeer.type);
+    List acc = List.make(IpAddrPeer.type);
     Iterator iter = java.getInterfaceAddresses().iterator();
     while (iter.hasNext())
     {
@@ -240,3 +240,4 @@ public class IpInterfacePeer
   public NetworkInterface java;
 
 }
+

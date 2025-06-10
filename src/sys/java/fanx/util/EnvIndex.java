@@ -87,7 +87,7 @@ public class EnvIndex
       }
     }
 
-    List keys = new List(Sys.StrType);
+    List keys = List.make(Sys.StrType);
 
     // long t2 = System.currentTimeMillis();
     // System.out.println("Env.index load " + (t2-t1) + "ms");
@@ -105,7 +105,7 @@ public class EnvIndex
       String key  = (String)entry.getKey();
       List val    = (List)entry.getValue();
       addListVal(index, key, val);
-      addListVal(keyToPodNames, key, new List(Sys.StrType, 1)._add(podName));
+      addListVal(keyToPodNames, key, List.make(Sys.StrType, 1)._add(podName));
     }
   }
 

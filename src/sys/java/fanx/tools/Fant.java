@@ -173,7 +173,7 @@ public class Fant
     try
     {
       test = (Test)type.make();
-      args = new List(Sys.ObjType, new Object[] {test});
+      args = List.make(Sys.ObjType, new Object[] {test});
     }
     catch (Throwable e)
     {

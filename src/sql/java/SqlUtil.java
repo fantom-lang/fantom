@@ -472,7 +472,7 @@ public class SqlUtil
   static final ArrayToFanList toFanStringList = (obj) ->
   {
     String[] arr = (String[]) obj;
-    return new List(
+    return List.make(
       hasNull(arr) ?
         Sys.StrType.toNullable() :
         Sys.StrType,
@@ -494,7 +494,7 @@ public class SqlUtil
         dst[i] = src[i].longValue();
     }
 
-    return new List(
+    return List.make(
       hasNull ?
         Sys.IntType.toNullable() :
         Sys.IntType,
@@ -504,7 +504,7 @@ public class SqlUtil
   static final ArrayToFanList toFanLongList = (obj) ->
   {
     Long[] arr = (Long[]) obj;
-    return new List(
+    return List.make(
       hasNull(arr) ?
         Sys.IntType.toNullable() :
         Sys.IntType,
@@ -514,7 +514,7 @@ public class SqlUtil
   static final ArrayToFanList toFanBooleanList = (obj) ->
   {
     Boolean[] arr = (Boolean[]) obj;
-    return new List(
+    return List.make(
       hasNull(arr) ?
         Sys.BoolType.toNullable() :
         Sys.BoolType,
@@ -536,7 +536,7 @@ public class SqlUtil
         dst[i] = src[i].doubleValue();
     }
 
-    return new List(
+    return List.make(
       hasNull ?
         Sys.FloatType.toNullable() :
         Sys.FloatType,
@@ -546,7 +546,7 @@ public class SqlUtil
   static final ArrayToFanList toFanDoubleList = (obj) ->
   {
     Double[] arr = (Double[]) obj;
-    return new List(
+    return List.make(
       hasNull(arr) ?
         Sys.FloatType.toNullable() :
         Sys.FloatType,
@@ -568,7 +568,7 @@ public class SqlUtil
         dst[i] = DateTime.fromJava(src[i].getTime());
     }
 
-    return new List(
+    return List.make(
       hasNull ?
         Sys.DateTimeType.toNullable() :
         Sys.DateTimeType,

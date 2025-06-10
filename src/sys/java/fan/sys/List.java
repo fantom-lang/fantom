@@ -32,28 +32,86 @@ public final class List<V>
 // Constructors
 //////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Construct empty list of given type
+   */
+  public static List make(Type of)
+  {
+    return new List(of);
+  }
+
+  /**
+   * Construct empty list of given type with given capacity
+   */
   public static List make(Type of, long capacity)
   {
     return new List(of, (int)capacity);
   }
 
+  /**
+   * Construct empty list of Obj? with given capacity
+   */
   public static List makeObj(long capacity)
   {
     return new List(Sys.ObjType.toNullable(), (int)capacity);
   }
 
+  /**
+   * Construct list of Obj? for an array. No copy is made
+   * of the backing array, it should be no used again.  If the
+   * array is null then return null.
+   */
   public static List makeObj(Object[] values)
   {
+    if (values == null) return null;
     return new List(Sys.ObjType.toNullable(), values, values.length);
   }
 
+  /**
+   * Construct list of given type for an array. No copy is made
+   * of the backing array, it should be no used again.  If the
+   * array is null then return null.
+   */
   public static List make(Type of, Object[] values)
   {
     if (values == null) return null;
     return new List(of, values);
   }
 
-  public List(Type of, V[] values)
+  /**
+   * Construct list of given type for an array and size. No copy is made
+   * of the backing array, it should be no used again.  If the
+   * array is null then return null.
+   */
+  public static List make(Type of, Object[] values, int size)
+  {
+    if (values == null) return null;
+    return new List(of, values, size);
+  }
+
+  /**
+   * Construct list of given type using collection.
+   */
+  public static List make(Type of, Collection c)
+  {
+    return new List(of, c);
+  }
+
+  List(Type of)
+  {
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
+    this.of = of;
+    this.values = (V[])empty;
+  }
+
+  List(Type of, int capacity)
+  {
+    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
+    this.of = of;
+    this.values = capacity == 0 ? (V[])empty : newArray(capacity);
+  }
+
+  List(Type of, V[] values)
   {
     if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
@@ -61,7 +119,7 @@ public final class List<V>
     this.size = values.length;
   }
 
-  public List(Type of, V[] values, int size)
+  List(Type of, V[] values, int size)
   {
     if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
@@ -69,21 +127,7 @@ public final class List<V>
     this.size = size;
   }
 
-  public List(Type of, int capacity)
-  {
-    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
-    this.of = of;
-    this.values = capacity == 0 ? (V[])empty : newArray(capacity);
-  }
-
-  public List(Type of)
-  {
-    if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
-    this.of = of;
-    this.values = (V[])empty;
-  }
-
-  public List(Type of, Collection collection)
+  List(Type of, Collection collection)
   {
     if (of == null) { Thread.dumpStack(); throw NullErr.make(); }
     this.of = of;
@@ -91,7 +135,7 @@ public final class List<V>
     this.values = (V[])collection.toArray(newArray(size));
   }
 
-  public List(String[] values)
+  List(String[] values)
   {
     this.of = Sys.StrType;
     this.size = values.length;

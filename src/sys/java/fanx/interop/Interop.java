@@ -222,7 +222,7 @@ public class Interop
    */
   public static List toFan(Enumeration e, Type of)
   {
-    List list = new List(of);
+    List list = List.make(of, 16);
     while (e.hasMoreElements()) list.add(e.nextElement());
     return list;
   }
@@ -240,7 +240,7 @@ public class Interop
    */
   public static List toFan(Iterator i, Type of)
   {
-    List list = new List(of);
+    List list = List.make(of, 16);
     while (i.hasNext()) list.add(i.next());
     return list;
   }

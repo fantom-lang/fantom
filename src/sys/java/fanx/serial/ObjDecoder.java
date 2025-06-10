@@ -212,7 +212,7 @@ public class ObjDecoder
   private Object readComplex(int line, Type t, boolean root)
   {
     Map toSet = Map.make(Sys.FieldType, Sys.ObjType.toNullable());
-    List toAdd = new List(Sys.ObjType.toNullable());
+    List toAdd = List.make(Sys.ObjType.toNullable(), 8);
 
     // read fields/collection into toSet/toAdd
     readComplexFields(t, toSet, toAdd);
@@ -225,7 +225,7 @@ public class ObjDecoder
     // get argument lists
     List args = null;
     if (root && options != null && options.get("makeArgs") != null)
-      args = new List(Sys.ObjType).addAll((List)options.get("makeArgs"));
+      args = List.make(Sys.ObjType, 8).addAll((List)options.get("makeArgs"));
 
     // construct object
     Object obj = null;
@@ -237,7 +237,7 @@ public class ObjDecoder
       Param p = (Param)makeCtor.params().last();
       if (p != null && p.type().fits(Sys.FuncType) && t.isConst())
       {
-        if (args == null) args = new List(Sys.ObjType);
+        if (args == null) args = List.make(Sys.ObjType, 8);
         args.add(Field.makeSetFunc(toSet));
         setAfterCtor = false;
       }
@@ -415,7 +415,7 @@ public class ObjDecoder
     {
       consume();
       consume(Token.RBRACKET, "Expecting ']'");
-      return new List(toListOfType(t, curField, false));
+      return List.make(toListOfType(t, curField, false));
     }
 
     // handle special case of [:]
@@ -464,7 +464,7 @@ public class ObjDecoder
     // infer type if needed
     if (of == null) of = Type.common(acc, n);
 
-    return new List(of, acc, n);
+    return List.make(of, acc, n);
   }
 
   /**

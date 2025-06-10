@@ -11,6 +11,8 @@
 - Java make List/Map generic types
 - Java List implements java.util.List
 - Java Map implements java.util.Map
+- Java make fan.sys.Type subclasses package scope
+- Java make all Map and List constructors package scope
 - Compiler: rename CParam.paramType to type
 - Compiler: rename CMethod.returnType to returns
 - Compiler: rename CField.fieldType to type

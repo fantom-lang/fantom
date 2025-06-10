@@ -22,7 +22,7 @@ final class List
   **
   ** Constructor for of[] with initial capacity.
   **
-  new make(Type of, Int capacity)
+  new make(Type of, Int capacity := 0)
 
   **
   ** Constructor for Obj?[] with initial capacity.

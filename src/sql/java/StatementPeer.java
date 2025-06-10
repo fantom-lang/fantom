@@ -140,7 +140,7 @@ public class StatementPeer
     // map the meta-data to a dynamic type
     ResultSetMetaData meta = rs.getMetaData();
     int numCols = meta.getColumnCount();
-    List cols = new List(SqlUtil.colType, numCols);
+    List cols = List.make(SqlUtil.colType, numCols);
     for (int i=0; i<numCols; ++i)
     {
       String name = meta.getColumnLabel(i+1);
@@ -207,7 +207,7 @@ public class StatementPeer
   {
     Cols cols = makeCols(rs);
     SqlUtil.SqlToFan[] converters = makeConverters(rs);
-    List rows = new List(SqlUtil.rowType);
+    List rows = List.make(SqlUtil.rowType);
     while (rs.next()) rows.add(makeRow(rs, cols, converters));
     return rows;
   }
@@ -312,7 +312,7 @@ public class StatementPeer
 
           // lazily create keys list with proper type
           if (keys == null)
-            keys = new List(key instanceof Long ? Sys.IntType : Sys.StrType);
+            keys = List.make(key instanceof Long ? Sys.IntType : Sys.StrType);
 
           keys.add(key);
         }

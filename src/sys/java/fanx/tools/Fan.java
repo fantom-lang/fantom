@@ -168,7 +168,7 @@ public class Fan
     else if (((Param)params.get(0)).type().is(Sys.StrType.toListOf()) &&
              (params.sz() == 1 || ((Param)params.get(1)).hasDefault()))
     {
-      args = new List(Sys.ObjType, new Object[] { Env.cur().args() });
+      args = List.make(Sys.ObjType, new Object[] { Env.cur().args() });
     }
     else
     {

@@ -130,7 +130,7 @@ public abstract class FStore
 
     public List podFiles(Uri podUri)
     {
-      List list = new List(Sys.FileType);
+      List list = List.make(Sys.FileType);
       Enumeration en = zipFile.entries();
       while (en.hasMoreElements())
       {
@@ -218,7 +218,7 @@ public abstract class FStore
       String manifestPath = "res/" + fpod.podName + "/res-manifest.txt";
       BufferedReader in = new BufferedReader(new InputStreamReader(loader.getResourceAsStream(manifestPath)));
       String line;
-      List list = new List(Sys.FileType);
+      List list = List.make(Sys.FileType);
       while ((line = in.readLine()) != null)
       {
         if (line.length() == 0) continue;
@@ -284,3 +284,4 @@ public abstract class FStore
   FPod fpod;  // set by FPod in ctor
 
 }
+

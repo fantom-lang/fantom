@@ -47,7 +47,7 @@ final class CertChainLoader
   {
     final String host = uri.host();
     final int port    = uriToPort(uri);
-    List acc = new List(X509.typeof);
+    List acc = List.make(X509.typeof);
     try
     {
       SSLContext context = SSLContext.getInstance("TLS");
@@ -231,3 +231,4 @@ final class CertChainLoader
     }
   }
 }
+
