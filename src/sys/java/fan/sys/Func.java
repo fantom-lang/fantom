@@ -70,7 +70,7 @@ public abstract class Func
    */
   public static abstract class Indirect extends Func
   {
-    protected Indirect(FuncType type) { this.type = type; }
+    protected Indirect(Type type) { this.type = (FuncType)type; }
 
     public String  name()  { return getClass().getName(); }
     public Type typeof()   { return type; }
@@ -122,7 +122,7 @@ public abstract class Func
   /** Helper to create function with 0 parameters */
   public static abstract class Indirect0 extends Indirect
   {
-    protected Indirect0(FuncType type) { super(type); }
+    protected Indirect0(Type type) { super(type); }
     protected Indirect0() { super(type0); }
     public final Object callList(List args) { return call(); }
     public abstract Object call();
@@ -139,7 +139,7 @@ public abstract class Func
   /** Helper to create function with 1 parameter */
   public static abstract class Indirect1 extends Indirect
   {
-    protected Indirect1(FuncType type) { super(type); }
+    protected Indirect1(Type type) { super(type); }
     protected Indirect1() { super(type1); }
     public final Object callList(List args) { return call(args.get(0)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -167,7 +167,7 @@ public abstract class Func
   /** Helper to create function with 2 parameters */
   public static abstract class Indirect2 extends Indirect
   {
-    protected Indirect2(FuncType type) { super(type); }
+    protected Indirect2(Type type) { super(type); }
     protected Indirect2() { super(type2); }
     public final Object callList(List args) { return call(args.get(0), args.get(1)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -184,7 +184,7 @@ public abstract class Func
   /** Helper to create function with 3 parameters */
   public static abstract class Indirect3 extends Indirect
   {
-    protected Indirect3(FuncType type) { super(type); }
+    protected Indirect3(Type type) { super(type); }
     protected Indirect3() { super(type3); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -201,7 +201,7 @@ public abstract class Func
   /** Helper to create function with 4 parameters */
   public static abstract class Indirect4 extends Indirect
   {
-    protected Indirect4(FuncType type) { super(type); }
+    protected Indirect4(Type type) { super(type); }
     protected Indirect4() { super(type4); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -218,7 +218,7 @@ public abstract class Func
   /** Helper to create function with 5 parameters */
   public static abstract class Indirect5 extends Indirect
   {
-    protected Indirect5(FuncType type) { super(type); }
+    protected Indirect5(Type type) { super(type); }
     protected Indirect5() { super(type5); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -235,7 +235,7 @@ public abstract class Func
   /** Helper to create function with 6 parameters */
   public static abstract class Indirect6 extends Indirect
   {
-    protected Indirect6(FuncType type) { super(type); }
+    protected Indirect6(Type type) { super(type); }
     protected Indirect6() { super(type6); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -252,7 +252,7 @@ public abstract class Func
   /** Helper to create function with 7 parameters */
   public static abstract class Indirect7 extends Indirect
   {
-    protected Indirect7(FuncType type) { super(type); }
+    protected Indirect7(Type type) { super(type); }
     protected Indirect7() { super(type7); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -269,7 +269,7 @@ public abstract class Func
   /** Helper to create function with 8 parameters */
   public static abstract class Indirect8 extends Indirect
   {
-    protected Indirect8(FuncType type) { super(type); }
+    protected Indirect8(Type type) { super(type); }
     protected Indirect8() { super(type8); }
     public final Object callList(List args) { return call(args.get(0), args.get(1), args.get(2), args.get(3), args.get(4), args.get(5), args.get(6), args.get(7)); }
     public final Object call() { throw tooFewArgs(0); }
@@ -286,7 +286,7 @@ public abstract class Func
   /** Helper to create function with 8+ parameters */
   public static abstract class IndirectX extends Indirect
   {
-    protected IndirectX(FuncType type) { super(type); }
+    protected IndirectX(Type type) { super(type); }
     public abstract Object callList(List args);
     public final Object call() { throw tooFewArgs(0); }
     public final Object call(Object a) { throw tooFewArgs(1); }

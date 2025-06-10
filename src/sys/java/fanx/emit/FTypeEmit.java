@@ -219,8 +219,7 @@ public abstract class FTypeEmit
     if (funcType != null)
     {
       code.op2(GETSTATIC, typeField.ref());
-      code.op2(CHECKCAST, cls("fan/sys/FuncType"));
-      code.op2(INVOKESPECIAL, method(superClassName +".<init>(Lfan/sys/FuncType;)V"));
+      code.op2(INVOKESPECIAL, method(superClassName +".<init>(Lfan/sys/Type;)V"));
     }
     else
     {

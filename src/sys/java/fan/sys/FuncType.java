@@ -18,7 +18,7 @@ import fanx.emit.*;
 /**
  * FuncType is a parameterized type for Funcs
  */
-public class FuncType
+class FuncType
   extends GenericType
 {
 
