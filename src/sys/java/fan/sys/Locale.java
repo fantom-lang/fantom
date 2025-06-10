@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Locale
+ * Locale models a cultural language and region/country.
  */
 public class Locale
   extends FanObj

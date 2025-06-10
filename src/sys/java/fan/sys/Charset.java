@@ -13,7 +13,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 
 /**
- * Charset
+ * Charset represents a specific character encoding.
  */
 public class Charset
   extends FanObj
@@ -487,3 +487,4 @@ public class Charset
   final String name;
 
 }
+

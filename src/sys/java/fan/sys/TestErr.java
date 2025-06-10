@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * TestErr
+ * TestErr is thrown by Test when a test method fails a verify.
  */
 public class TestErr
   extends Err
@@ -44,3 +44,4 @@ public class TestErr
   public Type typeof() { return Sys.TestErrType; }
 
 }
+

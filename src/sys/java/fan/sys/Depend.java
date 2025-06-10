@@ -10,7 +10,7 @@ package fan.sys;
 import java.util.*;
 
 /**
- * Depend
+ * Depend models a dependency as a pod name and a version constraint.
  */
 public final class Depend
   extends FanObj
@@ -307,3 +307,4 @@ public final class Depend
   private String str;
 
 }
+

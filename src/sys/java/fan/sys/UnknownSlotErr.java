@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnknownSlotErr
+ * UnknownSlotErr indicates an attempt to access a non-existent slot.
  */
 public class UnknownSlotErr
   extends Err
@@ -44,3 +44,4 @@ public class UnknownSlotErr
   public Type typeof() { return Sys.UnknownSlotErrType; }
 
 }
+

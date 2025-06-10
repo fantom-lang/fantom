@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * ParseErr
+ * ParseErr indicates an invalid string format which cannot be parsed.
  */
 public class ParseErr
   extends Err
@@ -59,3 +59,4 @@ public class ParseErr
   public Type typeof() { return Sys.ParseErrType; }
 
 }
+

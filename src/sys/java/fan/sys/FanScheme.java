@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * FanScheme
+ * FanScheme handles URI scheme "fan:"
  */
 public class FanScheme
   extends UriScheme
@@ -45,3 +45,4 @@ public class FanScheme
   }
 
 }
+

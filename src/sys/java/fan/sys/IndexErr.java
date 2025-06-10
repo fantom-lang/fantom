@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * IndexErr
+ * IndexErr indicates an attempt to access an invalid index in a List.
  */
 public class IndexErr
   extends Err
@@ -52,3 +52,4 @@ public class IndexErr
   public Type typeof() { return Sys.IndexErrType; }
 
 }
+

@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * IOErr
+ * IOErr indicates an input/output error typically associated with a file system or socket.
  */
 public class IOErr
   extends Err
@@ -51,3 +51,4 @@ public class IOErr
   public Type typeof() { return Sys.IOErrType; }
 
 }
+

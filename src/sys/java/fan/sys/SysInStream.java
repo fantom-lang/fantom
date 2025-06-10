@@ -10,7 +10,7 @@ package fan.sys;
 import java.io.*;
 
 /**
- * SysInStream
+ * SysInStream implements InStream using a java.io.InputStream
  */
 public class SysInStream
   extends InStream
@@ -180,3 +180,4 @@ public class SysInStream
   InputStream in;
 
 }
+

@@ -21,7 +21,7 @@ import fanx.serial.*;
 import fanx.util.*;
 
 /**
- * List
+ * List represents a linear sequence of Objects indexed by an Int.
  */
 public final class List<V>
   extends FanObj

@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * NoDoc facet
+ * Annotate a type or slot as undocumented.
  */
 public final class NoDoc extends FanObj implements Facet
 {
@@ -21,3 +21,4 @@ public final class NoDoc extends FanObj implements Facet
   public String toStr() { return typeof().qname(); }
 
 }
+

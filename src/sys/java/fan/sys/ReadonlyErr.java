@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * ReadonlyErr
+ * ReadonlyErr indicates an attempt to modify a readonly instance.
  */
 public class ReadonlyErr
   extends Err
@@ -44,3 +44,4 @@ public class ReadonlyErr
   public Type typeof() { return Sys.ReadonlyErrType; }
 
 }
+

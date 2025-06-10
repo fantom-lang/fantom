@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Unsafe
+ * Unsafe wraps a mutable object as an immutable reference.
  */
 public final class Unsafe
   extends FanObj
@@ -29,3 +29,4 @@ public final class Unsafe
   private Object val;
 
 }
+

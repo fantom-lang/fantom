@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
- * TimeZone
+ * TimeZone represents a region's offset from UTC and its daylight savings time rules.
  */
 public final class TimeZone
   extends FanObj

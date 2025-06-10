@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Endian
+ * Endian models byte ordering
  */
 public final class Endian
   extends Enum

@@ -10,7 +10,7 @@ package fan.sys;
 import java.util.*;
 
 /**
- * Version
+ * Version is defined as a list of decimal digits separated by the dot.
  */
 public final class Version
   extends FanObj

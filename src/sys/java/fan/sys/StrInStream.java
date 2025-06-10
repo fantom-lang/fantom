@@ -10,7 +10,7 @@ package fan.sys;
 import java.io.*;
 
 /**
- * StrInStream
+ * StrInStream implements InStream for a String
  */
 public class StrInStream
   extends InStream
@@ -94,3 +94,4 @@ public class StrInStream
   List pushback;
 
 }
+

@@ -9,7 +9,7 @@
 package fan.sys;
 
 /**
- * Cancelled
+ * CancelledErr indicates that an operation was cancelled before it completed normally.
  */
 public class CancelledErr
   extends Err
@@ -45,3 +45,4 @@ public class CancelledErr
   public Type typeof() { return Sys.CancelledErrType; }
 
 }
+

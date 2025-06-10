@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Err
+ * Err is the base class of all Fantom exceptions.
  */
 public class Err
   extends RuntimeException

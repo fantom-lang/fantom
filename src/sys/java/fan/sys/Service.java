@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Service
+ * Services are used to publish functionality in a VM for use by other software components.
  */
 public interface Service
 {

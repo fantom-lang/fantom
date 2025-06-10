@@ -17,7 +17,7 @@ import java.util.zip.*;
 import java.util.HashMap;
 
 /**
- * Buf
+ * Buf is used to model a block of bytes with random access.
  */
 public abstract class Buf
   extends FanObj

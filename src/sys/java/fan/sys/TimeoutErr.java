@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * TimeoutErr
+ * TimeoutErr indicates that a blocking operation timed out before normal completion.
  */
 public class TimeoutErr
   extends Err
@@ -44,3 +44,4 @@ public class TimeoutErr
   public Type typeof() { return Sys.TimeoutErrType; }
 
 }
+

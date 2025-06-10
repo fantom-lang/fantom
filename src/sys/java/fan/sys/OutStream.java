@@ -11,7 +11,7 @@ import java.math.*;
 import fanx.serial.*;
 
 /**
- * OutStream.
+ * OutStream is used to write binary and text data to an output stream.
  */
 public class OutStream
   extends FanObj

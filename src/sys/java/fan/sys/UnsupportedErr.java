@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnsupportedErr
+ * UnsupportedErr indicates a feature which isn't supported.
  */
 public class UnsupportedErr
   extends Err
@@ -45,3 +45,4 @@ public class UnsupportedErr
   public Type typeof() { return Sys.UnsupportedErrType; }
 
 }
+

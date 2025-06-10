@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * InterruptedErr
+ * InterruptedErr indicates that a thread is interrupted from its normal execution
  */
 public class InterruptedErr
   extends Err
@@ -49,3 +49,4 @@ public class InterruptedErr
   public Type typeof() { return Sys.InterruptedErrType; }
 
 }
+

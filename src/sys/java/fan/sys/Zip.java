@@ -20,7 +20,7 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 /**
- * Zip
+ * Zip is used to read/write compressed zip files and streams.
  */
 public final class Zip
   extends FanObj

@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * NameErr
+ * NameErr indicates an attempt to use an invalid name.
  */
 public class NameErr
   extends Err
@@ -44,3 +44,4 @@ public class NameErr
   public Type typeof() { return Sys.NameErrType; }
 
 }
+

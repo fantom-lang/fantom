@@ -11,7 +11,7 @@ import java.math.*;
 import fanx.serial.*;
 
 /**
- * InStream interface.
+ * InStream is used to read binary and text stream based input.
  */
 public class InStream
   extends FanObj

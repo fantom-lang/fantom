@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnknownPodErr
+ * UnknownPodErr indicates an attempt to access a non-existent pod.
  */
 public class UnknownPodErr
   extends Err
@@ -44,3 +44,4 @@ public class UnknownPodErr
   public Type typeof() { return Sys.UnknownPodErrType; }
 
 }
+

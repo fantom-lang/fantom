@@ -8,8 +8,9 @@
 package fan.sys;
 
 /**
- * Facet
+ * Facet is a mixin included into every facet type.
  */
 public interface Facet
 {
 }
+

@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * FileScheme
+ * FileScheme handles URI schemes for "file:"
  */
 public class FileScheme
   extends UriScheme
@@ -36,3 +36,4 @@ public class FileScheme
   }
 
 }
+

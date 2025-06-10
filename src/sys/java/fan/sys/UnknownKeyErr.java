@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnknownKeyErr
+ * UnknownKeyErr indicates an attempt to lookup a non-existent key.
  */
 public class UnknownKeyErr
   extends Err
@@ -44,3 +44,4 @@ public class UnknownKeyErr
   public Type typeof() { return Sys.UnknownKeyErrType; }
 
 }
+

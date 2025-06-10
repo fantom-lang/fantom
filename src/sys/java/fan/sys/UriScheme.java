@@ -10,7 +10,7 @@ package fan.sys;
 import java.util.HashMap;
 
 /**
- * UriScheme
+ * UriScheme is base class for handling URI schemes
  */
 public abstract class UriScheme
   extends FanObj
@@ -87,3 +87,4 @@ public abstract class UriScheme
 
   static HashMap cache = new HashMap();
 }
+

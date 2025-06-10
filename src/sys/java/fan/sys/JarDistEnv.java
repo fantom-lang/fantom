@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 /**
- * JarDistEnv
+ * JarDistEnv is the Env used when Fantom is packaged into Java JAR file
  */
 public class JarDistEnv
   extends Env

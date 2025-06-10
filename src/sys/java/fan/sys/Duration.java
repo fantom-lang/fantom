@@ -10,7 +10,7 @@ package fan.sys;
 import fanx.serial.*;
 
 /**
- * Duration
+ * Duration represents a relative duration of time with nanosecond precision.
  */
 public final class Duration
   extends FanObj
@@ -554,3 +554,4 @@ public final class Duration
   private String str;
 
 }
+

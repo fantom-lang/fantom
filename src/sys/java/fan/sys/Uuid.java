@@ -11,7 +11,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Uuid
+ * Universally Unique Identifier.
  */
 public final class Uuid
   extends FanObj

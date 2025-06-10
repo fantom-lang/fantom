@@ -14,7 +14,7 @@ import java.util.zip.*;
 import fanx.util.*;
 
 /**
- * Env
+ * Env defines a pluggable class used to boot and manage a Fantom runtime environment.
  */
 public abstract class Env
   extends FanObj

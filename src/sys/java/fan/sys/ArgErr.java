@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * ArgErr
+ * ArgErr indicates an invalid argument was passed.
  */
 public class ArgErr
   extends Err
@@ -52,3 +52,4 @@ public class ArgErr
   public Type typeof() { return Sys.ArgErrType; }
 
 }
+

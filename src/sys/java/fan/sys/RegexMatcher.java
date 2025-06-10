@@ -10,7 +10,7 @@ package fan.sys;
 import java.util.regex.*;
 
 /**
- * RegexMatcher
+ * RegexMatcher is used in matching operations on a regular expression.
  */
 public final class RegexMatcher
   extends FanObj
@@ -117,3 +117,4 @@ public final class RegexMatcher
 
   Matcher matcher;
 }
+

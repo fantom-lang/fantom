@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * ConstErr
+ * ConstErr indicates an attempt to set a const field after the object has been constructed.
  */
 public class ConstErr
   extends Err
@@ -44,3 +44,4 @@ public class ConstErr
   public Type typeof() { return Sys.ConstErrType; }
 
 }
+

@@ -9,7 +9,7 @@
 package fan.sys;
 
 /**
- * UnknownServiceErr
+ * UnknownServiceErr indicates an attempt to lookup a service which is not installed.
  */
 public class UnknownServiceErr
   extends Err

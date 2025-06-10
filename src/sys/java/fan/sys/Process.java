@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
- * Process
+ * Process manages spawning external OS processes.
  */
 public class Process
   extends FanObj

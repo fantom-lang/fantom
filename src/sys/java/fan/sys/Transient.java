@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Transient facet
+ * Transient annotates fields which should not be serialized.
  */
 public final class Transient extends FanObj implements Facet
 {
@@ -21,3 +21,4 @@ public final class Transient extends FanObj implements Facet
   public String toStr() { return typeof().qname(); }
 
 }
+

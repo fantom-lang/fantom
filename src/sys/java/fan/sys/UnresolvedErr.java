@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnresolvedErr
+ * UnresolvedErr indicates the failure to resolve a Uri to a resource.
  */
 public class UnresolvedErr
   extends Err
@@ -51,3 +51,4 @@ public class UnresolvedErr
   public Type typeof() { return Sys.UnresolvedErrType; }
 
 }
+

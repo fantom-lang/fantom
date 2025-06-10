@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * CastErr
+ * CastErr is a runtime exception raised when invalid cast is performed.
  */
 public class CastErr
   extends Err
@@ -45,3 +45,4 @@ public class CastErr
   public Type typeof() { return Sys.CastErrType; }
 
 }
+

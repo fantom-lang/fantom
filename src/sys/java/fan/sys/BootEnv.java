@@ -17,7 +17,7 @@ import fanx.fcode.*;
 import fanx.util.*;
 
 /**
- * BootEnv
+ * BootEnv is root implementation of Env
  */
 public class BootEnv
   extends Env

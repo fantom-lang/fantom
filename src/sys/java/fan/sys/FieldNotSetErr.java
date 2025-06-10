@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * FieldNotSetErr
+ * FieldNotSetErr indicates a non-nullable field was not set by the constructor it-block.
  */
 public class FieldNotSetErr
   extends Err
@@ -44,3 +44,4 @@ public class FieldNotSetErr
   public Type typeof() { return Sys.FieldNotSetErrType; }
 
 }
+

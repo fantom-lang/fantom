@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Js facet
+ * Js is used to annoate types which should be compiled into JavaScript.
  */
 public final class Js extends FanObj implements Facet
 {
@@ -21,3 +21,4 @@ public final class Js extends FanObj implements Facet
   public String toStr() { return typeof().qname(); }
 
 }
+

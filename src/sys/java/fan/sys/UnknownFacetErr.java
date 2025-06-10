@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnknownFacetErr
+ * UnknownFacetErr indicates an attempt to access an undefined facet.
  */
 public class UnknownFacetErr
   extends Err
@@ -44,3 +44,4 @@ public class UnknownFacetErr
   public Type typeof() { return Sys.UnknownFacetErrType; }
 
 }
+

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 /**
- * Unit
+ * Unit models a unit of measurement.
  */
 public final class Unit
   extends FanObj

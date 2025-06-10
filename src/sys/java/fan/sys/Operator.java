@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Operator facet
+ * Used on methods to indicate method may be used as an operator.
  */
 public final class Operator extends FanObj implements Facet
 {
@@ -21,3 +21,4 @@ public final class Operator extends FanObj implements Facet
   public String toStr() { return typeof().qname(); }
 
 }
+

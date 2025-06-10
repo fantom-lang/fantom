@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * NullErr
+ * NullErr indicates an attempt to dereference null.
  */
 public class NullErr
   extends Err
@@ -47,3 +47,4 @@ public class NullErr
   public Type typeof() { return Sys.NullErrType; }
 
 }
+

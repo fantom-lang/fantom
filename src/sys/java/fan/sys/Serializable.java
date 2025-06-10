@@ -10,7 +10,7 @@ package fan.sys;
 import fanx.serial.*;
 
 /**
- * Serializable facet
+ * Serializable is a facet used to annotate types which can be serialized.
  */
 public final class Serializable extends FanObj implements Facet
 {
@@ -35,3 +35,4 @@ public final class Serializable extends FanObj implements Facet
   public boolean collection;
 
 }
+

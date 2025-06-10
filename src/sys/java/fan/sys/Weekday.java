@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Weekday
+ * Enum for seven days of the week.
  */
 public final class Weekday
   extends Enum

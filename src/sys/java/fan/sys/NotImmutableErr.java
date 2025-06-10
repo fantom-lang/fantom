@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * NotImmutableErr
+ * NotImmutableErr indicates using a mutable Obj where an immutable Obj is required.
  */
 public class NotImmutableErr
   extends Err
@@ -44,3 +44,4 @@ public class NotImmutableErr
   public Type typeof() { return Sys.NotImmutableErrType; }
 
 }
+

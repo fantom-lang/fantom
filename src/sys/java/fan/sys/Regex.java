@@ -10,7 +10,7 @@ package fan.sys;
 import java.util.regex.*;
 
 /**
- * Regex
+ * Regex represents a regular expression.
  */
 public final class Regex
   extends FanObj

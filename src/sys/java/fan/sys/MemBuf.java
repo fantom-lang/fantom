@@ -11,7 +11,7 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * MemBuf
+ * MemBuf is mutable Buf of byte[]
  */
 public final class MemBuf
   extends Buf
@@ -372,3 +372,4 @@ public final class MemBuf
   private MemBufOutStream out;
 
 }
+

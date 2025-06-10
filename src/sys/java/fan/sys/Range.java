@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Range
+ * Range represents a contiguous range of integers from start to end.
  */
 public final class Range
   extends FanObj

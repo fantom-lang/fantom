@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * Month
+ * Enum for twelve months of the year.
  */
 public final class Month
   extends Enum

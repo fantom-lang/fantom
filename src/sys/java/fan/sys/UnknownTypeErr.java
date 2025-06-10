@@ -8,7 +8,7 @@
 package fan.sys;
 
 /**
- * UnknownTypeErr
+ * UnknownTypeErr indicates an attempt to access a non-existent type.
  */
 public class UnknownTypeErr
   extends Err
@@ -44,3 +44,4 @@ public class UnknownTypeErr
   public Type typeof() { return Sys.UnknownTypeErrType; }
 
 }
+
