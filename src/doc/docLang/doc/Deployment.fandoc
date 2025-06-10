@@ -24,7 +24,8 @@ This translation occurs at runtime.  The sys APIs are implemented in
 normal Java code.
 
 - Likewise the .NET runtime reads pods files and emits the fcode as IL
-at runtime.  The sys APIs are implemented in normal C# code.
+at runtime.  The sys APIs are implemented in normal C# code. *Note that
+.NET is unsupported at this time*
 
 The following illustration depicts this architecture:
 
@@ -79,3 +80,4 @@ distro.  Most of those files are not needed for runtime.  In general
 the only directories needed for runtime are 'bin', 'lib', and 'etc'.  Within
 the 'lib' directory you can remove all the pod, jar, and dll files not
 needed by your application.
+

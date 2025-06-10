@@ -29,9 +29,11 @@
   [`Functions`,     "functional programming"],
   [`Closures`,      "deep dive into closures"],
 "Interop",
-  [`JavaFFI`,       "Java foreign function interface"],
+  [`Interop`,       "Summary of language interop feature"],
   [`Natives`,       "implementing methods and fields in Java and C# code"],
-  [`JavaScript`,    "compiling to JavaScript"],
+  [`JavaFFI`,       "Java foreign function interface"],
+  [`Java`,          "Transpiling to Java"],
+  [`JavaScript`,    "Transpiling to JavaScript"],
 "Advanced",
   [`Deployment`,    "how to deploy pods and applications"],
   [`Env`,           "customizing the Fantom environment"],
@@ -51,3 +53,4 @@
 
 // type compatibility
 // variable scoping
+

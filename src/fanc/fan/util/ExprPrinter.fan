@@ -241,7 +241,7 @@ mixin ExprPrinter : CodePrinter
   ** Constructor call expression
   abstract This ctorExpr(CallExpr x)
 
-  ** Handle special assign+math operators: += -= *= /=
+  ** Handle special assign+math operators: '+= -= *= /='
   abstract This shortcutAssignExpr(ShortcutExpr x)
 
   ** Handle postfix ++ or --

@@ -56,7 +56,7 @@ abstract class Node
 
   ** Get the file location for this node from the original parsed source.
   ** If the location is not known or source spans were not enabled during
-  ** parsing, then return `FileLoc.unknown`.
+  ** parsing, then return `util::FileLoc.unknown`.
   FileLoc loc()
   {
     if (sourceSpans.isEmpty) return FileLoc.unknown
@@ -398,3 +398,4 @@ class HtmlInline : Node
 ** Custom node
 @Js
 class CustomNode : Node { }
+

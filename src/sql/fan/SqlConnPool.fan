@@ -49,7 +49,7 @@ const class SqlConnPool
   **
   ** If auto-commit is true then each statement is executed and committed
   ** as an individual transaction.  Otherwise statements are grouped into
-  ** transaction which must be closed via `commit` or `rollback`.
+  ** transaction which must be closed via `SqlConn.commit` or `SqlConn.rollback`.
   Bool autoCommit
   {
     get { return isAutoCommit.val }

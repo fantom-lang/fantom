@@ -1,0 +1,54 @@
+**************************************************************************
+** title:      Interop
+** author:     Brian Frank
+** created:    10 Jun 25
+** copyright:  Copyright (c) 2025, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+Fantom was founded upon the principle of writing code portable to
+heterogeneous runtime environments. Today we target three runtimes:
+  - [Java]`#java`: use of the Java VM as primary server runtime;
+    interoperability with Java code
+  - [JavaScript]`#js`: target browsers and NodeJS; interoperability
+    with JavaScript and TypeScript
+  - [.NET]`#dotNet`: legacy, unsupported target for .NET CLR;
+    interoperability with C#
+
+Options [#options]
+******************
+The following options provide different interop pathways:
+  - `Natives`: allows Fantom types/slots to be implemented in
+    native Java or JavaScript
+  - `JavaFFI`: allows Fantom code to call Java APIs directly
+  - `Java`: transpile Fantom to Java source code via
+  - `JavaScript`: transpile Fantom to JavaScript source code
+  - `build::JarDist`: package Fantom into a Java jar
+
+Also see `docTools::Fanc`.
+
+Java [#java]
+************
+Fantom targets Java as its primary runtime, especially for server side
+applications.  The Java runtime fully supports multi-threading via
+`Concurrency` and `Actors`.  Out of the box, Fantom is designed to run
+via the Java VM. You can also use `build::JarDist` and `docTools::Fanc`
+to package Fantom pods into a library for use by Java code.
+
+JavaScript [#js]
+****************
+Fantom is designed to cross-compile into JavaScript with TypeScript
+binding. Primarily this is used to write portable code that can execute
+in browser front ends. Most of the 'sys' APIs can also be used in
+NodeJS including the file and zip APIs.  Note however that the concurrency
+APIs that assume multi-threading are not available in JS environments.
+
+C# and .NET [#dotNet]
+*********************
+The original Fantom framework targeted Java and .NET/C#. However .NET
+is not currently supported.  Most of the original Fantom APIs are fully
+working in .NET and the infrastructure is in the place.  So with some
+effort .NET could be brought up to production quality with some effort.
+

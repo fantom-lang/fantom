@@ -10,9 +10,11 @@
   [`Setup`,      "how to get everything setup"],
   [`Fan`,        "fan launcher"],
   [`Fansh`,      "interactive shell for exploring"],
+  [`Fanc`,       "compiler and transpiler tools"],
   [`Fant`,       "unit testing framework"],
   [`Fanp`,       "fcode disassembler"],
   [`Build`,      "build toolkit"],
   [`Bootstrap`,  "how to recompile the runtime and compiler itself"],
   [`IDEs`,       "links to other Fantom IDEs"],
 ]
+

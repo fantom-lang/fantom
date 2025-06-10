@@ -1,0 +1,35 @@
+**************************************************************************
+** title:      Fanc
+** author:     Brian Frank
+** created:    10 Jun 25
+** copyright:  Copyright (c) 2025, Brian Frank and Andy Frank
+** license:    Licensed under the Academic Free License version 3.0
+**************************************************************************
+
+Overview [#overview]
+********************
+The 'fanc' command line is used to transpile Fantom code to different
+programming languages including Java and JavaScript/TypeScript.
+
+Java [#java]
+************
+Use 'fanc java' to transpile a set of Fantom pods to Java source code.
+This command takes one of pod names, solves their dependency
+chain and generates the code needed to package up a self contained jar file.
+Also see `docLang::Java`.
+
+Example:
+
+  fanc java -jar example.jar pod1 pod2
+
+JavaScript [#js]
+******************
+Use 'fanc js' to transpile a set of Fantom pods to JavaScript and TypeScript
+source code.  This command takes one of pod names, solves their dependency
+chain and generates the JS and TS code as an NPM modue. Also
+see `docLang::JavaScript`.
+
+Example:
+
+  fanc js pod1 pod2
+
