@@ -339,14 +339,14 @@ internal class JavaNativeGen
       else if (part.isConvenience)
         s.add("  /** Convenience for $part.slot.name */\n")
       else
-        printJavaDoc(s, part.slot, 2)
+        printJavadoc(s, part.slot, 2)
     }
 
     part.lines.each |line| { s.add(line).add("\n") }
   }
 
   ** Print javadoc for given node
-  static Void printJavaDoc(StrBuf s, DefNode n, Int indent)
+  static Void printJavadoc(StrBuf s, DefNode n, Int indent)
   {
     indentStr := Str.spaces(indent)
     if (n.isNoDoc) return s.add(indentStr).add("/** NoDoc */\n")
@@ -358,20 +358,10 @@ internal class JavaNativeGen
     {
       doc.lines.each |line|
       {
-        s.add(indentStr).add(" * ").add(escapeJavaDoc(line)).add("\n")
+        s.add(indentStr).add(" * ").add(JavaPrinter.escapeJavadoc(line)).add("\n")
       }
     }
     s.add(indentStr).add(" */\n")
-  }
-
-  static Str escapeJavaDoc(Str line)
-  {
-    line.replace("/*", "/ *")
-        .replace("*/", "* /")
-        .replace("\\uxxxx", "\\u1234")
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
   }
 
 //////////////////////////////////////////////////////////////////////////

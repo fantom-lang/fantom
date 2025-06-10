@@ -50,6 +50,7 @@ internal class JavaMethodPrinter : JavaPrinter
     paramDefaults
 
     // implementation signature
+    doc(def)
     methodSig
 
     // body

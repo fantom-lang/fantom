@@ -66,6 +66,8 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void typeHeader(TypeDef t)
   {
+    doc(t)
+
     // scope
     if (t.isPublic) w("public ")
     if (t.isAbstract) w("abstract ")
@@ -225,6 +227,7 @@ internal class JavaTypePrinter : JavaPrinter
     if (!x.isOverride)
     {
       nl
+      doc(x)
       slotScope(x)
       if (x.isStatic) w("static ")
       typeSig(x.type).sp.fieldName(x)
@@ -256,6 +259,8 @@ internal class JavaTypePrinter : JavaPrinter
 
   Void mixinStaticFields(MethodDef? init, FieldDef[] fields)
   {
+    if (fields.isEmpty) return
+
     // Java interfaces don't support static fields nor initializers;
     // so generate an inner class named Fields that declares storage
     // and handles static initilizer.  We swizzle get via constGetter()

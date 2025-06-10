@@ -167,6 +167,39 @@ internal class JavaPrinter : CodePrinter
   }
 
 //////////////////////////////////////////////////////////////////////////
+// JavaDoc
+//////////////////////////////////////////////////////////////////////////
+
+  This doc(DefNode node)
+  {
+    if (node.isNoDoc) return w("/** NoDoc */").nl
+    if (node.doc == null) return this
+
+    lines := toJavadoc(node.doc.text)
+
+    w("/**").nl
+    lines.each |line| { w(" * ").w(line).nl }
+    w(" */").nl
+    return this
+  }
+
+  static Str[] toJavadoc(Str fandoc)
+  {
+    lines := fandoc.splitLines
+    return lines.map |line| { escapeJavadoc(line) }
+  }
+
+  static Str escapeJavadoc(Str line)
+  {
+    line.replace("/*", "/ *")
+        .replace("*/", "* /")
+        .replace("\\uxxxx", "\\u1234")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Misc Utils
 //////////////////////////////////////////////////////////////////////////
 
