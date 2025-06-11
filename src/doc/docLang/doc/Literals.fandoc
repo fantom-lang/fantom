@@ -54,10 +54,11 @@ Fantom also permits C style character literals to represent a Unicode code point
 as an 'Int' literal.  Character literals are surrounded with the tick and support
 the following escapes:
 
-  \b  \f  \n  \r  \t  \"  \'  \` \$  \\  \uXXXX
+  \b  \f  \n  \r  \t  \"  \'  \` \$  \\  \uXXXX \u{XX}
 
-The last escape '\uXXXX' specifies a Unicode code point using a a four
-digit hexadecimal number.
+The escape '\uXXXX' specifies a Unicode code point using a a four
+digit hexadecimal number; or use '\u{xxxxx}' to escape a code point with
+less than or more than four digits.
 
 'Int' literal examples:
 
@@ -70,6 +71,7 @@ digit hexadecimal number.
   '\n'
   '\u03ab'
   '\u00F2'
+  '\u{1F60A}'
 
 As a value-type 'Int' fields default to '0' instead of 'null'.
 However 'Int?' does default to null.
@@ -141,6 +143,7 @@ above for [Int]`#int` character literals. A couple 'Str' literal examples:
   "hello"
   "line 1\nline 2"
   "It is 73\u00B0 Fahrenheit outside!"
+  "\u{1F60A} is happy face emoji"
 
 Multi-line Strs [#multiLineStr]
 ===============================
