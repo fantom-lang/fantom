@@ -9,7 +9,7 @@
 Overview [#overview]
 ********************
 Fantom provides support for compiling to JavaScript and running in
-JavaScript VMs such as web browsers.  Most of the sys API is available,
+JavaScript VMs such as web browsers and Node.js.  Most of the sys API is available,
 however not all pods and APIs are accessible due to limitations of the
 JavaScript VM environment.
 
@@ -33,8 +33,10 @@ translating to the target platform at runtime.
 
 All Fantom source code in a pod marked as '@Js' will be compiled to a single
 JavaScript source file.  This file will also include reflection information
-and other meta-data needed at runtime.  The file is named '<podname>.js' and
-is packaged into the root directory of the pod file.
+and other meta-data needed at runtime. The compiler generates modern ECMAScript-compliant
+JavaScript in both the ES6 and CommonJS module formats. The files are packaged in
+the 'js/' directory of the pod as 'js/<podname>.mjs' and 'js/<podname.js' respectively.
+A sourcemap is also included in that directory that is compatible with both module formats.
 
 As JavaScript files are interpreted in the order they are parsed, each pod JS
 file must be written in the correct order.  To simplify this process, the
@@ -106,10 +108,27 @@ You can run JavaScript compiled from Fantom by loading the pod's JavaScript
 source file into any JavaScript VM.  There are no special requirements. Most
 of the information from the above sections should apply to other JsVMs.
 
+Node.js [#nodejs]
+****************
+Fantom includes special support for running code in Node.js. Several tools are
+packaged together in the 'nodeJs' pod and can be accessed by running
+
+  $ fan nodeJs -help
+
+You can run Fan scripts in Node.js using 'fan nodeJs run' command. Any class you
+want available in Node.js must have the '@Js' facet and the main entry point must
+be in a class called 'Main'.
+
+You can also use [fanc]`docTools::Fanc` to stub out an NPM module for your Fantom code.
+This tool is unique in that it will generate JavaScript for *all* types; not just the
+ones having the '@Js' facet. This gives you access to much more of the Fantom API in
+Node.js. See the [fanc]`docTools::Fanc` for more details on that tool
+
 Invoking Fantom from JavaScript [#jsFFI]
 ****************************************
 Fantom types are normal JavaScript objects, so they can be invoked natively
-from JavaScript code.  Types are are formatted as:
+from JavaScript code.  In the browser, types are are formatted as below (note -
+this is the CommonJs pattern used for scoping types into the global namespace):
 
   fan.<myPod>.<myType>.<method>
 
@@ -120,26 +139,146 @@ An example using an HTML event handler:
 
   <button onclick="fan.myPod.MyType.doSomething();">Click Me</button>
 
-Fields are compiled into JavaScript as follows:
+Code Conventions [#conventions]
+*******************************
+If you are writing native code, it must adhere to the following conventions to work
+with the ES compiler. It is highly recommended to spend some time looking at the
+JavaScript source code in [sys]`https://github.com/fantom-lang/fantom/tree/master/src/sys/es/fan`
+and [dom]`https://github.com/fantom-lang/fantom/tree/master/src/dom/es` to
+see how the various types are implemented and adhere to these conventions.
 
-  - the field itself is prefixed with "m_"
-  - getter matches field name
-  - the setter is suffixed with the "$" character
-  - const fields do not have a getter (must access as m_myField)
+Classes [#classes]
+==================
+All Fantom types are implemented as ES6 classes
 
-Field examples:
+**Fantom**
+pre>
+class Foo { }
+<pre
 
-  instance.myField()        // call getter
-  instance.myField$(value)  // call setter
-  instance.m_field          // access field storage
+**ES6**
+pre>
+class Foo extends sys.Obj {
+  constructor() { super(); }
+}
+<pre
 
-Any Fantom slot that conflicts with a JavaScript keyword will be
-prefixed with "$".  For example a slot named "var" will be accessed
-in JavaScript as "$var".
+Note that in all pods (excluding sys), the compiler will auto-generate 'import' statements
+for all your pod dependencies using this pattern (or similiarly 'require' for common js)
 
-Refer to the JavaScript source code in [sys]`https://github.com/fantom-lang/fantom/tree/master/src/sys/js/fan`
-and [dom]`https://github.com/fantom-lang/fantom/tree/master/src/dom/js` to
-see how  the various types are implemented.
+  import * as <podName> from './<podName>.js';
+
+You can then refer to types from another pod in your code as '<podName>.<Type>'. Notice
+in the example above that the 'Foo' class extends 'sys.Obj'.
+
+Fields [#fields]
+================
+All Fantom fields are generated as private in the JavaScript and the compiler will
+generate a single method for getting/setting the field based on the access flags
+for the getter/setter in Fantom. The generated getter/setter will conform to the
+[Naming]`#naming` rules outlined later.
+
+Note that an implication of this design is that *all* fields in Fantom are only accessible
+in JavaScript as methods. You never access a JavaScript field's storage directly.
+
+**Fantom**
+pre>
+class Foo
+{
+  Int a := 0
+  Int b := 1 { private set }
+  private Int c := 2
+}
+<pre
+
+**JavaScript**
+pre>
+class Foo extends sys.Obj {
+  constructor() {
+    super();
+    this.#a = 0;
+    this.#b = 1;
+    this.#c = 2;
+  }
+
+  #a = 0;
+
+  // has public getter/setter
+  a(it=undefined) {
+    if (it===undefined) return this.#a;
+    else this.#a = it;
+  }
+
+  #b = 0;
+
+  // has only public getter
+  b() { return this.#b; }
+
+  #c = 0;
+  // no method generated for #c since it has private getter/setter
+}
+
+let f = new Foo();
+f.a(100);
+console.log(`The value of a is now ${f.a()});
+<pre
+
+Enum [#enums]
+=============
+This field design has some specific implications for Enums. All static enum fields are
+generated as methods also. A good reference example is in 'src/sys/es/Weekday.js'.
+In general, you don't need to be concerned with the implementation details but any
+native code that wants to work with Enums needs to understand these conventions.
+
+  const monday = sys.Weekday.mon();
+
+Funcs and Closure [#funcs]
+==========================
+All Fantom code that expects a closure or Func will be generated to expect a native
+JavaScript closure. For example, the 'sys::List.each' method is defined in 'List.fan' as
+
+  Void each |V item, Int index| c)
+
+and implemented in 'List.js' as
+
+pre>
+each(f) {
+  for (let i=0; i<this.#size; ++i)
+    f(this.#values[i], i)
+}
+<pre
+
+Notice that the 'f' parameter is assumed to be a native JavaScript function and is
+invoked directly.
+
+Naming [#naming]
+================
+All class names are preserved when going from Fantom to JavaScript.
+
+Slot and Parameter names that conflict with built-in JS keywords are "pickled" to end
+with '$'. The list of names that gets pickled can be found in
+'src/compilerEs/fan/ast/JsNode.fan'.
+
+pre>
+# Fantom
+Void name(Str var) { ... }
+
+# JavaScript
+name$(var$) { ... }
+<pre
+
+As a general rule, any field or method that ends with '$' should be considered "public"
+API when using the JS code natively in an environment like Node or the browser. There
+are several "internal" methods and fields that are intended for compiler support and they
+will be prefixed with two underbars '__'. They should not be used by consumer of the
+generated JS code and are subject to change at any time without any notice.
+
+pre>
+# JavaScript - these should all be considered internal
+static __registry = {};
+
+__at(a,b,c) { ... }
+<pre
 
 Natives [#natives]
 ******************
@@ -147,17 +286,28 @@ To compile JavaScript natives, add the source directories to your
 build script using the [jsDirs]`build::BuildPod.jsDirs` field.
 See [Build Pod]`docTools::Build#buildPod` for an example.
 
+Currently the Fantom compiler supports generating JavaScript in the legacy js format
+and the new ES format. The ES compiler will look for natives by swizzling the first
+part of the path for each 'jsDir' to 'es/' and looking for the implementation there.
+For example
+
+pre>
+# build.fan
+jsDirs = [`js/`, `js/foo/`] // legacy location
+
+# The ES compiler will look for natives in
+[`es/`, `es/foo/`]
+<pre
+
 The JavaScript code must follow the compiler conventions discussed above.
 
 Testing [#testing]
 ******************
 Fantom includes built-in support for 'fant' to run units test in a JavaScript
-VM using the '-js' flag:
+VM using the '-es' flag:
 
-  $ fant -js myPod
+  $ fant -es myPod
 
-To run JS tests you need to have [NodeJs]`https://nodejs.org` installed. For
-macOS you can install using [Homebrew]`https://brew.sh`:
-
-  $ brew install node
+Note that this is convenience for calling 'fan nodeJs test myPod'.
+To run JS tests you need to have [Node.js]`https://nodejs.org` installed.
 

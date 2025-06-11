@@ -82,6 +82,12 @@ class Main
       if (fcodeDump == true) input.fcodeDump = true
     }
 
-    return Compiler(input).compile.js
+    output := Compiler(input).compile
+    switch (options["output"])
+    {
+      case "legacy": return output.js
+      case "esm":    return output.esm
+      default:       return output.cjs
+    }
   }
 }

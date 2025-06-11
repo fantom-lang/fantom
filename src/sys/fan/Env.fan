@@ -280,6 +280,9 @@ abstract const class Env
   **   - log: the `compiler::CompilerLog` to use for
   **     logging the compilation process and errors
   **   - logOut: an output stream to capture logging
+  **   - output: The output format of the compile javascript.
+  **   Use "legacy" for old js format, "js" for CommonJs and  "esm" for ES module.
+  **   The default is "js" if not specified.
   **
   virtual Str compileScriptToJs(File f, [Str:Obj]? options := null)
 
