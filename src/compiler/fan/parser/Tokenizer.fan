@@ -676,13 +676,16 @@ class Tokenizer : CompilerSupport
       {
         consume
         ch := 0
+        numDigits := 0
         while (cur != '}')
         {
           i := cur.fromDigit(16)
-          if (i == null)  throw err("Invalid hex value for \\u{x}")
+          numDigits++
+          if (i == null) throw err("Invalid hex value for \\u{x}")
           ch = ch.shiftl(4).or(i)
           consume
         }
+        if (numDigits == 0 || numDigits > 6) throw err("Invalid number of hex digits for \\u{x}")
         consume
         return ch
       }
