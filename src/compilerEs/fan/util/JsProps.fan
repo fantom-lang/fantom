@@ -11,6 +11,13 @@
 **
 class JsProps
 {
+  new make(ModuleSystem ms)
+  {
+    this.ms = ms
+  }
+
+  private ModuleSystem ms
+
   static Void writePod(OutStream out, Pod pod, Uri uri, Duration maxAge := 1sec)
   {
     props := Env.cur.props(pod, uri, maxAge)
@@ -29,5 +36,13 @@ class JsProps
     props.each |v,k| { js.wl("m.set(${k.toCode},${v.toCode});") }
     js.wl("sys.Env.cur().__props(${key.toCode}, m);")
     js.wl("})();")
+  }
+
+  Void write(OutStream out, Uri path, Pod[] pods)
+  {
+    ms.writeBeginModule(out)
+    ms.writeInclude(out, "sys.ext")
+    pods.each |pod| { writePod(out, pod, path) }
+    ms.writeEndModule(out)
   }
 }

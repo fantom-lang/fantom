@@ -242,10 +242,18 @@ const class FilePack : Weblet
   ** Compile the locale props into a JavaScript file "{locale}.js"
   static File toLocaleJsFile(Locale locale, Pod[] pods := Pod.list)
   {
-    buf := Buf(1024)
-    m := Slot.findMethod("compilerJs::JsProps.writeProps")
+    buf  := Buf(1024)
     path := `locale/${locale.toStr}.props`
-    pods.each |pod| { m.call(buf.out, pod, path, 1sec) }
+    if (WebJsMode.cur.isEs)
+    {
+      c := Type.find("compilerEs::JsProps").make([moduleSystem])
+      c->write(buf.out, path, pods)
+    }
+    else
+    {
+      m := Slot.findMethod("compilerJs::JsProps.writeProps")
+      pods.each |pod| { m.call(buf.out, pod, path, 1sec) }
+    }
     return buf.toFile(`${locale}.js`)
   }
 
@@ -262,9 +270,9 @@ const class FilePack : Weblet
   static File toPodJsMapFile(File[] files, [Str:Obj]? options := null)
   {
     buf := Buf(4 * 1024 * 1024)
-    m := WebJsMode.cur.isEs ?
-         Slot.findMethod("compilerEs::SourceMap.pack") :
-         Slot.findMethod("compilerJs::SourceMap.pack")
+    m := WebJsMode.cur.isEs
+      ? Slot.findMethod("compilerEs::SourceMap.pack")
+      : Slot.findMethod("compilerJs::SourceMap.pack")
     m.call(files, buf.out, options)
     return buf.toFile(`js.map`)
   }
