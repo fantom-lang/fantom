@@ -159,10 +159,12 @@ class TokenizerTest : Test
     verifyInt("'\\r'",    '\r')
     verifyInt("'\\''",    '\'')
     verifyInt("'\\uabcd'",'\uabcd')
+    verifyInt("'\\u{1f601}'",'\u{1f601}')
     verifyInvalid("'a")
     verifyInvalid("'ab'")
     verifyInvalid("'\\q'")
     verifyInvalid("'\\ug000'")
+    verifyInvalid("'\\u{g000}'")
   }
 
   Void verifyInt(Str src, Int val)
