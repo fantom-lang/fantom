@@ -98,7 +98,7 @@ public class StrBuf
 
   public StrBuf addChar(long ch)
   {
-    sb.append((char)ch);
+    sb.appendCodePoint((int)ch);
     return this;
   }
 
