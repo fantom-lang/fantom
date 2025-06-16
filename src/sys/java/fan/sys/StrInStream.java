@@ -60,8 +60,16 @@ public class StrInStream
   {
     if (pushback != null && pushback.sz() > 0)
       return ((Long)pushback.pop()).intValue();
+
     if (pos >= size) return -1;
-    return str.charAt(pos++);
+
+    final char c = str.charAt(pos++);
+    if (Character.isHighSurrogate(c) && pos<size)
+    {
+      final char low = str.charAt(pos++);
+      return Character.toCodePoint(c, low);
+    }
+    return c;
   }
 
   public Long readChar()
@@ -69,12 +77,19 @@ public class StrInStream
     if (pushback != null && pushback.sz() > 0)
       return (Long)pushback.pop();
     if (pos >= size) return null;
-    return Long.valueOf(str.charAt(pos++));
+
+    final char c = str.charAt(pos++);
+    if (Character.isHighSurrogate(c) && pos<size)
+    {
+      final char low = str.charAt(pos++);
+      return (long)Character.toCodePoint(c, low);
+    }
+    return (long)c;
   }
 
   public InStream unreadChar(long c)
   {
-    if (pushback == null) pushback = new List(Sys.IntType, 8);
+    if (pushback == null) pushback = new List<>(Sys.IntType, 8);
     pushback.push(c);
     return this;
   }
@@ -91,7 +106,7 @@ public class StrInStream
   String str;
   int pos;
   int size;
-  List pushback;
+  List<Long> pushback;
 
 }
 

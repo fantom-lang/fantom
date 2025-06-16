@@ -171,9 +171,9 @@ public class OutStream
     return w(x ? 1 : 0);
   }
 
-  public OutStream writeUtf(String s)
+  public OutStream writeUtf(final String s)
   {
-    int slen = s.length();
+    final int slen = s.length();
     int utflen = 0;
 
     // first we have to figure out the utf length
@@ -193,7 +193,7 @@ public class OutStream
 
     // write length as 2 byte value
     w((utflen >>> 8) & 0xFF);
-    w((utflen >>> 0) & 0xFF);
+    w(utflen & 0xFF);
 
     // write characters
     for (int i=0; i<slen; ++i)
@@ -207,12 +207,12 @@ public class OutStream
       {
         w(0xE0 | ((c >> 12) & 0x0F));
         w(0x80 | ((c >>  6) & 0x3F));
-        w(0x80 | ((c >>  0) & 0x3F));
+        w(0x80 | ((c      ) & 0x3F));
       }
       else
       {
         w(0xC0 | ((c >>  6) & 0x1F));
-        w(0x80 | ((c >>  0) & 0x3F));
+        w(0x80 | ((c      ) & 0x3F));
       }
     }
     return this;
@@ -284,13 +284,27 @@ public class OutStream
   }
 
   public OutStream writeChars(String s) { return writeChars(s, 0, s.length()); }
-  public OutStream writeChars(String s, long off) { return writeChars(s, (int)off, s.length()-(int)off); }
-  public OutStream writeChars(String s, long off, long len) { return writeChars(s, (int)off, (int)len); }
-  public OutStream writeChars(String s, int off, int len)
+  public OutStream writeChars(String s, final long off) { return writeChars(s, (int)off, s.length()-(int)off); }
+  public OutStream writeChars(String s, final long off, final long len) { return writeChars(s, (int)off, (int)len); }
+  public OutStream writeChars(String s, final int off, final int len)
   {
     int end = off+len;
     for (int i=off; i<end; ++i)
-      writeChar(s.charAt(i));
+    {
+      final char c = s.charAt(i);
+      // if we find a high surrogate and there is at least one more char
+      // we write the encoded code point for this surrogate pair
+      if (Character.isHighSurrogate(c) && i+1<end)
+      {
+        ++i;
+        final char low = s.charAt(i);
+        writeChar(Character.toCodePoint(c, low));
+      }
+      else
+      {
+        writeChar(c);
+      }
+    }
     return this;
   }
 

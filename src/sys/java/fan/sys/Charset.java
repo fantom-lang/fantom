@@ -419,6 +419,7 @@ public class Charset
    */
   public static abstract class Decoder
   {
+    /** Read the next code point from the InStream */
     public abstract int decode(InStream in);
   }
 
