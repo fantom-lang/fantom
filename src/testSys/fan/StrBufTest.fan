@@ -113,7 +113,8 @@ class StrBufTest : Test
     s.addChar('d')
     s.add(null)
     s.addChar('\n')
-    verifyEq(s.toStr, "abcdnull\n")
+    s.addChar('\u{1f601}')
+    verifyEq(s.toStr, "abcdnull\n😁")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -300,6 +301,7 @@ class StrBufTest : Test
     verifyOut("x\u0abc\n") |out| { out.printLine("x\u0abc") }
     verifyOut("x\u0abc\n") |out| { out.writeChar('x').writeChar('\u0abc').writeChar('\n') }
     verifyOut("x\u0abc\n") |out| { out.writeChars("x\u0abc\n") }
+    verifyOut("x😁\n")     |out| { out.writeChar('x').writeChar('\u{1f601}').writeChar('\n') }
     verifyOut("&lt;foo>") |out| { out.writeXml("<foo>") }
     verifyOut("&lt;&amp;\"'") |out| { out.writeXml("<&\"'") }
     verifyOut("&lt;&amp;&quot;&#39;") |out| { out.writeXml("<&\"'", OutStream.xmlEscQuotes) }
@@ -337,6 +339,8 @@ class StrBufTest : Test
     out.writeChars("xfgx", 1, 2); verifyEq(buf.toStr, "abcdefg")
     out.print("hi");              verifyEq(buf.toStr, "abcdefghi")
     out.printLine("j");           verifyEq(buf.toStr, "abcdefghij\n")
+    out.writeChar('\u{1f601}');   verifyEq(buf.toStr, "abcdefghij\n😁")
+    out.print("😁!");   verifyEq(buf.toStr, "abcdefghij\n😁😁!")
 
     // writeProps
     buf.clear

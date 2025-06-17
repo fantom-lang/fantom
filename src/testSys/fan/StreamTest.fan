@@ -442,8 +442,10 @@ class StreamTest : Test
     out.writeChar(0xf6)
     out.writeChar(0xabcd)
     out.write(0x33)
+    out.writeChars("😁")
+    out.writeChar('\u{1f44d}')
     out.close
-    verifyEq(f.size, 18)
+    verifyEq(f.size, 26)
 
     // read file back in
     in := f.in(0)
@@ -464,6 +466,8 @@ class StreamTest : Test
     verifyEq(in.peekChar, 0xabcd)
     verifyEq(in.readChar, 0xabcd)
     verifyEq(in.read,     0x33)
+    verifyEq(in.readChar, '\u{1f601}')
+    verifyEq(in.readChar, '\u{1f44d}')
     verifyEq(in.readChar, null)
     verifyEq(in.peekChar, null)
     verifyEq(in.read,     null)

@@ -397,7 +397,7 @@ class StrTest : Test
   {
     if (expected != null)
     {
-echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
+// echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
       verifyEq(s[r], expected)
       verifyEq(s.getRange(r), expected)
     }
@@ -559,6 +559,9 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
     verify("abcd".contains("bc"))
     verifyFalse("abcd".contains("x"))
     verifyFalse("abcd".contains("abx"))
+    verify("a🥳c".contains("🥳"))
+    verify("a🥳c".contains('\u{1f973}'.toChar))
+    verify("a🥳c".contains("🥳c"))
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -572,6 +575,7 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
     verifyEq("ab CD".containsChar('D'), true)
     verifyEq("ab CD".containsChar('c'), false)
     verifyEq("ab CD".containsChar('B'), false)
+    verifyEq("ab 🥳C DE".containsChar('\u{1f973}'), true)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -584,6 +588,7 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
     verifyChars("a", ['a'])
     verifyChars("a b", ['a', ' ', 'b'])
     verifyChars("\u345F", [0x345F])
+    verifyChars("\u{1f973}", [0x1f973])
   }
 
   Void verifyChars(Str s, Int[] chars)
@@ -1231,6 +1236,7 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
     verifySame("<>" * 1, "<>")
     verifyEq("<>" * 2, "<><>")
     verifyEq("<>" * 3, "<><><>")
+    verifyEq("🥳👍" * 3, "🥳👍🥳👍🥳👍")
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1265,6 +1271,9 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
       Buf { charset=Charset.utf16BE; write(0).write('x').write(0xa).write(0xbc) }.toHex)
 
     verifyEq("hi there".toBuf.readAllStr, "hi there")
+
+    verifyEq("good job! \u{1f44d}".toBuf.toHex,
+      Buf().print("good job! 👍").toHex)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1275,7 +1284,7 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
   {
     verifyEq("hi test".in.readAllStr, "hi test")
     verifyEq("hi\ntest".in.readAllLines, ["hi", "test"])
+    verifyEq("does unicode go 💣?".in.readAllStr, "does unicode go 💣?")
+    verifyEq("does unicode go\n💣?".in.readAllLines, ["does unicode go", "💣?"])
   }
-
-
 }
