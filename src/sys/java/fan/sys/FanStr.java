@@ -14,18 +14,17 @@ import fanx.serial.*;
 import fanx.util.StrUtil;
 
 /**
- * FanString defines the methods for sys::Str.  The actual
+ * FanString defines the methods for sys::Str. The actual
  * class used for representation is java.lang.String.
  */
 public class FanStr
 {
-
-  public static String fromChars(List chars)
+  public static String fromChars(final List<Long> chars)
   {
     if (chars.sz() == 0) return "";
     StringBuilder s = new StringBuilder(chars.sz());
     for (int i=0; i<chars.sz(); ++i)
-      s.append((char)((Long)chars.get(i)).longValue());
+      s.appendCodePoint(chars.get(i).intValue());
     return s.toString();
   }
 
@@ -318,13 +317,12 @@ public class FanStr
 // Iterators
 //////////////////////////////////////////////////////////////////////////
 
-  public static List<Long> chars(String self)
+  public static List<Long> chars(final String self)
   {
     int len = self.length();
     if (len == 0) return Sys.IntType.emptyList();
-    Long[] chars = new Long[len];
-    for (int i=0; i<len; ++i) chars[i] = Long.valueOf(self.charAt(i));
-    return new List(Sys.IntType, chars);
+    final Long[] codePoints = self.codePoints().asLongStream().boxed().toArray(Long[]::new);
+    return new List<>(Sys.IntType, codePoints);
   }
 
   public static void each(String self, Func f)
