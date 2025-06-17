@@ -106,16 +106,26 @@ public class Charset
       {
         out.unread(c);
       }
-      else if (c > 0x07FF)
+      else if (c <= 0x07FF)
+      {
+        out.unread(0x80 | ((c >>  0) & 0x3F))
+           .unread(0xC0 | ((c >>  6) & 0x1F));
+
+      }
+      else if (c <= 0xFFFF)
       {
         out.unread(0x80 | ((c >>  0) & 0x3F))
            .unread(0x80 | ((c >>  6) & 0x3F))
            .unread(0xE0 | ((c >> 12) & 0x0F));
+
       }
       else
       {
-        out.unread(0x80 | ((c >>  0) & 0x3F))
-           .unread(0xC0 | ((c >>  6) & 0x1F));
+        out.unread(0x80 | (( c >> 0) & 0x3F))
+           .unread(0x80 | ((c >>  6) & 0x3F))
+           .unread(0x80 | ((c >> 12) & 0x3F))
+           .unread(0xF0 | ((c >> 18) & 0x07));
+
       }
     }
   }
@@ -155,11 +165,7 @@ public class Charset
           c4 = in.r();
           if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80) || ((c4 & 0xC0) != 0x80))
             throw IOErr.make("Invalid UTF-8 encoding");
-          // Java can't handle chars in this upper / extended range
-          // so return a replacement character instead
-          // see https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character
           return (((c & 0x07) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | ((c4 & 0x3F) << 0));
-          // return 0xFFFD;
 
         default:
           throw IOErr.make("Invalid UTF-8 encoding");
