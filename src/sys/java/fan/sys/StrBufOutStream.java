@@ -65,13 +65,13 @@ public class StrBufOutStream
 
   public OutStream writeChar(int c)
   {
-    sb.append((char)c);
+    sb.appendCodePoint(c);
     return this;
   }
 
   public OutStream writeChar(long c)
   {
-    sb.append((char)c);
+    sb.appendCodePoint((int)c);
     return this;
   }
 
