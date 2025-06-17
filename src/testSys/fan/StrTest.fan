@@ -1208,12 +1208,12 @@ echo("-- $s[$r] => " + s.getRange(r) + " ?= " + expected)
     verifyEq("a".toCode('`'), "`a`")
     verifyEq("a".toCode('!'), "!a!")
 
-    verifyEq("\u0000 \u001F".toCode, Str<|"\u0000 \u001f"|>)
+    verifyEq("\u0000 \u001F".toCode, Str<|"\u{0} \u{1f}"|>)
 
-    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode, "\"(\\n \\r \\f \\t \\\\ \\\$ ` ' \\\" \u0278 \u7abc)\"")
-    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('\''), "'(\\n \\r \\f \\t \\\\ \\\$ ` \\' \" \u0278 \u7abc)'")
-    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('`'), "`(\\n \\r \\f \\t \\\\ \\\$ \\` ' \" \u0278 \u7abc)`")
-    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u8abc)".toCode('`', true), "`(\\n \\r \\f \\t \\\\ \\\$ \\` ' \" \\u0278 \\u8abc)`")
+    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode, "\"(\\n \\r \\f \\t \\\\ \\\$ ` ' \\\" \u{278} \u{7abc})\"")
+    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('\''), "'(\\n \\r \\f \\t \\\\ \\\$ ` \\' \" \u{278} \u{7abc})'")
+    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u7abc)".toCode('`'), "`(\\n \\r \\f \\t \\\\ \\\$ \\` ' \" \u{278} \u{7abc})`")
+    verifyEq("(\n \r \f \t \\ \$ ` ' \" \u0278 \u8abc)".toCode('`', true), "`(\\n \\r \\f \\t \\\\ \\\$ \\` ' \" \\u{278} \\u{8abc})`")
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -469,9 +469,11 @@ class StreamTest : Test
     verifyEq(in.read,     null)
     in.close
 
-    // test chars outside Java's range (emoji)
-    str := Buf.fromHex("666f6f20e299bff09f8e99206f6e20626172").readAllStr
-    verifyEq(str.toCode(null, true), Str<|foo \u267f\ufffd on bar|>)
+    // test chars outside Java's range (emoji) using unicode escape and character itself
+    str := "foo \u{1f601} bar"
+    verifyEq(str.toCode(null, true), Str<|foo \u{1f601} bar|>)
+    str = "foo 🥳 bar"
+    verifyEq(str.toCode(null, true), Str<|foo \u{1f973} bar|>)
   }
 
 //////////////////////////////////////////////////////////////////////////

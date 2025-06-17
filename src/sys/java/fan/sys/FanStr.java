@@ -893,13 +893,12 @@ public class FanStr
   public static Regex toRegex(String self) { return Regex.fromStr(self); }
 
   public static String toCode(String self) { return toCode(self, FanInt.pos['"'], false); }
-  public static String toCode(String self, Long quote) { return toCode(self, quote, false); }
-  public static String toCode(String self, Long quote, boolean escapeUnicode)
+  public static String toCode(final String self, final Long quote) { return toCode(self, quote, false); }
+  public static String toCode(final String self, final Long quote, final boolean escapeUnicode)
   {
     StringBuilder s = new StringBuilder(self.length()+10);
 
     // opening quote
-    boolean escu = escapeUnicode;
     int q = 0;
     if (quote != null)
     {
@@ -908,10 +907,10 @@ public class FanStr
     }
 
     // NOTE: these escape sequences are duplicated in ObjEncoder
-    int len = self.length();
-    for (int i=0; i<len; ++i)
+    final int len = self.length();
+    for (int i=0; i<len; )
     {
-      int c = self.charAt(i);
+      final int c = self.codePointAt(i);
       switch (c)
       {
         case '\n': s.append('\\').append('n'); break;
@@ -924,19 +923,19 @@ public class FanStr
         case '\'': if (q == '\'') s.append('\\').append('\''); else s.append((char)c); break;
         case '$':  s.append('\\').append('$'); break;
         default:
-          if (c < ' ' || (escu && c > 127))
+          if (c < ' ' || (escapeUnicode && c > 127))
           {
-            s.append('\\').append('u')
-             .append((char)hex((c>>12)&0xf))
-             .append((char)hex((c>>8)&0xf))
-             .append((char)hex((c>>4)&0xf))
-             .append((char)hex(c&0xf));
+            // always encode using \\u{X} encoding
+            s.append('\\').append('u').append('{')
+                    .append(FanInt.toHex(c))
+                    .append('}');
           }
           else
           {
-            s.append((char)c);
+            s.appendCodePoint(c);
           }
       }
+      i += Character.charCount(c);
     }
 
     // closing quote
