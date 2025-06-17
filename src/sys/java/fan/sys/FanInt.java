@@ -451,11 +451,11 @@ public final class FanInt extends FanNum
 // Conversion
 //////////////////////////////////////////////////////////////////////////
 
-  public static String toChar(long self)
+  public static String toChar(final long self)
   {
-    if (self < 0 || self > 0xFFFF) throw Err.make("Invalid unicode char: " + self);
+    if (!Character.isValidCodePoint((int)self)) throw Err.make("Invalid unicode char: " + self);
     if (self < FanStr.ascii.length) return FanStr.ascii[(int)self];
-    return String.valueOf((char)self);
+    return String.valueOf(Character.toChars((int)self));
   }
 
   public static String toHex(long self) { return toHex(self, null); }

@@ -524,7 +524,8 @@ class IntTest : Test
     verifyEq(32.toChar, " ")
     verifyEq(0x1234.toChar, "\u1234")
 
-    verifyErr(Err#) { 0x10000.toChar }
+    verifyErr(Err#) { (-1).toChar }
+    verifyErr(Err#) { (1_114_112+1).toChar }
   }
 
 //////////////////////////////////////////////////////////////////////////
