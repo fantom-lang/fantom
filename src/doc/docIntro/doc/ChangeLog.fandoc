@@ -6,7 +6,7 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.82 (working)*
+*Build 1.0.82 (26 Jun 2025)*
 - New fanc tool for transpiling to Java source
 - Java make List/Map generic types
 - Java List implements java.util.List
@@ -31,6 +31,8 @@
 - ES support for IntArray and FloatArray
 - New docs: Interop, Java, and Fanc
 - Add string literal escape sequence for \u{xxx}
+- Improve surrogate pair support in Java
+- France locale change start of week from Sun to Mon
 
 *Build 1.0.81 (6 Dec 2024)*
 - New markdown pod
