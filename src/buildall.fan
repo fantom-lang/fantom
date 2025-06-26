@@ -206,6 +206,7 @@ class Build : BuildGroup
   Void deleteNonDist()
   {
     Delete(this, devHomeDir+`readme.html`).run
+    Delete(this, devHomeDir+`gen/`).run
     Delete(this, devHomeDir+`tmp/`).run
     Delete(this, devHomeDir+`temp/`).run
     Delete(this, devHomeDir+`lib/tmp/`).run

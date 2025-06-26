@@ -140,7 +140,7 @@ class Build : BuildScript
       t.fields.each |f|
       {
         facets := toFacets(f->ffacets)
-        out.print(".\$af('$f.name',${f->flags},'$f.fieldType.signature',{$facets})")
+        out.print(".\$af('$f.name',${f->flags},'$f.type.signature',{$facets})")
       }
       t.methods.each |m|
       {
@@ -149,10 +149,10 @@ class Build : BuildScript
         m.params.each |p,j|
         {
           if (j > 0) params.add(",")
-          params.add("new fan.sys.Param('$p.name','$p.paramType.signature',$p.hasDefault)")
+          params.add("new fan.sys.Param('$p.name','$p.type.signature',$p.hasDefault)")
         }
         params.add("])")
-        out.print(".\$am('$m.name',${m->flags},'${m.returnType.signature}',$params,{$facets})")
+        out.print(".\$am('$m.name',${m->flags},'${m.returns.signature}',$params,{$facets})")
       }
       out.printLine(";")
     }
@@ -297,3 +297,4 @@ class Build : BuildScript
   File? fanx      // sys/fanx/ dir
   CType[]? types  // types to emit
 }
+
