@@ -1653,10 +1653,8 @@ public final class List<V>
 
     public Object next()
     {
-      int i = cursor + 1;
-      if (i >= size) throw new NoSuchElementException();
-      cursor = i;
-      return (V) values[cursor];
+      if (cursor >= size) throw new NoSuchElementException();
+      return (V) values[cursor++];
     }
 
     public int nextIndex()
