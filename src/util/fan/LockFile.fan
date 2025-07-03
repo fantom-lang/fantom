@@ -14,6 +14,7 @@ using [java] java.io::RandomAccessFile
 ** LockFile is used to acquire an exclusive lock to prevent
 ** two different processes from using same files
 **
+@Js
 native const final class LockFile
 {
   ** Construct with given file
