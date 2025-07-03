@@ -78,6 +78,12 @@ abstract const class Env
   Str runtime()
 
   **
+  ** Returns true if the runtime is 'js' and execution environment
+  ** is a web browser.
+  **
+  Bool isBrowser()
+
+  **
   ** Get the Java VM Version as a single integer (8, 9, etc.).
   ** If the `runtime` is not java, return 0.
   **

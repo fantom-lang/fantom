@@ -125,6 +125,8 @@ class Env extends Obj {
   // but I think a lot of code my depend/assume that single value
   runtime() { return "js"; }
 
+  isBrowser() { return (typeof window !== "undefined") && this.runtime() == "js"; }
+
   javaVersion() { return 0; }
 
   idHash(obj) {
