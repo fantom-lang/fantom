@@ -357,7 +357,12 @@ abstract class AbstractMain
       if (v is List)
       {
         out.printLine(indent+ "$n:")
-        ((List)v).each |path| { out.printLine(indent + "  " + path) }
+        ((List)v).each |x| { out.printLine(indent + "  " + x) }
+      }
+      else if (v is Map)
+      {
+        out.printLine(indent+ "$n:")
+        ((Map)v).each |x, k| { out.printLine(indent + "  " + k + ": " + x) }
       }
       else
       {
