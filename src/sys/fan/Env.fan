@@ -311,9 +311,15 @@ abstract const class Env
 
   **
   ** Return list of all pod names that define the given key.
-  ** NOTE: Java runtime only
   **
   virtual Str[] indexPodNames(Str key)
+
+  **
+  ** Get the values for this key organized by each pod that defines the key.
+  ** The keys of the map are the pod names, and the values of the map are the key values
+  ** defined by that pod.
+  **
+  virtual [Str:Str[]] indexByPodName(Str key)
 
   **
   ** Return a merged key/value map of all the prop files found

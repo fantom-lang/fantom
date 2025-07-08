@@ -139,7 +139,7 @@ public abstract class Env
 
   public List<String> findAllPodNames()
   {
-    List acc = new List(Sys.StrType);
+    List<String> acc = new List<>(Sys.StrType);
     List files = findFile(Uri.fromStr("lib/fan/")).list();
     for (int i=0; i<files.sz(); ++i)
     {
@@ -179,6 +179,11 @@ public abstract class Env
   public List<String> indexPodNames(String key)
   {
     return index.podNames(key);
+  }
+
+  public Map<String, List<String>> indexByPodName(String key)
+  {
+    return index.byPodName(key);
   }
 
   public Map<String,String> props(Pod pod, Uri uri, Duration maxAge)

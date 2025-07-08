@@ -32,26 +32,33 @@ public class EnvIndex
 // Get
 //////////////////////////////////////////////////////////////////////////
 
-  public synchronized List get(String key)
+  public synchronized List<String> get(String key)
   {
     if (index == null) load();
-    List list = (List)index.get(key);
+    List<String> list = index.get(key);
     if (list != null) return list;
     return Sys.StrType.emptyList();
   }
 
-  public synchronized List keys()
+  public synchronized List<String> keys()
   {
     if (keys == null) load();
     return keys;
   }
 
-  public synchronized List podNames(String key)
+  public synchronized List<String> podNames(String key)
   {
     if (keys == null) load();
-    List list = (List)keyToPodNames.get(key);
-    if (list != null) return list;
-    return Sys.StrType.emptyList();
+    Map<String, List<String>> map = byPodName(key);
+    return map.keys();
+  }
+
+  public synchronized Map<String, List<String>> byPodName(String key)
+  {
+    if (keys == null) load();
+    Map<String, List<String>> map = keyToByPodName.get(key);
+    if (map != null) return map;
+    return Map.make(Sys.StrType, Sys.StrType.toListOf());
   }
 
   public synchronized void reload()
@@ -69,17 +76,17 @@ public class EnvIndex
     // long t1 = System.currentTimeMillis();
 
     // load all the props
-    List podNames = env.findAllPodNames();
-    HashMap index = new HashMap(podNames.sz()*11);
-    HashMap keyToPodNames = new HashMap();
+    final List<String> podNames = env.findAllPodNames();
+    HashMap<String, List<String>> index = new HashMap<>(podNames.sz()*11);
+    HashMap<String, Map<String, List<String>>> keyToByPodName = new HashMap<>();
     for (int i=0; i<podNames.sz(); ++i)
     {
-      String podName = (String)podNames.get(i);
+      final String podName = podNames.get(i);
       try
       {
-        Map props = env.readIndexProps(podName);
+        Map<String, List<String>> props = env.readIndexProps(podName);
         if (props == null) continue;
-        addProps(index, keyToPodNames, podName, props);
+        addProps(index, keyToByPodName, podName, props);
       }
       catch (Throwable e)
       {
@@ -87,31 +94,41 @@ public class EnvIndex
       }
     }
 
-    List keys = List.make(Sys.StrType);
+    List<String> keys = List.make(Sys.StrType);
 
     // long t2 = System.currentTimeMillis();
     // System.out.println("Env.index load " + (t2-t1) + "ms");
     this.index = toImmutableListVals(index, keys);
-    this.keyToPodNames = toImmutableListVals(keyToPodNames, null);
-    this.keys = (List)keys.sort().toImmutable();
+    this.keys = (List<String>)keys.sort().toImmutable();
+    this.keyToByPodName = toImmutableByPodName(keyToByPodName);
   }
 
-  private static void addProps(HashMap index, HashMap keyToPodNames, String podName, Map props)
+  private static void addProps(HashMap<String, List<String>> index,
+                               HashMap<String, Map<String, List<String>>> keyToByPodName,
+                               String podName,
+                               Map<String, List<String>> props)
   {
-    Iterator it = props.pairsIterator();
+    Iterator<Entry<String, List<String>>> it = props.pairsIterator();
     while (it.hasNext())
     {
-      Entry entry = (Entry)it.next();
-      String key  = (String)entry.getKey();
-      List val    = (List)entry.getValue();
+      Entry<String, List<String>> entry = it.next();
+      String key       = entry.getKey();
+      List<String> val = entry.getValue();
       addListVal(index, key, val);
-      addListVal(keyToPodNames, key, List.make(Sys.StrType, 1)._add(podName));
+
+      Map<String, List<String>> byPodName = keyToByPodName.get(key);
+      if (byPodName == null)
+      {
+        byPodName = Map.make(Sys.StrType, Sys.StrType.toListOf());
+        keyToByPodName.put(key, byPodName);
+      }
+      byPodName.put(podName, (List<String>)val.toImmutable());
     }
   }
 
-  private static void addListVal(HashMap acc, String key, List val)
+  private static void addListVal(HashMap<String, List<String>> acc, String key, List<String> val)
   {
-    List master = (List)acc.get(key);
+    List<String> master = acc.get(key);
     if (master == null)
       acc.put(key, val);
     else
@@ -130,6 +147,12 @@ public class EnvIndex
       if (keys != null) keys.add(key);
     }
     return immutable;
+  }
+
+  private static HashMap<String, Map<String, List<String>>> toImmutableByPodName(HashMap<String, Map<String, List<String>>> mutable)
+  {
+    mutable.replaceAll((k, v) -> (Map<String, List<String>>) mutable.get(k).toImmutable());
+    return mutable;
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -156,9 +179,9 @@ public class EnvIndex
 //////////////////////////////////////////////////////////////////////////
 
   private final Env env;
-  private HashMap index;
-  private List keys;
-  private HashMap keyToPodNames;
+  private HashMap<String, List<String>> index;
+  private List<String> keys;
+  private HashMap<String, Map<String, List<String>>> keyToByPodName;
 
 }
 
