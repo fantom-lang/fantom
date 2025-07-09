@@ -39,9 +39,17 @@ class Env extends Obj {
 //////////////////////////////////////////////////////////////////////////
 
   static #index;
-  __loadIndex(index) {
+  static #indexKeys;
+  static #indexByPodName;
+  __loadIndex(index, indexByPodName) {
     if (index.typeof().toStr() != "[sys::Str:sys::Str[]]") throw ArgErr.make("Invalid type");
+    if (indexByPodName.typeof().toStr() != "[sys::Str:[sys::Str:sys::Str[]]]") throw ArgErr.make("Invalie type for byPodname");
     Env.#index = index;
+    Env.#indexKeys = Env.#index.keys().toImmutable();
+    indexByPodName.keys().each((k) => {
+      indexByPodName.set(k, indexByPodName.get(k).toImmutable());
+    })
+    Env.#indexByPodName = indexByPodName;
   }
 
   static #props;
@@ -179,6 +187,17 @@ class Env extends Obj {
 //////////////////////////////////////////////////////////////////////////
 
   index(key) { return Env.#index.get(key, Str.type$.emptyList()); }
+
+  indexKeys() { return Env.#indexKeys; }
+
+  indexPodNames(key) { return this.indexByPodName(key).keys().toImmutable(); }
+
+  indexByPodName(key)
+  {
+    const m = Env.#indexByPodName.get(key)
+    if (m != null) return m;
+    return Map.make(Str.type$, Str.type$.toListOf()).toImmutable();
+  }
 
   props(pod, uri, maxAge) {
     // if (!Env.#props) Env.#props = Map.make(Str.type$, Str.type$);

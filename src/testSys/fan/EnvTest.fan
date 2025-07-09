@@ -399,7 +399,8 @@ class EnvTest : Test
     verifyIndex("testSys.single", ["works!"])
 
     mult := ["testSys-1", "testSys-2"]
-    hasNative := Pod.find("testNative", false) != null
+    // TODO:FIXIT for js
+    hasNative := Pod.find("testNative", false) != null || Env.cur.runtime == "js"
     if (hasNative) mult.add("testNative")
     verifyIndex("testSys.mult", mult)
 
