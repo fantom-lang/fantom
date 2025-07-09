@@ -50,7 +50,7 @@ public class EnvIndex
   {
     if (keys == null) load();
     Map<String, List<String>> map = byPodName(key);
-    return map.keys();
+    return (List<String>)map.keys().toImmutable();
   }
 
   public synchronized Map<String, List<String>> byPodName(String key)
@@ -58,7 +58,7 @@ public class EnvIndex
     if (keys == null) load();
     Map<String, List<String>> map = keyToByPodName.get(key);
     if (map != null) return map;
-    return Map.make(Sys.StrType, Sys.StrType.toListOf());
+    return (Map<String, List<String>>)Map.make(Sys.StrType, Sys.StrType.toListOf()).toImmutable();
   }
 
   public synchronized void reload()

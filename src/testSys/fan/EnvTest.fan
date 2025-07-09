@@ -405,6 +405,13 @@ class EnvTest : Test
 
     verifyIndexPodNames("testSys.mult", hasNative ? ["testNative", "testSys"] : ["testSys"])
     verifyIndexPodNames("testSys.bad", Str[,])
+
+    verifyIndexByPodName("testSys.bad", [Str:Str[]][:])
+    verifyIndexByPodName("testSys.single", ["testSys":["works!"]])
+
+    expected := ["testSys":["testSys-1", "testSys-2"]]
+    if (hasNative) expected["testNative"] = ["testNative"]
+    verifyIndexByPodName("testSys.mult", expected)
   }
 
   Void verifyIndex(Str key, Str[] expected)
@@ -420,7 +427,7 @@ class EnvTest : Test
     actual := Env.cur.indexPodNames(key)
     // echo("P=> $key  $actual  ?=  $expected")
     verifyIndexList(actual, expected)
-    verifySame(actual, Env.cur.indexPodNames(key))
+    verifyEq(actual, Env.cur.indexPodNames(key))
   }
 
   Void verifyIndexList(Str[] actual, Str[] expected)
@@ -428,6 +435,16 @@ class EnvTest : Test
     verifyEq(actual.dup.sort, expected.sort)
     verifyEq(actual.isImmutable, true)
     verifyEq(actual.typeof, Str[]#)
+  }
+
+  Void verifyIndexByPodName(Str key, [Str:Str[]] expected)
+  {
+    actual := Env.cur.indexByPodName(key)
+    verifyEq(actual.isImmutable, true)
+    verifyEq(actual.isEmpty, expected.isEmpty)
+    verifyEq(actual, expected)
+    actual.each |v, k| { verifyEq(v.isImmutable, true) }
+    if (!actual.isEmpty) verifySame(actual, Env.cur.indexByPodName(key))
   }
 
 //////////////////////////////////////////////////////////////////////////
