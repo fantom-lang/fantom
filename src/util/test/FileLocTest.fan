@@ -24,6 +24,12 @@ class FileLocTest : Test
     verifyCmd(FileLoc("a", 2, 5), FileLoc("a", 2, 5), 0)
     verifyCmd(FileLoc("a", 2, 5), FileLoc("a", 2, 7), -1)
     verifyCmd(FileLoc("a", 2, 9), FileLoc("a", 2, 7), 1)
+
+    verifyLoc(FileLoc("foo.txt").toFilenameOnly, "foo.txt", 0, 0)
+    verifyLoc(FileLoc("foo.txt", 1, 2).toFilenameOnly, "foo.txt", 1, 2)
+    verifyLoc(FileLoc("/path/foo.txt").toFilenameOnly, "foo.txt", 0, 0)
+    verifyLoc(FileLoc("\\path\\foo.txt", 1, 2).toFilenameOnly, "foo.txt", 1, 2)
+    verifyLoc(FileLoc("/long/path/here/foo.txt", 2, 3).toFilenameOnly, "foo.txt", 2, 3)
   }
 
   Void verifyLoc(FileLoc loc, Str file, Int line, Int col)
@@ -43,3 +49,4 @@ class FileLocTest : Test
     verifyEq(a > b, expected > 0)
   }
 }
+

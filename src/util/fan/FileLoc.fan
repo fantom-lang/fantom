@@ -114,6 +114,13 @@ const class FileLoc
     return "$file($line,$col)"
   }
 
+  ** Simplify the file path to remove path
+  @NoDoc FileLoc toFilenameOnly()
+  {
+    slash := file.indexr("/") ?: file.indexr("\\")
+    if (slash == null) return this
+    return make(file[slash+1..-1], line, col)
+  }
 }
 
 **************************************************************************
