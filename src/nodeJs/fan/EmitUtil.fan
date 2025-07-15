@@ -54,11 +54,11 @@ internal class EmitUtil
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  private File? podJsFile(Pod pod, Str name := pod.name)
+  private File? podJsFile(Pod pod, Str name, Bool checked)
   {
     ext    := isCjs ? "js" : "mjs"
     script := "${name}.${ext}"
-    return pod.file(`/js/$script`, false)
+    return pod.file(`/js/$script`, checked)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@ internal class EmitUtil
   Void writeFanJs()
   {
     out := ms.file("fan").out
-    podJsFile(Pod.find("sys"), "fan").in.pipe(out)
+    podJsFile(Pod.find("sys"), "fan", true).in.pipe(out)
     out.flush.close
   }
 
@@ -111,7 +111,7 @@ internal class EmitUtil
 
     this.depends.each |pod|
     {
-      file   := podJsFile(pod)
+      file   := podJsFile(pod, pod.name, false)
       target := ms.file(pod.name)
       if (file != null)
       {
@@ -203,3 +203,4 @@ internal class EmitUtil
     return buf.toStr
   }
 }
+
