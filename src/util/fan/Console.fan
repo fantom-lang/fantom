@@ -152,7 +152,10 @@ class ConsoleTable
     if (list != null && list.first is List)
     {
       headers = list[0]
-      if (list.size > 1) rows = list[1..-1]
+      list.eachRange(1..-1) |Obj?[] listItem|
+      {
+        rows.add(listItem.map |z->Str| { str(z) })
+      }
       return
     }
 
@@ -251,7 +254,7 @@ class ConsoleTable
 
   private static Str str(Obj? x)
   {
-    if (x == null) return "null"
+    if (x == null) return ""
     s := x.toStr
     if (s.contains("\n")) s = s.splitLines.first
     if (s.size > 80) s = s[0..80] + ".."
