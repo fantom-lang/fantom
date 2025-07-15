@@ -515,6 +515,13 @@ const final class Str
   Str[] splitLines()
 
   **
+  ** Split string into lines and call specified function with each line.
+  ** Each line is terminated by \n, \r\n, \r, or EOF using the same
+  ** semantics as `splitLines`
+  **
+  Void eachLine(|Str| f)
+
+  **
   ** Replace all occurrences of 'from' with 'to'.
   **
   ** Examples:
@@ -672,3 +679,4 @@ const final class Str
 
 
 }
+

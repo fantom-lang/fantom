@@ -6,6 +6,9 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
+*Build 1.0.83 (working)*
+- Add Str.eachLine
+
 *Build 1.0.82 (26 Jun 2025)*
 - New fanc tool for transpiling to Java source
 - Java make List/Map generic types

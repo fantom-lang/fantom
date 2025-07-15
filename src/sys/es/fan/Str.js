@@ -14,10 +14,10 @@
 class Str extends Obj {
   constructor() { super(); }
 
-  static defVal() { return ""; } 
+  static defVal() { return ""; }
   static #spaces = null;
 
-  
+
 
 //////////////////////////////////////////////////////////////////////////
 // Identity
@@ -243,14 +243,14 @@ class Str extends Obj {
         let next = i+1 < self.length ? self.charCodeAt(i+1) : 81;
         if (!(65 <= last && last <= 90) || !(65 <= next && next <= 90))
           s += ' ';
-      } 
+      }
       else if (97 <= c && c <= 122) {
         if ((48 <= last && last <= 57)) { s += ' '; c &= ~0x20; }
         else if (last == 95) c &= ~0x20;
-      } 
+      }
       else if (48 <= c && c <= 57) {
         if (!(48 <= last && last <= 57)) s += ' ';
-      } 
+      }
       else if (c == 95) {
         s += ' ';
         last = c;
@@ -376,18 +376,22 @@ class Str extends Obj {
 
   static splitLines(self) {
     const lines = List.make(Str.type$, []);
+    Str.eachLine(self, (line) => { lines.add(line) });
+    return lines;
+  }
+
+  static eachLine(self, f) {
     const len = self.length;
     let s = 0;
     for (var i=0; i<len; ++i) {
       const c = self.charAt(i);
       if (c == '\n' || c == '\r') {
-        lines.add(self.substring(s, i));
+        f(self.substring(s, i));
         s = i+1;
         if (c == '\r' && s < len && self.charAt(s) == '\n') { i++; s++; }
       }
     }
-    lines.add(self.substring(s, len));
-    return lines;
+    f(self.substring(s, len));
   }
 
   static replace(self, oldstr, newstr) {
@@ -607,3 +611,4 @@ class Str extends Obj {
   }
 
 }
+

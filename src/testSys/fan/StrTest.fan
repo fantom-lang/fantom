@@ -1107,19 +1107,28 @@ class StrTest : Test
 
   Void testSplitLines()
   {
-    verifyEq("".splitLines, [""])
-    verifyEq("x".splitLines, ["x"])
-    verifyEq("foo".splitLines, ["foo"])
-    verifyEq("x\n".splitLines, ["x", ""])
-    verifyEq("\nx\n".splitLines, ["", "x", ""])
-    verifyEq("1\n2\n3".splitLines, ["1", "2", "3"])
-    verifyEq("x\r".splitLines, ["x", ""])
-    verifyEq("\r\rx".splitLines, ["", "", "x"])
-    verifyEq("\r\n".splitLines, ["", ""])
-    verifyEq("a\r\n".splitLines, ["a", ""])
-    verifyEq("\r\na".splitLines, ["", "a"])
-    verifyEq("a\r\nb".splitLines, ["a", "b"])
-    verifyEq("foo\r\nbar\nbaz\rroo".splitLines, ["foo", "bar", "baz", "roo"])
+    verifySplitLines("", [""])
+    verifySplitLines("x", ["x"])
+    verifySplitLines("foo", ["foo"])
+    verifySplitLines("x\n", ["x", ""])
+    verifySplitLines("\nx\n", ["", "x", ""])
+    verifySplitLines("1\n2\n3", ["1", "2", "3"])
+    verifySplitLines("x\r", ["x", ""])
+    verifySplitLines("\r\rx", ["", "", "x"])
+    verifySplitLines("\r\n", ["", ""])
+    verifySplitLines("a\r\n", ["a", ""])
+    verifySplitLines("\r\na", ["", "a"])
+    verifySplitLines("a\r\nb", ["a", "b"])
+    verifySplitLines("foo\r\nbar\nbaz\rroo", ["foo", "bar", "baz", "roo"])
+  }
+
+  Void verifySplitLines(Str s, Str[] expect)
+  {
+    verifyEq(s.splitLines, expect)
+
+    acc := Str[,]
+    s.eachLine |line| { acc.add(line) }
+    verifyEq(acc, expect)
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -700,7 +700,15 @@ public class FanStr
 
   public static List<String> splitLines(String self)
   {
-    List lines = new List(Sys.StrType, 16);
+    final List lines = new List(Sys.StrType, 16);
+    eachLine(self, new Func.Indirect1() {
+       public Object call(Object x) { lines.add((String)x); return null; }
+    });
+    return lines;
+  }
+
+  public static void eachLine(String self, Func f)
+  {
     int len = self.length();
     int s = 0;
     for (int i=0; i<len; ++i)
@@ -708,13 +716,12 @@ public class FanStr
       int c = self.charAt(i);
       if (c == '\n' || c == '\r')
       {
-        lines.add(self.substring(s, i));
+        f.call(self.substring(s, i));
         s = i+1;
         if (c == '\r' && s < len && self.charAt(s) == '\n') { i++; s++; }
       }
     }
-    lines.add(self.substring(s, len));
-    return lines;
+    f.call(self.substring(s, len));
   }
 
   public static String replace(String self, String from, String to)
