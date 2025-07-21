@@ -170,7 +170,7 @@ class FileWeblet : Weblet
   **
   ** Utility for standard check modified logic
   **
-  internal static Bool doCheckNotModified(WebReq req, WebRes res, Str etag, DateTime modified)
+  @NoDoc static Bool doCheckNotModified(WebReq req, WebRes res, Str etag, DateTime modified)
   {
     // check If-Match-None
     matchNone := req.headers["If-None-Match"]
