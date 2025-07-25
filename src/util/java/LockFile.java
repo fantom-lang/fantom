@@ -45,7 +45,7 @@ public final class LockFile extends FanObj
       {
         lock = fp.getChannel().tryLock();
       }
-      catch (IOException e)
+      catch (Exception e)
       {
         // OverlappingFileLockException when doing locks within the same JVM
       }
