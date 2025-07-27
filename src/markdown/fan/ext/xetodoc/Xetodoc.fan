@@ -109,6 +109,7 @@
   {
     builder
       .customInlineContentParserFactory(TicksInlineParser.factory)
+      .customInlineContentParserFactory(BackticksSpecLinkParser.factory)
       .customInlineContentParserFactory(BackticksLinkParser.factory)
       .extensions(exts)
   }
@@ -117,6 +118,7 @@
   {
     builder
       .attrProviderFactory |HtmlContext cx->AttrProvider| { HeadingAttrsProvider() }
+      .nodeRendererFactory |cx->NodeRenderer| { SpecLinkRenderer(cx) }
       .extensions(exts)
   }
 
@@ -170,7 +172,7 @@ internal const class TicksInlineParserFactory : InlineContentParserFactory
 ** the equivalent common markdown: '[url](/url)'. Note - only single-backticks
 ** will be parsed as links, e.g. '``not a link``'
 **
-** Has special handling for `embed://` links
+** Only processes actual URLs, everything else becomes regular code
 **
 @Js
 internal class BackticksLinkParser : InlineContentParser
@@ -181,10 +183,25 @@ internal class BackticksLinkParser : InlineContentParser
     res := BackticksInlineParser().withMaxMarkers(1).tryParse(state)
     if (res == null) return res
 
-    // convert to a Link
+    // check if this looks like a URL
     Code code := res.node
-    link := Link(code.literal).appendChild(Text(code.literal))
+    content := code.literal
+    
+    // Only convert to link if it looks like a URL (contains :// or starts with http/https)
+    if (!isUrl(content)) return null
+    
+    // convert to a Link
+    link := Link(content).appendChild(Text(content))
     return ParsedInline.of(link, res.pos)
+  }
+  
+  private Bool isUrl(Str content)
+  {
+    return content.contains("://") || 
+           content.startsWith("http://") || 
+           content.startsWith("https://") ||
+           content.startsWith("ftp://") ||
+           content.startsWith("mailto:")
   }
 
   static const InlineContentParserFactory factory := BackticksLinkParserFactory()
@@ -316,6 +333,124 @@ internal class VideoRenderer : NodeRenderer
     html.line
     html.tag("div", ["class": "xetodoc-video"])
     html.tag("iframe", attrs).tag("/iframe")
+    html.tag("/div")
+  }
+}
+
+**************************************************************************
+** SpecLink
+**************************************************************************
+
+**
+** A resolved spec reference link with semantic metadata
+**
+@Js
+internal class SpecLink : Node
+{
+  new make(Str originalName, Str qname, Str specFlavor)
+  {
+    this.originalName = originalName
+    this.qname = qname
+    this.specFlavor = specFlavor
+  }
+
+  ** Original name that appeared in the markdown (e.g. "Str")
+  const Str originalName
+
+  ** Fully qualified name (e.g. "sys::Str")
+  const Str qname
+
+  ** Spec flavor (e.g. "type", "global", "func")
+  const Str specFlavor
+}
+
+**************************************************************************
+** BackticksSpecLinkParser
+**************************************************************************
+
+**
+** Parses backticks containing resolved spec references in the format:
+** `qname | SpecFlavor::flavor` and converts them to SpecLink nodes
+**
+@Js
+internal class BackticksSpecLinkParser : InlineContentParser
+{
+  override ParsedInline? tryParse(InlineParserState state)
+  {
+    // parse with normal backticks semantics (only support single opener/closer sequence)
+    res := BackticksInlineParser().withMaxMarkers(1).tryParse(state)
+    if (res == null) return res
+
+    // check if this is a resolved spec reference
+    Code code := res.node
+    content := code.literal
+    
+    // Look for the pattern: qname | SpecFlavor::flavor
+    pipeIndex := content.index(" | ")
+    if (pipeIndex == null) return null
+    
+    qname := content[0..<pipeIndex]
+    remainder := content[pipeIndex+3..-1]
+    
+    // Check for SpecFlavor:: prefix
+    if (!remainder.startsWith("SpecFlavor::")) return null
+    
+    specFlavor := remainder[12..-1]  // Remove "SpecFlavor::" prefix
+    
+    // Extract original name from qname (part after ::)
+    colonIndex := qname.index("::")
+    if (colonIndex == null) return null
+    originalName := qname[colonIndex+2..-1]
+    
+    // Create SpecLink node
+    specLink := SpecLink(originalName, qname, specFlavor)
+    return ParsedInline.of(specLink, res.pos)
+  }
+
+  static const InlineContentParserFactory factory := BackticksSpecLinkParserFactory()
+}
+
+@Js
+internal const class BackticksSpecLinkParserFactory : InlineContentParserFactory
+{
+  override const Int[] triggerChars := ['`']
+
+  override InlineContentParser create() { BackticksSpecLinkParser() }
+}
+
+**************************************************************************
+** SpecLinkRenderer
+**************************************************************************
+
+**
+** Renders SpecLink nodes as div elements with qname and specFlavor attributes
+**
+@Js
+internal class SpecLinkRenderer : NodeRenderer
+{
+  new make(HtmlContext cx)
+  {
+    this.cx = cx
+    this.html = cx.writer
+  }
+
+  private HtmlContext cx
+  private HtmlWriter html
+
+  override const Type[] nodeTypes := [SpecLink#]
+
+  override Void render(Node node)
+  {
+    specLink := (SpecLink)node
+    
+    attrs := [
+      "class": "spec-link",
+      "qname": specLink.qname,
+      "specFlavor": specLink.specFlavor
+    ]
+    
+    html.tag("div", attrs)
+    html.text(specLink.originalName)
     html.tag("/div")
   }
 }
