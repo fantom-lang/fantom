@@ -223,7 +223,7 @@ internal class JavaUtil
       "sys::List.clear":  "_clear",
       "sys::List.remove": "_remove",
       "sys::List.size":   "_size",
-      "sys::Map.clear":   "clear",
+      "sys::Map.clear":   "_clear",
       "sys::Map.size":    "_size",
     ].toImmutable
   }

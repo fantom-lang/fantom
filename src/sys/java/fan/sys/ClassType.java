@@ -619,9 +619,28 @@ catch (Exception e) { e.printStackTrace(); }
     field.reflect = f;
   }
 
+  private boolean skipFinishMethod(java.lang.reflect.Method m)
+  {
+    // ignore Java methods in Sys that are not public or
+    // if we are swizzling them such as size -> _size
+    if (pod.isSys)
+    {
+      if (!Modifier.isPublic(m.getModifiers())) return true;
+      if (name.equals("List"))
+      {
+        if (FanUtil.listSwizzles.get(m.getName()) != null) return true;
+      }
+      else if (name.equals("Map"))
+      {
+        if (FanUtil.mapSwizzles.get(m.getName()) != null) return true;
+      }
+    }
+    return false;
+  }
+
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
-    if (pod.isSys && !Modifier.isPublic(m.getModifiers())) return;
+    if (skipFinishMethod(m)) return;
     this.finishing = m.getName();
     String name = m.getName();
     if (name.charAt(0) == '_' && pod.name().equals("sys"))
