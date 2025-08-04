@@ -294,6 +294,7 @@ public class Pod
   Pod(FPod fpod, Pod[] dependPods)
   {
     this.name = fpod.podName;
+    this.isSys = this.name.equals("sys");
     this.classLoader = new FanClassLoader(this);
     this.dependPods = dependPods;
     load(fpod);
@@ -638,7 +639,7 @@ public class Pod
     }
 
     // handle generic parameter types (for sys pod only)
-    if (this.name.equals("sys"))
+    if (this.isSys)
     {
       type = Sys.genericParamType(typeName);
       if (type != null)
@@ -662,6 +663,7 @@ public class Pod
   final String name;
   final FanClassLoader classLoader;
   final Pod[] dependPods;
+  final boolean isSys;
   Uri uri;
   FPod fpod;
   Version version;

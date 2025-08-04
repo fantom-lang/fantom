@@ -621,7 +621,7 @@ catch (Exception e) { e.printStackTrace(); }
 
   private void finishMethod(java.lang.reflect.Method m, boolean staticOnly)
   {
-    if (pod == Sys.sysPod && !Modifier.isPublic(m.getModifiers())) return;
+    if (pod.isSys && !Modifier.isPublic(m.getModifiers())) return;
     this.finishing = m.getName();
     String name = m.getName();
     if (name.charAt(0) == '_' && pod.name().equals("sys"))
@@ -656,7 +656,7 @@ catch (Exception e) { e.printStackTrace(); }
       // methods that use non-Fantom signatures
       Class[] params = m.getParameterTypes();
       int numParams = params.length;
-      if (pod == Sys.sysPod)
+      if (pod.isSys)
       {
         if (!checkAllFan(params)) return;
         if (this.name.equals("Map"))
