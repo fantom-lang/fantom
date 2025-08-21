@@ -84,18 +84,17 @@ which will pass an object to another thread include:
   - [Actor.sendLater]`concurrent::Actor.sendLater`
   - [Actor.sendWhenComplete]`concurrent::Actor.sendWhenComplete`
   - [Future.get]`concurrent::Future.get`
+  - static const fields
 
-All of these APIs use the same pattern to safely pass an object
-between threads.  If an object is immutable then we can safely pass
-it to another thread by reference.  Otherwise we assume the object
-is [serializable]`Serialization` and pass a serialized copy of the
-object to another thread.  Both of these approaches have their
-pros and cons to consider in your application design:
+All of these APIs require that an object is immutable to be
+safely passed between threads.
 
-  - immutable:
-     - ideal for simple structures if fast to create
-     - deeply structured objects expensive to change inside a single thread
-     - always extremely efficient to pass between threads
-  - serializable:
-     - deeply structured objects can be modified efficiently in a single thread
-     - moderately expensive to pass between threads
+Additional Techniques [#additional]
+***********************************
+Although most Fantom code uses actors as its primary means of concurrency
+there are several APIs which can be used for more advanced situations:
+  - `concurrent::AtomicRef`: for sharing mutable ref to an immutable object
+  - `concurrent::ConcurrentMap`: for sharing map of immutable objects with
+    thread safe mutation (uses Java ConcurrentHashMap under the covers).
+  - `concurrent::Lock`: re-entrant mutex locking
+
