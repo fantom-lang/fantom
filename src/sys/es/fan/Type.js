@@ -226,7 +226,7 @@ class Type extends Obj {
       if (defVal instanceof Method) return defVal.invoke(null, null);
     }
 
-    throw Err.make(`Typs missing 'make' or 'defVal' slots: ${this.toStr()}`);
+    throw Err.make(`Type missing 'make' or 'defVal' slots: ${this.toStr()}`);
   }
 
 //////////////////////////////////////////////////////////////////////////
