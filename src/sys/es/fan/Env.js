@@ -92,7 +92,7 @@ class Env extends Obj {
   // Note that currently the generated sys.js imports that file into
   // variable 'node'.
   static __node(module=null) {
-    if (typeof node === "undefined") throw Unsupported>err("Only supported in Node.js runtime");
+    if (typeof node === "undefined") throw UnsupportedErr.make("Only supported in Node.js runtime");
     return module == null ? node : node[module];
   }
 
