@@ -101,6 +101,11 @@ class HttpReqPeer extends sys.Obj {
     const res = HttpRes.make();
     res.__xhr = xhr;
     res.status(xhr.status);
+
+    // short-circuit immediately when the xhr status is 0. this means the request
+    // did not successfully send.
+    if (xhr.status == 0) return res;
+
     if (isText)
       res.content(xhr.responseText);
     else if (xhr.responseType == "arraybuffer")
