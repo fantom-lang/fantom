@@ -110,6 +110,9 @@ class CallTest : Test
 
     // errors
     verifyErr(UnknownSlotErr#) { obj->blah }
+
+    // regression introduced by changes on 21-May-2025 changeset
+    verifyErr(NullErr#) { null->toStr }
   }
 
 }
@@ -159,3 +162,4 @@ class CallDynamic
   Str? name
   Obj[]? args
 }
+
