@@ -9,6 +9,7 @@
 package fan.sys;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -27,7 +28,30 @@ public class Log
     synchronized (lock)
     {
       List acc = List.make(Sys.LogType, byName.size());
-      for (WeakReference ref : byName.values()) acc.add(ref.get());
+      ArrayList<String> toRemove = null;
+
+      // iterate byName and add to accumulator or keep track of removes
+      for (Map.Entry<String,WeakReference<Log>> entry : byName.entrySet())
+      {
+        Log log = entry.getValue().get();
+        if (log != null)
+        {
+          acc.add(log);
+        }
+        else
+        {
+          // use this opportunity to remove GC entries
+          if (toRemove == null) toRemove = new ArrayList<String>();
+          toRemove.add(entry.getKey());
+        }
+      }
+
+      // if any logs have been garbage collected then remove their entries
+      if (toRemove != null)
+      {
+        for (String name : toRemove) byName.remove(name);
+      }
+
       return acc.ro();
     }
   }
@@ -38,7 +62,11 @@ public class Log
     synchronized (lock)
     {
       WeakReference<Log> ref = byName.get(name);
-      if (ref != null) return ref.get();
+      if (ref != null)
+      {
+        Log log = ref.get();
+        if (log != null) return log;
+      }
       if (checked) throw Err.make("Unknown log: " + name);
       return null;
     }
@@ -49,7 +77,11 @@ public class Log
     synchronized (lock)
     {
       WeakReference<Log> ref = byName.get(name);
-      if (ref != null) return ref.get();
+      if (ref != null)
+      {
+        Log log = ref.get();
+        if (log != null) return log;
+      }
       return make(name, true);
     }
   }
@@ -73,16 +105,16 @@ public class Log
       synchronized (lock)
       {
         // verify unique
-        if (byName.get(name) != null)
+        if (find(name, false) != null)
           throw ArgErr.make("Duplicate log name: " + name);
 
         // init and put into map
         byName.put(name, new WeakReference(self));
-
-        // check for initial level
-        String val = (String)Sys.sysPod.props(Uri.fromStr("log.props"), Duration.oneMin).get(name);
-        if (val != null) self.level = LogLevel.fromStr(val);
       }
+
+      // check for initial level
+      String val = (String)Sys.sysPod.props(Uri.fromStr("log.props"), Duration.oneMin).get(name);
+      if (val != null) self.level = LogLevel.fromStr(val);
     }
   }
 
@@ -239,7 +271,7 @@ public class Log
 //////////////////////////////////////////////////////////////////////////
 
   private static Object lock = new Object();  // synchronization
-  private static HashMap<String,WeakReference> byName = new HashMap<>();
+  private static HashMap<String,WeakReference<Log>> byName = new HashMap<>();
 
   private String name;
   private volatile LogLevel level = LogLevel.info;
