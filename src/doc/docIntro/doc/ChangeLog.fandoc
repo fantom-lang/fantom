@@ -8,6 +8,7 @@
 
 *Build 1.0.83 (working)*
 - Add Str.eachLine
+- Refactor Log registry to use weak references
 
 *Build 1.0.82 (26 Jun 2025)*
 - New fanc tool for transpiling to Java source
