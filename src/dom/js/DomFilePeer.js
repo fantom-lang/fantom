@@ -30,6 +30,11 @@ fan.dom.DomFilePeer.wrap = function(file)
   return x;
 }
 
+fan.dom.DomFile.fromNative = function(file)
+{
+  return fan.dom.DomFilePeer.wrap(file);
+}
+
 fan.dom.DomFilePeer.prototype.$name = function(self)
 {
   return this.file.name;

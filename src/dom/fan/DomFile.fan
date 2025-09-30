@@ -11,8 +11,8 @@
 **
 @Js class DomFile
 {
-  ** Create an `DomFile` instance from a native JavaScript DOM file.
-  @Js static native Elem fromNative(Obj file)
+  ** Create a `DomFile` instance from a native JavaScript DOM file.
+  @Js static native DomFile fromNative(Obj file)
 
   ** Name of file. This is just the file name, and does not
   ** include any path information.
@@ -42,4 +42,3 @@
   ** the callback function with results.
   native Void readAsText(|Str| f)
 }
-
