@@ -33,6 +33,11 @@ class DomFilePeer extends sys.Obj {
     return x;
   }
 
+  static fromNative = function(file)
+  {
+    return wrap(file);
+  }
+
   name(self)
   {
     return this.file.name;
@@ -67,3 +72,4 @@ class DomFilePeer extends sys.Obj {
     reader.readAsText(this.file);
   }
 }
+
