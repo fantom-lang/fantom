@@ -540,7 +540,7 @@ class Type extends Obj {
     if ((typeof obj) == "number"  || obj instanceof Number)  return Int.type$;
     if ((typeof obj) == "string"  || obj instanceof String)  return Str.type$;
     if ((typeof obj) == "function" || obj instanceof Function) return Func.type$;
-    if ((typeof obj) == "bigint" || ojb instanceof BigInt) return Int.type$;
+    if ((typeof obj) == "bigint" || obj instanceof BigInt) return Int.type$;
     throw Err.make(`sys::Type.toFanType: Not a Fantom type: ${obj} ${typeof obj}`);
   }
 
