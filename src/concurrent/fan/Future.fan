@@ -17,7 +17,6 @@ native abstract const class Future
 
   **
   ** Construct a completable future instance in the pending state.
-  ** This method is subject to change.
   **
   static Future makeCompletable()
 
@@ -33,6 +32,13 @@ native abstract const class Future
   ** is raised to the caller of this method.
   **
   abstract Obj? get(Duration? timeout := null)
+
+  **
+  ** Return the exception raised by the asynchronous computation or null
+  ** if the future completed successfully.  This method can only be used
+  ** after completion, otherwise if status pending then raise NotCompleteErr.
+  **
+  abstract Err? err()
 
   **
   ** Current state of asynchronous computation
@@ -105,6 +111,7 @@ native abstract const class Future
 internal native final const class ActorFuture  : Future
 {
   override Obj? get(Duration? timeout := null)
+  override Err? err()
   override FutureStatus status()
   override Void cancel()
   override This complete(Obj? val)

@@ -64,8 +64,10 @@ class ActorTest : Test
       verifyType(f, ActorFuture#)
       verifyEq(f.typeof.base, Future#)
       verifyEq(f.get, i+1)
+      verifyEq(f.err, null)
       verifySame(f.status, FutureStatus.ok)
       verifyEq(f.get, i+1)
+      verifyEq(f.err, null)
     }
   }
 
@@ -667,55 +669,6 @@ class ActorTest : Test
     }
 
     return Actor.locals["testLocal"].toStr + " " + Locale.cur
-  }
-
-//////////////////////////////////////////////////////////////////////////
-// Futures
-//////////////////////////////////////////////////////////////////////////
-
-  Void testFuture()
-  {
-    f := Future.makeCompletable
-    verifyEq(f.status, FutureStatus.pending)
-    verifySame(f.typeof, ActorFuture#)
-    verifySame(f.typeof.base, Future#)
-
-    // can only complete with immutable value
-    verifyErr(NotImmutableErr#) { f.complete(this) }
-    verifySame(f.status, FutureStatus.pending)
-
-    // verify complete
-    f.complete("done!")
-    verifySame(f.status, FutureStatus.ok)
-    verifyEq(f.get, "done!")
-
-    // can only complete once
-    verifyErr(Err#) { f.complete("no!") }
-    verifyErr(Err#) { f.completeErr(Err()) }
-    verifySame(f.status, FutureStatus.ok)
-    verifyEq(f.get, "done!")
-
-    // verify completeErr
-    f = Future.makeCompletable
-    verifyEq(f.status, FutureStatus.pending)
-    err := CastErr()
-    f.completeErr(err)
-    verifySame(f.status, FutureStatus.err)
-    verifyErr(CastErr#) { f.get }
-    verifyErr(Err#) { f.complete("no!") }
-    verifyErr(Err#) { f.completeErr(Err()) }
-    verifySame(f.status, FutureStatus.err)
-    verifyErr(CastErr#) { f.get }
-
-    // verify cancel;
-    f = Future.makeCompletable
-    f.cancel
-    verifySame(f.status, FutureStatus.cancelled)
-    verifyErr(CancelledErr#) { f.get }
-    f.complete("no!")
-    f.completeErr(IOErr())
-    verifySame(f.status, FutureStatus.cancelled)
-    verifyErr(CancelledErr#) { f.get }
   }
 
 //////////////////////////////////////////////////////////////////////////

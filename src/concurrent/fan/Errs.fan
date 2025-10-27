@@ -12,12 +12,16 @@
 **
 const class QueueOverflowErr : Err
 {
-
-  **
   ** Construct with specified error message and optional root cause.
-  **
   new make(Str msg := "", Err? cause := null) : super(msg, cause) {}
-
 }
 
+**
+** Raised when attempting to access results of a future in the pending state.
+**
+const class NotCompleteErr : Err
+{
+  ** Construct with specified error message and optional root cause.
+  new make(Str msg := "", Err? cause := null) : super(msg, cause) {}
+}
 

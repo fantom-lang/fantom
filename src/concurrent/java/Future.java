@@ -59,6 +59,8 @@ public abstract class Future
   public Object get(long t, TimeUnit u) { return get(Duration.make(u.toNanos(t))); }
   public abstract Object get(Duration timeout);
 
+  public abstract Err err();
+
   public Future waitFor() { return waitFor(null); }
   public abstract Future waitFor(Duration timeout);
 

@@ -122,6 +122,17 @@ public final class ActorFuture
     return Actor._safe(r);
   }
 
+  public final Err err()
+  {
+    switch (state)
+    {
+      case DONE_OK:     return null;
+      case DONE_ERR:    return (Err)result;
+      case DONE_CANCEL: return CancelledErr.make("Future cancelled");
+      default:          throw NotCompleteErr.make("Future is pending");
+    }
+  }
+
   public final Future waitFor() { return waitFor(null); }
   public final Future waitFor(Duration timeout)
   {
