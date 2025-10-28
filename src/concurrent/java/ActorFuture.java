@@ -122,17 +122,6 @@ public final class ActorFuture
     return Actor._safe(r);
   }
 
-  public final Err err()
-  {
-    switch (state)
-    {
-      case DONE_OK:     return null;
-      case DONE_ERR:    return (Err)result;
-      case DONE_CANCEL: return CancelledErr.make("Future cancelled");
-      default:          throw NotCompleteErr.make("Future is pending");
-    }
-  }
-
   public final Future waitFor() { return waitFor(null); }
   public final Future waitFor(Duration timeout)
   {
@@ -174,6 +163,45 @@ public final class ActorFuture
     catch (InterruptedException e)
     {
       throw InterruptedErr.make(e);
+    }
+  }
+
+  public final Err err()
+  {
+    switch (state)
+    {
+      case DONE_OK:     return null;
+      case DONE_ERR:    return (Err)result;
+      case DONE_CANCEL: return CancelledErr.make("Future cancelled");
+      default:          throw NotCompleteErr.make("Future is pending");
+    }
+  }
+
+  public final Future then(Func onOk, Func onErr)
+  {
+    waitFor(null);
+    Object chain = null;
+    try
+    {
+      switch (state)
+      {
+        case DONE_OK:
+          chain = onOk.call(result);
+          break;
+        case DONE_ERR:
+          if (onErr != null) chain = onErr.call(result);
+          break;
+        case DONE_CANCEL:
+          if (onErr != null) chain = onErr.call(CancelledErr.make("Future cancelled"));
+          break;
+        default:
+          throw NotCompleteErr.make("Future is pending");
+      }
+      return Future.makeCompletable().complete(chain);
+    }
+    catch (Throwable e)
+    {
+      return Future.makeCompletable().completeErr(Err.make(e));
     }
   }
 

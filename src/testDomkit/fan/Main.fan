@@ -21,7 +21,7 @@ class Main : AbstractMain
   Bool css := false
 
   @Opt { help = "javascript mode to use (js, es)" }
-  Str jsMode := "js"
+  Str jsMode := "es"
 
   override Int run()
   {
@@ -276,3 +276,4 @@ const class DomkitTestMod : WebMod
     }
     """
 }
+

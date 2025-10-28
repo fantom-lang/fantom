@@ -64,6 +64,9 @@ public abstract class Future
   public Future waitFor() { return waitFor(null); }
   public abstract Future waitFor(Duration timeout);
 
+  public Future then(Func onOk) { return then(onOk, null); }
+  public abstract Future then(Func onOk, Func onErr);
+
   public static final void waitForAll(List<Future> list) { waitForAll(list, null); }
   public static final void waitForAll(List<Future> list, Duration timeout)
   {
@@ -99,6 +102,8 @@ public abstract class Future
   public abstract Future complete(Object r);
 
   public abstract Future completeErr(Err e);
+
+  public Object promise() { throw UnsupportedErr.make("Not available in Java VM"); }
 
   public Future wraps() { return null; }
 

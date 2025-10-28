@@ -7,6 +7,7 @@
 **************************************************************************
 
 *Build 1.0.83 (working)*
+- Future support for JS promises
 - Add Str.eachLine
 - Refactor Log registry to use weak references
 

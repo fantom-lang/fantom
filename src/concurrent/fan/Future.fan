@@ -82,6 +82,26 @@ native abstract const class Future
   abstract This completeErr(Err err)
 
   **
+  ** Register a callback function when this future completes in either
+  ** the ok or err/cancel state.  Return a new future that may be chained
+  ** for additional async operations that will return the result of the
+  ** given callback.
+  **
+  ** In the Java VM this operation is a blocking operation that has the
+  ** same effect as calling `waitFor` and then invoking the given callback
+  ** with the result of `get` or `err`.
+  **
+  ** In JavaScript this operation wrap a Promise with the same semantics.
+  **
+  abstract Future then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
+
+  **
+  ** Get JavaScript Promise object which backs this Future.
+  ** Only available in JavaScript environments.
+  **
+  abstract Obj promise()
+
+  **
   ** If this future wraps another future
   **
   @NoDoc virtual Future? wraps()
@@ -117,6 +137,8 @@ internal native final const class ActorFuture  : Future
   override This complete(Obj? val)
   override This completeErr(Err err)
   override This waitFor(Duration? timeout := null)
+  override Future then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
+  override Obj promise()
 }
 
 **************************************************************************
