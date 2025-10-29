@@ -92,7 +92,7 @@ native abstract const class Future
   **
   ** In JavaScript this operation wraps Promise.then with the same semantics.
   **
-  This then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
+  This then(|Obj?->Obj?| onOk, |Err->Obj?|? onErr := null)
 
   **
   ** Get JavaScript Promise object which backs this Future.
