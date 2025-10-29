@@ -64,7 +64,6 @@ public final class ActorFuture
     throw Err.make("Internal error " + state);
   }
 
-  public final Object get() { return get(null); }
   public final Object get(Duration timeout)
   {
     Object r = null;
@@ -122,7 +121,6 @@ public final class ActorFuture
     return Actor._safe(r);
   }
 
-  public final Future waitFor() { return waitFor(null); }
   public final Future waitFor(Duration timeout)
   {
     try
@@ -249,6 +247,11 @@ public final class ActorFuture
     }
     sendWhenDone(wd);
     return this;
+  }
+
+  public final Future wrap(Future wrap)
+  {
+    throw Err.make("do not use");
   }
 
 //////////////////////////////////////////////////////////////////////////

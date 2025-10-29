@@ -28,7 +28,10 @@ public abstract class Future
 
   public static Future makeCompletable() { return new ActorFuture(null); }
 
-  public static void make$(Future self) {}
+  public static void make$(Future self, Future wraps)
+  {
+    self.wraps = wraps;
+  }
 
   public Future() {}
 
@@ -49,23 +52,39 @@ public abstract class Future
 // Future
 //////////////////////////////////////////////////////////////////////////
 
-  public abstract FutureStatus status();
-
   public final boolean isDone() { return status().isComplete(); }
 
   public final boolean isCancelled() { return status().isCancelled(); }
 
+  public FutureStatus status()
+  {
+    return wrapped().status();
+  }
+
   public Object get() { return get(null); }
-  public Object get(long t, TimeUnit u) { return get(Duration.make(u.toNanos(t))); }
-  public abstract Object get(Duration timeout);
+  public final Object get(long t, TimeUnit u) { return get(Duration.make(u.toNanos(t))); }
+  public Object get(Duration timeout)
+  {
+    return wrapped().get(timeout);
+  }
 
-  public abstract Err err();
+  public Err err()
+  {
+    return wrapped().err();
+  }
 
-  public Future waitFor() { return waitFor(null); }
-  public abstract Future waitFor(Duration timeout);
+  public final Future waitFor() { return waitFor(null); }
+  public Future waitFor(Duration timeout)
+  {
+    wrapped().waitFor(timeout);
+    return this;
+  }
 
-  public Future then(Func onOk) { return then(onOk, null); }
-  public abstract Future then(Func onOk, Func onErr);
+  public final Future then(Func onOk) { return then(onOk, null); }
+  public Future then(Func onOk, Func onErr)
+  {
+    return wrap(wrapped().then(onOk, onErr));
+  }
 
   public static final void waitForAll(List<Future> list) { waitForAll(list, null); }
   public static final void waitForAll(List<Future> list, Duration timeout)
@@ -97,15 +116,38 @@ public abstract class Future
     return true;
   }
 
-  public abstract void cancel();
+  public void cancel()
+  {
+    wrapped().cancel();
+  }
 
-  public abstract Future complete(Object r);
+  public Future complete(Object r)
+  {
+    wrapped().complete(r);
+    return this;
+  }
 
-  public abstract Future completeErr(Err e);
+  public Future completeErr(Err e)
+  {
+    wrapped().completeErr(e);
+    return this;
+  }
 
-  public Object promise() { throw UnsupportedErr.make("Not available in Java VM"); }
+  public Object promise()
+  {
+    throw UnsupportedErr.make("Not available in Java VM");
+  }
 
-  public Future wraps() { return null; }
+  public abstract Future wrap(Future wrap);
 
+  public Future wraps() { return wraps; }
+
+  Future wrapped()
+  {
+    if (wraps == null) throw UnsupportedErr.make("Future missing wraps");
+    return wraps;
+  }
+
+  private Future wraps;
 }
 
