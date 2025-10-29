@@ -20,30 +20,20 @@ ARG JDK_VERSION=17
 
 FROM eclipse-temurin:$JDK_VERSION AS bootstrap
 
-ARG SWT_DL_URL=https://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.27-202303020300/swt-4.27-gtk-linux-x86_64.zip&mirror_id=1
-
-# These define the `rel` Fantom version.
-ARG REL_VERSION=fantom-1.0.80
-ARG REL_TAG=v1.0.80
-
 WORKDIR /work
 
-RUN set -e; \
-    FAN_BIN_URL="https://github.com/fantom-lang/fantom/releases/download/$REL_TAG/$REL_VERSION.zip" \
-    # Install curl
-    && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -q update && apt-get -q install -y curl unzip && rm -rf /var/lib/apt/lists/* \
-    # Download Fantom
-    && curl -fsSL "$FAN_BIN_URL" -o fantom.zip \
-    && unzip fantom.zip -d fantom \
-    && mv fantom/$REL_VERSION rel \
-    && chmod +x rel/bin/* \
-    && rm -rf fantom && rm -f fantom.zip \
-    # Download linux-x86_64 SWT
-    && curl -fsSL "$SWT_DL_URL" -o swt.zip \
-    && unzip swt.zip -d swt \
-    && mv swt/swt.jar ./ \
-    && rm -rf swt && rm -f swt.zip
+ARG FAN_REL_VER=1.0.82
+
+# Build Fantom from source
+RUN <<EOF
+  apt-get -q update
+  apt-get -q install -y curl unzip
+  curl -fsSL https://github.com/fantom-lang/fantom/releases/download/v${FAN_REL_VER}/fantom-${FAN_REL_VER}.zip -o fantom.zip
+  unzip fantom.zip
+  mv fantom-${FAN_REL_VER} rel
+  chmod +x rel/bin/*
+  chmod +x rel/adm/*
+EOF
 
 COPY . ./fan/
 
