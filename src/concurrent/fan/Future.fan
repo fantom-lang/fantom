@@ -14,16 +14,27 @@
 @Js
 native abstract const class Future
 {
-
   **
   ** Construct a completable future instance in the pending state.
   **
   static Future makeCompletable()
 
+  // NOTE: subclassing APIs are WIP and subject to change
+
   **
-  ** Subclass constructor
+  ** Subclass constructor to wrap future
   **
-  protected new make()
+  @NoDoc protected new make(Future wrap)
+
+  **
+  ** Return wrapped future if this is a subclass
+  **
+  @NoDoc Future? wraps()
+
+  **
+  ** Create new instance of subclass that wraps given future
+  **
+  @NoDoc abstract This wrap(Future wrap)
 
   **
   ** Block current thread until result is ready.  If timeout occurs
@@ -31,37 +42,25 @@ native abstract const class Future
   ** an exception was raised by the asynchronous computation, then it
   ** is raised to the caller of this method.
   **
-  abstract Obj? get(Duration? timeout := null)
+  virtual Obj? get(Duration? timeout := null)
 
   **
   ** Return the exception raised by the asynchronous computation or null
   ** if the future completed successfully.  This method can only be used
   ** after completion, otherwise if status pending then raise NotCompleteErr.
   **
-  abstract Err? err()
+  Err? err()
 
   **
   ** Current state of asynchronous computation
   **
-  abstract FutureStatus status()
-
-  **
-  ** Deprecated, use 'status.isComplete'.
-  **
-  @NoDoc @Deprecated { msg = "Use Future.status" }
-  Bool isDone()
-
-  **
-  ** Deprecated, use 'status.isCancelled'.
-  **
-  @NoDoc @Deprecated { msg = "Use Future.status" }
-  Bool isCancelled()
+  FutureStatus status()
 
   **
   ** Cancel this computation if it has not begun processing.
   ** No guarantee is made that the computation will be cancelled.
   **
-  abstract Void cancel()
+  Void cancel()
 
   **
   ** Complete the future successfully with given value.  Raise
@@ -70,7 +69,7 @@ native abstract const class Future
   ** Raise UnsupportedErr if this future is not completable.
   ** Return this. This method is subject to change.
   **
-  abstract This complete(Obj? val)
+  This complete(Obj? val)
 
   **
   ** Complete the future with a failure condition using given
@@ -79,7 +78,7 @@ native abstract const class Future
   ** Raise UnsupportedErr if this future is not completable.
   ** This method is subject to change.
   **
-  abstract This completeErr(Err err)
+  This completeErr(Err err)
 
   **
   ** Register a callback function when this future completes in either
@@ -93,25 +92,20 @@ native abstract const class Future
   **
   ** In JavaScript this operation wrap a Promise with the same semantics.
   **
-  abstract Future then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
+  This then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
 
   **
   ** Get JavaScript Promise object which backs this Future.
   ** Only available in JavaScript environments.
   **
-  abstract Obj promise()
-
-  **
-  ** If this future wraps another future
-  **
-  @NoDoc virtual Future? wraps()
+  Obj promise()
 
   **
   ** Block until this future transitions to a completed state (ok,
   ** err, or canceled).  If timeout is null then block forever, otherwise
   ** raise a TimeoutErr if timeout elapses.  Return this.
   **
-  abstract This waitFor(Duration? timeout := null)
+  This waitFor(Duration? timeout := null)
 
   **
   ** Block on a list of futures until they all transition to a completed
@@ -130,15 +124,7 @@ native abstract const class Future
 ** Actor implementation for future
 internal native final const class ActorFuture  : Future
 {
-  override Obj? get(Duration? timeout := null)
-  override Err? err()
-  override FutureStatus status()
-  override Void cancel()
-  override This complete(Obj? val)
-  override This completeErr(Err err)
-  override This waitFor(Duration? timeout := null)
-  override Future then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
-  override Obj promise()
+  override This wrap(Future wrap)
 }
 
 **************************************************************************

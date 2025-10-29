@@ -160,6 +160,54 @@ class FutureTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Subclass
+//////////////////////////////////////////////////////////////////////////
+
+  Void testSubclass()
+  {
+    w := Future.makeCompletable
+    verifyEq(w.wraps, null)
+    verifyErr(Err#) { w.wrap(w) }
+
+    f := TestFuture(w);
+    verifySame(f.typeof, TestFuture#)
+    verifySame(f.wraps, w)
+    verifyWrap(f, w)
+
+    verifySame(f.complete("!"), f)
+    verifyWrap(f, w)
+    verifyEq(f.status, FutureStatus.ok)
+    verifyEq(f.get, "!")
+
+    res := null
+    f2 := f.then |r->Obj?| { res = r; return "then res" }
+    verifySame(f2.typeof, TestFuture#)
+    verifyEq(res, "!")
+    verifyEq(f2.status, FutureStatus.ok)
+    verifyEq(f2.get, "then res")
+
+    w = Future.makeCompletable
+    f = TestFuture(w)
+    verifyWrap(f, w)
+    verifyEq(f.status, FutureStatus.pending)
+    w.completeErr(IOErr("bad"))
+    verifyWrap(f, w)
+    verifyEq(f.status, FutureStatus.err)
+    verifyEq(f.err?.toStr, "sys::IOErr: bad")
+  }
+
+  Void verifyWrap(Future f, Future w)
+  {
+    verifySame(f.wraps, w)
+    verifyEq(f.status, w.status)
+    if (f.status.isComplete)
+    {
+      verifyEq(f.err, w.err)
+      if (f.status.isOk) verifyEq(f.get, w.get)
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
@@ -183,5 +231,15 @@ class FutureTest : Test
     a := Actor(pool) |msg| { f(msg); return null }
     fut := a.sendLater(10ms, "x")
   }
+}
+
+**************************************************************************
+** TestFuture
+**************************************************************************
+
+internal const class TestFuture : Future
+{
+  new make(Future wrap) : super(wrap) {}
+  override This wrap(Future wrap) { make(wrap) }
 }
 
