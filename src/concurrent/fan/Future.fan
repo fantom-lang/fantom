@@ -90,7 +90,7 @@ native abstract const class Future
   ** same effect as calling `waitFor` and then invoking the given callback
   ** with the result of `get` or `err`.
   **
-  ** In JavaScript this operation wrap a Promise with the same semantics.
+  ** In JavaScript this operation wraps Promise.then with the same semantics.
   **
   This then(|Obj?->Obj?| onOk, |Err->Obj|? onErr := null)
 

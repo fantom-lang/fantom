@@ -36,7 +36,8 @@ class Future extends sys.Obj {
     f.#promise = promise;
     promise.then(
       (r) => { f.#res = r; f.#status = FutureStatus.ok();  },
-      (e) => { f.#err = e; f.#status = FutureStatus.err(); });
+      (e) => { f.#err = e; f.#status = FutureStatus.err(); }
+    );
     return f;
   }
 
