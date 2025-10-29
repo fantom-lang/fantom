@@ -488,7 +488,7 @@ class CheckErrors : CompilerStep
       err("Mixins cannot have instance constructors", m.loc)
 
     // ensure super/this constructor is called
-    if (m.ctorChain == null && !compiler.isSys && !curType.base.isObj && !curType.isSynthetic)
+    if (m.ctorChain == null && !compiler.isSys && !curType.base.isObj && !curType.isSynthetic && !curType.isNative)
       err("Must call super class constructor in '$m.name'", m.loc)
 
     // if this constructor doesn't call a this
