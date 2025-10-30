@@ -36,21 +36,24 @@ popd
 
 call:getJava JAVA
 call:getProp FAN_JAVA_OPTS
-SET FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
+
+REM Set FAN_CP classpath if not already set
+IF "%FAN_CP%" == "" SET FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
+SET FAN_CLASSPATH="%FAN_CP%";"%CLASSPATH%"
 
 IF "%FAN_LAUNCHER_DEBUG%" == "true" (
   ECHO -- LAUNCHER DEBUG ON
 	ECHO -- Launcher Args: %*
 	ECHO -- FAN_HOME: "%FAN_HOME%"
 	ECHO -- Java: %JAVA%
-	ECHO -- Fantom classpath: %FAN_CP%
+	ECHO -- Fantom classpath: %FAN_CLASSPATH%
 	ECHO -- Java Options: %FAN_JAVA_OPTS%
 	ECHO -- Fantom Tool: %TOOL%
 	ECHO -- Tool Args: %TOOL_ARGS%
 	ECHO -- Command:
-	ECHO --    %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
+	ECHO --    %JAVA% %FAN_JAVA_OPTS% -cp %FAN_CLASSPATH% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 )
-%JAVA% %FAN_JAVA_OPTS% -cp %FAN_CP% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
+%JAVA% %FAN_JAVA_OPTS% -cp %FAN_CLASSPATH% "-Dfan.home=%FAN_HOME%" fanx.tools.%TOOL% %TOOL_ARGS%
 ENDLOCAL
 EXIT /B %errorlevel%
 
