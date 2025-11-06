@@ -82,6 +82,12 @@ class HttpReq
     send("GET", null, c)
   }
 
+  ** Convenience for 'send("PUT", content, c)'
+  Void put(Obj content, |HttpRes res| c)
+  {
+    send("PUT", content, c)
+  }
+
   ** Convenience for 'send("POST", content, c)'.
   Void post(Obj content, |HttpRes res| c)
   {
