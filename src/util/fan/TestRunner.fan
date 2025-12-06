@@ -197,7 +197,7 @@ class TestRunner
   private This doRunPod(Pod pod, Bool blankLine)
   {
     types := Type[,]
-    pod.types.each |type|
+    pod.types.dup.sort.each |type|
     {
       if (type.fits(Test#) && !type.isAbstract) types.add(type)
     }
