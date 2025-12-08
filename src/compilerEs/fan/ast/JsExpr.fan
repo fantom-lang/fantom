@@ -412,10 +412,9 @@ class JsExpr : JsNode
     // field outside its type since we declare all fields as private
     // in the generated js code
     //
-    // else if the field is declared on this type and we are doing a set,
-    // but the field has a private setter, then we don't use the accessor
+    // else if the field is declared on this type but private, then we don't use accessor
     if (parent.qname != plugin.curType.qname) useAccessor = true
-    else if (isSet && (fe.field.setter?.isPrivate ?: false)) useAccessor = false
+    else if ((fe.field.setter?.isPrivate ?: false) || (fe.field.getter?.isPrivate ?: false)) useAccessor = false
 
     writeTarget := |->| {
       if (fe.target == null) js.w(qnameToJs(parent), fe.loc)
