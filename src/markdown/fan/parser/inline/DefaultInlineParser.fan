@@ -355,7 +355,6 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
   {
     linkInfo := parseLinkInfo(opener, beforeClose)
     if (linkInfo == null) return null
-
     processorStartPos := scanner.pos
 
     return linkProcessors.eachWhile |processor|
@@ -363,7 +362,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
       result := processor.process(linkInfo, scanner, cx)
       if (result == null)
       {
-        // reset position in  case the processor used the scanner, and it didn't work out
+        // reset position in case the processor used the scanner, and it didn't work out
         scanner.setPos(processorStartPos)
         return null
       }

@@ -13,29 +13,25 @@ class XetodocExtTest : RenderingTest
   private static const HtmlRenderer renderer := Xetodoc.htmlRenderer
   private static const MarkdownRenderer md := Xetodoc.markdownRenderer
 
-  Void testTicks()
+  Void testInlineCode()
   {
-    verifyEq(render("'code'"), "<p><code>code</code></p>\n")
-    verifyEq(render("this is 'fandoc' code"), "<p>this is <code>fandoc</code> code</p>\n")
-    verifyEq(render("not 'fandoc code"), "<p>not 'fandoc code</p>\n")
-    verifyEq(render("empty '' code is not code"), "<p>empty '' code is not code</p>\n")
-
-    verifyEq(render("finally ''this 'is' possible''"),"<p>finally <code>this 'is' possible</code></p>\n")
-
-    // doc := parser.parse("``` fantom\nis this fenced code\n```")
-    // doc := parser.parse("```is this fenced code```")
-    // Node.dumpTree(doc)
-    // echo("===")
-    // echo(renderer.render(doc))
+    // sanity check that backticks renders as inline code
+    verifyEq(render("`code`"), "<p><code>code</code></p>\n")
   }
 
-  Void testBacktickLinks()
+  Void testBracketLinks()
   {
-    // doc := parser.parse("`url`\n\n[url](url)\n\n![imgUrl](imgUrl)")
-    // Node.dumpTree(doc)
-    // echo("===")
-    // echo(renderer.render(doc))
+    verifyEq(Xetodoc.toHtml("[a]"), """<p><a href="a">a</a></p>\n""")
+    verifyEq(Xetodoc.toHtml("Use [now()] for timestamp"), """<p>Use <a href="now()">now()</a> for timestamp</p>\n""")
   }
+
+  // Void testBacktickLinks()
+  // {
+  //   // doc := parser.parse("`url`\n\n[url](url)\n\n![imgUrl](imgUrl)")
+  //   // Node.dumpTree(doc)
+  //   // echo("===")
+  //   // echo(renderer.render(doc))
+  // }
 
   Void testHeadingAnchor()
   {
@@ -49,7 +45,7 @@ class XetodocExtTest : RenderingTest
     verifyEq(render("# Intro\n# Intro"), """<h1 id="intro">Intro</h1>\n<h1 id="intro-1">Intro</h1>\n""")
 
     // text and code mixed
-    verifyEq(render("## 'Heading' 2"), """<h2 id="heading-2"><code>Heading</code> 2</h2>\n""")
+    verifyEq(render("## `Heading` 2"), """<h2 id="heading-2"><code>Heading</code> 2</h2>\n""")
 
     // whacky symbols and spacing
     verifyEq(render("# Heading#!\tNoSpace!!!  "), """<h1 id="headingnospace">Heading#!\tNoSpace!!!</h1>\n""")

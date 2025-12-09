@@ -17,7 +17,7 @@
 **   [text][label]
 ** Collapsed (label is ""):
 **   [text][]
-** Shorcut (label is null):
+** Shortcut (label is null):
 **   [text]
 **
 ** Images use the same syntax as links but with a '!' marker front, e.g.

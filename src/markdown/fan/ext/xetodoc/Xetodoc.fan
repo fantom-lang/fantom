@@ -9,12 +9,8 @@
 **
 ** Xetodoc is a curated set of features and extensions to the CommonMark syntax.
 **
-** - Changes inline code to be single-tick delimited, e.g.
-** pre>
-** 'this is code'
-** <pre
 ** - Disables rendering of inline and block HTML nodes
-** - Allows links to be specified in backticks, e.g. '`http://fantom.org`'
+** - Adds syntactic sugar for [foo] to be parsed as [foo](foo)
 ** - Enables the following extensions: `ImgAttrsExt`, and `TablesExt`
 ** - Enables embedding videos in HTML using image links using video scheme links
 **   - ![alt text](video://youtu.be/abc?si=123)
@@ -23,10 +19,10 @@
 ** pre>
 ** parser := Xetodoc.parser |->LinkResolver| { MyCustomLinkResolver() }
 ** renderer := Xetodoc.htmlRenderer
-** html := renderer.render(parser.parse("Hello 'Xetodoc'!"))
+** html := renderer.render(parser.parse("Hello `Xetodoc`!"))
 **
 ** // using convenience methods
-** html = Xetodoc.toHtml("Hello, 'Xetodoc'!")
+** html = Xetodoc.toHtml("Hello, `Xetodoc`!")
 **
 ** // roundtrip the parsed Document back to xetodoc markdown text
 ** md := Xetodoc.renderToMarkdown(parser.parse("Round-trip to markdown"))
@@ -65,6 +61,7 @@
     Parser.builder
       .withIncludeSourceSpans(IncludeSourceSpans.blocks_and_inlines)
       .linkProcessor(VideoProcessor())
+      .linkProcessor(BracketLinkProcessor())
       .extensions(xetodoc)
   }
 
@@ -108,8 +105,6 @@
   override Void extendParser(ParserBuilder builder)
   {
     builder
-      .customInlineContentParserFactory(TicksInlineParser.factory)
-      .customInlineContentParserFactory(BackticksLinkParser.factory)
       .extensions(exts)
   }
 
@@ -122,9 +117,7 @@
 
   override Void extendMarkdown(MarkdownRendererBuilder builder)
   {
-    builder
-      .nodeRendererFactory(|cx->NodeRenderer| { MdTicksRenderer(cx) })
-      .extensions(exts)
+    builder.extensions(exts)
   }
 }
 
@@ -142,60 +135,26 @@ internal class HeadingAttrsProvider : AttrProvider
 }
 
 **************************************************************************
-** TickInlineParser
+** BracketsLink
 **************************************************************************
 
 @Js
-internal class TicksInlineParser : InlineCodeParser
+internal const class BracketLinkProcessor : CoreLinkProcessor
 {
-  new make() : super('\'') { }
-
-  static const InlineContentParserFactory factory := TicksInlineParserFactory()
-}
-
-@Js
-internal const class TicksInlineParserFactory : InlineContentParserFactory
-{
-  override const Int[] triggerChars := ['\'']
-
-  override InlineContentParser create() { TicksInlineParser() }
-}
-
-**************************************************************************
-** BackticksLinkParser
-**************************************************************************
-
-**
-** Parses '`url`' as a link as though it had been specified using
-** the equivalent common markdown: '[url](/url)'. Note - only single-backticks
-** will be parsed as links, e.g. '``not a link``'
-**
-** Has special handling for `embed://` links
-**
-@Js
-internal class BackticksLinkParser : InlineContentParser
-{
-  override ParsedInline? tryParse(InlineParserState state)
+  override LinkResult? process(LinkInfo info, Scanner scanner, InlineParserContext cx)
   {
-    // parse with normal backticks semantics (only support single opener/closer sequence)
-    res := BackticksInlineParser().withMaxMarkers(1).tryParse(state)
-    if (res == null) return res
+    // try normal processing - if it succeeds it takes precedence
+    res := super.process(info, scanner, cx)
+    if (res != null) return res
 
-    // convert to a Link
-    Code code := res.node
-    link := Link(code.literal).appendChild(Text(code.literal))
-    return ParsedInline.of(link, res.pos)
+    // treat shortcut [foo] as a [foo](foo). The normal CoreLinkProcessor
+    // would just leave it as Text node if it doesn't resolve to a link reference.
+    if (info.label == null)
+    {
+      return LinkResult.wrapTextIn(Link(info.text), scanner.pos)
+    }
+    return LinkResult.none
   }
-
-  static const InlineContentParserFactory factory := BackticksLinkParserFactory()
-}
-
-@Js
-internal const class BackticksLinkParserFactory : InlineContentParserFactory
-{
-  override const Int[] triggerChars := ['`']
-
-  override InlineContentParser create() { BackticksLinkParser() }
 }
 
 **************************************************************************
@@ -317,21 +276,5 @@ internal class VideoRenderer : NodeRenderer
     html.tag("div", ["class": "xetodoc-video"])
     html.tag("iframe", attrs).tag("/iframe")
     html.tag("/div")
-  }
-}
-
-**************************************************************************
-** MdTicksRenderer
-**************************************************************************
-
-@Js
-internal class MdTicksRenderer : NodeRenderer
-{
-  new make(MarkdownContext cx) { this.cx = cx }
-  private MarkdownContext cx
-  override const Type[] nodeTypes := [Code#]
-  override Void render(Node node)
-  {
-    CoreMarkdownNodeRenderer.writeCode(cx.writer, node, '\'')
   }
 }
