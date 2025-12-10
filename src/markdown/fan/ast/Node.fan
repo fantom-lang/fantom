@@ -295,6 +295,10 @@ abstract class Node
 **************************************************************************
 
 ** Hard line break
+** pre>
+** line\
+** break
+** <pre
 @Js
 class HardLineBreak : Node { }
 
@@ -302,7 +306,11 @@ class HardLineBreak : Node { }
 ** SoftLineBreak
 **************************************************************************
 
-** Soft line break
+** A soft line break (as opposed to `HardLineBreak`), e.g. between:
+** pre>
+** foo
+** bar
+** <pre
 @Js
 class SoftLineBreak : Node { }
 
@@ -326,6 +334,9 @@ mixin Delimited
 **************************************************************************
 
 ** Strong emphasis
+** pre>
+** Some **strong emphasis** or __strong emphasis__
+** <pre
 @Js
 class StrongEmphasis : Node, Delimited
 {
@@ -342,6 +353,9 @@ class StrongEmphasis : Node, Delimited
 **************************************************************************
 
 ** Emphasis
+** pre>
+** Some *emphasis* or _emphasis_
+** <pre
 @Js
 class Emphasis : Node, Delimited
 {
@@ -357,7 +371,11 @@ class Emphasis : Node, Delimited
 ** Text
 **************************************************************************
 
-** Text
+** A text node:
+** pre>
+** foo *bar*
+** <pre
+** The 'foo ' is a text node, and the 'bar' inside the emphasis is also a text node.
 @Js
 class Text : Node
 {
@@ -370,7 +388,10 @@ class Text : Node
 ** Code
 **************************************************************************
 
-** Code
+** Inline code span:
+** pre>
+** Some `inline code`
+** <pre
 @Js
 class Code : Node
 {

@@ -63,7 +63,18 @@ class Link : LinkNode
 ** Image
 **************************************************************************
 
-** Image node
+** An image
+** pre>
+** ![foo](/url "title")
+** <pre
+**
+** The corresponding `LinkNode` would look like this:
+** - 'destination' => '/uri'
+** - 'title' => "title"
+** - A `Text` child node with 'literal' that returns "link"
+**
+** Note that the text in the link can contain inline formatting, so it could
+** also contain an `Image` or `Emphasis`, etc.
 @Js
 class Image : LinkNode
 {

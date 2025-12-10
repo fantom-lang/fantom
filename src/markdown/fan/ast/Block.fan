@@ -48,7 +48,13 @@ final class Document : Block
 ** Heading
 **************************************************************************
 
-** Heading block
+** A heading (ATX or Setext):
+** pre>
+** First heading
+** =============
+**
+** ## Another heading
+** <pre
 @Js
 class Heading : Block
 {
@@ -67,7 +73,11 @@ class Heading : Block
 ** BlockQuote
 **************************************************************************
 
-** Block quote block
+** A block quote:
+** pre>
+** > some quoted text
+** <pre
+** Note that child nodes are themselves blocks, e.g. `Paragraph`, `ListBlock`, etc.
 @Js
 class BlockQuote : Block { }
 
@@ -76,6 +86,12 @@ class BlockQuote : Block { }
 **************************************************************************
 
 ** Fenced code block
+** pre>
+** ```
+** foo
+** bar
+** ```
+** <pre
 @Js
 class FencedCode : Block
 {
@@ -143,7 +159,14 @@ class HtmlBlock : Block
 ** ThematicBreak
 **************************************************************************
 
-** Thematic break block
+** A thematic break, e.g. between text:
+** pre>
+** Some text
+**
+** ---
+**
+** Some other text.
+** <pre
 @Js
 class ThematicBreak : Block
 {
@@ -157,7 +180,13 @@ class ThematicBreak : Block
 ** IndentedCode
 **************************************************************************
 
-** Indented code block
+** An indented code block:
+** pre>
+** Code follows:
+**
+**     foo
+**     bar
+** <pre
 @Js
 class IndentedCode : Block
 {
@@ -185,7 +214,13 @@ abstract class ListBlock : Block
 ** BulletList
 **************************************************************************
 
-** Bullet list block
+** A bullet list:
+** pre>
+** - One
+** - Two
+** - Three
+** <pre
+** The children are `ListItem` blocks, which contain other blocks (or nested lists).
 @Js
 class BulletList : ListBlock
 {
@@ -200,7 +235,13 @@ class BulletList : ListBlock
 ** OrderedList
 **************************************************************************
 
-** Ordered list block
+** An ordered list:
+** pre>
+** 1. One
+** 2. Two
+** 3. Three
+** <pre
+** The children are `ListItem` blocks, which contain other blocks (or nested lists).
 @Js
 class OrderedList : ListBlock
 {
@@ -221,7 +262,7 @@ class OrderedList : ListBlock
 ** ListItem
 **************************************************************************
 
-** List item
+** A child of a `ListBlock`, containing other blocks (e.g. `Paragraph`, other lists, etc.)
 @Js
 class ListItem : Block
 {
@@ -256,7 +297,7 @@ class ListItem : Block
 ** Paragraph
 **************************************************************************
 
-** Paragraph
+** A paragraph block contains inline nodes such as `Text`.
 @Js
 class Paragraph : Block { }
 
