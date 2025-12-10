@@ -76,8 +76,10 @@ abstract const class BlockParserFactory
 @Js
 final class BlockStart
 {
+  ** Result when there is no block start
   static new none() { null }
 
+  ** Start block(s) with the specified parser(s)
   static new of(BlockParser[] blockParsers) { BlockStart.make(blockParsers) }
 
   private new make(BlockParser[] blockParsers)
@@ -93,9 +95,41 @@ final class BlockStart
 
   Bool isReplaceActiveBlockParser := false { private set }
 
+  Int replaceParagraphLines := 0
+
+  ** Continue parsing at the specified index
   This atIndex(Int newIndex) { this.newIndex = newIndex; return this }
+
+  ** Continue parsing at the specified column (for tab handling)
   This atColumn(Int newColumn) { this.newColumn = newColumn; return this }
+
+  @Deprecated { msg="Use setReplaceParagraphLines(int) instead" }
   This replaceActiveBlockParser() { this.isReplaceActiveBlockParser = true; return this }
+
+  ** Replace a number of lines from the current paragraph (as returned by
+  ** `MatchedBlockParser.paragraphLines`) with the new block.
+  **
+  ** This is useful for parsing blocks that start with normal paragrapsh and only have
+  ** special marker syntax in later lines, e.g. in this:
+  **
+  ** pre>
+  ** Foo
+  ** ===
+  ** <pre
+  ** The 'Foo' line is initially parsed as a normal paragraph, then the '===' is parsed
+  ** as a heading marker, replacing the 1 paragraph line before. The end result is a
+  ** single Heading block.
+  **
+  ** Note that source spans from the replaced lines are automatically added to the new block.
+  **
+  ** Paramter 'lines' indicates the number of lines to replace (at least 1); use Int.maxVal
+  ** to replace the paragraph.
+  This withReplaceParagraphLines(Int lines)
+  {
+    if (!(lines >= 1)) throw ArgErr("Lines must be >= 1: ${lines}")
+    this.replaceParagraphLines = lines
+    return this
+  }
 }
 
 **************************************************************************

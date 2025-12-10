@@ -268,20 +268,20 @@ internal const class TableParserFactory : BlockParserFactory
   override BlockStart? tryStart(ParserState state, MatchedBlockParser parser)
   {
     paraLines := parser.paragraphLines.lines
-    if (paraLines.size == 1 && Chars.find('|', paraLines.first.content, 0) != -1)
+    if (paraLines.size >= 1 && Chars.find('|', paraLines[-1].content, 0) != -1)
     {
       line := state.line
       separatorLine := line.substring(state.index, line.content.size)
       columns := parseSeparator(separatorLine.content)
       if (columns != null && !columns.isEmpty)
       {
-        paragraph := paraLines[0]
+        paragraph := paraLines[-1]
         headerCells := TableParser.split(paragraph)
         if (columns.size >= headerCells.size)
         {
           return BlockStart.of([TableParser(columns, paragraph)])
             .atIndex(state.index)
-            .replaceActiveBlockParser
+            .withReplaceParagraphLines(1)
         }
       }
     }

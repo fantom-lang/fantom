@@ -255,10 +255,18 @@ internal class DocumentParser : ParserState
         setNewColumn(blockStart.newColumn)
 
       SourceSpan[]? replacedSourceSpans := null
-      if (blockStart.isReplaceActiveBlockParser)
+      if (blockStart.replaceParagraphLines >= 1 || blockStart.isReplaceActiveBlockParser)
       {
-        replacedBlock := prepareActiveBlockParserForReplacement
-        replacedSourceSpans = replacedBlock.sourceSpans
+        if (activeBlockParser is ParagraphParser)
+        {
+          paraParser := (ParagraphParser)activeBlockParser
+          lines := blockStart.isReplaceActiveBlockParser ? Int.maxVal : blockStart.replaceParagraphLines
+          replacedSourceSpans = replaceParagraphLines(lines, paraParser)
+        }
+        else if (blockStart.isReplaceActiveBlockParser)
+        {
+          replacedSourceSpans = prepareActiveBlockParserForReplacement(activeBlockParser)
+        }
       }
 
       blockStart.blockParsers.each |newBlockParser|
@@ -510,6 +518,18 @@ internal class DocumentParser : ParserState
     openBlockParsers.pop
   }
 
+  private SourceSpan[] prepareActiveBlockParserForReplacement(BlockParser blockParser)
+  {
+    // Note that we don't want to parse inlines here, as it's getting replaced
+    deactivateBlockParser
+
+    // do this so that source positions are calculated, which we will carry over to
+    // the replacing block
+    blockParser.closeBlock
+    blockParser.block.unlink
+    return blockParser.block.sourceSpans
+  }
+/*
   private Block prepareActiveBlockParserForReplacement()
   {
     // Note that we don't want to parse inlines, as it's getting replaced
@@ -533,6 +553,7 @@ internal class DocumentParser : ParserState
     old.block.unlink
     return old.block
   }
+  */
 
   ** Prepares the input line by replacing '\0' characters with 'U+FFFD'.
   ** See § 2.3 - Insecure Characters.
@@ -540,6 +561,16 @@ internal class DocumentParser : ParserState
   {
     if (!line.containsChar('\u0000')) return line
     return line.replace("\u0000", "\uFFFD")
+  }
+
+  private SourceSpan[] replaceParagraphLines(Int lines, ParagraphParser paraParser)
+  {
+    // remove lines from paragraph as the new block is uing them.
+    // if all lines are used, this also unlinks the paragraph block.
+    sourceSpans := paraParser.removeLines(lines)
+    // close the paragraph block parser, which will finalize it
+    closeBlockParsers(1)
+    return sourceSpans
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -631,6 +662,11 @@ class MatchedBlockParser
 
   BlockParser matchedBlockParser { private set }
 
+  ** Returns the current paragraph lines if the matched block is a paragraph. If you
+  ** want to use some or all of the lines for starting a new block instead, use
+  ** `BlockStart.replaceParagraphLines`.
+  **
+  ** Return the paragraph content or empty list
   SourceLines paragraphLines()
   {
     if (matchedBlockParser is ParagraphParser)

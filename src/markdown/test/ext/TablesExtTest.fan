@@ -75,11 +75,6 @@ class TablesExtTest : RenderingTest
     verifyRendering("Abc|Def\n|--- ---", "<p>Abc|Def\n|--- ---</p>\n")
   }
 
-  Void testHeaderMustBeOneLine()
-  {
-    verifyRendering("No\nAbc|Def\n---|---", "<p>No\nAbc|Def\n---|---</p>\n")
-  }
-
   Void testOneHeadNoBody()
   {
     verifyRendering("Abc|Def\n---|---",
@@ -512,6 +507,25 @@ class TablesExtTest : RenderingTest
     verifyRendering("Abc|Def\n---|---\n1|2\n  |  ",
       """${expected2cells.trim}
          <p>|</p>\n""")
+  }
+
+  Void testInterruptsParagraph()
+  {
+    verifyRendering("text\n|a  |\n|---|\n|b  |",
+      Str<|<p>text</p>
+           <table>
+           <thead>
+           <tr>
+           <th>a</th>
+           </tr>
+           </thead>
+           <tbody>
+           <tr>
+           <td>b</td>
+           </tr>
+           </tbody>
+           </table>
+          |>)
   }
 
   Void testAttrProviderIsApplied()

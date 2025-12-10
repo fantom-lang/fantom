@@ -85,6 +85,20 @@ internal class LinkReferenceDefinitionParser
     }
   }
 
+  SourceSpan[] removeLines(Int lines)
+  {
+    removedSpans := sourceSpans[(sourceSpans.size-lines).max(0)..<sourceSpans.size]
+    removeLast(lines, workingLines)
+    removeLast(lines, sourceSpans)
+    return removedSpans
+  }
+
+  private static Void removeLast(Int n, List arr)
+  {
+    if (n >= arr.size) arr.clear
+    else { n.times { arr.removeAt(-1) } }
+  }
+
   private Bool onStartDefinition(Scanner scanner)
   {
     // finish any outstanding references now. we don't do this earlier because

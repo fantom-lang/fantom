@@ -64,7 +64,7 @@ internal const class HeadingParserFactory : BlockParserFactory
       {
         return BlockStart.of([HeadingParser(setextHeadingLevel, para)])
           .atIndex(line.content.size)
-          .replaceActiveBlockParser
+          .withReplaceParagraphLines(para.lines.size)
       }
     }
 

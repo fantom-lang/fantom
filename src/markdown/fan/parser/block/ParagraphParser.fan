@@ -66,4 +66,6 @@ internal class ParagraphParser : BlockParser
   }
 
   SourceLines paragraphLines() { linkRefDefParser.paragraphLines }
+
+  SourceSpan[] removeLines(Int lines) { linkRefDefParser.removeLines(lines) }
 }
