@@ -176,6 +176,13 @@ class MarkdownRendererTest : Test
     verifyRendering("", "2) Test\n", render(doc))
   }
 
+  Void testOrderedListItemsWithStartNumberLongerThanLaterNumber()
+  {
+    src := "10001.\n20.\n"
+    doc := parse(src)
+    verifyRendering(src, "10001. \n10002. \n", render(doc))
+  }
+
   Void testTabs()
   {
     verifyRoundTrip("a\tb\n")

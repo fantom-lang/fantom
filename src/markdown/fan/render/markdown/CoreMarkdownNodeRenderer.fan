@@ -181,7 +181,7 @@
     else throw ArgErr("listHolder is ${listHolder}")
 
     contentIndent := item.contentIndent
-    spaces := contentIndent == null ? " " : " ".mult(contentIndent - marker.size)
+    spaces := contentIndent == null ? " " : " ".mult((contentIndent - marker.size).max(1))
     writer.writePrefix(marker)
     writer.writePrefix(spaces)
     writer.pushPrefix(" ".mult(marker.size + spaces.size))
