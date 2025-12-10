@@ -156,6 +156,18 @@ class HtmlRendererTest : Test
       def.render(parse("![foo &auml;](/url)\n")));
   }
 
+  Void testImageAltTextWithInlines()
+  {
+    verifyEq("<p><img src=\"/url\" alt=\"foo bar link\" /></p>\n",
+      def.render(parse("![_foo_ **bar** [link](/url)](/url)\n")))
+  }
+
+  Void testImageAltTextWithCode()
+  {
+    verifyEq("<p><img src=\"/url\" alt=\"foo bar\" /></p>\n",
+      def.render(parse("![`foo` bar](/url)\n")))
+  }
+
   Void testCanRenderContentsOfSingleParagraph()
   {
     paras := parse("Here I have a test [link](http://www.google.com)")

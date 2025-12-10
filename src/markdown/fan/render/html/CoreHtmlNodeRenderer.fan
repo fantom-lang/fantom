@@ -316,6 +316,7 @@ internal class AltTextVisitor : Visitor
   Str altText() { sb.toStr }
 
   override Void visitText(Text text) { sb.add(text.literal) }
+  override Void visitCode(Code code) { sb.add(code.literal) }
   override Void visitSoftLineBreak(SoftLineBreak node) { sb.addChar('\n') }
   override Void visitHardLineBreak(HardLineBreak node) { sb.addChar('\n') }
 }
