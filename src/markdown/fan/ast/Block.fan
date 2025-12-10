@@ -263,6 +263,11 @@ class OrderedList : ListBlock
 **************************************************************************
 
 ** A child of a `ListBlock`, containing other blocks (e.g. `Paragraph`, other lists, etc.)
+**
+** Note that a list item can't directly contain `Text`, it needs to be:
+** `ListItem` : `Paragraph` : `Text`.
+**
+** If you want a list that is rendered tightly, created a list with `ListBlock.tight`
 @Js
 class ListItem : Block
 {
