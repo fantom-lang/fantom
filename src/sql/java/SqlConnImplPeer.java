@@ -34,7 +34,15 @@ public class SqlConnImplPeer
     {
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
-      self.peer.jconn = DriverManager.getConnection(uri, user, pass);
+      if (user == null)
+      {
+        //support for certificate auth
+        self.peer.jconn = DriverManager.getConnection(uri);
+      }
+      else
+      {
+        self.peer.jconn = DriverManager.getConnection(uri, user, pass);
+      }
       self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
       return self;
     }
