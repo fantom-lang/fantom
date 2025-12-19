@@ -92,9 +92,9 @@ class SmtpClient
       if (res.code != 250) throw SmtpErr.makeRes(res)
       readExts(res)
 
-      // if we have starttls and no plaintext auth
-      // options then upgrade the socket
-      if (starttls && (auths == null || auths.isEmpty))
+      // if server advertised starttls extension then upgrade the socket and
+      // send another EHLO query
+      if (starttls)
       {
         // tell server we're starting TLS
         writeReq("STARTTLS")
