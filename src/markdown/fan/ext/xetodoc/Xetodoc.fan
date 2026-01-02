@@ -218,11 +218,9 @@ internal class VideoRenderer : NodeRenderer
 
   override const Type[] nodeTypes := [Video#]
 
-  private static const [Str:Str?] stdAttrs := [
+  private static const [Str:Str] stdAttrs := [
     "frameborder": "0",
-    "allowfullscreen": null,
-    "webkitallowfullscreen": null,
-    "mozallowfullscreen": null,
+    "allowfullscreen": "true",
     "width": "50%",
     "height": "35%",
   ]
@@ -278,3 +276,4 @@ internal class VideoRenderer : NodeRenderer
     html.tag("/div")
   }
 }
+
