@@ -47,6 +47,11 @@ class StrBuf extends Obj {
     return this;
   }
 
+  addTrim(str) {
+    this.#str += Str.trim(str);
+    return this;
+  }
+
   capacity(it=undefined) {
     if (it === undefined) {
       if (this.#capacity == null) return this.#str.length;
@@ -98,6 +103,11 @@ class StrBuf extends Obj {
     if (i < 0) i = this.#str.length+i;
     if (i < 0 || i > this.#str.length) throw IndexErr.make(i);
     this.#str = this.#str.substring(0,i) + s + this.#str.substring(i);
+    return this;
+  }
+
+  trimEnd() {
+    this.#str = Str.trimEnd(this.#str);
     return this;
   }
 

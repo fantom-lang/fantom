@@ -88,6 +88,12 @@ final class StrBuf
   This addRange(Str s, Range r)
 
   **
+  ** Add string with its leading and trailing [whitespace]`Str.trim`
+  ** trimmed.  Return this.
+  **
+  This addTrim(Str x)
+
+  **
   ** Add x.toStr to the end of the buffer.  If the buffer is not
   ** empty, then first add the specified separator which defaults
   ** to a space if not specified.  Return this.
@@ -107,6 +113,11 @@ final class StrBuf
   ** this.
   **
   This insert(Int index, Obj? x)
+
+  **
+  ** Remove any trailing [whitespace]`Str.trim` in the buffer.  Return this.
+  **
+  This trimEnd()
 
   **
   ** Remove the char at the specified index.  A negative index may be

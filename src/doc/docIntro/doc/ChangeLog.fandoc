@@ -9,6 +9,7 @@
 *Build 1.0.83 (working)*
 - Future support for JS promises
 - Add Str.eachLine
+- Add StrBuf addTrim, trimEnd
 - Refactor Log registry to use weak references
 
 *Build 1.0.82 (26 Jun 2025)*

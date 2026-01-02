@@ -110,6 +110,17 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf addTrim(String str)
+  {
+    int len = str.length();
+    if (len == 0) return this;
+    if (str.charAt(0) > ' ' && str.charAt(len-1) > ' ') return add(str);
+    int s = 0;     while (s < len && str.charAt(s) <= ' ') s++;
+    int e = len-1; while (e > s && str.charAt(e) <= ' ') e--;
+    sb.append(str, s, e+1);
+    return this;
+  }
+
   public StrBuf join(Object x) { return join(x, " "); }
   public StrBuf join(Object x, String sep)
   {
@@ -133,6 +144,13 @@ public class StrBuf
     if (i < 0) i = sb.length()+i;
     if (i > sb.length()) throw IndexErr.make(index);
     sb.insert(i, s);
+    return this;
+  }
+
+  public StrBuf trimEnd()
+  {
+    while (sb.length() > 0 && FanInt.isSpace(sb.charAt(sb.length()-1)))
+      sb.deleteCharAt(sb.length()-1);
     return this;
   }
 

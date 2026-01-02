@@ -190,6 +190,46 @@ class StrBufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// AddTrim
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAddTrim()
+  {
+    verifyAddTrim(["x", " y", "z "], "xyz")
+    verifyAddTrim(["x", " ", " \n", "\t\n\n", "."], "x.")
+    verifyAddTrim(["x", "", "  <1>", "   <2>   ", "<3>   ", "."], "x<1><2><3>.")
+  }
+
+  Void verifyAddTrim(Str[] input, Str expect)
+  {
+    s := StrBuf()
+    input.each |x| { s.addTrim(x) }
+    verifyEq(s.toStr, expect)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// TrimEnd
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTrimEnd()
+  {
+    verifyTrimEnd("", "")
+    verifyTrimEnd("x", "x")
+    verifyTrimEnd("x y", "x y")
+    verifyTrimEnd(" ", "")
+    verifyTrimEnd(" \n ", "")
+    verifyTrimEnd("x ", "x")
+    verifyTrimEnd("x y \t \n", "x y")
+  }
+
+  Void verifyTrimEnd(Str input, Str expect)
+  {
+    s := StrBuf()
+    s.add(input)
+    verifyEq(s.trimEnd.toStr, expect)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Remove
 //////////////////////////////////////////////////////////////////////////
 
