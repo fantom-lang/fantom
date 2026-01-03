@@ -327,17 +327,35 @@ class FandocParser
   {
     try
     {
-      lines = in.readAllLines
-      numLines = lines.size
-      lineIndex = curLine = 0
-      consume
-      consume
-      curLine = 1
+      initLines(in.readAllLines)
     }
     finally
     {
       if (close) in.close
     }
+  }
+
+  **
+  ** Backdoor util for line-by-line processing
+  **
+  @NoDoc LineType[] parseLineTypes(Str[] lines)
+  {
+    initLines(lines)
+    types := LineType[,]
+    types.capacity = lines.size
+    while (cur != null) { types.add(curt); consume }
+    return types
+  }
+
+  private Void initLines(Str[] lines)
+  {
+    this.lines = lines
+    this.numLines = lines.size
+    this.lineIndex = this.curLine = 0
+    this.consume
+    this.consume
+    this.curLine = 1
+    return this
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -509,8 +527,8 @@ class FandocParser
 ** LineType
 **************************************************************************
 
-@Js
-internal enum class LineType
+@NoDoc @Js
+enum class LineType
 {
   eof,         // end of file
   blank,       // space*
@@ -540,3 +558,4 @@ internal enum class LineType
     }
   }
 }
+
