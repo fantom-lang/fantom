@@ -544,7 +544,7 @@ enum class LineType
   hr,          // ---  (with a leading blank line)
   normal       // anything else
 
-  Bool isList() { return this === ul }
+  Bool isHeading() { this === h1 || this === h2 || this === h3 || this === h4 }
 
   Int headingLevel()
   {
