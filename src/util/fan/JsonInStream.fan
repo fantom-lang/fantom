@@ -120,54 +120,53 @@ class JsonInStream : InStream
 
   private Obj parseNum()
   {
-    integral := StrBuf()
-    fractional := StrBuf()
-    exponent := StrBuf()
+    s := StrBuf()
+    isFloat := false
+
     if (maybe('-'))
-      integral.add("-")
+      s.add("-")
 
     while (this.cur.isDigit)
     {
-      integral.addChar(this.cur)
+      s.addChar(this.cur)
       consume
     }
 
     if (this.cur == '.')
     {
-      decimal := true
+      isFloat = true
+
+      s.addChar(this.cur)
       consume
       while (this.cur.isDigit)
       {
-        fractional.addChar(this.cur)
+        s.addChar(this.cur)
         consume
       }
     }
 
     if (this.cur == 'e' || this.cur == 'E')
     {
-      exponent.addChar(this.cur)
+      isFloat = true
+
+      s.addChar(this.cur)
       consume
       if (this.cur == '+') consume
       else if (this.cur == '-')
       {
-        exponent.addChar(this.cur)
+        s.addChar(this.cur)
         consume
       }
       while (this.cur.isDigit)
       {
-        exponent.addChar(this.cur)
+        s.addChar(this.cur)
         consume
       }
     }
 
-    Num? num := null
-    if (fractional.size > 0)
-      num = Float.fromStr(integral.toStr+"."+fractional.toStr+exponent.toStr)
-    else if (exponent.size > 0)
-      num = Float.fromStr(integral.toStr+exponent.toStr)
-    else num = Int.fromStr(integral.toStr)
-
-    return num
+    return isFloat ?
+      Float.fromStr(s.toStr) :
+      Int.fromStr(s.toStr)
   }
 
   private Str parseStr()
