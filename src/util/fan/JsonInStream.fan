@@ -288,5 +288,4 @@ internal class JsonToken
   internal static const Int arrayEnd := ']'
   internal static const Int comma := ','
   internal static const Int quote := '"'
-  internal static const Int grave := '`'
 }
