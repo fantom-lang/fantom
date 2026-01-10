@@ -19,6 +19,10 @@ class JsonTest : Test
     verifyBasics("null", null)
     verifyBasics("true", true)
     verifyBasics("false", false)
+    verifyErr(ParseErr#) { JsonInStream("nabc".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("tabc".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("fabcd".in).readJson }
+    verifyErr(ParseErr#) { JsonInStream("a".in).readJson }
 
     // numbers
     verifyBasics("5", 5)
