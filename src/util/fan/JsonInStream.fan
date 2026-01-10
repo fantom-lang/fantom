@@ -90,17 +90,27 @@ class JsonInStream : InStream
     else if (this.cur == JsonToken.arrayStart) return parseArray
     else if (this.cur == 't')
     {
-      "true".size.times |->| { consume }
+      consume
+      expect('r')
+      expect('u')
+      expect('e')
       return true
     }
     else if (this.cur == 'f')
     {
-      "false".size.times |->| { consume }
+      consume
+      expect('a')
+      expect('l')
+      expect('s')
+      expect('e')
       return false
     }
     else if (this.cur == 'n')
     {
-      "null".size.times |->| { consume }
+      consume
+      expect('u')
+      expect('l')
+      expect('l')
       return null
     }
 
