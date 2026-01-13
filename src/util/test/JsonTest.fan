@@ -244,20 +244,12 @@ class JsonTest : Test
 
   public Void testTransform()
   {
-    elems := JsonInStream(
-      Str<|[
-             {"foo": "abc", "bar": 123},
-             {"quux": "xyz"}
-           ]|>.in,
-      |Str:Obj? x -> Obj|
-      {
-        return x.containsKey("foo") ?
-          Foo(x["foo"], x["bar"]) :
-          x
-      }).readJson
-
     verifyEq(
-      elems,
+      FooInStream(
+        Str<|[
+               {"foo": "abc", "bar": 123},
+               {"quux": "xyz"}
+             ]|>.in).readJson,
       Obj?[
         Foo("abc", 123),
         Str:Obj?["quux": "xyz"]
@@ -278,6 +270,22 @@ internal class SerialA
   Str s := "string\n"
   @Transient Int noGo := 99
   Int[] ints  := [1, 2, 3]
+}
+
+**************************************************************************
+** FooInStream
+**************************************************************************
+
+internal class FooInStream : JsonInStream
+{
+  new make(InStream in) : super(in) {}
+
+  override Obj transformObj(Str:Obj? obj)
+  {
+    return obj.containsKey("foo") ?
+      Foo(obj["foo"], obj["bar"]) :
+      obj
+  }
 }
 
 **************************************************************************

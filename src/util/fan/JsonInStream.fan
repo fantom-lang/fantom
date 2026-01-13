@@ -18,13 +18,8 @@ class JsonInStream : InStream
   **
   ** Construct by wrapping given input stream.
   **
-  ** The optional 'transform' function transforms each Str:Obj? into
-  ** an arbitrary Obj during parsing.
   **
-  new make(InStream in, |Str:Obj? -> Obj|? transform := null) : super(in)
-  {
-    this.transform = transform
-  }
+  new make(InStream in) : super(in) {}
 
   **
   ** Read a JSON object from this stream and return one
@@ -66,8 +61,14 @@ class JsonInStream : InStream
 
     expect(JsonToken.objectEnd)
 
-    return (transform == null) ?
-      pairs : transform(pairs)
+    return transformObj(pairs)
+  }
+
+  ** Override this method to transform each Str:Obj? into
+  ** an arbitrary Obj during parsing.
+  virtual Obj transformObj(Str:Obj? obj)
+  {
+    return obj
   }
 
   private Void parsePair(Str:Obj? obj)
@@ -275,7 +276,6 @@ class JsonInStream : InStream
 
   private Err err(Str msg) { ParseErr(msg) }
 
-  private |Str:Obj? -> Obj|? transform
   private Int cur := '?'
   private Int pos := 0
 }
