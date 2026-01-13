@@ -18,7 +18,13 @@ class JsonInStream : InStream
   **
   ** Construct by wrapping given input stream.
   **
-  new make(InStream in) : super(in) {}
+  ** The optional 'transform' function transforms each Str:Obj? into
+  ** an arbitrary Obj during parsing.
+  **
+  new make(InStream in, |Str:Obj? -> Obj|? transform := null) : super(in)
+  {
+    this.transform = transform
+  }
 
   **
   ** Read a JSON object from this stream and return one
@@ -41,7 +47,7 @@ class JsonInStream : InStream
     return parseVal
   }
 
-  private Str:Obj? parseObj()
+  private Obj parseObj()
   {
     pairs := Str:Obj?[:] { ordered = true }
 
@@ -54,16 +60,14 @@ class JsonInStream : InStream
       skipWhitespace
       if (maybe(JsonToken.objectEnd)) return pairs
 
-      // FIXIT would like pair to be a 2-tuple
-      // OR a map with atom/symbol keys!
-      // FIXIT what about empty object?
       parsePair(pairs)
       if (!maybe(JsonToken.comma)) break
     }
 
     expect(JsonToken.objectEnd)
 
-    return pairs
+    return (transform == null) ?
+      pairs : transform(pairs)
   }
 
   private Void parsePair(Str:Obj? obj)
@@ -271,6 +275,7 @@ class JsonInStream : InStream
 
   private Err err(Str msg) { ParseErr(msg) }
 
+  private |Str:Obj? -> Obj|? transform
   private Int cur := '?'
   private Int pos := 0
 }
