@@ -40,8 +40,8 @@ class DateTimeTest : Test
   const TimeZone ny      := TimeZone.fromStr("America/New_York")
   const TimeZone la      := TimeZone.fromStr("America/Los_Angeles")
   const TimeZone uk      := TimeZone.fromStr("Europe/London")
-  const TimeZone nl      := TimeZone.fromStr("Europe/Amsterdam")
-  const TimeZone kiev    := TimeZone.fromStr("Europe/Kiev")
+  const TimeZone nl      := TimeZone.fromStr("Europe/Brussels")
+  const TimeZone kiev    := TimeZone.fromStr("Europe/Kyiv")
   const TimeZone brazil  := TimeZone.fromStr("America/Sao_Paulo")
   const TimeZone aust    := TimeZone.fromStr("Australia/Sydney")
   const TimeZone riga    := TimeZone.fromStr("Europe/Riga")
@@ -530,13 +530,15 @@ class DateTimeTest : Test
     verifyTimeZone("Etc/UTC",          "UTC",   0hr, null,  null)
     verifyTimeZone("Etc/Rel",          "Rel",   0hr, null,  null)
 
+    // NOTE - in 2025c database there are no first-class timezones with no slashes
+    // TODO:FUTUE - check this condition for future tzdb updates
     // no slashes
-    x := TimeZone.fromStr("EST")
-    verifyEq(x.name, "EST")
-    verifyEq(x.fullName, "EST")
+    // x := TimeZone.fromStr("EST")
+    // verifyEq(x.name, "EST")
+    // verifyEq(x.fullName, "EST")
 
     // 2 slashes
-    x = TimeZone.fromStr("America/Kentucky/Louisville")
+    x := TimeZone.fromStr("America/Kentucky/Louisville")
     verifyEq(x.name, "Louisville")
     verifyEq(x.fullName, "America/Kentucky/Louisville")
     verifySame(TimeZone.fromStr("America/Kentucky/Louisville"), TimeZone.fromStr("Louisville"))
@@ -733,7 +735,7 @@ class DateTimeTest : Test
     verifyDateTime(310384800000_000000, la, 2009, nov, 1, 2, 0, 0, sun, std)
     verifyDateTime(310384807000_000000, la, 2009, nov, 1, 2, 0, 7, sun, std)
 
-    // Amsterdam (+1, with universal dst mode)
+    // Brussels (+1, with universal dst mode)
     verifyDateTime(289220400000_000000, nl, 2009, mar, 1,  12, 0, 0, sun, std)
     verifyDateTime(291601800000_000000, nl, 2009, mar, 29, 1, 30, 0, sun, std)
     verifyDateTime(291603600000_000000, nl, 2009, mar, 29, 3, 0, 0,  sun, dst)
@@ -896,27 +898,27 @@ class DateTimeTest : Test
     verifyEq(d.toStr, "2006-10-31T01:02:03-05:00 New_York")
 
     d = DateTime.makeTicks(289220400000_000000, nl)
-    verifyEq(d.toStr, "2009-03-01T12:00:00+01:00 Amsterdam")
+    verifyEq(d.toStr, "2009-03-01T12:00:00+01:00 Brussels")
 
     d = DateTime.makeTicks(290000000000_000000, uk)
     verifyEq(d.toStr, "2009-03-10T11:33:20Z London")
 
-    verifyFromStrErr("2009^03-01T12:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03^01T12:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01^12:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12^00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00^00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00:00^01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00:00+01^00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00:00+01:00^Amsterdam")
+    verifyFromStrErr("2009^03-01T12:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03^01T12:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01^12:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12^00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00^00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00:00^01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00:00+01^00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00:00+01:00^Brussels")
     verifyFromStrErr("2009-03-01T12:00:00+01:00 FooBar")
     verifyFromStrErr("3000-03-01T12:00:00+01:00 FooBar")
-    verifyFromStrErr("2009-13-01T12:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-32T12:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T24:00:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:61:00+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00:99+01:00 Amsterdam")
-    verifyFromStrErr("2009-03-01T12:00:00+01 Amsterdam")
+    verifyFromStrErr("2009-13-01T12:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-32T12:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T24:00:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:61:00+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00:99+01:00 Brussels")
+    verifyFromStrErr("2009-03-01T12:00:00+01 Brussels")
   }
 
   Void testDateToStr()
@@ -1040,7 +1042,7 @@ class DateTimeTest : Test
     x = DateTime.makeTicks(255148200000_000000, stJohn)
     verifyEq(x.toLocale("z|zzz|zzzz"), "-03:30|NST|St_Johns")
     x = DateTime.makeTicks(291718800000_000000, kiev)
-    verifyEq(x.toLocale("z|zzz|zzzz"), "+03:00|EEST|Kiev")
+    verifyEq(x.toLocale("z|zzz|zzzz"), "+03:00|EEST|Kyiv")
 
     // optional secs
     x = DateTime.make(2007, Month.jun, 17, 1, 2, 3, 123_456_789, utc)

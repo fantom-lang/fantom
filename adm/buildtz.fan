@@ -24,6 +24,14 @@ using build
 **
 ** Refer to TimeZone.java for the time zone binary database format.
 **
+** How to use this script:
+**
+** 1. Clone the [tzdb]`https://github.com/fantom-lang/tzdb` repo from GitHub
+** See the README in that repo for details on where to clone it.
+** 1. Update the 'tzVer' variable in the script below for the tzdb you want to gen
+** 1. Run this script to generate the Fantom JVM tz database
+** 1. Then run 'fan compilerEs::TzTool -embed -gen' to generate the tz database for JS
+**
 ** Conversion Notes Nov-2010
 ** -------------------------
 **   - southamerica was non-ASCII, resaved as UTF-8
@@ -53,6 +61,13 @@ using build
 **   - Asia/Hebron - overlapping rules, nuked many of 2010
 **   - Asia/Gaza - overlapping rules, couple in 2010-2013
 **
+** Conversion Notes Dec-2025
+** -------------------------
+**   - 2025c version
+**   - Africa/Casabalanca has overlapping rules - nuked many of them
+**   - Africa/Egypt - fixed overlapping rules
+**   - Asia/Palestine - fixed overlapping rules
+**
 class Build : BuildScript
 {
 
@@ -60,8 +75,21 @@ class Build : BuildScript
 // Inputs
 //////////////////////////////////////////////////////////////////////////
 
-  // directory of input files
-  Uri srcDir := `/work/stuff/tzinfo/2019c/`
+  ** Timezone database version to build for
+  private static const Str tzVer := "2025c"
+
+  ** Directory of input files
+  once Uri srcDir()
+  {
+    // assume unix/mac
+    Uri? homeDir := Env.cur.vars["HOME"]?.toUri
+
+    // check for window
+    if (Env.cur.os == "win32")
+      homeDir = Env.cur.vars["HOMEPATH"].replace("\\", "/").plus("/").toUri
+
+    return homeDir.plus(`tzinfo/${tzVer}/`)
+  }
 
   // input files from Olsen database
   Uri[] srcUris :=
@@ -74,7 +102,6 @@ class Build : BuildScript
     `northamerica`,
     `southamerica`,
     `etcetera`,
-    `systemv`,
   ]
 
   // we don't include any historical rules older than this
