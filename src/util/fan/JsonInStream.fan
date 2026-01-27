@@ -53,7 +53,7 @@ class JsonInStream : InStream
     while (true)
     {
       skipWhitespace
-      if (maybe(JsonToken.objectEnd)) return pairs
+      if (maybe(JsonToken.objectEnd)) return transformObj(pairs)
 
       parsePair(pairs)
       if (!maybe(JsonToken.comma)) break
