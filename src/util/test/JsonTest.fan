@@ -245,14 +245,16 @@ class JsonTest : Test
   public Void testTransform()
   {
     verifyEq(
-      FooInStream(
+      TransformJsonInStream(
         Str<|[
-               {"foo": "abc", "bar": 123},
-               {"quux": "xyz"}
+               {},
+               {"a": true},
+               {"b": "xyz", "c": 123}
              ]|>.in).readJson,
       Obj?[
-        Foo("abc", 123),
-        Str:Obj?["quux": "xyz"]
+        Pair[,],
+        Pair[Pair("a", true)],
+        Pair[Pair("b", "xyz"), Pair("c", 123)],
       ])
   }
 }
@@ -273,45 +275,45 @@ internal class SerialA
 }
 
 **************************************************************************
-** FooInStream
+** TransformJsonInStream
 **************************************************************************
 
-internal class FooInStream : JsonInStream
+internal class TransformJsonInStream : JsonInStream
 {
   new make(InStream in) : super(in) {}
 
   override Obj transformObj(Str:Obj? obj)
   {
-    return obj.containsKey("foo") ?
-      Foo(obj["foo"], obj["bar"]) :
-      obj
+    pairs := Pair[,]
+    obj.each |v,k| { pairs.add(Pair(k, v)) }
+    return pairs
   }
 }
 
 **************************************************************************
-** Foo
+** Pair
 **************************************************************************
 
-internal class Foo
+internal class Pair
 {
-  new make(Str foo, Int bar)
+  new make(Str key, Obj val)
   {
-    this.foo = foo
-    this.bar = bar
+    this.key = key
+    this.val = val
   }
 
   override Bool equals(Obj? that)
   {
-    x := that as Foo
+    x := that as Pair
     if (x == null) return false
-    return foo == x.foo && bar == x.bar
+    return key == x.key && val == x.val
   }
 
   override Int hash()
   {
-    return foo.hash*31 + bar.hash
+    return key.hash*31 + val.hash
   }
 
-  internal Str foo
-  internal Int bar
+  internal Str key
+  internal Obj val
 }
