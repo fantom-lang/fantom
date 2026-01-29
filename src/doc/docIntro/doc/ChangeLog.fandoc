@@ -11,6 +11,7 @@
 - Add Str.eachLine
 - Add StrBuf addTrim, trimEnd
 - Refactor Log registry to use weak references
+- 2025c time zone database
 
 *Build 1.0.82 (26 Jun 2025)*
 - New fanc tool for transpiling to Java source
