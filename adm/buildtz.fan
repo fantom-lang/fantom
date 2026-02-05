@@ -88,7 +88,7 @@ class Build : BuildScript
     if (Env.cur.os == "win32")
       homeDir = Env.cur.vars["HOMEPATH"].replace("\\", "/").plus("/").toUri
 
-    return homeDir.plus(`tzinfo/${tzVer}/`)
+    return homeDir.plus(`tzdb/${tzVer}/`)
   }
 
   // input files from Olsen database
