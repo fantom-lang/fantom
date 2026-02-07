@@ -37,9 +37,6 @@ abstract class LinkNode : Node
     appendChild(content)
   }
 
-  ** Flag that indicates this was specified as '[uri]' instead of '(text)[uri]'
-  @NoDoc virtual Bool shortcut() { false }
-
   override protected Str toStrAttributes() { "dest=${destination}, title=${title}" }
 }
 
@@ -63,7 +60,7 @@ class Link : LinkNode
   }
 
   ** Flag that indicates this was specified as '[uri]' instead of '(text)[uri]'
-  @NoDoc override Bool shortcut
+  @NoDoc Bool shortcut
 }
 
 **************************************************************************
