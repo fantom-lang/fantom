@@ -151,7 +151,9 @@ internal const class BracketLinkProcessor : CoreLinkProcessor
     // would just leave it as Text node if it doesn't resolve to a link reference.
     if (info.label == null)
     {
-      return LinkResult.wrapTextIn(Link(info.text), scanner.pos)
+      link := Link(info.text)
+      link.shortcut = true
+      return LinkResult.wrapTextIn(link, scanner.pos)
     }
     return LinkResult.none
   }

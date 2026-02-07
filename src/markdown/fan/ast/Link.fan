@@ -29,12 +29,16 @@ abstract class LinkNode : Node
 
   ** Replace the display text for this link
   @NoDoc Void setText(Str text) { setContent(Text(text)) }
+
   ** Replace the display content with the given node
   @NoDoc Void setContent(Node content)
   {
     children.each |child| { child.unlink }
     appendChild(content)
   }
+
+  ** Flag that indicates this was specified as '[uri]' instead of '(text)[uri]'
+  @NoDoc virtual Bool shortcut() { false }
 
   override protected Str toStrAttributes() { "dest=${destination}, title=${title}" }
 }
@@ -57,6 +61,9 @@ class Link : LinkNode
   new make(Str destination, Str? title := null) : super(destination, title)
   {
   }
+
+  ** Flag that indicates this was specified as '[uri]' instead of '(text)[uri]'
+  @NoDoc override Bool shortcut
 }
 
 **************************************************************************
@@ -111,3 +118,4 @@ class LinkReferenceDefinition : Block
   const Str destination
   const Str? title
 }
+
