@@ -149,7 +149,8 @@ internal const class BracketLinkProcessor : CoreLinkProcessor
 
     // treat shortcut [foo] as a [foo](foo). The normal CoreLinkProcessor
     // would just leave it as Text node if it doesn't resolve to a link reference.
-    if (info.label == null)
+    // Also - dont't allow empty brackets (e.g. Str[])
+    if (info.label == null && !info.text.isEmpty)
     {
       link := Link(info.text)
       link.shortcut = true

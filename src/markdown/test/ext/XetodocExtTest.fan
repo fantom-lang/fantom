@@ -23,6 +23,7 @@ class XetodocExtTest : RenderingTest
   {
     verifyEq(Xetodoc.toHtml("[a]"), """<p><a href="a">a</a></p>\n""")
     verifyEq(Xetodoc.toHtml("Use [now()] for timestamp"), """<p>Use <a href="now()">now()</a> for timestamp</p>\n""")
+    verifyEq(Xetodoc.toHtml("Str[]"), """<p>Str[]</p>\n""")
   }
 
   // Void testBacktickLinks()
