@@ -224,8 +224,8 @@ internal class VideoRenderer : NodeRenderer
   private static const [Str:Str] stdAttrs := [
     "frameborder": "0",
     "allowfullscreen": "true",
-    "width": "50%",
-    "height": "35%",
+    "width": "960",
+    "height": "540",
   ]
 
   override Void render(Node node)
@@ -234,8 +234,10 @@ internal class VideoRenderer : NodeRenderer
     type  := video.uri.host.lower
     switch (type)
     {
-      case "loom": renderLoom(video)
-      // case "vimeo": renderVimeo(embed)
+      case "loom":
+        renderLoom(video)
+      case "vimeo":
+        renderVimeo(video)
       case "youtube":
       case "youtu.be":
         renderYoutube(video)
@@ -252,6 +254,19 @@ internal class VideoRenderer : NodeRenderer
     attrs := stdAttrs.dup.addAll([
       "title": "${video.altText}",
       "src": "${src}"
+    ]).setAll(uri.query)
+    renderVideo(attrs)
+  }
+
+  private Void renderVimeo(Video video)
+  {
+    uri := video.uri
+    src := `https://player.vimeo.com/video/${uri.name}`
+    attrs := stdAttrs.dup.addAll([
+      "title": "${video.altText}",
+      "portrait": "0",
+      "byline":"0",
+      "src": src.toStr,
     ]).setAll(uri.query)
     renderVideo(attrs)
   }
