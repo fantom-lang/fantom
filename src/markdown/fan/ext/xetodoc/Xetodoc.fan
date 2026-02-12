@@ -261,7 +261,10 @@ internal class VideoRenderer : NodeRenderer
   private Void renderVimeo(Video video)
   {
     uri := video.uri
-    src := `https://player.vimeo.com/video/${uri.name}`
+    path := uri.toStr
+    if (!path.startsWith("video://vimeo/")) echo("WARN: invalid vimeo URI: $uri")
+    else path = path["video://vimeo/".size..-1]
+    src := `https://player.vimeo.com/video/${path}`
     attrs := stdAttrs.dup.addAll([
       "title": "${video.altText}",
       "portrait": "0",
