@@ -28,6 +28,46 @@ class WriterTest : Test
     ])
   }
 
+  Void testSpecialChars()
+  {
+    verifyYaml("key: value")
+    verifyYaml("- list item")
+    verifyYaml("#comment")
+    verifyYaml("nested {json}")
+    verifyYaml("C:\\Windows")
+
+    verifyYaml("He said \"Hello\"");
+    verifyYaml("It's a trap");
+    verifyYaml("Tab\tSeparated");
+
+    verifyEq(roundTrip("123.45"), 123.45f)
+    verifyEq(roundTrip("007"), 7)
+
+    verifyYaml("");
+    verifyYaml("   spaces   ");
+    verifyYaml(":");
+  }
+
+  Void testMultiline()
+  {
+    // N.B the YamlReader adds a newline to the end
+
+    verifyEq(
+      roundTrip(Obj:Obj?[
+        "foo": "Line1\nLine2",
+      ]),
+      Obj:Obj?[
+        "foo": "Line1\nLine2\n",
+      ])
+    verifyEq(
+      roundTrip(Obj:Obj?[
+        "foo": "Line1\nLine2", "bar": 1,
+      ]),
+      Obj:Obj?[
+        "foo": "Line1\nLine2\n", "bar": 1,
+      ])
+  }
+
   private Void verifyYaml(Obj? val)
   {
     verifyEq(val, roundTrip(val))
