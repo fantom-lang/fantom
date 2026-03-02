@@ -1240,13 +1240,13 @@ class PyTypePrinter : PyPrinter
     nl
   }
 
+  ** Write field storage initialization with type default value.
+  ** Matches ES compiler pattern: field storage gets type defaults (false, 0, null),
+  ** actual initialization happens in instance$init which has properly resolved expressions.
   private Void fieldInit(FieldDef f)
   {
     w("self._${escapeName(f.name)} = ")
-    if (f.init != null)
-      PyExprPrinter(this).expr(f.init)
-    else
-      w(defaultVal(f.type))
+    w(defaultVal(f.type))
     eos
   }
 

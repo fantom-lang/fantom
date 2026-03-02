@@ -81,8 +81,9 @@ class PyExprPrinter : PyPrinter
       case ExprId.slotLiteral:     slotLiteral(e)
       case ExprId.itExpr:          itExpr(e)
       case ExprId.throwExpr:       throwExpr(e)
+      case ExprId.unknownVar:      unknownVar(e)
       default:
-        w("None")  // Placeholder for unimplemented expr: ${e.id}
+        throw UnsupportedErr("Unhandled expr type: $e.id")
     }
   }
 
@@ -104,32 +105,9 @@ class PyExprPrinter : PyPrinter
 
   private Void listLiteral(ListLiteralExpr e)
   {
-    // Generate type-aware list: List.from_literal([items], elementType)
-    // Extract element type from ListType
-    listType := e.ctype
-    CType? elemType := null
-
-    // Try to get the element type from the parameterized list type
-    if (!listType.isGeneric)
-    {
-      try
-      {
-        elemType = listType->v  // ListType has v() method returning element type
-      }
-      catch (Err err)
-      {
-        // Fallback to Obj?
-        elemType = listType.pod.resolveType("Obj", true)?.toNullable
-      }
-    }
-
-    // Use Obj? as fallback if we couldn't determine type
-    elemSig := elemType?.signature ?: "sys::Obj?"
-
-    // Add sys. prefix only when NOT inside the sys pod
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    // Cast to ListType to get element type directly (no try/catch, no dynamic dispatch)
+    lt := (ListType)((CType)(e.explicitType ?: e.ctype)).deref
+    sysPrefix()
     w("List.from_literal([")
     e.vals.each |val, i|
     {
@@ -137,82 +115,38 @@ class PyExprPrinter : PyPrinter
       expr(val)
     }
     w("], ")
-    str(elemSig)
+    str(lt.v.signature)
     w(")")
   }
 
   private Void mapLiteral(MapLiteralExpr e)
   {
-    // Generate type-aware map: Map.from_literal([keys], [vals], keyType, valType)
-    // Extract key/value types (explicit or inferred from compiler)
-    mapType := e.ctype
-
-    // Get the MapType's K and V types
-    // ctype should be a MapType with k and v methods
-    CType? keyType := null
-    CType? valType := null
-
-    // Try to get key/value types via the k and v methods
-    if (mapType.isGeneric)
-    {
-      // For generic maps, use Obj:Obj? as default
-      keyType = mapType.pod.resolveType("Obj", false)
-      valType = mapType.pod.resolveType("Obj", true)?.toNullable
-    }
-    else
-    {
-      // Try to access the parametrized types
-      // MapType has k() and v() methods that return CType
-      try
-      {
-        keyType = mapType->k
-        valType = mapType->v
-      }
-      catch (Err err)
-      {
-        // Fallback to Obj:Obj?
-        keyType = mapType.pod.resolveType("Obj", false)
-        valType = mapType.pod.resolveType("Obj", true)?.toNullable
-      }
-    }
-
-    // Use Obj:Obj? as fallback if we couldn't determine types
-    keySig := keyType?.signature ?: "sys::Obj"
-    valSig := valType?.signature ?: "sys::Obj?"
-
-    // Add sys. prefix only when NOT inside the sys pod
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    // Cast to MapType to get key/value types directly (no try/catch, no dynamic dispatch)
+    mt := (MapType)(e.explicitType ?: e.ctype)
+    sysPrefix()
     w("Map.from_literal([")
-    // Keys array
     e.keys.each |key, i|
     {
       if (i > 0) w(", ")
       expr(key)
     }
     w("], [")
-    // Values array
     e.vals.each |val, i|
     {
       if (i > 0) w(", ")
       expr(val)
     }
     w("], ")
-    // Key type
-    str(keySig)
+    str(mt.k.signature)
     w(", ")
-    // Value type
-    str(valSig)
+    str(mt.v.signature)
     w(")")
   }
 
   private Void rangeLiteral(RangeLiteralExpr e)
   {
     // Generate Range.make(start, end, exclusive)
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    sysPrefix()
     w("Range.make(")
     expr(e.start)
     w(", ")
@@ -226,16 +160,11 @@ class PyExprPrinter : PyPrinter
   {
     // Duration literal - value is in nanoseconds
     dur := e.val as Duration
-    curPod := m.curType?.pod?.name
-    prefix := curPod != "sys" ? "sys." : ""
+    sysPrefix()
     if (dur != null)
-    {
-      w("${prefix}Duration.make(").w(dur.ticks).w(")")
-    }
+      w("Duration.make(").w(dur.ticks).w(")")
     else
-    {
-      w("${prefix}Duration.make(0)")
-    }
+      w("Duration.make(0)")
   }
 
   private Void decimalLiteral(LiteralExpr e)
@@ -244,9 +173,7 @@ class PyExprPrinter : PyPrinter
     // Matches JS transpiler pattern: sys.Decimal.make(value)
     // Use string constructor to preserve precision for large values
     val := e.val.toStr
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    sysPrefix()
     w("Decimal.make(\"").w(val).w("\")")
   }
 
@@ -254,28 +181,18 @@ class PyExprPrinter : PyPrinter
   {
     // URI literal `http://example.com` -> Uri.from_str("http://example.com")
     uri := e.val as Uri
-    curPod := m.curType?.pod?.name
-    prefix := curPod != "sys" ? "sys." : ""
+    sysPrefix()
     if (uri != null)
-    {
-      w("${prefix}Uri.from_str(").str(uri.toStr).w(")")
-    }
+      w("Uri.from_str(").str(uri.toStr).w(")")
     else
-    {
-      w("${prefix}Uri.from_str(").str(e.val.toStr).w(")")
-    }
+      w("Uri.from_str(").str(e.val.toStr).w(")")
   }
 
 //////////////////////////////////////////////////////////////////////////
 // Variables
 //////////////////////////////////////////////////////////////////////////
 
-  private Void localVar(LocalVarExpr e)
-  {
-    varName := e.var.name
-
-    w(escapeName(varName))
-  }
+  private Void localVar(LocalVarExpr e) { w(escapeName(e.var.name)) }
 
   private Void thisExpr() { w("self") }
 
@@ -285,6 +202,14 @@ class PyExprPrinter : PyPrinter
   {
     // "it" is the implicit closure parameter - output as "it"
     w("it")
+  }
+
+  ** Unresolved variable reference -- output target.name if target present (matches ES compiler)
+  private Void unknownVar(Expr e)
+  {
+    uv := e as UnknownVarExpr
+    if (uv.target != null) { expr(uv.target); w(".") }
+    w(escapeName(uv.name))
   }
 
   private Void throwExpr(Expr e)
@@ -304,136 +229,92 @@ class PyExprPrinter : PyPrinter
 
   private Void call(CallExpr e)
   {
-    // Skip compiler-injected const protection calls (checkInCtor, enterCtor, exitCtor)
-    // These are added by ConstChecks.fan for preventing const field mutation.
-    // In Python we skip these since const protection is not strictly enforced.
-    // NOTE: checkFields$* is NOT skipped - it validates non-nullable fields were set.
     methodName := e.method.name
-    if (methodName == "checkInCtor" || methodName == "enterCtor" || methodName == "exitCtor")
-    {
-      // Output None as a placeholder (these are always no-return statements)
-      w("None")
-      return
-    }
 
-    // Handle safe navigation operator (?.): short-circuit to null if target is null
-    // Pattern: ((lambda _safe_: None if _safe_ is None else <call>)(<target>))
-    if (e.isSafe && e.target != null)
+    // Dispatch priority chain (see class doc)
+    if (e.isSafe && e.target != null)                                                     { callSafe(e); return }
+    if (e.isDynamic)                                                                      { callDynamic(e); return }
+    // All sys::Func methods handled here: call/callList -> direct invocation,
+    // enterCtor/exitCtor/checkInCtor -> no-op (compiler-injected const protection)
+    if (e.method.parent.qname == "sys::Func")
     {
-      w("((lambda _safe_: None if _safe_ is None else ")
-      safeCallBody(e)
-      w(")(")
-      expr(e.target)
-      w("))")
-      return
+      if (methodName == "call" || methodName == "callList")                               { callFunc(e); return }
+      if (methodName == "enterCtor" || methodName == "exitCtor" || methodName == "checkInCtor")
+                                                                                          { w("None"); return }
     }
-
-    // Check if this is a dynamic call (-> operator)
-    // Dynamic calls use trap() for runtime dispatch
-    if (e.isDynamic)
-    {
-      w("ObjUtil.trap(")
-      if (e.target != null)
-        expr(e.target)
-      else
-        w("self")
-      // NOTE: Do NOT escapeName() here - the name is a string key for dict lookup,
-      // not a Python identifier. "id" should stay "id", not become "id_"
-      w(", ").str(e.name)
-      // Fantom semantics: no args = null, with args = list
-      if (e.args.isEmpty)
-      {
-        w(", None)")
-      }
-      else
-      {
-        w(", [")
-        e.args.each |arg, i|
-        {
-          if (i > 0) w(", ")
-          expr(arg)
-        }
-        w("])")
-      }
-      return
-    }
-
-    // Check if this is a Func.call() or Func.callList() - convert to direct invocation
-    methodParentQname := e.method.parent.qname
-    if (methodParentQname == "sys::Func" && (e.method.name == "call" || e.method.name == "callList"))
-    {
-      // f.call(a, b) -> f(a, b)
-      // f.callList([a, b]) -> f(*list)
-      if (e.target != null)
-      {
-        expr(e.target)
-      }
-      w("(")
-      if (e.method.name == "callList" && !e.args.isEmpty)
-      {
-        // callList takes a list, spread it
-        w("*")
-        expr(e.args.first)
-      }
-      else
-      {
-        e.args.each |arg, i|
-        {
-          if (i > 0) w(", ")
-          expr(arg)
-        }
-      }
-      w(")")
-      return
-    }
-
-    // Check if this is an Obj method that should use ObjUtil dispatch
-    if (e.target != null && isObjUtilMethod(e.method))
-    {
-      objUtilCall(e)
-      return
-    }
-
-    // Check if this is a method call on a primitive type (instance method)
-    // Static calls (target is StaticTargetExpr) should NOT use primitive dispatch
+    if (e.target != null && isObjUtilMethod(e.method))                                    { objUtilCall(e); return }
     if (e.target != null && isPrimitiveType(e.target.ctype) && e.target.id != ExprId.staticTarget)
+                                                                                          { primitiveCall(e); return }
+    if (e.method.isPrivate && !e.method.isStatic && !e.method.isCtor)                     { callPrivate(e); return }
+
+    // Normal instance/static method call -- resolve target prefix
+    callNormal(e)
+  }
+
+  ** Safe navigation: ((lambda _safe_: None if _safe_ is None else <body>)(target))
+  private Void callSafe(CallExpr e)
+  {
+    w("((lambda _safe_: None if _safe_ is None else ")
+    safeCallBody(e)
+    w(")(")
+    expr(e.target)
+    w("))")
+  }
+
+  ** Dynamic call (-> operator): ObjUtil.trap(target, name, args)
+  ** targetWriter overrides how the target is written (used by safeCallBody for _safe_)
+  private Void callDynamic(CallExpr e, |->|? targetWriter := null)
+  {
+    w("ObjUtil.trap(")
+    if (targetWriter != null) targetWriter()
+    else if (e.target != null) expr(e.target)
+    else w("self")
+    w(", ").str(e.name)
+    if (e.args.isEmpty)
     {
-      // Convert x.method() to Type.method(x)
-      primitiveCall(e)
-      return
+      w(", None)")
     }
-
-    // NOTE: List and Map use instance method dispatch (like JS transpiler)
-    // No special static dispatch block needed - they fall through to normal method calls
-
-    // Method call
-    // Check for private methods - they are non-virtual in Fantom
-    // Use static dispatch: ClassName.method(self/target, args)
-    // BUT: In static context, there's no self - use factory pattern without self
-    // NOTE: Constructors (isCtor) become static factories in Python, so don't add self
-    if (e.method.isPrivate && !e.method.isStatic && !e.method.isCtor)
+    else
     {
-      w(PyUtil.escapeTypeName(e.method.parent.name)).w(".").w(escapeName(e.method.name)).w("(")
-      if (e.target != null)
-      {
-        expr(e.target)
-      }
-      else if (!m.inStaticContext)
-      {
-        // Only add self if NOT in static context
-        w("self")
-      }
-      // Add comma separator only if we added a target/self AND have args
-      if ((e.target != null || !m.inStaticContext) && !e.args.isEmpty) w(", ")
-      e.args.each |arg, i|
-      {
-        if (i > 0) w(", ")
-        expr(arg)
-      }
-      w(")")
-      return
+      w(", [")
+      writeArgs(e.args)
+      w("])")
     }
+  }
 
+  ** Func.call/callList -> direct Python invocation
+  private Void callFunc(CallExpr e)
+  {
+    if (e.target != null) expr(e.target)
+    w("(")
+    if (e.method.name == "callList" && !e.args.isEmpty)
+    {
+      w("*")
+      expr(e.args.first)
+    }
+    else
+    {
+      writeArgs(e.args)
+    }
+    w(")")
+  }
+
+  ** Private method -> static dispatch: ClassName.method(self/target, args)
+  private Void callPrivate(CallExpr e)
+  {
+    w(PyUtil.escapeTypeName(e.method.parent.name)).w(".").w(escapeName(e.method.name)).w("(")
+    if (e.target != null)
+      expr(e.target)
+    else if (!m.inStaticContext)
+      w("self")
+    if ((e.target != null || !m.inStaticContext) && !e.args.isEmpty) w(", ")
+    writeArgs(e.args)
+    w(")")
+  }
+
+  ** Normal method call -- resolve target prefix then emit name(args)
+  private Void callNormal(CallExpr e)
+  {
     if (e.target != null)
     {
       expr(e.target)
@@ -441,61 +322,26 @@ class PyExprPrinter : PyPrinter
     }
     else if (e.method.isStatic)
     {
-      // Static method call without explicit target needs class qualification
-      curPod := m.curType?.pod?.name
-      targetPod := e.method.parent.pod.name
-      typeName := PyUtil.escapeTypeName(e.method.parent.name)
-
-      if (targetPod == "sys" && curPod != "sys")
-      {
-        // Sys pod type from non-sys pod - use sys. prefix
-        w("sys.").w(typeName).w(".")
-      }
-      else if (targetPod != "sys" && curPod != null && curPod != targetPod)
-      {
-        // Cross-pod reference (non-sys to non-sys) - use dynamic import
-        // Pod namespace returns MODULE not CLASS, so need __import__ pattern
-        podPath := PyUtil.podImport(targetPod)
-        w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}.")
-      }
-      else
-      {
-        // Same pod - no prefix needed
-        w(typeName).w(".")
-      }
+      writeTypeRef(e.method.parent.pod.name, PyUtil.escapeTypeName(e.method.parent.name))
+      w(".")
     }
     else if (m.inStaticContext)
     {
-      // In static context (like _static_init), use class name instead of self
       w(PyUtil.escapeTypeName(e.method.parent.name)).w(".")
     }
     else if (e.method.isPrivate && !e.method.isCtor)
     {
-      // Private methods are non-virtual in Fantom - use static dispatch
-      // Generate: ClassName.method(self, args) instead of self.method(args)
-      // NOTE: Constructors (isCtor) become static factories in Python, so don't add self
-      w(PyUtil.escapeTypeName(e.method.parent.name)).w(".").w(escapeName(e.method.name)).w("(self")
-      if (!e.args.isEmpty) w(", ")
-      e.args.each |arg, i|
-      {
-        if (i > 0) w(", ")
-        expr(arg)
-      }
-      w(")")
+      // Duplicate private check (reached when private method not caught above)
+      callPrivate(e)
       return
     }
     else
     {
-      // Instance method call on self
       w("self.")
     }
     w(escapeName(e.method.name))
     w("(")
-    e.args.each |arg, i|
-    {
-      if (i > 0) w(", ")
-      expr(arg)
-    }
+    writeArgs(e.args)
     w(")")
   }
 
@@ -503,56 +349,33 @@ class PyExprPrinter : PyPrinter
   ** These are Obj/Num methods that may be called on primitives coerced to Obj or Num
   private Bool isObjUtilMethod(CMethod m)
   {
-    parentQname := m.parent.qname
+    // All sys::Obj methods route through ObjUtil (matches ES compiler)
+    if (m.parent.isObj) return true
+
+    // Force equals/compare through ObjUtil for NaN-aware semantics
+    // even when resolved to a specific type (matches ES compiler)
     name := m.name
+    if (name == "equals" || name == "compare") return true
 
-    // Obj methods (including _-suffixed versions used when name conflicts with Python builtins)
-    if (parentQname == "sys::Obj")
-    {
-      return name == "isImmutable" ||
-             name == "toImmutable" ||
-             name == "typeof" ||
-             name == "compare" ||
-             name == "equals" ||
-             name == "hash" ||
-             name == "hash_" ||
-             name == "toStr"
-    }
-
-    // Obj methods on Map - route through ObjUtil for proper dispatch
-    // The Fantom compiler may resolve hash/equals/etc to Map parent
-    // Note: List methods go through primitiveCall which handles them properly
-    if (parentQname == "sys::Map")
-    {
-      if (name == "hash" || name == "hash_" || name == "equals" || name == "compare" || name == "toStr")
-        return true
-    }
-
-    // Num methods - toFloat/toInt/toDecimal/toLocale may be called on Num-typed values
-    if (parentQname == "sys::Num")
-    {
+    // Num methods on Num-typed values (Python has no Num.py for static dispatch)
+    if (m.parent.isNum)
       return name == "toFloat" || name == "toInt" || name == "toDecimal" || name == "toLocale"
-    }
 
-    // Decimal methods - toLocale may be called on Decimal-typed values
-    if (parentQname == "sys::Decimal")
-    {
-      return name == "toLocale"
-    }
+    // Decimal.toLocale on Decimal-typed values
+    if (m.parent.isDecimal) return name == "toLocale"
 
     return false
   }
 
   ** Output ObjUtil method call: x.method() -> ObjUtil.method(x)
-  private Void objUtilCall(CallExpr e)
+  ** targetWriter overrides how the target is written (used by safeCallBody for _safe_)
+  private Void objUtilCall(CallExpr e, |->|? targetWriter := null)
   {
-    methodName := e.method.name
-
-    // Convert to snake_case for Python
-    pyName := escapeName(methodName)
+    pyName := escapeName(e.method.name)
 
     w("ObjUtil.").w(pyName).w("(")
-    expr(e.target)
+    if (targetWriter != null) targetWriter()
+    else expr(e.target)
     if (!e.args.isEmpty)
     {
       e.args.each |arg|
@@ -564,149 +387,134 @@ class PyExprPrinter : PyPrinter
     w(")")
   }
 
+  ** Map of Fantom primitive type qnames to their Python wrapper class names.
+  ** Primitives use static dispatch: x.method() -> sys.Type.method(x)
+  ** List and Map are NOT primitives -- they use normal instance dispatch.
+  ** Matches ES compiler pmap: Bool, Decimal, Float, Int, Str
+  private static const Str:Str primitiveMap :=
+  [
+    "sys::Bool":    "Bool",
+    "sys::Int":     "Int",
+    "sys::Float":   "Float",
+    "sys::Decimal": "Float",  // Decimal uses Float methods in Python
+    "sys::Str":     "Str",
+  ]
+
   ** Check if type is a primitive that needs static method calls
-  ** NOTE: List and Map are NOT primitives - they are pure Fantom classes that extend Obj
-  ** (with Python ABC interfaces for interop). They use normal instance method dispatch.
-  ** See Brian Frank's guidance: primitives are Bool, Int, Float, Str, Func, Err
   private Bool isPrimitiveType(CType? t)
   {
     if (t == null) return false
-    sig := t.toNonNullable.signature
-    // Only Bool, Int, Float, Str, Decimal are primitives (matches JS transpiler)
-    // List and Map are NOT primitives - they use instance method dispatch
-    if (sig == "sys::Bool" || sig == "sys::Int" || sig == "sys::Float" || sig == "sys::Str" || sig == "sys::Decimal")
-      return true
-    return false
+    return primitiveMap.containsKey(t.toNonNullable.signature)
   }
+
+  ** Write "sys." prefix when current pod is NOT the sys pod.
+  ** This is the standard pattern for qualifying sys pod types from non-sys code.
+  private Void sysPrefix()
+  {
+    if (m.curType?.pod?.name != "sys")
+      w("sys.")
+  }
+
+  ** Hand-written sys types that use Python @property for instance fields.
+  ** These types use property assignment (self.x = v) not method-call setters (self.x(v)).
+  ** Derived from: grep -l "@property" fan/src/sys/py/fan/*.py
+  private static const Str[] handWrittenSysTypes :=
+  [
+    "sys::Depend",  // @property (version, isPlus, etc.)
+    "sys::Endian",  // @property
+    "sys::List",    // read-write @property (capacity)
+    "sys::Locale",  // @property
+    "sys::Map",     // read-write @property (def_, ordered, caseInsensitive)
+    "sys::StrBuf",  // read-only @property (charset)
+    "sys::Type",    // read-only @property (root, v, k, params, ret)
+  ]
 
   ** Check if type is a hand-written sys type that uses Python @property
-  ** Only include types where we've confirmed @property usage for instance fields
-  private Bool isHandWrittenSysType(Str qname)
-  {
-    // Types confirmed to use Python @property decorators (found via grep @property)
-    // Note: Buf removed - uses method-style accessors to match Fantom source patterns
-    return qname == "sys::Map" ||     // read-write @property (def_, ordered, caseInsensitive)
-           qname == "sys::List" ||    // read-write @property (capacity)
-           qname == "sys::Type" ||    // read-only @property (root, v, k, params, ret)
-           qname == "sys::StrBuf"     // read-only @property (charset)
-  }
+  private Bool isHandWrittenSysType(Str qname) { handWrittenSysTypes.contains(qname) }
 
-  ** Check if type is a hand-written sys type that uses method-style setters
-  ** These types use field(value) for setting, not field = value
-  private Bool usesMethodStyleSetters(Str qname)
-  {
-    // Types that use def field(self, value=None) pattern for get/set
-    return qname == "sys::Log"        // level(newLevel) setter
-  }
 
-  ** Get Python wrapper class name for primitive
-  ** NOTE: List and Map are NOT primitives - they use instance method dispatch
+  ** Get Python wrapper class name for primitive type
   private Str primitiveClassName(CType t)
   {
-    sig := t.toNonNullable.signature
-    if (sig == "sys::Bool") return "Bool"
-    if (sig == "sys::Int") return "Int"
-    if (sig == "sys::Float") return "Float"
-    if (sig == "sys::Decimal") return "Float"  // Decimal uses Float methods in Python
-    if (sig == "sys::Str") return "Str"
-    return t.name
+    return primitiveMap.get(t.toNonNullable.signature, t.name)
   }
 
-  ** Output primitive type static method call: x.method() -> sys.Type.method(x)
-  private Void primitiveCall(CallExpr e)
+  ** Write a pod-qualified type reference.
+  ** Handles same-pod (dynamic import), sys-to-non-sys (sys. prefix),
+  ** cross-pod (dynamic import), and same-pod-sys (bare name).
+  private Void writeTypeRef(Str targetPod, Str typeName)
   {
-    className := primitiveClassName(e.target.ctype)
-    methodName := escapeName(e.method.name)
-
-    // Add sys. prefix only when NOT inside the sys pod
     curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
-    w(className).w(".").w(methodName).w("(")
-    expr(e.target)
-    if (!e.args.isEmpty)
+    if (curPod != null && curPod != "sys" && curPod == targetPod)
     {
-      e.args.each |arg|
-      {
-        w(", ")
-        expr(arg)
-      }
+      // Same pod, non-sys - use dynamic import to avoid circular imports
+      podPath := PyUtil.podImport(targetPod)
+      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
     }
-    w(")")
+    else if (targetPod == "sys" && curPod != "sys")
+    {
+      // Sys pod type from non-sys pod - use sys. prefix
+      w("sys.").w(typeName)
+    }
+    else if (targetPod != "sys" && curPod != null && curPod != targetPod)
+    {
+      // Cross-pod reference (non-sys to non-sys) - use dynamic import
+      podPath := PyUtil.podImport(targetPod)
+      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
+    }
+    else
+    {
+      // Same pod (sys) or already imported directly
+      w(typeName)
+    }
   }
 
-  ** Generate the body of a safe call using _safe_ as the target variable
-  ** This is called from within a lambda wrapper: ((lambda _safe_: None if _safe_ is None else <body>)(target))
-  private Void safeCallBody(CallExpr e)
+  ** Write comma-separated argument expressions
+  private Void writeArgs(Expr[] args)
   {
-    // Dynamic call (-> operator) with safe nav
-    // NOTE: Do NOT escapeName() here - the name is a string key for dict lookup,
-    // not a Python identifier. "id" should stay "id", not become "id_"
-    if (e.isDynamic)
-    {
-      w("ObjUtil.trap(_safe_, ").str(e.name)
-      if (e.args.isEmpty)
-        w(", None)")
-      else
-      {
-        w(", [")
-        e.args.each |arg, i|
-        {
-          if (i > 0) w(", ")
-          expr(arg)
-        }
-        w("])")
-      }
-      return
-    }
-
-    // Primitive type call with safe nav: _safe_.method() -> sys.Type.method(_safe_)
-    if (e.target != null && isPrimitiveType(e.target.ctype) && e.target.id != ExprId.staticTarget)
-    {
-      className := primitiveClassName(e.target.ctype)
-      methodName := escapeName(e.method.name)
-      // Add sys. prefix for sys pod types when called from non-sys pods
-      curPod := m.curType?.pod?.name
-      if (curPod != "sys")
-        w("sys.")
-      w(className).w(".").w(methodName).w("(_safe_")
-      if (!e.args.isEmpty)
-      {
-        e.args.each |arg|
-        {
-          w(", ")
-          expr(arg)
-        }
-      }
-      w(")")
-      return
-    }
-
-    // ObjUtil method call with safe nav
-    if (e.target != null && isObjUtilMethod(e.method))
-    {
-      pyName := escapeName(e.method.name)
-      w("ObjUtil.").w(pyName).w("(_safe_")
-      if (!e.args.isEmpty)
-      {
-        e.args.each |arg|
-        {
-          w(", ")
-          expr(arg)
-        }
-      }
-      w(")")
-      return
-    }
-
-    // Regular instance method call with safe nav: _safe_.method(args)
-    // NOTE: List and Map use instance methods (like JS) - no special static dispatch needed
-    w("_safe_.").w(escapeName(e.method.name)).w("(")
-    e.args.each |arg, i|
+    args.each |arg, i|
     {
       if (i > 0) w(", ")
       expr(arg)
     }
+  }
+
+  ** Output primitive type static method call: x.method() -> sys.Type.method(x)
+  ** targetWriter overrides how the target is written (used by safeCallBody for _safe_)
+  private Void primitiveCall(CallExpr e, |->|? targetWriter := null)
+  {
+    className := primitiveClassName(e.target.ctype)
+    methodName := escapeName(e.method.name)
+
+    sysPrefix()
+    w(className).w(".").w(methodName).w("(")
+    if (targetWriter != null) targetWriter()
+    else expr(e.target)
+    if (!e.args.isEmpty)
+    {
+      e.args.each |arg|
+      {
+        w(", ")
+        expr(arg)
+      }
+    }
+    w(")")
+  }
+
+  ** Generate the body of a safe call using _safe_ as the target variable.
+  ** Delegates to the same dispatch methods as call() but writes _safe_ instead of expr(e.target).
+  private Void safeCallBody(CallExpr e)
+  {
+    safeTarget := |->| { w("_safe_") }
+
+    if (e.isDynamic)                                                                         { callDynamic(e, safeTarget); return }
+    if (e.target != null && isPrimitiveType(e.target.ctype) && e.target.id != ExprId.staticTarget)
+                                                                                             { primitiveCall(e, safeTarget); return }
+    if (e.target != null && isObjUtilMethod(e.method))                                       { objUtilCall(e, safeTarget); return }
+
+    // Regular instance method call: _safe_.method(args)
+    w("_safe_.").w(escapeName(e.method.name)).w("(")
+    writeArgs(e.args)
     w(")")
   }
 
@@ -736,49 +544,14 @@ class PyExprPrinter : PyPrinter
   private Void construction(CallExpr e)
   {
     // Constructor call - always use factory pattern: ClassName.make(args)
-    // This is needed because Fantom may have multiple constructors with
-    // different signatures, but Python __init__ only has one signature.
-    // The .make() factory method handles dispatching to the right constructor.
-    curPod := m.curType?.pod?.name
-    targetPod := e.method.parent.pod.name
-    typeName := PyUtil.escapeTypeName(e.method.parent.name)
-    methodName := e.method.name
-
-    if (curPod != null && curPod != "sys" && curPod == targetPod)
-    {
-      // Same pod, non-sys - use dynamic import
-      podPath := PyUtil.podImport(targetPod)
-      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
-    }
-    else if (targetPod == "sys" && curPod != "sys")
-    {
-      // Sys pod type referenced from non-sys pod - use namespace prefix
-      w("sys.").w(typeName)
-    }
-    else if (targetPod != "sys" && curPod != null && curPod != targetPod)
-    {
-      // Cross-pod reference (non-sys to non-sys) - use dynamic import
-      // e.g., testSys constructing concurrent::AtomicRef
-      podPath := PyUtil.podImport(targetPod)
-      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
-    }
-    else
-    {
-      // Same pod (sys) or already imported directly
-      w(typeName)
-    }
+    writeTypeRef(e.method.parent.pod.name, PyUtil.escapeTypeName(e.method.parent.name))
 
     // Always call the factory method: .make() or .fromStr() etc.
-    // This ensures correct construction even when __init__ has different signature
-    factoryName := methodName == "<ctor>" ? "make" : methodName
+    factoryName := e.method.name == "<ctor>" ? "make" : e.method.name
     w(".").w(escapeName(factoryName))
 
     w("(")
-    e.args.each |arg, i|
-    {
-      if (i > 0) w(", ")
-      expr(arg)
-    }
+    writeArgs(e.args)
     w(")")
   }
 
@@ -832,18 +605,16 @@ class PyExprPrinter : PyPrinter
       return
     }
 
-    // Check for List/Map primitive field access (size, isEmpty, etc.)
-    // Convert target.size to List.size(target) for proper Python dispatch
+    // Primitive field access uses static dispatch, same as method calls
+    // e.g., str.size -> sys.Str.size(str) because Python str has no .size property
     if (e.target != null && isPrimitiveType(e.target.ctype))
     {
-      if (fieldName == "size" || fieldName == "isEmpty" || fieldName == "capacity")
-      {
-        className := primitiveClassName(e.target.ctype)
-        w(className).w(".").w(fieldName).w("(")
-        expr(e.target)
-        w(")")
-        return
-      }
+      className := primitiveClassName(e.target.ctype)
+      sysPrefix()
+      w(className).w(".").w(escapeName(fieldName)).w("(")
+      expr(e.target)
+      w(")")
+      return
     }
 
     // Check for $this field (outer this capture in closures)
@@ -886,26 +657,8 @@ class PyExprPrinter : PyPrinter
     else if (e.field.isStatic)
     {
       // Static field without explicit target - need class prefix
-      curPod := m.curType?.pod?.name
-      targetPod := e.field.parent.pod.name
-      typeName := PyUtil.escapeTypeName(e.field.parent.name)
-
-      if (targetPod == "sys" && curPod != "sys")
-      {
-        // Sys pod type from non-sys pod - use sys. prefix
-        w("sys.").w(typeName).w(".")
-      }
-      else if (targetPod != "sys" && curPod != null && curPod != targetPod)
-      {
-        // Cross-pod reference (non-sys to non-sys) - use dynamic import
-        podPath := PyUtil.podImport(targetPod)
-        w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}.")
-      }
-      else
-      {
-        // Same pod - no prefix needed
-        w(typeName).w(".")
-      }
+      writeTypeRef(e.field.parent.pod.name, PyUtil.escapeTypeName(e.field.parent.name))
+      w(".")
     }
 
     // useAccessor=false means direct storage access (&field syntax)
@@ -995,9 +748,8 @@ class PyExprPrinter : PyPrinter
         // Determine whether to use method call syntax or property assignment:
         // - Hand-written sys types (Map, Type, etc.) use @property -> property assignment
         // - Transpiled types use def field(self, _val_=None): -> method call syntax
-        // - Types explicitly marked for method-style setters (Log) -> method call syntax
         parentSig := fieldExpr.field.parent.qname
-        useMethodCall := usesMethodStyleSetters(parentSig) || !isHandWrittenSysType(parentSig)
+        useMethodCall := !isHandWrittenSysType(parentSig)
 
         if (useMethodCall)
         {
@@ -1271,7 +1023,7 @@ class PyExprPrinter : PyPrinter
           case Token.ltEq: comparison(e, "compare_le")
           case Token.gt:   comparison(e, "compare_gt")
           case Token.gtEq: comparison(e, "compare_ge")
-          default:         cmp(e)  // <=>
+          default:         comparison(e, "compare")  // <=>
         }
       case ShortcutOp.negate:    w("(-"); expr(e.target); w(")")
       case ShortcutOp.increment: increment(e)
@@ -1284,114 +1036,96 @@ class PyExprPrinter : PyPrinter
       case ShortcutOp.mult:      doShortcutBinaryOp(e, "*")
       case ShortcutOp.div:       divOp(e)  // Use ObjUtil.div for Fantom semantics (truncated)
       case ShortcutOp.mod:       modOp(e)  // Use ObjUtil.mod for Fantom semantics (truncated)
-      default:                   w("# TODO: shortcut ${op}")
+      default:                   throw UnsupportedErr("Unhandled shortcut operator: $op")
     }
   }
 
   private Void doShortcutBinaryOp(ShortcutExpr e, Str op)
   {
-    // Check for string + non-string - route to Str.plus for proper type conversion
-    // In Fantom, "str" + x always converts x to string
-    // Skip for compound assignment - that's handled below with proper assignment semantics
+    // String + non-string: route to Str.plus for proper type conversion
     if (op == "+" && !e.isAssign && isStringPlusNonString(e))
     {
       stringPlusNonString(e)
       return
     }
 
-    // Check for compound assignment (x *= 3 -> x = x * 3)
+    // Compound assignment (x *= 3 -> x = x * 3)
     if (e.isAssign)
     {
-      // Need to assign the result back to target
-      // Unwrap coerce to get actual target
-      target := unwrapCoerce(e.target)
-      if (target.id == ExprId.localVar)
-      {
-        localExpr := target as LocalVarExpr
-        varName := escapeName(localExpr.var.name)
-        // Check for string += null pattern on local var
-        if (isStringPlusNullAssign(e))
-        {
-          curPod := m.curType?.pod?.name
-          prefix := curPod != "sys" ? "sys." : ""
-          w("(").w(varName).w(" := ${prefix}Str.plus(").w(varName).w(", ")
-          expr(e.args.first)
-          w("))")
-        }
-        else
-        {
-          w("(").w(varName).w(" := (").w(varName).w(" ").w(op).w(" ")
-          expr(e.args.first)
-          w("))")
-        }
-      }
-      else if (target.id == ExprId.field)
-      {
-        fieldExpr := target as FieldExpr
+      compoundAssign(e, op)
+      return
+    }
 
-        // Check for Wrap$.val compound assignment -- treat as local variable
-        origName := isWrapValAccess(fieldExpr)
-        if (origName != null)
-        {
-          varName := escapeName(origName)
-          w("(").w(varName).w(" := (").w(varName).w(" ").w(op).w(" ")
-          expr(e.args.first)
-          w("))")
-        }
-        else
-        {
-          // Normal field compound assignment - use direct assignment
-          escapedName := escapeName(fieldExpr.field.name)
-          if (fieldExpr.target != null)
-          {
-            expr(fieldExpr.target)
-            w(".")
-          }
-          w("_").w(escapedName).w(" = ")
-          if (fieldExpr.target != null)
-          {
-            expr(fieldExpr.target)
-            w(".")
-          }
-          w("_").w(escapedName).w(" ").w(op).w(" ")
-          expr(e.args.first)
-        }
-      }
-      else if (target.id == ExprId.shortcut)
+    // Simple binary op
+    w("(")
+    expr(e.target)
+    w(" ").w(op).w(" ")
+    expr(e.args.first)
+    w(")")
+  }
+
+  ** Compound assignment dispatch: handles local vars, fields, Wrap$.val, and index access
+  private Void compoundAssign(ShortcutExpr e, Str op)
+  {
+    target := unwrapCoerce(e.target)
+
+    if (target.id == ExprId.localVar)
+    {
+      localExpr := target as LocalVarExpr
+      varName := escapeName(localExpr.var.name)
+      // String += null needs Str.plus
+      if (isStringPlusNullAssign(e))
       {
-        // Index access compound assignment: x[i] += val -> x[i] = x[i] + val
-        shortcutTarget := target as ShortcutExpr
-        if (shortcutTarget.op == ShortcutOp.get)
-        {
-          indexCompoundAssign(shortcutTarget, op, e.args.first)
-        }
-        else
-        {
-          // Fallback - just do the operation (won't assign)
-          w("(")
-          expr(e.target)
-          w(" ").w(op).w(" ")
-          expr(e.args.first)
-          w(")")
-        }
+        w("(").w(varName).w(" := ")
+        sysPrefix()
+        w("Str.plus(").w(varName).w(", ")
+        expr(e.args.first)
+        w("))")
       }
       else
       {
-        // Fallback - just do the operation (won't assign)
-        w("(")
-        expr(e.target)
-        w(" ").w(op).w(" ")
+        w("(").w(varName).w(" := (").w(varName).w(" ").w(op).w(" ")
         expr(e.args.first)
-        w(")")
+        w("))")
+      }
+    }
+    else if (target.id == ExprId.field)
+    {
+      fieldExpr := target as FieldExpr
+      // Wrap$.val -> treat as local variable
+      origName := isWrapValAccess(fieldExpr)
+      if (origName != null)
+      {
+        varName := escapeName(origName)
+        w("(").w(varName).w(" := (").w(varName).w(" ").w(op).w(" ")
+        expr(e.args.first)
+        w("))")
+      }
+      else
+      {
+        // Normal field: target._field = target._field op value
+        escapedName := escapeName(fieldExpr.field.name)
+        if (fieldExpr.target != null) { expr(fieldExpr.target); w(".") }
+        w("_").w(escapedName).w(" = ")
+        if (fieldExpr.target != null) { expr(fieldExpr.target); w(".") }
+        w("_").w(escapedName).w(" ").w(op).w(" ")
+        expr(e.args.first)
+      }
+    }
+    else if (target.id == ExprId.shortcut)
+    {
+      shortcutTarget := target as ShortcutExpr
+      if (shortcutTarget.op == ShortcutOp.get)
+        indexCompoundAssign(shortcutTarget, op, e.args.first)
+      else
+      {
+        w("("); expr(e.target); w(" ").w(op).w(" "); expr(e.args.first); w(")")
       }
     }
     else
     {
-      w("(")
-      expr(e.target)
-      w(" ").w(op).w(" ")
-      expr(e.args.first)
-      w(")")
+      // Fallback
+      w("("); expr(e.target); w(" ").w(op).w(" "); expr(e.args.first); w(")")
     }
   }
 
@@ -1400,12 +1134,9 @@ class PyExprPrinter : PyPrinter
   ** Also handles nullable strings (Str?) which might be null at runtime
   private Bool isStringPlusNonString(ShortcutExpr e)
   {
-    targetSig := e.target?.ctype?.toNonNullable?.signature ?: ""
-    argSig := e.args.first?.ctype?.toNonNullable?.signature ?: ""
-
     // If neither is a string, no special handling needed
-    targetIsStr := targetSig == "sys::Str"
-    argIsStr := argSig == "sys::Str"
+    targetIsStr := e.target?.ctype?.toNonNullable?.isStr ?: false
+    argIsStr := e.args.first?.ctype?.toNonNullable?.isStr ?: false
 
     if (!targetIsStr && !argIsStr) return false
 
@@ -1431,16 +1162,13 @@ class PyExprPrinter : PyPrinter
     if (e.args.first?.id != ExprId.nullLiteral) return false
 
     // Check if target is string type
-    targetSig := e.target?.ctype?.toNonNullable?.signature ?: ""
-    return targetSig == "sys::Str"
+    return e.target?.ctype?.toNonNullable?.isStr ?: false
   }
 
   ** Handle string + non-string concatenation using sys.Str.plus()
   private Void stringPlusNonString(ShortcutExpr e)
   {
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    sysPrefix()
     w("Str.plus(")
     expr(e.target)
     w(", ")
@@ -1475,91 +1203,49 @@ class PyExprPrinter : PyPrinter
     w(")")
   }
 
-  private Void cmp(ShortcutExpr e)
-  {
-    w("ObjUtil.compare(")
-    expr(e.target)
-    w(", ")
-    expr(e.args.first)
-    w(")")
-  }
-
   private Void divOp(ShortcutExpr e)
   {
-    // Float division uses Python / directly
-    if (e.target?.ctype?.toNonNullable?.signature == "sys::Float")
+    // Float division uses Python / directly (no truncation issue)
+    if (e.target?.ctype?.toNonNullable?.isFloat ?: false)
     {
       doShortcutBinaryOp(e, "/")
       return
     }
-
     // Int division uses ObjUtil.div for truncated division semantics
     // (Python // is floor division, Fantom uses truncated toward zero)
-    if (e.isAssign)
-    {
-      // Compound assignment: x /= 5 -> x = ObjUtil.div(x, 5)
-      target := unwrapCoerce(e.target)
-      if (target.id == ExprId.localVar)
-      {
-        localExpr := target as LocalVarExpr
-        varName := escapeName(localExpr.var.name)
-        w("(").w(varName).w(" := ObjUtil.div(").w(varName).w(", ")
-        expr(e.args.first)
-        w("))")
-      }
-      else
-      {
-        w("ObjUtil.div(")
-        expr(e.target)
-        w(", ")
-        expr(e.args.first)
-        w(")")
-      }
-    }
-    else
-    {
-      w("ObjUtil.div(")
-      expr(e.target)
-      w(", ")
-      expr(e.args.first)
-      w(")")
-    }
+    objUtilOp(e, "div")
   }
 
   private Void modOp(ShortcutExpr e)
   {
     // Use ObjUtil.mod for Fantom-style modulo semantics
     // (truncated division vs Python's floor division)
+    objUtilOp(e, "mod")
+  }
+
+  ** Emit ObjUtil.{method}(target, arg) with compound assignment support
+  private Void objUtilOp(ShortcutExpr e, Str method)
+  {
+    // Compound assignment to local var: x /= y -> (x := ObjUtil.div(x, y))
     if (e.isAssign)
     {
-      // Compound assignment: y %= 5 -> y = ObjUtil.mod(y, 5)
-      // Unwrap coerce to get actual target
       target := unwrapCoerce(e.target)
       if (target.id == ExprId.localVar)
       {
         localExpr := target as LocalVarExpr
         varName := escapeName(localExpr.var.name)
-        w("(").w(varName).w(" := ObjUtil.mod(").w(varName).w(", ")
+        w("(").w(varName).w(" := ObjUtil.").w(method).w("(").w(varName).w(", ")
         expr(e.args.first)
         w("))")
-      }
-      else
-      {
-        w("ObjUtil.mod(")
-        expr(e.target)
-        w(", ")
-        expr(e.args.first)
-        w(")")
+        return
       }
     }
-    else
-    {
-      w("ObjUtil.mod(")
-      expr(e.target)
-      w(", ")
-      expr(e.args.first)
-      w(")")
-    }
+    // Simple call or non-local compound assignment fallback
+    w("ObjUtil.").w(method).w("(")
+    expr(e.target)
+    w(", ")
+    expr(e.args.first)
+    w(")")
   }
 
   ** Unwrap coerce expressions to get the underlying expression
@@ -1585,9 +1271,14 @@ class PyExprPrinter : PyPrinter
   // Post-increment/decrement returns the OLD value (before modification).
   // Pre-increment/decrement returns the NEW value (after modification).
 
-  private Void increment(ShortcutExpr e)
+  private Void increment(ShortcutExpr e) { incDec(e, "+", "inc") }
+
+  private Void decrement(ShortcutExpr e) { incDec(e, "-", "dec") }
+
+  ** Unified increment/decrement: op is "+" or "-", prefix is "inc" or "dec"
+  ** Pre (++x/--x) returns new value, post (x++/x--) returns old value
+  private Void incDec(ShortcutExpr e, Str op, Str prefix)
   {
-    // ++x (pre) returns new value, x++ (post) returns old value
     target := unwrapCoerce(e.target)
     isPost := e.isPostfixLeave
 
@@ -1595,7 +1286,7 @@ class PyExprPrinter : PyPrinter
     {
       fieldExpr := target as FieldExpr
 
-      // Check for Wrap$.val increment -- treat as local variable increment
+      // Check for Wrap$.val -- treat as local variable
       origName := isWrapValAccess(fieldExpr)
       if (origName != null)
       {
@@ -1603,18 +1294,18 @@ class PyExprPrinter : PyPrinter
         if (isPost)
         {
           w("((_old_").w(varName).w(" := ").w(varName).w(", ")
-          w(varName).w(" := ").w(varName).w(" + 1, ")
+          w(varName).w(" := ").w(varName).w(" ").w(op).w(" 1, ")
           w("_old_").w(varName).w(")[2])")
         }
         else
         {
-          w("(").w(varName).w(" := ").w(varName).w(" + 1)")
+          w("(").w(varName).w(" := ").w(varName).w(" ").w(op).w(" 1)")
         }
         return
       }
 
       // Normal field access - use ObjUtil helper
-      method := isPost ? "inc_field_post" : "inc_field"
+      method := isPost ? "${prefix}_field_post" : "${prefix}_field"
       w("ObjUtil.").w(method).w("(")
       if (fieldExpr.target != null)
         expr(fieldExpr.target)
@@ -1624,11 +1315,11 @@ class PyExprPrinter : PyPrinter
     }
     else if (target.id == ExprId.shortcut)
     {
-      // Index access (list[i]++) - use ObjUtil helper
+      // Index access (list[i]++/--) - use ObjUtil helper
       shortcutExpr := target as ShortcutExpr
       if (shortcutExpr.op == ShortcutOp.get)
       {
-        method := isPost ? "inc_index_post" : "inc_index"
+        method := isPost ? "${prefix}_index_post" : "${prefix}_index"
         w("ObjUtil.").w(method).w("(")
         expr(shortcutExpr.target)
         w(", ")
@@ -1637,138 +1328,51 @@ class PyExprPrinter : PyPrinter
       }
       else
       {
-        // Other shortcut - fallback
         w("(")
         expr(e.target)
-        w(" + 1)")
+        w(" ").w(op).w(" 1)")
       }
     }
     else if (target.id == ExprId.localVar)
     {
-      // Local variable - use lambda for post-increment, walrus for pre
       localExpr := target as LocalVarExpr
       varName := escapeName(localExpr.var.name)
       if (isPost)
       {
-        // x++ returns old value: ((lambda _o: (setattr(...), _o)[1])(...) - but locals don't have setattr
-        // Use: ((_old := x, x := x + 1, _old)[2]) - tuple trick
+        // Post: return old value via tuple trick: ((_old := x, x := x +/- 1, _old)[2])
         w("((_old_").w(varName).w(" := ").w(varName).w(", ")
-        w(varName).w(" := ").w(varName).w(" + 1, ")
+        w(varName).w(" := ").w(varName).w(" ").w(op).w(" 1, ")
         w("_old_").w(varName).w(")[2])")
       }
       else
       {
-        w("(").w(varName).w(" := ").w(varName).w(" + 1)")
+        w("(").w(varName).w(" := ").w(varName).w(" ").w(op).w(" 1)")
       }
     }
     else
     {
-      // Fallback - just add 1 (won't assign but won't error)
+      // Fallback - just apply op (won't assign but won't error)
       w("(")
       expr(e.target)
-      w(" + 1)")
-    }
-  }
-
-  private Void decrement(ShortcutExpr e)
-  {
-    // --x (pre) returns new value, x-- (post) returns old value
-    target := unwrapCoerce(e.target)
-    isPost := e.isPostfixLeave
-
-    if (target.id == ExprId.field)
-    {
-      fieldExpr := target as FieldExpr
-
-      // Check for Wrap$.val decrement -- treat as local variable decrement
-      origName := isWrapValAccess(fieldExpr)
-      if (origName != null)
-      {
-        varName := escapeName(origName)
-        if (isPost)
-        {
-          w("((_old_").w(varName).w(" := ").w(varName).w(", ")
-          w(varName).w(" := ").w(varName).w(" - 1, ")
-          w("_old_").w(varName).w(")[2])")
-        }
-        else
-        {
-          w("(").w(varName).w(" := ").w(varName).w(" - 1)")
-        }
-        return
-      }
-
-      // Normal field access - use ObjUtil helper
-      method := isPost ? "dec_field_post" : "dec_field"
-      w("ObjUtil.").w(method).w("(")
-      if (fieldExpr.target != null)
-        expr(fieldExpr.target)
-      else
-        w("self")
-      w(", \"_").w(escapeName(fieldExpr.field.name)).w("\")")
-    }
-    else if (target.id == ExprId.shortcut)
-    {
-      // Index access (list[i]--) - use ObjUtil helper
-      shortcutExpr := target as ShortcutExpr
-      if (shortcutExpr.op == ShortcutOp.get)
-      {
-        method := isPost ? "dec_index_post" : "dec_index"
-        w("ObjUtil.").w(method).w("(")
-        expr(shortcutExpr.target)
-        w(", ")
-        expr(shortcutExpr.args.first)
-        w(")")
-      }
-      else
-      {
-        // Other shortcut - fallback
-        w("(")
-        expr(e.target)
-        w(" - 1)")
-      }
-    }
-    else if (target.id == ExprId.localVar)
-    {
-      // Local variable - use tuple trick for post-decrement
-      localExpr := target as LocalVarExpr
-      varName := escapeName(localExpr.var.name)
-      if (isPost)
-      {
-        w("((_old_").w(varName).w(" := ").w(varName).w(", ")
-        w(varName).w(" := ").w(varName).w(" - 1, ")
-        w("_old_").w(varName).w(")[2])")
-      }
-      else
-      {
-        w("(").w(varName).w(" := ").w(varName).w(" - 1)")
-      }
-    }
-    else
-    {
-      // Fallback - just subtract 1 (won't assign but won't error)
-      w("(")
-      expr(e.target)
-      w(" - 1)")
+      w(" ").w(op).w(" 1)")
     }
   }
 
   private Void indexGet(ShortcutExpr e)
   {
     // Check target type for special handling
-    targetSig := e.target?.ctype?.toNonNullable?.signature ?: ""
+    targetType := e.target?.ctype?.toNonNullable
     arg := e.args.first
-    argSig := arg.ctype?.toNonNullable?.signature ?: ""
+    argType := arg.ctype?.toNonNullable
 
     // String indexing: str[i] returns Int codepoint, str[range] returns substring
-    curPod := m.curType?.pod?.name
-    prefix := curPod != "sys" ? "sys." : ""
-    if (targetSig == "sys::Str")
+    if (targetType?.isStr ?: false)
     {
-      if (argSig == "sys::Range")
+      if (argType?.isRange ?: false)
       {
         // str[range] -> sys.Str.get_range(str, range)
-        w("${prefix}Str.get_range(")
+        sysPrefix()
+        w("Str.get_range(")
         expr(e.target)
         w(", ")
         expr(arg)
@@ -1777,7 +1381,8 @@ class PyExprPrinter : PyPrinter
       else
       {
         // str[i] -> sys.Str.get(str, i) returns Int codepoint
-        w("${prefix}Str.get(")
+        sysPrefix()
+        w("Str.get(")
         expr(e.target)
         w(", ")
         expr(arg)
@@ -1787,10 +1392,11 @@ class PyExprPrinter : PyPrinter
     }
 
     // Check if index is a Range - need to use sys.List.get_range() instead
-    if (argSig == "sys::Range")
+    if (argType?.isRange ?: false)
     {
       // list[range] -> sys.List.get_range(list, range)
-      w("${prefix}List.get_range(")
+      sysPrefix()
+      w("List.get_range(")
       expr(e.target)
       w(", ")
       expr(arg)
@@ -1820,35 +1426,7 @@ class PyExprPrinter : PyPrinter
 
   private Void staticTarget(StaticTargetExpr e)
   {
-    // Check if this is a same-pod type reference (not sys pod)
-    // For same-pod types, use a runtime import to avoid circular import issues
-    curPod := m.curType?.pod?.name
-    targetPod := e.ctype.pod.name
-    typeName := PyUtil.escapeTypeName(e.ctype.name)
-
-    if (curPod != null && curPod != "sys" && curPod == targetPod)
-    {
-      // Same pod, non-sys - use dynamic import to avoid circular imports
-      podPath := PyUtil.podImport(targetPod)
-      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
-    }
-    else if (targetPod == "sys" && curPod != "sys")
-    {
-      // Sys pod type referenced from non-sys pod - use namespace prefix
-      w("sys.").w(typeName)
-    }
-    else if (targetPod != "sys" && curPod != null && curPod != targetPod)
-    {
-      // Cross-pod reference (non-sys to non-sys) - use dynamic import
-      // Pod namespace returns MODULE not CLASS, so need __import__ pattern
-      podPath := PyUtil.podImport(targetPod)
-      w("__import__('${podPath}.${typeName}', fromlist=['${typeName}']).${typeName}")
-    }
-    else
-    {
-      // Same pod (sys) or already imported directly
-      w(typeName)
-    }
+    writeTypeRef(e.ctype.pod.name, PyUtil.escapeTypeName(e.ctype.name))
   }
 
   private Void typeLiteral(LiteralExpr e)
@@ -1858,9 +1436,7 @@ class PyExprPrinter : PyPrinter
     if (t != null)
     {
       sig := PyUtil.sanitizeJavaFfi(t.signature)
-      curPod := m.curType?.pod?.name
-      if (curPod != "sys")
-        w("sys.")
+      sysPrefix()
       w("Type.find(").str(sig).w(")")
     }
     else
@@ -1876,18 +1452,17 @@ class PyExprPrinter : PyPrinter
     parentSig := e.parent.signature
     slotName := e.name  // Keep original Fantom camelCase name
 
-    curPod := m.curType?.pod?.name
-    prefix := curPod != "sys" ? "sys." : ""
-
     // Determine if it's a method or field
     if (e.slot != null && e.slot is CField)
     {
-      w("${prefix}Field.find(").str("${parentSig}.${slotName}").w(")")
+      sysPrefix()
+      w("Field.find(").str("${parentSig}.${slotName}").w(")")
     }
     else
     {
       // Default to Method
-      w("${prefix}Method.find(").str("${parentSig}.${slotName}").w(")")
+      sysPrefix()
+      w("Method.find(").str("${parentSig}.${slotName}").w(")")
     }
   }
 
@@ -2010,9 +1585,7 @@ class PyExprPrinter : PyPrinter
     immutCase := m.closureImmutability(e)
 
     // Generate Func.make_closure(spec, lambda)
-    curPod := m.curType?.pod?.name
-    if (curPod != "sys")
-      w("sys.")
+    sysPrefix()
     w("Func.make_closure({")
 
     // Returns type
