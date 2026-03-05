@@ -169,37 +169,25 @@ abstract class DocRenderer
   @NoDoc
   virtual Void onFandocLink(Link elem, DocLoc loc)
   {
-    // don't process absolute links
+    // route to DocEnv.link
     orig := elem.uri
-    if (orig.startsWith("http:/") ||
-        orig.startsWith("https:/") ||
-        orig.startsWith("ftp:/")) return
-
-    try
+    link := env.link(doc, orig, false)
+    if (link == null)
     {
-      // route to DocEnv.link
-      link := resolveFandocLink(elem, true)
-
-      // get environment URI for the DocLink
-      elem.uri = env.linkUri(link).encode
-      elem.isCode = link.target.isCode
-
-      // extra checking
-      env.linkCheck(link, loc)
-
-      // if link text was original URI, then update with DocLink.dis
-      if (elem.children.first is DocText && elem.children.first.toStr == orig)
-      {
-        elem.removeAll.add(DocText(link.dis))
-      }
+      env.err("Broken link: $orig", loc)
+      return
     }
-    catch (Err e)
-    {
-      if (elem.uri.startsWith("examples::"))
-        elem.uri = "https://fantom.org/doc/" + elem.uri.replace("::", "/")
-      else
-        onFandocErr(e, loc)
-    }
+
+     /// get environment URI for the DocLink
+    elem.uri = env.linkUri(link).encode
+    elem.isCode = link.target.isCode
+
+    // extra checking
+    env.linkCheck(link, loc)
+
+    // if link text was original URI, then update with DocLink.dis
+    if (elem.children.first is DocText && elem.children.first.toStr == orig)
+      elem.removeAll.add(DocText(link.dis))
   }
 
   ** Fandoc handling for inage nodes
@@ -216,11 +204,5 @@ abstract class DocRenderer
     env.link(this.doc, elem.uri, true)
   }
 
-  ** Handle a fandoc linking error
-  @NoDoc
-  virtual Void onFandocErr(Err e, DocLoc loc)
-  {
-    env.err(e.toStr, loc)
-  }
 }
 

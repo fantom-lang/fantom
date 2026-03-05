@@ -102,6 +102,16 @@ abstract const class DocEnv
   **
   virtual DocLink? link(Doc from, Str link, Bool checked := true)
   {
+    // absolute URIs
+    if (DocLink.isAbsolute(link)) return DocLink.makeAbsUri(from, link.toUri, link)
+
+    // check for special examples:: handling
+    if (link.startsWith("examples::"))
+    {
+      absUri := "https://fantom.org/doc/" + link.replace("::", "/")
+      return DocLink.makeAbsUri(from, absUri.toUri, link)
+    }
+
     // if absolute spaceName::docName
     colons := link.index("::")
     space := from.space as DocSpace
@@ -123,8 +133,9 @@ abstract const class DocEnv
       type := space.doc(typeName, false) as DocType
       if (type != null)
       {
-        slot := type.slot(slotName)
-        if (slot != null) return DocLink(from, type, "${typeName}.${slotName}", slotName)
+        slot := type.slot(slotName, false)
+        if (slot == null) return null
+        return DocLink(from, type, "${typeName}.${slotName}", slotName)
       }
     }
 
@@ -199,3 +210,4 @@ abstract const class DocEnv
     return err
   }
 }
+

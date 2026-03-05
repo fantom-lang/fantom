@@ -70,4 +70,14 @@ const class DocLink
   {
     "[$dis] $from.docName -> $target.docName" + (frag == null ? "" : "#$frag")
   }
+
+  ** Return if absolute uri such as `https://....`
+  static Bool isAbsolute(Str uri)
+  {
+    uri.startsWith("http:/") ||
+    uri.startsWith("https:/") ||
+    uri.startsWith("ftp:/")
+  }
+
 }
+
