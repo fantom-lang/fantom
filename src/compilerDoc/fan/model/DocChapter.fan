@@ -9,6 +9,8 @@
 using concurrent
 using fandoc::FandocParser
 using fandoc::Heading
+using markdown::XetodocChapter
+using markdown::XetodocHeading
 
 **
 ** DocChapter models a fandoc "chapter" in a manual like docLang
@@ -31,24 +33,60 @@ const class DocChapter : Doc
     meta := Str:Str[:]
     try
     {
-      // parse fandoc silently - don't worry about errors,
-      // we'll catch and report them at render time
-      parser := FandocParser()
-      parser.silent = true
-      fandocDoc := parser.parse(f.name, doc.text.in)
-      meta = fandocDoc.meta
-      fandocHeadings := fandocDoc.findHeadings
-
-      // map headings into tree structure
-      buildHeadingsTree(loader, fandocHeadings, headingTop, headingMap)
+      text := doc.text
+      if (format === DocFormat.markdown)
+        buildHeadingsMarkdown(loader, headingTop, headingMap, meta)
+      else
+        buildHeadingsFandoc(loader, headingTop, headingMap, meta)
     }
     catch (Err e)
     {
-      loader.err("Cannot parse fandoc chapter", loc, e)
+      loader.err("Cannot parse chapter", loc, e)
     }
     this.headings = headingTop
     this.headingMap = headingMap
     this.meta = meta
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Markdown Headings
+//////////////////////////////////////////////////////////////////////////
+
+  private Void buildHeadingsMarkdown(DocPodLoader loader, DocHeading[] headingTop, Str:DocHeading headingMap, Str:Str meta)
+  {
+    xc := XetodocChapter.parse(doc.text)
+    meta.setAll(xc.meta)
+    xc.top.each |x|
+    {
+      headingTop.add(mapXetodocHeading(x, headingMap))
+    }
+  }
+
+  private DocHeading mapXetodocHeading(XetodocHeading x, Str:DocHeading acc)
+  {
+    h := DocHeading { it.level = x.level; it.title = x.text; it.anchorId = x.anchor }
+    acc[h.anchorId] = h
+    children := x.children.map |kid->DocHeading| { mapXetodocHeading(kid, acc) }
+    h.childrenRef.val = children.toImmutable
+    return h
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Fandoc Headings
+//////////////////////////////////////////////////////////////////////////
+
+  private Void buildHeadingsFandoc(DocPodLoader loader, DocHeading[] headingTop, Str:DocHeading headingMap, Str:Str meta)
+  {
+    // parse fandoc silently - don't worry about errors,
+    // we'll catch and report them at render time
+    parser := FandocParser()
+    parser.silent = true
+    fandocDoc := parser.parse(name, doc.text.in)
+    meta.addAll(fandocDoc.meta)
+    fandocHeadings := fandocDoc.findHeadings
+
+    // map headings into tree structure
+    buildHeadingsTree(loader, fandocHeadings, headingTop, headingMap)
   }
 
   private Void buildHeadingsTree(DocPodLoader loader, Heading[] fandoc, DocHeading[] top, Str:DocHeading map)
@@ -99,6 +137,10 @@ const class DocChapter : Doc
     // map children map to immutable list fields
     children.each |kids, h| { h.childrenRef.val = kids.toImmutable }
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Identity
+//////////////////////////////////////////////////////////////////////////
 
   ** Pod which defines this chapter such as "docLang"
   const DocPod pod
@@ -180,6 +222,10 @@ const class DocChapter : Doc
     crawler.addFandoc(doc)
   }
 }
+
+**************************************************************************
+** DocHeading
+**************************************************************************
 
 **
 ** DocHeader models a heading in a table of contents for pod/chapter.

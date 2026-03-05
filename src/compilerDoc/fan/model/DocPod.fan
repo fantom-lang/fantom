@@ -319,7 +319,7 @@ internal class DocPodLoader
         }
 
         // if doc/{type}.fandoc
-        if (f.ext == "fandoc")
+        if (f.ext == "fandoc" || f.ext == "md")
         {
           chapter := DocChapter(this, f)
           chapters[chapter.name] = chapter
