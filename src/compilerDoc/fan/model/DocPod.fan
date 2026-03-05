@@ -45,6 +45,7 @@ const class DocPod : DocSpace
       this.version = loader.version
       this.summary = loader.summary
       this.meta    = loader.meta
+      this.format  = loader.format
 
       // next load meta
       loader.loadContent(zip)
@@ -73,6 +74,9 @@ const class DocPod : DocSpace
 
   ** Summary string for the pod
   const Str summary
+
+  ** Markdown or legacy fandoc
+  const DocFormat format
 
   ** Always return `name`.
   override Str toStr() { name }
@@ -274,6 +278,7 @@ internal class DocPodLoader
     this.name    = getMeta("pod.name")
     this.summary = getMeta("pod.summary")
     this.version = Version.fromStr(getMeta("pod.version"))
+    this.format  = DocFormat.fromPodMeta(meta)
   }
 
   private Str getMeta(Str n)
@@ -488,6 +493,7 @@ internal class DocPodLoader
   Str? name                     // loadMeta
   Str? summary                  // loadMeta
   Version? version              // loadMeta
+  DocFormat? format             // loadMeta
   DocType[]? typeList           // finishTypes
   [Str:DocType]? typeMap        // finishTypes
   DocChapter[]? chapterList     // finishChapters
@@ -500,5 +506,4 @@ internal class DocPodLoader
   Obj[]? toc                    // finishTypes/finishChapters
   DocPodIndex? index            // finishIndex
 }
-
 

@@ -197,7 +197,32 @@ const class DocFandoc
   ** Location of fandoc in source file
   const DocLoc loc
 
-  ** Plain text fandoc string
+  ** Plain text markdown or fandoc string
   const Str text
+}
+
+**************************************************************************
+** DocFormat
+**************************************************************************
+
+** Toggle between markdown and legacy markdown
+enum class DocFormat
+{
+  markdown,
+  fandoc
+
+  static DocFormat fromPodMeta(Str:Str meta)
+  {
+    // currently we assume fandoc for backward compatibility until
+    // a pod opts-in via the doc.format tag
+    meta["doc.format"] == "markdown" ? markdown : fandoc
+  }
+
+  static DocFormat fromFileExt(Str ext)
+  {
+    if (ext == "md") return markdown
+    if (ext == "fandoc") return fandoc
+    throw Err("Unsupported doc format ext: $ext")
+  }
 }
 

@@ -121,7 +121,7 @@ class DocPodIndexRenderer : DocRenderer
         out.tr
         out.td; writeLinkTo(type); out.tdEnd
         out.td
-        writeFandoc(type.doc.firstSentence)
+        writeFandoc(type.doc.firstSentence, pod.format)
         out.tdEnd
         out.trEnd
       }

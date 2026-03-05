@@ -28,6 +28,7 @@ class Build : BuildPod
     depends    = ["sys 1.0",
                   "concurrent 1.0",
                   "fandoc 1.0",
+                  "markdown 1.0",
                   "syntax 1.0",
                   "util 1.0",
                   "web 1.0"]
@@ -36,3 +37,4 @@ class Build : BuildPod
     docSrc     = true
   }
 }
+

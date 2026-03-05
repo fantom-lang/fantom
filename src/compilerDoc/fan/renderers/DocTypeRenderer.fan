@@ -64,6 +64,9 @@ class DocTypeRenderer : DocRenderer
   ** Type to renderer
   const DocType type
 
+  ** Pod for type
+  DocPod pod() { type.pod }
+
   override Void writeContent()
   {
     out.div("class='mainSidebar'")
@@ -107,7 +110,7 @@ class DocTypeRenderer : DocRenderer
     writeSrcLink(type.doc.loc)
 
     // fandoc
-    writeFandoc(type.doc)
+    writeFandoc(type.doc, pod.format)
 
     // enum vals
     if (DocFlags.isEnum(type.flags))
@@ -162,7 +165,7 @@ class DocTypeRenderer : DocRenderer
     out.dd
     writeSlotSig(slot)
     writeSrcLink(slot.doc.loc)
-    writeFandoc(slot.doc)
+    writeFandoc(slot.doc, pod.format)
     out.ddEnd
   }
 

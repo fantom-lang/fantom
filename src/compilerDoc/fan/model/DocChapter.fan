@@ -18,11 +18,12 @@ const class DocChapter : Doc
   ** Constructor
   internal new make(DocPodLoader loader, File f)
   {
-    this.pod   = loader.pod
-    this.name  = f.name == "pod.fandoc" ? "pod-doc" : f.basename
-    this.loc   = DocLoc("${pod}::${f.name}", 1)
-    this.doc   = DocFandoc(this.loc, f.in.readAllStr)
-    this.qname = "$pod.name::$name"
+    this.pod    = loader.pod
+    this.name   = f.name == "pod.fandoc" ? "pod-doc" : f.basename
+    this.loc    = DocLoc("${pod}::${f.name}", 1)
+    this.doc    = DocFandoc(this.loc, f.in.readAllStr)
+    this.format = DocFormat.fromFileExt(f.ext)
+    this.qname  = "$pod.name::$name"
 
     // parse fandoc and build the headings tree
     headingTop := DocHeading[,]
@@ -135,6 +136,9 @@ const class DocChapter : Doc
   ** Chapter contents as Fandoc string
   const DocFandoc doc
 
+  ** Toggle for doc as markdown vs fandoc
+  const DocFormat format
+
   ** Top-level chapter headings
   const DocHeading[] headings
 
@@ -198,3 +202,4 @@ const class DocHeading
   DocHeading[] children() { childrenRef.val }
   internal const AtomicRef childrenRef := AtomicRef()
 }
+

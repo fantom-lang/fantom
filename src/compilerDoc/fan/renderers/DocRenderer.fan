@@ -8,6 +8,7 @@
 
 using fandoc
 using fandoc::Doc as FandocDoc
+using markdown::Xetodoc
 using web
 
 **
@@ -106,11 +107,28 @@ abstract class DocRenderer
   }
 
   **
-  ** Write the given fandoc string as HTML.  This method
+  ** Write the given markdown/fandoc string as HTML.  This method
   ** delegates to `DocEnv.link` and `DocEnv.linkUri` to
   ** resolve links from the current document.
   **
-  virtual Void writeFandoc(DocFandoc doc)
+  virtual Void writeFandoc(DocFandoc doc, DocFormat format)
+  {
+    if (format === DocFormat.markdown)
+      writeMarkdownFormat(doc)
+    else
+      writeFandocFormat(doc)
+  }
+
+  ** Choke point for writing DocFormat as markdown
+  private Void writeMarkdownFormat(DocFandoc doc)
+  {
+    // linker := DocLinker(env, this.doc)
+    xetodoc := Xetodoc() //.withLinkResolver(linker)
+    out.w(xetodoc.toHtml(doc.text))
+  }
+
+  ** Choke point for writing DocFormat as fandoc
+  private Void writeFandocFormat(DocFandoc doc)
   {
     // parse fandoc
     docLoc := doc.loc
@@ -205,3 +223,4 @@ abstract class DocRenderer
     env.err(e.toStr, loc)
   }
 }
+

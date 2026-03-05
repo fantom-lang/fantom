@@ -73,7 +73,7 @@ class DocChapterRenderer : DocRenderer
   ** Write chapter body.
   virtual Void writeBody()
   {
-    writeFandoc(chapter.doc)
+    writeFandoc(chapter.doc, chapter.format)
   }
 
   ** Write chapter prev/next navigation.
@@ -177,3 +177,4 @@ class DocChapterRenderer : DocRenderer
     }
   }
 }
+
