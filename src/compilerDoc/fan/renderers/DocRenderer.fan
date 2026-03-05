@@ -9,6 +9,7 @@
 using fandoc
 using fandoc::Doc as FandocDoc
 using markdown::Xetodoc
+using markdown::LinkResolver
 using web
 
 **
@@ -119,13 +120,52 @@ abstract class DocRenderer
       writeFandocFormat(doc)
   }
 
+  ** Hook for resolving both markdown and fandoc links
+  private DocLink? resolveLink(Str orig, DocLoc loc)
+  {
+    link := env.link(doc, orig, false)
+    if (link == null)
+    {
+      env.err("Broken link: $orig", loc)
+    }
+    else
+    {
+      env.linkCheck(link, loc)
+    }
+    return link
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Markdown
+//////////////////////////////////////////////////////////////////////////
+
   ** Choke point for writing DocFormat as markdown
   private Void writeMarkdownFormat(DocFandoc doc)
   {
-    // linker := DocLinker(env, this.doc)
-    xetodoc := Xetodoc() //.withLinkResolver(linker)
+    xetodoc := Xetodoc().withLinkResolver(DocMarkdownLinker(this))
+    curDocLoc = doc.loc
     out.w(xetodoc.toHtml(doc.text))
+    curDocLoc = null
   }
+
+  ** Markdown handling for link nodes
+  internal Void onMarkdownLink(markdown::Link node)
+  {
+    orig := node.destination
+    loc  := DocLoc(curDocLoc.file, curDocLoc.line + node.loc.line - 1)
+    link := resolveLink(orig, loc)
+    if (link != null)
+    {
+      node.destination = env.linkUri(link).encode
+      if (node.shortcut) node.setText(link.dis)
+    }
+  }
+
+  private DocLoc? curDocLoc
+
+//////////////////////////////////////////////////////////////////////////
+// Fandoc
+//////////////////////////////////////////////////////////////////////////
 
   ** Choke point for writing DocFormat as fandoc
   private Void writeFandocFormat(DocFandoc doc)
@@ -171,19 +211,12 @@ abstract class DocRenderer
   {
     // route to DocEnv.link
     orig := elem.uri
-    link := env.link(doc, orig, false)
-    if (link == null)
-    {
-      env.err("Broken link: $orig", loc)
-      return
-    }
+    link := resolveLink(orig, loc)
+    if (link == null) return
 
-     /// get environment URI for the DocLink
+    /// get environment URI for the DocLink
     elem.uri = env.linkUri(link).encode
     elem.isCode = link.target.isCode
-
-    // extra checking
-    env.linkCheck(link, loc)
 
     // if link text was original URI, then update with DocLink.dis
     if (elem.children.first is DocText && elem.children.first.toStr == orig)
@@ -195,14 +228,19 @@ abstract class DocRenderer
   virtual Void onFandocImage(Image elem, DocLoc loc)
   {
   }
+}
 
-  **
-  ** Hook used to map a fandoc link to a doc link
-  **
-  virtual DocLink? resolveFandocLink(Link elem, Bool checked := true)
+**************************************************************************
+** DocMarkdownLinker
+**************************************************************************
+
+internal class DocMarkdownLinker : LinkResolver
+{
+  new make(DocRenderer r) { this.r = r }
+  private DocRenderer r
+  override Void resolve(markdown::LinkNode node)
   {
-    env.link(this.doc, elem.uri, true)
+    if (node is markdown::Link) r.onMarkdownLink(node)
   }
-
 }
 
