@@ -108,6 +108,12 @@ abstract class BuildPod : BuildScript
   Uri[]? jsDirs
 
   **
+  ** List of Uris relative to build script of directories containing
+  ** the Python source files to compile for Python native methods.
+  **
+  Uri[]? pyDirs
+
+  **
   ** List of Uris relative to build script that should be searched for '.props'
   ** files to compile to JavaScript. You may also give relative paths to files
   ** with a '.props' ext.  If this field is null, it defaults to `resDirs`.
@@ -244,6 +250,7 @@ abstract class BuildPod : BuildScript
     meta["pod.native.jni"]    = (jniDirs    != null && !jniDirs.isEmpty).toStr
     meta["pod.native.dotnet"] = (dotnetDirs != null && !dotnetDirs.isEmpty).toStr
     meta["pod.native.js"]     = (jsDirs     != null && !jsDirs.isEmpty).toStr
+    meta["pod.native.py"]     = (pyDirs     != null && !pyDirs.isEmpty).toStr
 
     // TODO: add additinal meta props defined by config file/env var
     // this behavior is not guaranteed in future versions, rather we
@@ -289,6 +296,7 @@ abstract class BuildPod : BuildScript
     ci.resFiles     = resDirs
     ci.jsFiles      = jsDirs
     ci.jsPropsFiles = jsProps ?: resDirs
+    ci.pyFiles      = pyDirs
     ci.log          = log
     ci.includeDoc   = docApi
     ci.includeSrc   = docSrc
