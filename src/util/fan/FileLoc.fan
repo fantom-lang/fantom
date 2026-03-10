@@ -16,13 +16,19 @@
 const class FileLoc
 {
   ** Constant for an unknown location
-  static const FileLoc unknown := make("unknown", 0)
+  static const FileLoc unknown := make("unknown")
+
+  ** Constant for evalation location
+  @NoDoc static const FileLoc eval := make("eval")
 
   ** Constant for tool input location
-  static const FileLoc inputs := make("inputs", 0)
+  @NoDoc static const FileLoc inputs := make("inputs")
+
+  ** Generic remote RPC call
+  @NoDoc static const FileLoc remote := make("remote")
 
   ** Constant for synthetic location
-  static const FileLoc synthetic := make("synthetic", 0)
+  @NoDoc static const FileLoc synthetic := make("synthetic")
 
   ** Constructor for file
   static new makeFile(File file, Int line := 0, Int col := 0)
