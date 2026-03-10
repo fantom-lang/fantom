@@ -30,6 +30,12 @@ class FileLocTest : Test
     verifyLoc(FileLoc("/path/foo.txt").toFilenameOnly, "foo.txt", 0, 0)
     verifyLoc(FileLoc("\\path\\foo.txt", 1, 2).toFilenameOnly, "foo.txt", 1, 2)
     verifyLoc(FileLoc("/long/path/here/foo.txt", 2, 3).toFilenameOnly, "foo.txt", 2, 3)
+
+    verifyEq(FileLoc("a", 2, 9).join, "a:2:9")
+    verifyEq(FileLoc("a", 2, 9).join("."), "a.2.9")
+    verifyEq(FileLoc("a", 2).join("."), "a.2")
+    verifyEq(FileLoc("a", 2).join, "a:2")
+    verifyEq(FileLoc("a").join, "a")
   }
 
   Void verifyLoc(FileLoc loc, Str file, Int line, Int col)

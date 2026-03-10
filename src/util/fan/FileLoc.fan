@@ -120,6 +120,16 @@ const class FileLoc
     return "$file($line,$col)"
   }
 
+  ** String representation using given separator between file, line, and col.
+  @NoDoc Str join(Str sep := ":")
+  {
+    if (line <= 0) return file
+    s := StrBuf()
+    s.add(file.toStr).add(sep).add(line)
+    if (col > 0) s.add(sep).add(col)
+    return s.toStr
+  }
+
   ** Simplify the file path to remove path
   @NoDoc FileLoc toFilenameOnly()
   {
