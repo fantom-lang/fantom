@@ -149,10 +149,11 @@ class WebClient
   **
   ** Also see convenience methods: `resStr` and `resBuf`.
   **
-  InStream resIn()
+  InStream? resIn(Bool checked := true)
   {
-    if (resInStream == null) throw IOErr("No input stream for response $resCode")
-    return resInStream
+    if (resInStream != null) return resInStream
+    if (checked) throw IOErr("No input stream for response $resCode")
+    return null
   }
 
   **
