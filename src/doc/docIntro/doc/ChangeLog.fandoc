@@ -6,12 +6,18 @@
 ** license:    Licensed under the Academic Free License version 3.0
 **************************************************************************
 
-*Build 1.0.83 (working)*
+*Build 1.0.83 (12 Mar 2026)*
 - Future support for JS promises
 - Add Str.eachLine
 - Add StrBuf addTrim, trimEnd
+- Add Env.indexByPodName
+- Add dom::Elem.fromNative to create from native JS reference
+- JsonInStream.transformObj
+- New YamlWriter class
 - Refactor Log registry to use weak references
 - 2025c time zone database
+- Doc support for both fandoc and markdown
+- #2948: [JS] Private Field Accessors
 
 *Build 1.0.82 (26 Jun 2025)*
 - New fanc tool for transpiling to Java source
