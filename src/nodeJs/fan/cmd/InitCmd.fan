@@ -16,7 +16,7 @@ internal class InitCmd : NodeJsCmd
   override Str summary() { "Initialize Node.js environment for running Fantom modules" }
 
   @Opt { help = "Root directory for staging Node.js environment"; aliases = ["-d"] }
-  override File dir := Env.cur.homeDir.plus(`lib/es/`)
+  override File dir := Env.cur.homeDir.plus(`lib/js/`)
 
   override Int run()
   {
