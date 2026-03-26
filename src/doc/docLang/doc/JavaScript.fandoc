@@ -142,9 +142,9 @@ An example using an HTML event handler:
 Code Conventions [#conventions]
 *******************************
 If you are writing native code, it must adhere to the following conventions to work
-with the ES compiler. It is highly recommended to spend some time looking at the
-JavaScript source code in [sys]`https://github.com/fantom-lang/fantom/tree/master/src/sys/es/fan`
-and [dom]`https://github.com/fantom-lang/fantom/tree/master/src/dom/es` to
+with the JS compiler. It is highly recommended to spend some time looking at the
+JavaScript source code in [sys]`https://github.com/fantom-lang/fantom/tree/master/src/sys/js/fan`
+and [dom]`https://github.com/fantom-lang/fantom/tree/master/src/dom/js` to
 see how the various types are implemented and adhere to these conventions.
 
 Classes [#classes]
@@ -286,27 +286,14 @@ To compile JavaScript natives, add the source directories to your
 build script using the [jsDirs]`build::BuildPod.jsDirs` field.
 See [Build Pod]`docTools::Build#buildPod` for an example.
 
-Currently the Fantom compiler supports generating JavaScript in the legacy js format
-and the new ES format. The ES compiler will look for natives by swizzling the first
-part of the path for each 'jsDir' to 'es/' and looking for the implementation there.
-For example
-
-pre>
-# build.fan
-jsDirs = [`js/`, `js/foo/`] // legacy location
-
-# The ES compiler will look for natives in
-[`es/`, `es/foo/`]
-<pre
-
 The JavaScript code must follow the compiler conventions discussed above.
 
 Testing [#testing]
 ******************
 Fantom includes built-in support for 'fant' to run units test in a JavaScript
-VM using the '-es' flag:
+VM using the '-js' flag:
 
-  $ fant -es myPod
+  $ fant -js myPod
 
 Note that this is convenience for calling 'fan nodeJs test myPod'.
 To run JS tests you need to have [Node.js]`https://nodejs.org` installed.
