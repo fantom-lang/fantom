@@ -187,7 +187,6 @@ abstract class BuildPod : BuildScript
     switch (podName)
     {
       case "compilerJs":
-      case "compilerEs":
       case "testCompiler":
         return
     }

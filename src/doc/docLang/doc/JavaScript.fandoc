@@ -257,7 +257,7 @@ All class names are preserved when going from Fantom to JavaScript.
 
 Slot and Parameter names that conflict with built-in JS keywords are "pickled" to end
 with '$'. The list of names that gets pickled can be found in
-'src/compilerEs/fan/ast/JsNode.fan'.
+'src/compilerJs/fan/ast/JsNode.fan'.
 
 pre>
 # Fantom

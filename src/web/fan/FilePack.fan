@@ -166,7 +166,7 @@ const class FilePack : Weblet
   ** standard location used by the Fantom JS compiler is "/{pod-name}.js"
   static File? toPodJsFile(Pod pod)
   {
-    uri := (WebJsMode.cur.isEs ? `/js/` : `/`).plus(`${pod.name}.js`)
+    uri := `/js/`.plus(`${pod.name}.js`)
     return pod.file(uri, false)
   }
 
@@ -182,7 +182,7 @@ const class FilePack : Weblet
       js := toPodJsFile(pod)
       if (js != null)
       {
-        if (pod.name == "sys" && WebJsMode.cur.isEs) acc.add(pod.file(`/js/fan.js`))
+        if (pod.name == "sys") acc.add(pod.file(`/js/fan.js`))
         acc.add(js)
       }
     }
@@ -200,15 +200,13 @@ const class FilePack : Weblet
 
   @NoDoc static Obj moduleSystem()
   {
-    Type.find("compilerEs::CommonJs").make([Env.cur.tempDir.plus(`file_pack/`)])
+    Type.find("compilerJs::CommonJs").make([Env.cur.tempDir.plus(`file_pack/`)])
   }
 
   private static File compileJsFile(Str cname, Uri fname, Obj? arg := null)
   {
     buf := Buf(4096)
-    c := WebJsMode.cur.isEs
-      ? Type.find("compilerEs::${cname}").make([moduleSystem])
-      : Type.find("compilerJs::${cname}").make
+    c := Type.find("compilerJs::${cname}").make([moduleSystem])
     c->write(buf.out, arg)
     return buf.toFile(fname)
   }
@@ -244,16 +242,8 @@ const class FilePack : Weblet
   {
     buf  := Buf(1024)
     path := `locale/${locale.toStr}.props`
-    if (WebJsMode.cur.isEs)
-    {
-      c := Type.find("compilerEs::JsProps").make([moduleSystem])
-      c->write(buf.out, path, pods)
-    }
-    else
-    {
-      m := Slot.findMethod("compilerJs::JsProps.writeProps")
-      pods.each |pod| { m.call(buf.out, pod, path, 1sec) }
-    }
+    c := Type.find("compilerJs::JsProps").make([moduleSystem])
+    c->write(buf.out, path, pods)
     return buf.toFile(`${locale}.js`)
   }
 
@@ -270,9 +260,7 @@ const class FilePack : Weblet
   static File toPodJsMapFile(File[] files, [Str:Obj]? options := null)
   {
     buf := Buf(4 * 1024 * 1024)
-    m := WebJsMode.cur.isEs
-      ? Slot.findMethod("compilerEs::SourceMap.pack")
-      : Slot.findMethod("compilerJs::SourceMap.pack")
+    m := Slot.findMethod("compilerJs::SourceMap.pack")
     m.call(files, buf.out, options)
     return buf.toFile(`js.map`)
   }

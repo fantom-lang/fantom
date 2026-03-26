@@ -20,16 +20,8 @@ class Main : AbstractMain
   @Opt { help = "apply sample css" }
   Bool css := false
 
-  @Opt { help = "javascript mode to use (js, es)" }
-  Str jsMode := "es"
-
   override Int run()
   {
-    log.info("Running with jsMode=${jsMode}")
-
-    // set javascript mode for file packing
-    WebJsMode.setCur(WebJsMode.fromStr(jsMode))
-
     wisp := WispService
     {
       it.httpPort = this.port

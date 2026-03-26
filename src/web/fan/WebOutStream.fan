@@ -241,18 +241,9 @@ class WebOutStream : OutStream
     main := env["main"]
     if (main != null)
     {
-      if (WebJsMode.cur.isEs)
-      {
-        w("window.addEventListener('load', function() {
-             fan.sys.Env.__invokeMain('${main}');
-           }, false);").nl
-      }
-      else
-      {
-        w("window.addEventListener('load', function() {
-             fan.sys.Env.\$invokeMain('${main}');
-           }, false);").nl
-      }
+      w("window.addEventListener('load', function() {
+           fan.sys.Env.__invokeMain('${main}');
+         }, false);").nl
     }
 
     w("</script>").nl

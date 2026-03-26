@@ -16,7 +16,6 @@ const class MainDomMod : WebMod
 {
   new make()
   {
-    WebJsMode.setCur(WebJsMode.es)
     pods := [typeof.pod]
     this.jsPack  = FilePack(FilePack.toAppJsFiles(pods))
     this.cssPack = FilePack(FilePack.toAppCssFiles(pods))
