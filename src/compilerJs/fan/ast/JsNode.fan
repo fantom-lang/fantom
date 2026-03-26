@@ -13,13 +13,13 @@ using compiler
 **
 abstract class JsNode
 {
-  new make(CompileEsPlugin plugin, Node? node := null)
+  new make(CompileJsPlugin plugin, Node? node := null)
   {
     this.plugin = plugin
     this.nodeRef = node
   }
 
-  CompileEsPlugin plugin { private set }
+  CompileJsPlugin plugin { private set }
   Compiler c() { plugin.compiler }
   private Node? nodeRef
 

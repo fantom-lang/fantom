@@ -10,13 +10,13 @@
 using build
 
 **
-** Build: compilerJsx
+** Build: compilerJs
 **
 class Build : BuildPod
 {
   new make()
   {
-    podName = "compilerEs"
+    podName = "compilerJs"
     summary = "Fantom to ECMAScript Compiler"
     meta    = ["org.name":     "Fantom",
                "org.uri":      "https://fantom.org/",

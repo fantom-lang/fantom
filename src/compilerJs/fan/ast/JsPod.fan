@@ -18,7 +18,7 @@ class JsPod : JsNode
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CompileEsPlugin plugin) : super(plugin)
+  new make(CompileJsPlugin plugin) : super(plugin)
   {
     this.pod = plugin.pod
 

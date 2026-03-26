@@ -12,7 +12,7 @@ using compiler
 ** Fantom source to JavaScript source compiler - this class is
 ** plugged into the compiler pipeline by the compiler::CompileJs step.
 **
-class CompileEsPlugin : CompilerStep
+class CompileJsPlugin : CompilerStep
 {
 
 //////////////////////////////////////////////////////////////////////////

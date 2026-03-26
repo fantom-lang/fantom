@@ -13,7 +13,7 @@ using compiler
 **
 class JsExpr : JsNode
 {
-  new make(CompileEsPlugin plugin, Expr expr) : super(plugin, expr)
+  new make(CompileJsPlugin plugin, Expr expr) : super(plugin, expr)
   {
   }
 
@@ -534,7 +534,7 @@ class JsExpr : JsNode
 
 internal class JsCallExpr : JsExpr
 {
-  new make(CompileEsPlugin plugin, CallExpr ce) : super(plugin, ce)
+  new make(CompileJsPlugin plugin, CallExpr ce) : super(plugin, ce)
   {
     this.ce = ce
     this.name = methodToJs(ce.method.name)
@@ -706,7 +706,7 @@ internal class JsCallExpr : JsExpr
 
 internal class JsShortcutExpr : JsCallExpr
 {
-  new make(CompileEsPlugin plugin, ShortcutExpr se) : super(plugin, se)
+  new make(CompileJsPlugin plugin, ShortcutExpr se) : super(plugin, se)
   {
     this.se = se
     this.isIndexedAssign = se is IndexedAssignExpr

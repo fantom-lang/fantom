@@ -18,13 +18,13 @@ class JsType : JsNode
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  new make(CompileEsPlugin plugin, TypeDef def) : super(plugin, def)
+  new make(CompileJsPlugin plugin, TypeDef def) : super(plugin, def)
   {
     this.hasNatives = null != def.slots.find |n| { n.isNative && n.parent.qname == def.qname }
     this.peer = findPeer(plugin, def)
   }
 
-  static CType? findPeer(CompileEsPlugin plugin, CType def)
+  static CType? findPeer(CompileJsPlugin plugin, CType def)
   {
     CType? t := def
     while (t != null)

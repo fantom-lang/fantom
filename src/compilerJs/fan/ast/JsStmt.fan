@@ -13,7 +13,7 @@ using compiler
 **
 class JsStmt : JsNode
 {
-  new make(CompileEsPlugin plugin, Stmt stmt) : super(plugin, stmt)
+  new make(CompileJsPlugin plugin, Stmt stmt) : super(plugin, stmt)
   {
   }
 
