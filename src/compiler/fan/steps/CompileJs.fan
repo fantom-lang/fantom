@@ -15,23 +15,18 @@ class CompileJs  : CompilerStep
 
   new make(Compiler compiler) : super(compiler)
   {
-    this.hasJs = compiler.types.any { it.hasFacet("sys::Js") }
+    this.hasJsFacet = compiler.types.any { it.hasFacet("sys::Js") }
   }
 
   ** Is any type annotated with @Js
-  private const Bool hasJs
+  private const Bool hasJsFacet
 
   override Void run()
   {
     log.info("CompileJs")
-    if (needCompileJs)
+    if (needCompileJs || compiler.isSys)
     {
-      compile("compilerJs::CompileJsPlugin")
-    }
-
-    if (needCompileEs)
-    {
-      if (pod.name != "sys") compile("compilerEs::CompileEsPlugin")
+      if (pod.name != "sys") compile("compilerJs::CompileJsPlugin")
     }
   }
 
@@ -49,11 +44,6 @@ class CompileJs  : CompilerStep
     t.make([compiler])->run
   }
 
-  Bool needCompileEs()
-  {
-    needCompileJs || compiler.isSys
-  }
-
   Bool needCompileJs()
   {
     // in JS mode we force JS compilation
@@ -69,7 +59,7 @@ class CompileJs  : CompilerStep
     if (compiler.jsPropsFiles != null && !compiler.jsPropsFiles.isEmpty) return true
 
     // run JS compiler if any type has @Js facet
-    return this.hasJs
+    return this.hasJsFacet
   }
 
 }

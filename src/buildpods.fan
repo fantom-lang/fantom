@@ -25,7 +25,6 @@ class Build : BuildGroup
     childrenScripts =
     [
       `compilerJs/build.fan`,
-      `compilerEs/build.fan`,
       `fandoc/build.fan`,
       `concurrent/build.fan`,
       `util/build.fan`,
