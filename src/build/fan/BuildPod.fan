@@ -446,7 +446,7 @@ abstract class BuildPod : BuildScript
       c := Compiler(ci)
       c.frontend
 
-      esmDir := Env.cur.homeDir.plus(`lib/es/esm/`)
+      esmDir := Env.cur.homeDir.plus(`lib/js/esm/`)
       if (Env.cur.vars.containsKey("FAN_ESM_DIR"))
         esmDir = Env.cur.vars["FAN_ESM_DIR"].toUri.toFile
 
