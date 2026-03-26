@@ -24,7 +24,6 @@ class TestRunner
     runner  := TestRunner()
     isAll   := false
     isJs    := false
-    isEs    := false
 
     // parse args
     for (i:=0; i<args.size; ++i)
@@ -50,11 +49,6 @@ class TestRunner
         isAll = true
         continue
       }
-      if (arg == "-es")
-      {
-        isEs = true
-        continue
-      }
       if (arg == "-js")
       {
         isJs = true
@@ -68,8 +62,7 @@ class TestRunner
       targets.add(arg)
     }
 
-    // handle js/es re-routing
-    if (isEs) return runner.runEs(targets)
+    // handle js
     if (isJs) return runner.runJs(targets)
 
     // run tests
@@ -109,8 +102,7 @@ class TestRunner
           -version       print version
           -v             verbose mode
           -all           test all pods
-          -es            test new ECMA JavaScript environment
-          -js            test legacy JavaScript environment
+          -js            test JavaScript environment
         """)
   }
 
@@ -133,18 +125,10 @@ class TestRunner
   }
 
   ** Run new ECMA JS code
-  private Int runEs(Str[] targets)
+  private Int runJs(Str[] targets)
   {
     args := Str[,].add("test").addAll(targets)
     type := Type.find("nodeJs::Main")
-    return type.make->main(args)
-  }
-
-  ** Run legacy JS code
-  private Int runJs(Str[] targets)
-  {
-    args := Str[,].add("-test").addAll(targets)
-    type := Type.find("compilerJs::NodeRunner")
     return type.make->main(args)
   }
 
