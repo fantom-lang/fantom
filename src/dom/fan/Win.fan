@@ -94,6 +94,12 @@ class Win
   ** Evaluate given JavaScript code.
   static native Obj eval(Str js)
 
+  ** Dynamically create a new Func with the given parameter names
+  ** and JavaScript code.  This is essentially a wrapper around
+  ** JavaScript's 'Function' constructor that takes a source code
+  ** string for the function body.
+  static native Func evalToFunc(Str[] paramNames, Str jsBody)
+
   ** Log object to console.
   native Void log(Obj? obj)
 

@@ -171,6 +171,11 @@ class WinPeer extends sys.Obj {
     return eval(js);
   }
 
+  static evalToFunc(paramNames, jsBody)
+  {
+    return new Function(...paramNames.__values(), jsBody);
+  }
+
   log(self, obj)
   {
     console.log(obj);

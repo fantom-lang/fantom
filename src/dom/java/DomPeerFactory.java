@@ -73,6 +73,11 @@ public class DomPeerFactory
     throw UnsupportedErr.make("Win.eval");
   }
 
+  public Func winEvalToFunc(List params, String js)
+  {
+    throw UnsupportedErr.make("Win.evalToFunc");
+  }
+
   public Elem elemFromNative(Object elem, Type type)
   {
     throw UnsupportedErr.make("elem.fromNative");
@@ -83,3 +88,4 @@ public class DomPeerFactory
     throw UnsupportedErr.make("event.fromNative");
   }
 }
+

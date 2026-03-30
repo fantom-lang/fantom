@@ -389,21 +389,21 @@ class List extends Obj {
 // Stack
 //////////////////////////////////////////////////////////////////////////
 
-peek() {
-  if (this.#size == 0) return null;
-  return this.#values[this.#size-1];
-}
+  peek() {
+    if (this.#size == 0) return null;
+    return this.#values[this.#size-1];
+  }
 
-pop() {
-  // modify in removeAt()
-  if (this.#size == 0) return null;
-  return this.removeAt(-1);
-}
+  pop() {
+    // modify in removeAt()
+    if (this.#size == 0) return null;
+    return this.removeAt(-1);
+  }
 
-push(obj) {
-  // modify in add()
-  return this.add(obj);
-}
+  push(obj) {
+    // modify in add()
+    return this.add(obj);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Iterators

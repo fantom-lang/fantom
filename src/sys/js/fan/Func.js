@@ -44,7 +44,7 @@ class Func extends Obj {
   }
   static callOn(f, obj, args) {
     if (f.__method) return f.__method.callOn(obj, args);
-    throw UnsupportedErr.make();
+    return f.call(obj, ...args.__values());
   }
   static callList(f, args) {
     if (f.__method) return f.__method.callList(args);
@@ -97,3 +97,4 @@ class Func extends Obj {
   // }
 
 }
+

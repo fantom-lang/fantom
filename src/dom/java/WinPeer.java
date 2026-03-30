@@ -27,6 +27,11 @@ public class WinPeer
     return DomPeerFactory.factory().winEval(js);
   }
 
+  public static Func evalToFunc(List params, String js)
+  {
+    return DomPeerFactory.factory().winEvalToFunc(params, js);
+  }
+
   // userAgent() is required to exist by Win.make()
   public String userAgent(Win self)
   {
@@ -75,3 +80,4 @@ public class WinPeer
 
   private static Err err() { return UnsupportedErr.make(); }
 }
+
