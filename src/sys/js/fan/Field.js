@@ -129,19 +129,31 @@ class Field extends Slot {
     //  return;
     //}
 
-    if (this.isNative()) {
-      const peer = instance.peer;
-      const setter = peer[fname];
-      setter.call(peer, instance, value);
+    // native type handling
+    if (this.isNative())
+    {
+      // if it has a peer then check that first
+      if (instance.peer !== undefined)
+      {
+        const peer = instance.peer;
+        const setter = peer[fname];
+        // if we find a setter on the peer then use that
+        if (setter !== undefined)
+        {
+          setter.call(peer, instance, value);
+          return;
+        }
+        // otherwise fallback to default behavior below
+      }
     }
-    else {
-      var setter = instance[fname];
-      if (setter != null)
-        setter.call(instance, value);
-      else
-        throw Err.make(`Failed to set ${this.qname$()}`);
-        // instance["m_"+this.m_$name] = value;
-    }
+
+    // try to find the setter on the type itself
+    var setter = instance[fname];
+    if (setter != null)
+      setter.call(instance, value);
+    else
+      throw Err.make(`Failed to set ${this.qname$()}`);
+      // instance["m_"+this.m_$name] = value;
   }
 
 }
