@@ -465,8 +465,15 @@ internal class DocPodLoader
   private Void finishResources(Uri[] uris)
   {
     DocRes[] list := uris.sort.map |uri->DocRes| { DocRes(pod, uri) }
-    this.resList = list.toImmutable
-    this.resMap  = Str:DocRes[:].addList(list) |res| { res.uri.name }.toImmutable
+    map := Str:DocRes[:]
+    uris.each |uri|
+    {
+      name := uri.name
+      if (map[name] != null) echo("WARN: dup res names in pod [$uri]")
+      map[name] = DocRes(pod, uri)
+    }
+    this.resList = map.vals.sort |a, b| { a.uri <=> b.uri }
+    this.resMap  = map.toImmutable
   }
 
   private Void finishSources(Uri[] uris)
