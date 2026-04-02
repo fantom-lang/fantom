@@ -97,7 +97,7 @@ internal const class WispActor : Actor
       else if (e is IOErr && e.msg.contains("javax.net.ssl."))
       {
         // only log JAVA SSL exceptions at debug level
-        if (WispService.log.isDebug) WispService.log.debug("TLS Error", e)
+        if (service.log.isDebug) service.log.debug("TLS Error", e)
       }
       else
         e.trace
@@ -229,7 +229,7 @@ internal const class WispActor : Actor
 
       // log internal error
       if (!err.msg.contains("Broken pipe"))
-        WispService.log.err("Internal error processing: $req.uri", err)
+        service.log.err("Internal error processing: $req.uri", err)
 
       // if not committed yet, then return 400 if bad
       // client request or 500 if server error
@@ -242,7 +242,7 @@ internal const class WispActor : Actor
         res.close
       }
     }
-    catch (Err e) WispService.log.err("internalServiceError res failed", e)
+    catch (Err e) service.log.err("internalServiceError res failed", e)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -255,3 +255,4 @@ internal const class WispActor : Actor
 
   const WispService service
 }
+

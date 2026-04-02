@@ -80,7 +80,8 @@ const mixin WispSessionStore
     }
     catch (Err e)
     {
-      WispService.log.err("WispSession save", e)
+      service.log.err("WispSession save", e)
     }
   }
 }
+

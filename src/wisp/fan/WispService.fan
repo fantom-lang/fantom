@@ -20,12 +20,6 @@ using inet
 **
 const class WispService : Service
 {
-
-  **
-  ** Standard log for web service
-  **
-  internal static const Log log := Log.get("web")
-
   **
   ** Which IpAddr to bind to or null for the default.
   **
@@ -33,7 +27,7 @@ const class WispService : Service
 
   **
   ** Well known TCP port for HTTP traffic. The port is enabled if non-null
-  ** and disabled if null.
+  ** and disabled if null.  Set to -1 to assign an ephemeral port
   **
   const Int? httpPort := null
 
@@ -70,6 +64,11 @@ const class WispService : Service
   **
   const WebMod errMod := initErrMod
 
+  **
+  ** Log
+  **
+  @NoDoc const Log log := Log.get("web")
+
   ** The `inet::SocketConfig` to use for creating sockets
   const SocketConfig socketConfig := SocketConfig.cur
 
@@ -82,7 +81,7 @@ const class WispService : Service
     try
       return (WebMod)Type.find(Pod.find("web").config("errMod", "wisp::WispDefaultErrMod")).make
     catch (Err e)
-      log.err("Cannot init errMod", e)
+      Log.get("web").err("Cannot init errMod", e)
     return WispDefaultErrMod()
   }
 
@@ -99,7 +98,7 @@ const class WispService : Service
     try
       parseExtraHeaders(acc, Pod.find("web").config("extraResHeaders", ""))
     catch (Err e)
-      log.err("Cannot init resHeaders", e)
+      Log.get("web").err("Cannot init resHeaders", e)
     return acc.toImmutable
   }
 
@@ -188,12 +187,13 @@ const class WispService : Service
   internal Void listen(TcpListener listener, Int port)
   {
     portType := port == httpPort ? "http" : "https"
+    ephemeral := port == -1
     // loop until we successfully bind to port
     while (true)
     {
       try
       {
-        listener.bind(addr, port)
+        listener.bind(addr, ephemeral ? null : port)
         break
       }
       catch (Err e)
@@ -201,6 +201,13 @@ const class WispService : Service
         log.err("WispService cannot bind to ${portType} port ${port}", e)
         Actor.sleep(10sec)
       }
+    }
+
+    // if ephemeral then set field with port assigned by OS
+    if (ephemeral)
+    {
+      port = listener.localPort
+      typeof.field(portType + "Port")->setConst(this, port)
     }
 
     log.info("${portType} started on port ${port}")
@@ -263,11 +270,11 @@ const class WispService : Service
   ** Create instance for Test.setup easy to use via reflection (service is not started automatically)
   @NoDoc static WispService testSetup(WebMod root)
   {
-    log.level = LogLevel.err
     return WispService
     {
       it.root = root
-      it.httpPort = (10_000..60_000).random
+      it.log.level = LogLevel.err
+      it.httpPort = -1
     }
   }
 
@@ -349,3 +356,4 @@ const class WispDefaultErrMod : WebMod
     res.out.print(str)
   }
 }
+
