@@ -76,6 +76,19 @@ const class WispService : Service
   @NoDoc Bool isListening() { isListeningRef.val }
   private const AtomicBool isListeningRef := AtomicBool(false)
 
+  ** Block until the listener socket is opened.  If using an ephemeral
+  ** port, then will block until the httpPort assigned can be read
+  @NoDoc This waitUntilListening(Duration? timeout := null)
+  {
+    start := Duration.now
+    while (!isListening)
+    {
+      if (timeout != null && Duration.now - start > timeout) throw TimeoutErr()
+      Actor.sleep(50ms)
+    }
+    return this
+  }
+
   private static WebMod initErrMod()
   {
     try
