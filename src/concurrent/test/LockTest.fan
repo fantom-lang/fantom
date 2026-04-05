@@ -16,14 +16,16 @@ class LockTest : Test
     pool := ActorPool()
     lock := Lock.makeReentrant()
 
-    a := LockTestActor(pool, "A", lock)
-    b := LockTestActor(pool, "B", lock)
+    a := LockTestActor(pool, "A", true, lock)
+    b := LockTestActor(pool, "B", false, lock)
 
     // lock/unlock
     buf := StrBuf()
     fa := a.send(Unsafe(buf))
     fb := b.send(Unsafe(buf))
     Future.waitForAll([fa, fb])
+    verifyEq(fa.get, "A")
+    verifyEq(fb.get, "B")
     actual := buf.toStr
     verify(actual == "A0 A1 A2 B0 B1 B2" || actual == "B0 B1 B2 A0 A1 A2")
 
@@ -38,14 +40,16 @@ class LockTest : Test
 
 internal const class LockTestActor : Actor
 {
-  new make(ActorPool pool, Str name, Lock lock) : super(pool)
+  new make(ActorPool pool, Str name, Bool toggle, Lock lock) : super(pool)
   {
-    this.name = name
-    this.lock = lock
+    this.name   = name
+    this.lock   = lock
+    this.toggle = toggle
   }
 
   const Str name
   const Lock lock
+  const Bool toggle
 
   override Obj? receive(Obj? msg)
   {
@@ -53,14 +57,30 @@ internal const class LockTestActor : Actor
     if (msg is Unsafe)
     {
       buf := (StrBuf)((Unsafe)msg).val
-      lock.lock
-      3.times |i|
+
+      if (toggle)
       {
-        buf.join("$name$i", " ")
-        Actor.sleep(50ms)
+        return lock.withLock |->Str|
+        {
+          3.times |i|
+          {
+            buf.join("$name$i", " ")
+            Actor.sleep(50ms)
+          }
+          return name
+        }
       }
-      lock.unlock
-      return null
+      else
+      {
+        lock.lock
+        3.times |i|
+        {
+          buf.join("$name$i", " ")
+          Actor.sleep(50ms)
+        }
+        lock.unlock
+        return name
+      }
     }
 
     // tryLock for A
@@ -80,3 +100,4 @@ internal const class LockTestActor : Actor
     return t2 - t1
   }
 }
+

@@ -24,6 +24,10 @@ native const class Lock
   ** Release the lock.  Raise exception if not holding the lock.
   Void unlock()
 
+  ** Run callback while holding the lock and guarantee its released.
+  ** Return the result of thecallback function.
+  Obj? withLock(|This->Obj?| f)
+
   ** Acquire the lock if its free and immediately return true.
   ** Or if the lock is not available and timeout is null, then
   ** immediately return false.  If timeout is non-null, then block
@@ -31,5 +35,4 @@ native const class Lock
   ** if lock acquired or false on timeout.
   Bool tryLock(Duration? timeout := null)
 }
-
 

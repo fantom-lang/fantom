@@ -81,9 +81,22 @@ public final class Lock
     }
   }
 
-  public final void  unlock()
+  public final void unlock()
   {
     this.java.unlock();
+  }
+
+  public final Object withLock(Func f)
+  {
+    this.java.lock();
+    try
+    {
+      return f.call(this);
+    }
+    finally
+    {
+      unlock();
+    }
   }
 
   private final java.util.concurrent.locks.Lock java;

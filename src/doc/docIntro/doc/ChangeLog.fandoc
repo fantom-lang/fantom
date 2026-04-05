@@ -9,6 +9,7 @@
 *Build 1.0.84 (working)*
 - Replace legacy JS compiler with new ES compiler
 - Win.evalToFunc
+- Lock.withLock
 
 *Build 1.0.83 (12 Mar 2026)*
 - Future support for JS promises

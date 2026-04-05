@@ -21,6 +21,9 @@ class Lock extends sys.Obj {
 
   unlock() { }
 
+  withLock(f) { return f(this); }
+
   tryLock(timeout=null) { return true; }
 
 }
+
