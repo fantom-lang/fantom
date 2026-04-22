@@ -90,29 +90,29 @@ public class Test
     verifyCount++;
   }
 
-  public void verifyEq(Object expected, Object actual) { verifyEq(expected, actual, null); }
-  public void verifyEq(Object expected, Object actual, String msg)
+  public void verifyEq(Object a, Object b) { verifyEq(a, b, null); }
+  public void verifyEq(Object a, Object b, String msg)
   {
-    if (!OpUtil.compareEQ(expected, actual))
+    if (!OpUtil.compareEQ(a, b))
     {
       // if we have two multi-line strings display line in error
-      if (expected instanceof String && actual instanceof String)
+      if (a instanceof String && b instanceof String)
       {
-        List eLines = FanStr.splitLines((String)expected);
-        List aLines = FanStr.splitLines((String)actual);
-        if (eLines.sz() > 1 || aLines.sz() > 1)
+        List aLines = FanStr.splitLines((String)a);
+        List bLines = FanStr.splitLines((String)b);
+        if (aLines.sz() > 1 || bLines.sz() > 1)
         {
-          if (eLines.sz() != aLines.sz())
+          if (aLines.sz() != bLines.sz())
           {
-            msg = "Expected " + eLines.sz() + " lines, actual " + aLines.sz() + " lines";
+            msg = "Num lines: " + aLines.sz() + " != " + bLines.sz();
           }
           else
           {
-            for (int i=0; i<eLines.sz(); ++i)
+            for (int i=0; i<aLines.sz(); ++i)
             {
-              if (!eLines.get(i).equals(aLines.get(i)))
+              if (!aLines.get(i).equals(bLines.get(i)))
               {
-                msg = "Line " + (i+1) + ": " + FanStr.toCode((String)eLines.get(i)) + " != " + FanStr.toCode((String)aLines.get(i));
+                msg = "Line " + (i+1) + ": " + FanStr.toCode((String)aLines.get(i)) + " != " + FanStr.toCode((String)bLines.get(i));
                 break;
               }
             }
@@ -120,49 +120,49 @@ public class Test
         }
       }
 
-      if (msg == null) msg = s(expected) + " != " + s(actual);
+      if (msg == null) msg = s(a) + " != " + s(b);
       fail(msg);
     }
-    if (expected != null && actual != null)
+    if (a != null && b != null)
     {
-      if (hash(expected) != hash(actual))
+      if (hash(a) != hash(b))
       {
         fail("Equal but different hash codes: " +
-          expected + " (0x" + FanInt.toHex(hash(expected)) + ") ?= " +
-          actual   + " (0x" + FanInt.toHex(hash(actual)) + ")");
+          a + " (0x" + FanInt.toHex(hash(a)) + ") ?= " +
+          b + " (0x" + FanInt.toHex(hash(b)) + ")");
       }
     }
     verifyCount++;
   }
 
-  public void verifyNotEq(Object expected, Object actual) { verifyNotEq(expected, actual, null); }
-  public void verifyNotEq(Object expected, Object actual, String msg)
+  public void verifyNotEq(Object a, Object b) { verifyNotEq(a, b, null); }
+  public void verifyNotEq(Object a, Object b, String msg)
   {
-    if (!OpUtil.compareNE(expected, actual))
+    if (!OpUtil.compareNE(a, b))
     {
-      if (msg == null) msg = s(expected) + " == " + s(actual);
+      if (msg == null) msg = s(a) + " == " + s(b);
       fail(msg);
     }
     verifyCount++;
   }
 
-  public void verifySame(Object expected, Object actual) { verifySame(expected, actual, null); }
-  public void verifySame(Object expected, Object actual, String msg)
+  public void verifySame(Object a, Object b) { verifySame(a, b, null); }
+  public void verifySame(Object a, Object b, String msg)
   {
-    if (expected != actual)
+    if (a != b)
     {
-      if (msg == null) msg = s(expected) + " !== " + s(actual);
+      if (msg == null) msg = s(a) + " !== " + s(b);
       fail(msg);
     }
     verifyCount++;
   }
 
-  public void verifyNotSame(Object expected, Object actual) { verifyNotSame(expected, actual, null); }
-  public void verifyNotSame(Object expected, Object actual, String msg)
+  public void verifyNotSame(Object a, Object b) { verifyNotSame(a, b, null); }
+  public void verifyNotSame(Object a, Object b, String msg)
   {
-    if (expected == actual)
+    if (a == b)
     {
-      if (msg == null) msg = s(expected) + " === " + s(actual);
+      if (msg == null) msg = s(a) + " === " + s(b);
       fail(msg);
     }
     verifyCount++;
