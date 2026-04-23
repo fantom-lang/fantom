@@ -191,6 +191,13 @@ class CompilerInput
   **
   Uri[]? jsPropsFiles
 
+  **
+  ** List of Python files or directories containing Python files
+  ** to include in the Python output.  Uris are relative to `baseDir`.
+  ** This field is used only in file mode.
+  **
+  Uri[]? pyFiles
+
 //////////////////////////////////////////////////////////////////////////
 // CompilerInputMode.str
 //////////////////////////////////////////////////////////////////////////
