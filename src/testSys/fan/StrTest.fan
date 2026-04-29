@@ -1055,6 +1055,52 @@ class StrTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Truncate
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTruncate()
+  {
+    // no truncation needed
+    verifyTruncate("", 0, "", "")
+    verifyTruncate("", 5, "", "")
+    verifyTruncate("", 5, "...", "")
+    verifyTruncate("a", 1, "", "a")
+    verifyTruncate("a", 5, "", "a")
+    verifyTruncate("hello", 5, "", "hello")
+    verifyTruncate("hello", 10, "", "hello")
+    verifyTruncate("hello", 5, "...", "hello")
+    verifyTruncate("hello world", 11, "...", "hello world")
+
+    // truncation without suffix
+    verifyTruncate("hello", 0, "", "")
+    verifyTruncate("hello", 1, "", "h")
+    verifyTruncate("hello", 4, "", "hell")
+    verifyTruncate("hello world", 5, "", "hello")
+
+    // truncation with suffix
+    verifyTruncate("hello world", 8, "...", "hello...")
+    verifyTruncate("hello world", 5, "...", "he...")
+    verifyTruncate("hello world", 4, "...", "h...")
+    verifyTruncate("hello world", 3, "...", "...")
+    verifyTruncate("hello world", 6, "..", "hell..")
+    verifyTruncate("abcdefg", 5, "!", "abcd!")
+
+    // suffix exactly equals maxSize
+    verifyTruncate("hello world", 3, "...", "...")
+
+    // errors
+    verifyErr(ArgErr#) { "hello".truncate(-1) }
+    verifyErr(ArgErr#) { "hello".truncate(2, "...") }
+    verifyErr(ArgErr#) { "hello".truncate(0, "...") }
+  }
+
+  Void verifyTruncate(Str s, Int maxSize, Str suffix, Str expected)
+  {
+    Str actual := suffix.isEmpty ? s.truncate(maxSize) : s.truncate(maxSize, suffix)
+    verifyEq(actual, expected)
+    verify(actual.size <= maxSize)
+  }
+//////////////////////////////////////////////////////////////////////////
 // Split
 //////////////////////////////////////////////////////////////////////////
 

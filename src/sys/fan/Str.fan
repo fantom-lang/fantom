@@ -465,6 +465,20 @@ const final class Str
   Str trimEnd()
 
   **
+  ** Truncate this string to the given maximum size.  If the string
+  ** is already at or below 'maxSize', return it unchanged.  Otherwise
+  ** return a new string of exactly 'maxSize' characters, ending with
+  ** 'suffix' if specified.  The 'maxSize' is inclusive of the suffix.
+  ** Throw exception if 'maxSize' is less than suffix.
+  **
+  ** Examples:
+  **   "hello world".truncate(20)        =>  "hello world"
+  **   "hello world".truncate(5)         =>  "hello"
+  **   "hello world".truncate(8, "...")  =>  "hello..."
+  **
+  Str truncate(Int maxSize, Str suffix := "")
+
+  **
   ** Split a string into a list of substrings using the
   ** given separator character.  If there are contiguous separators,
   ** then they are split into empty strings.  If trim is true,

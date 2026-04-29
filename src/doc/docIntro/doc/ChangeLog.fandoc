@@ -8,6 +8,7 @@
 
 *Build 1.0.84 (working)*
 - Replace legacy JS compiler with new ES compiler
+- Str.truncate
 - Win.evalToFunc
 - Lock.withLock
 

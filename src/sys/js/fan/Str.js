@@ -333,6 +333,16 @@ class Str extends Obj {
     return trimmed.length == 0 ? null : trimmed;
   }
 
+  static truncate(self, maxSize, suffix) {
+    if (suffix === undefined) suffix = "";
+    if (maxSize < 0)  throw ArgErr.make("maxSize < 0: " + maxSize);
+    if (maxSize < suffix.length) throw ArgErr.make("maxSize " + maxSize + " < suffix.size " + suffix.length);
+
+    if (self.length <= maxSize) return self;
+    if (maxSize === suffix.length) return suffix;
+    return self.substring(0, maxSize - suffix.length) + suffix;
+  }
+
   static split(self, sep=null, trimmed=true) {
     if (sep == null) return Str.#splitws(self);
     const toks = List.make(Str.type$, []);

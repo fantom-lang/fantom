@@ -648,6 +648,18 @@ public class FanStr
     return trimmed.length() == 0 ? null : trimmed;
   }
 
+  public static String truncate(String self, long maxSize) { return truncate(self, maxSize, ""); }
+  public static String truncate(String self, long maxSize, String suffix)
+  {
+    if (maxSize < 0) throw ArgErr.make("maxSize < 0: " + maxSize);
+    if (maxSize < suffix.length()) throw ArgErr.make("maxSize " + maxSize + " < suffix.size " + suffix.length());
+
+    int max = (int)maxSize;
+    if (self.length() <= max) return self;
+    if (max == suffix.length()) return suffix;
+    return self.substring(0, max - suffix.length()) + suffix;
+  }
+
   public static List<String> split(String self) { return split(self, null, true); }
   public static List<String> split(String self, Long separator) { return split(self, separator, true); }
   public static List<String> split(String self, Long separator, boolean trimmed)
