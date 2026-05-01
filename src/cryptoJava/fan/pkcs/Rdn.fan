@@ -36,6 +36,17 @@ const class Rdn
   {
     keywords.eachWhile |oid, n| { oid == this.type ? n : null }
   }
+  
+  **
+  ** Get the canonical/preferred short name for this RDN.
+  ** Normalizes "S" to "ST" to match RFC 4514 standard.
+  **
+  Str? canonicalName()
+  {
+    name := shortName
+    if (name == "S") return "ST"  // Normalize to RFC 4514 standard
+    return name
+  }
 
   ** Get the attribute value as an ASN.1 string type according
   ** to its specification. If the attribute type is not recognized,
@@ -52,6 +63,7 @@ const class Rdn
       // IA5Str
       case "DC":
       case "EMAIL":
+      case "EMAILADDRESS":
         return Asn.str(val, AsnTag.univIa5Str)
       // Utf8
       default:
@@ -66,7 +78,7 @@ const class Rdn
 
   override Str toStr()
   {
-    name := shortName ?: type.oidStr
+    name := canonicalName ?: type.oidStr
     return "${name}=${val}"
   }
 
@@ -98,6 +110,7 @@ const class Rdn
     m["DC"]  = Asn.oid("0.9.2342.19200300.100.1.25")
     m["UID"] = Asn.oid("0.9.2342.19200300.100.1.1")
     m["EMAIL"] = Asn.oid("${pkcs9}.1")
+    m["EMAILADDRESS"] = Asn.oid("${pkcs9}.1")
     keywords = m
   }
 }

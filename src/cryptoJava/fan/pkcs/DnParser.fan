@@ -57,6 +57,22 @@ class DnParser
         consume
       }
       key := buf.toStr.upper
+      
+      // Handle "OID." prefix (non-RFC 4514, but used by some CAs)
+      if (key == "OID" && cur == '.')
+      {
+        consume('.')
+        // Parse numeric OID after the prefix
+        buf.clear
+        buf.add(number)
+        while (cur == '.')
+        {
+          buf.addChar(consume('.'))
+          buf.add(number)
+        }
+        return Asn.oid(buf.toStr)
+      }
+      
       return Rdn.keywords[key] ?: throw err("Must use OID for type ${key}", startIdx)
     }
     else if (cur.isDigit)
@@ -69,6 +85,10 @@ class DnParser
         buf.add(number)
       }
       return Asn.oid(buf.toStr)
+    }
+    else if (cur == ' ')
+    {
+      throw err("Spaces are not allowed after commas in RFC 4514 DN format. Use 'C=US,O=Example' not 'C=US, O=Example'")
     }
     else throw err("Invalid attribute type")
   }
@@ -89,6 +109,21 @@ class DnParser
   private Str parseVal()
   {
     if (cur == '#') return hexstring
+    
+    // Handle quoted strings (Java's X500Principal uses this format)
+    // Not RFC 4514, but common in real-world output
+    if (cur == '"')
+    {
+      consume('"')
+      start := pos
+      while (cur != '"' && pos < name.size)
+      {
+        consume
+      }
+      val := name[start..<pos]
+      consume('"')
+      return val
+    }
 
     // string
     start := pos
