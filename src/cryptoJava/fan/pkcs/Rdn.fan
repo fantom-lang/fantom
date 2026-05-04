@@ -40,11 +40,13 @@ const class Rdn
   **
   ** Get the canonical/preferred short name for this RDN.
   ** Normalizes "S" to "ST" to match RFC 4514 standard.
+  ** Normalizes "EMAILADDRESS" to "EMAIL" as the preferred form.
   **
   Str? canonicalName()
   {
     name := shortName
     if (name == "S") return "ST"  // Normalize to RFC 4514 standard
+    if (name == "EMAILADDRESS") return "EMAIL"  // Prefer shorter form
     return name
   }
 
@@ -78,7 +80,7 @@ const class Rdn
 
   override Str toStr()
   {
-    name := canonicalName ?: type.oidStr
+    name := canonicalName ?: "OID.${type.oidStr}"
     return "${name}=${val}"
   }
 

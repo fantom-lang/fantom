@@ -30,22 +30,22 @@ class DnTest : Test
     subjectDn := "cn=Test,Ou=Engineering,o=Example Corp,ST=Virginia,c=US"
     parsed := parse(subjectDn)
     verifyEq(parsed.map |rdn->Str| { rdn.toStr }, ["CN=Test", "OU=Engineering", "O=Example Corp", "ST=Virginia", "C=US"])
-    normalized := Dn.fromStr(subjectDn).toStr
+    normalized := Dn.fromStr(subjectDn).toX500
     verifyEq(normalized, "C=US,ST=Virginia,O=Example Corp,OU=Engineering,CN=Test")
   }
 
   Void testValueCase()
   {
     subjectDn := "cn=test,ou=Engineering,o=Example corp,st=virginia,c=us"
-    normalized := Dn.fromStr(subjectDn).toStr
+    normalized := Dn.fromStr(subjectDn).toX500
     verifyEq(normalized, "C=us,ST=virginia,O=Example corp,OU=Engineering,CN=test")
   }
 
   Void testWithStateNormaliztion()
   {
     subjectDn := "cn=Test,ou=Engineering,o=Example Corp,s=Virginia,c=US"
-    parsed := Dn.fromStr(subjectDn).toStr
-    verifyEq(parsed.toStr, "C=US,ST=Virginia,O=Example Corp,OU=Engineering,CN=Test")
+    normalized := Dn.fromStr(subjectDn).toX500
+    verifyEq(normalized, "C=US,ST=Virginia,O=Example Corp,OU=Engineering,CN=Test")
   }  
 
   Void testInvalidDn()
@@ -53,23 +53,6 @@ class DnTest : Test
     subjectDn := "cn=Test, ou=Engineering, o=Example Corp, s=Virginia, c=US"
     verifyErr(ParseErr#) { parse(subjectDn) }
     verifyErr(ParseErr#) { Dn.fromStr(subjectDn).toStr }
-    parsed := Dn.fromStr(subjectDn,false).toStr
-    verifyEq(parsed.toStr, subjectDn)
-  }
-
-  Void testCheckedParameterTrue()
-  {
-    verifyErr(ParseErr#) { Dn.fromStr("INVALID DN FORMAT").toStr }
-    verifyErr(ParseErr#) { Dn.fromStr("INVALID DN FORMAT", true).toStr }
-  }
-
-  Void testCheckedParameterFalse()
-  {
-    invalid := "COMPLETELY@INVALID#DN"
-    dn := Dn.fromStr(invalid, false)
-    verifyEq(dn.toStr, invalid)
-    verifyEq(dn.rawStr, invalid)
-    verifyEq(dn.rdns.size, 0)
   }
 
   Void testOidPrefixSupport()
@@ -77,11 +60,9 @@ class DnTest : Test
     dn := "CN=SOME CA,OID.2.5.4.97=ABCDE-F12345G,O=ABCD-CORP,C=US"
     parsed := Dn.fromStr(dn)
     verify(parsed.rdns.size > 0)
-    
-    normalized := parsed.toStr
-    verify(normalized.contains("C=US"))
-    verify(normalized.contains("O=ABCD-CORP"))
-    verify(normalized.contains("CN=SOME CA"))
+    verifyEq(parsed.toStr, dn)
+    normalized := parsed.toX500
+    verifyEq(normalized, "C=US,O=ABCD-CORP,CN=SOME CA,OID.2.5.4.97=ABCDE-F12345G")
   }
 
   Void testQuotedValues()
@@ -94,6 +75,7 @@ class DnTest : Test
     oRdn := parsed.rdns.find { it.shortName == "O" }
     verifyNotNull(oRdn)
     verifyEq(oRdn.val, "Fictional Telecom Co.,Ltd.")
+    verifyEq(parsed.toStr, "OU=ePKI Root,O=Fictional Telecom Co.,Ltd.,C=US")
   }
 
   Void testEmailAddressKeyword()
@@ -102,10 +84,12 @@ class DnTest : Test
     dn1 := "EMAIL=test@example.com,CN=Test,O=Example"
     parsed1 := Dn.fromStr(dn1)
     verifyEq(parsed1.rdns.size, 3)
+    verifyEq(parsed1.toStr, dn1)
     
     dn2 := "EMAILADDRESS=info@example.com,CN=Test,O=Example"
     parsed2 := Dn.fromStr(dn2)
     verifyEq(parsed2.rdns.size, 3)
+    verifyEq(parsed2.toStr, "EMAIL=info@example.com,CN=Test,O=Example")
     
     // Both should map to the same OID - find by value
     email1 := parsed1.rdns.find { it.val == "test@example.com" }
@@ -138,7 +122,7 @@ class DnTest : Test
   {
     dn := "CN=Test,S=Virginia,O=Example"
     parsed := Dn.fromStr(dn)
-    normalized := parsed.toStr
+    normalized := parsed.toX500
     
     verifyTrue(normalized.contains("ST=Virginia"))
     verifyFalse(normalized.contains("S=Virginia"))
@@ -149,24 +133,37 @@ class DnTest : Test
     // Test a complex real-world DN with multiple features
     dn := """EMAILADDRESS=info@e-szigno.hu,CN=Microsec e-Szigno Root CA 2009,O="Microsec Ltd.",L=Budapest,C=HU"""
     parsed := Dn.fromStr(dn)
-    
     verify(parsed.rdns.size >= 5)
     
-    normalized := parsed.toStr
-    verifyTrue(normalized.startsWith("C=HU"))
-    verify(normalized.contains("CN=Microsec"))
+    parsedStr := parsed.toStr
+    verifyTrue(parsedStr.startsWith("EMAIL=info@e-szigno.hu"))
+    verify(parsedStr.contains("CN=Microsec"))
+    normalized := parsed.toX500
+    verifyEq(normalized.toStr, "C=HU,L=Budapest,O=Microsec Ltd.,CN=Microsec e-Szigno Root CA 2009,EMAIL=info@e-szigno.hu")
   }
 
-  Void testUncheckedPreservesValidDn()
+  Void testToX500Ordering()
   {
     dn := "CN=Test,OU=Engineering,O=Example,C=US"
-    parsed := Dn.fromStr(dn, false)
-    
+    parsed := Dn.fromStr(dn)
     verifyEq(parsed.rdns.size, 4)
-    verifyNull(parsed.rawStr)
     
-    normalized := parsed.toStr
+    normalized := parsed.toX500
     verifyEq(normalized, "C=US,O=Example,OU=Engineering,CN=Test")
+  }
+
+  Void testToX500OrderingMultiple()
+  {
+    dn := "CN=SOME CA,OID.2.5.4.97=ABCDE-F12345G,EMAIL=support@someca.org,O=ABCD-CORP,C=US"
+    parsed := Dn.fromStr(dn)
+    verify(parsed.rdns.size > 0)
+    verifyEq(parsed.toStr, dn)
+    normalized := parsed.toX500
+    verifyEq(normalized, "C=US,O=ABCD-CORP,CN=SOME CA,OID.2.5.4.97=ABCDE-F12345G,EMAIL=support@someca.org")
+
+    dn2 := "CN=SOME CA,EMAIL=support@someca.org,OID.2.5.4.97=ABCDE-F12345G,O=ABCD-CORP,C=US"
+    normalized2 := Dn.fromStr(dn2).toX500
+    verifyEq(normalized2, "C=US,O=ABCD-CORP,CN=SOME CA,EMAIL=support@someca.org,OID.2.5.4.97=ABCDE-F12345G")
   }
 
   private Rdn[] parse(Str name)
