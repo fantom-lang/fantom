@@ -19,6 +19,8 @@ native const class X509 : Cert
 
   override Str subject()
 
+  override SubjectAltName[] subjectAltNames()
+
   override Str issuer()
 
   override Str certType()

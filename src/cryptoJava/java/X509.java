@@ -4,6 +4,7 @@
 //
 // History:
 //   16 Aug 2021 Matthew Giannini   Creation
+//   16 Apr 2026 Ross Schwalm       Add decoding for SubjectAlternativeName V3 Extension
 //
 
 package fan.cryptoJava;
@@ -114,17 +115,99 @@ final public class X509 extends FanObj implements fan.crypto.Cert
   static final Type typeof = Type.find("cryptoJava::X509");
 
 //////////////////////////////////////////////////////////////////////////
+// Utility
+//////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Parse a DN string and return normalized X.500 format.
+   * If parsing fails, returns the raw string.
+   */
+  private static String parseDn(String dnStr)
+  {
+    try
+    {
+      // Remove spaces after commas to match RFC4514 format expected by DnParser
+      dnStr = dnStr.replaceAll(",\\s+", ",");
+      return Dn.fromStr(dnStr).toX500();
+    }
+    catch (Exception e)
+    {
+      return dnStr;
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Cert
 //////////////////////////////////////////////////////////////////////////
 
   public String subject()
   {
-    return cert.getSubjectX500Principal().toString();
+    return parseDn(cert.getSubjectX500Principal().toString());
+  }
+
+  public List<fan.crypto.SubjectAltName> subjectAltNames()
+  {
+    try
+    {
+      Collection<java.util.List<?>> altNames = cert.getSubjectAlternativeNames();
+      ArrayList<fan.crypto.SubjectAltName> sans = new ArrayList<fan.crypto.SubjectAltName>();
+
+      if (altNames == null) return List.make(Type.find("crypto::SubjectAltName"), sans);
+
+      for (java.util.List<?> item : altNames)
+      {
+        Integer type = (Integer) item.get(0);
+        Object value = item.get(1);
+
+        switch (type)
+        {
+          case 0: // otherName - byte[] containing DER-encoded SEQUENCE
+            // Pass raw bytes to Fantom - let BerReader do the ASN.1 parsing
+            if (value instanceof byte[])
+            {
+              Buf buf = new MemBuf((byte[])value);
+              sans.add(JSubjectAltName.fromTag(type, buf));
+            }
+            break;
+
+          case 1: // rfc822Name - email address (String)
+          case 2: // dNSName - hostname (String)
+          case 6: // uniformResourceIdentifier - URI (String)
+          case 7: // iPAddress - IP address (String or byte[])
+            // These are returned as String by Java
+            sans.add(JSubjectAltName.fromTag(type, (String)value));
+            break;
+
+          case 4: // directoryName - X.500 principal name (String)
+            // Java returns the DN as a String - normalize to standard X.500 order
+            sans.add(JSubjectAltName.fromTag(type, parseDn((String)value)));
+            break;
+
+          case 8: // registeredID - OID (String in dotted notation)
+            // Java returns OID as String like "1.2.840.113549.1.9.1"
+            // Pass string to Fantom layer; it will convert to AsnOid
+            sans.add(JSubjectAltName.fromTag(type, (String)value));
+            break;
+
+          case 3: // x400Address - not supported
+          case 5: // ediPartyName - not supported
+            break;
+
+          default:
+            System.out.println("Unknown SubjectAltName type " + type + ": " + value);
+        }
+      }
+      return List.make(Type.find("crypto::SubjectAltName"), sans);
+    }
+    catch (Exception e)
+    {
+      throw Err.make(e);
+    }
   }
 
   public String issuer()
   {
-    return cert.getIssuerX500Principal().toString();
+    return parseDn(cert.getIssuerX500Principal().toString());
   }
 
   public String certType()

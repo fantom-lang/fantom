@@ -4,6 +4,7 @@
 //
 // History:
 //   17 Aug 2021 Matthew Giannini   Creation
+//   16 Apr 2026 Ross Schwalm       Add decoding for SubjectAlternativeName V3 Extension
 //
 
 using asn1
@@ -26,6 +27,12 @@ class JCertSigner : CertSigner
     // we start off as self-signed certificate
     this.caPrivKey = csr.priv
     this.issuerDn  = subjectDn
+
+    // Add Subject Alternative Names from CSR to certificate
+    csr.subjectAltNames.each |san|
+    {
+      SubjectAltNames.encodeName(JSubjectAltName.fromValue(san), subjectAltNames)
+    }
   }
 
   private const JCsr csr
@@ -97,7 +104,7 @@ class JCertSigner : CertSigner
     sans := subjectAltNames.toSeq
     if (!sans.isEmpty)
     {
-      this.exts.add(V3Ext(Asn.oid("2.5.29.17"), sans))
+      this.exts.add(SubjectAltNames.makeExt(sans))
     }
   }
 
@@ -211,22 +218,7 @@ class JCertSigner : CertSigner
 
   override This subjectAltName(Obj name)
   {
-    if (name is Str)
-    {
-      // dNSName [2] IA5String
-      subjectAltNames.add(Asn.tag(AsnTag.context(2).implicit).str(name, AsnTag.univIa5Str))
-    }
-    else if (name is Uri)
-    {
-      // uniformResourceIdentifier [6] IA5String
-      subjectAltNames.add(Asn.tag(AsnTag.context(6).implicit).str(name.toStr, AsnTag.univIa5Str))
-    }
-    else if (name is IpAddr)
-    {
-      // iPAddress [7] OCTET STRING
-      subjectAltNames.add(Asn.tag(AsnTag.context(7).implicit).octets(((IpAddr)name).bytes))
-    }
-    else throw UnsupportedErr("Unsupported type for SAN: $name ($name.typeof)")
+    SubjectAltNames.encodeName(JSubjectAltName.fromValue(name), subjectAltNames)
     return this
   }
 
@@ -337,3 +329,151 @@ const class BasicConstraints : V3Ext
   }
 }
 
+**
+** Models a SubjectAlternativeName V3 extension.
+**
+@NoDoc
+const class SubjectAltNames : V3Ext
+{
+  ** Create a SubjectAltName V3 extension from a sequence of GeneralNames
+  static V3Ext makeExt(AsnSeq generalNames)
+  {
+    return V3Ext.makeSpec(Asn.oid("2.5.29.17"), generalNames)
+  }
+
+  ** Encode a single name into an AsnCollBuilder.
+  static Void encodeName(JSubjectAltName name, AsnCollBuilder builder)
+  {
+    builder.add(name.asn)
+  }
+
+  ** Encode a list of names into a GeneralNames sequence
+  static AsnSeq encodeNames(Obj[] names)
+  {
+    builder := AsnColl.builder
+    names.each |name| { encodeName(name, builder) }
+    return builder.toSeq
+  }
+
+  ** Decode a GeneralNames sequence into a list of SubjectAltName objects.
+  static SubjectAltName[] decodeNames(AsnSeq generalNames)
+  {
+    result := SubjectAltName[,]
+
+    generalNames.vals.each |AsnObj name|
+    {
+      // Check the context tag to determine the type
+      if (name.tag.cls.isContext)
+      {
+        tagId := name.tag.id
+        value := decodeNameValue(tagId, name)
+
+        if (value == null) return
+
+        try
+        {
+          san := JSubjectAltName.fromTag(tagId, value)
+          result.add(san)
+        }
+        // skip unsupported types
+        catch (Err e) { }
+      }
+    }
+
+    return result
+  }
+
+  ** Decode the value for a specific GeneralName tag
+  private static Obj? decodeNameValue(Int tagId, AsnObj name)
+  {
+    switch (tagId)
+    {
+      case 0:   // otherName - SEQUENCE { type-id OID, value [0] EXPLICIT ANY }
+        if (name is AsnBin)
+        {
+          buf := ((AsnBin)name).buf
+          try
+          {
+            // The [0] IMPLICIT tag replaces the SEQUENCE tag in ASN.1 encoding
+            // Add the SEQUENCE tag (0x30) back before decoding
+            seqBuf := Buf()
+            seqBuf.write(0x30)  // SEQUENCE tag
+            seqBuf.write(buf.size)  // Length
+            seqBuf.writeBuf(buf)  // Content
+            seqBuf.flip
+
+            return JSubjectAltName.parseOtherName(seqBuf)
+          }
+          catch (Err e)
+          {
+            // Fallback on parse error
+            return ["oid": "unknown", "value": "<parse error: ${e.msg}>"]
+          }
+        }
+
+        return ["oid": "unknown", "value": "<encoded data>"]
+
+      case 1:   // rfc822Name - IA5String
+      case 2:   // dNSName - IA5String
+      case 6:   // uniformResourceIdentifier - IA5String
+        if (name is AsnBin)
+          return ((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str
+        return name.str
+
+      case 4:   // directoryName - Name (DN)
+        // Decode the DN from the implicit context tag
+        if (name is AsnBin)
+        {
+          // For explicit context tag [4], the content is the DN sequence
+          buf := ((AsnBin)name).buf
+          try
+          {
+            dnSeq := BerReader(buf.in).readObj as AsnSeq
+            if (dnSeq != null)
+              return Dn(dnSeq).toStr
+          }
+          catch (Err e) { }
+        }
+        // Fallback to string representation
+        return name.toStr
+
+      case 7:   // iPAddress - OCTET STRING
+        // Decode to IpAddr directly
+        buf := name.buf
+        if (buf.size == 0)
+        {
+          return null  // Skip this SAN entry
+        }
+        return IpAddr.makeBytes(buf)
+
+      case 8:   // registeredID - OBJECT IDENTIFIER
+        // For implicit context tags, the OID content is in the buffer without the OID tag
+        if (name is AsnBin)
+        {
+          contentBuf := ((AsnBin)name).buf
+
+          // Build a proper OID structure: tag (0x06) + length + content
+          oidBuf := Buf()
+          oidBuf.write(0x06)  // OID tag
+          oidBuf.write(contentBuf.size)  // Length
+          oidBuf.writeBuf(contentBuf)  // Content
+
+          oidBuf.flip
+          return BerReader(oidBuf.in).readObj
+        }
+        return name.oid
+
+      default:  // x400Address, ediPartyName
+        return name.toStr
+    }
+  }
+
+  new makeSpec(AsnOid extnId, AsnColl extnVal, Bool critical := false)
+    : super.makeSpec(extnId, extnVal, critical)
+  {
+  }
+
+  new make(AsnObj[] items) : super(items)
+  {
+  }
+}

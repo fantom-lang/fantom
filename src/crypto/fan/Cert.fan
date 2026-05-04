@@ -16,6 +16,9 @@ const mixin Cert
   ** Get the subject DN from the certificate.
   abstract Str subject()
 
+  ** Get the subject alternative names
+  abstract SubjectAltName[] subjectAltNames()
+
   ** Get the issuer DN from the certificate.
   abstract Str issuer()
 

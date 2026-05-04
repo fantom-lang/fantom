@@ -48,18 +48,21 @@ const mixin Crypto
   ** be a valid 'X.500' distinguised name as defined in
   ** [RFC4514]`https://tools.ietf.org/html/rfc4514`.
   **
-  ** By default, the implementation should choose a "strong" signing algorithm
-  ** for signing the CSR. All implementations must support the 'algorithm' option
-  ** with one of the following values:
-  **  - 'sha256WithRSAEncryption'
-  **  - 'sha512WithRSAEncryption'
+  ** The following options are supported:
+  **  - 'algorithm': (Str) - The implementation should choose a "strong" signing
+  **                         algorithm for signing the CSR. Supported values:
+  **                           - 'sha256WithRSAEncryption' (Default)
+  **                           - 'sha512WithRSAEncryption'
+  **  - 'subjectAltNames': (Obj[]) - List of subject alternative names
   **
   **   // Generate a csr signed with the default algorithm
   **   csr := Crypto.cur.genCsr(pair, "cn=test")
   **
   **   // Generate a csr signed with SHA-512
-  **   csr := Crypto.cru.genCsr(pair, "cn=test", ["algorithm": "sha512WithRSAEncryption"])
+  **   csr := Crypto.cur.genCsr(pair, "cn=test", ["algorithm": "sha512WithRSAEncryption"])
   **
+  **   // Generate a csr with subject alternative names
+  **   csr := Crypto.cur.genCsr(pair, "cn=test", ["subjectAltNames": ["fantom.org", "www.fantom.org"]])
   abstract Csr genCsr(KeyPair keys, Str subjectDn, Str:Obj opts := [:])
 
   ** Obtain a [builder]`CertSigner` that can be used to configure signing

@@ -17,6 +17,9 @@ const mixin Csr
   ** Get the subject dn
   abstract Str subject()
 
+  ** Get the subject alternative names
+  abstract SubjectAltName[] subjectAltNames()
+
   ** Get the immutable signing options
   abstract Str:Obj opts()
 }
