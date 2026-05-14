@@ -52,9 +52,14 @@ class StrBuf extends Obj {
     return this;
   }
 
-  spaces(num) {
+  tab(num) {
     for (i=0; i<num; ++i)
       this.#str += " "
+    return this;
+  }
+
+  sp() {
+    this.#str += " "
     return this;
   }
 

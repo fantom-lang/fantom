@@ -96,7 +96,12 @@ final class StrBuf
   **
   ** Add given number of spaces to the buffer
   **
-  This spaces(Int num)
+  This tab(Int num)
+
+  **
+  ** Convenience for adding space char
+  **
+  This sp()
 
   **
   ** Convenience for adding newline char

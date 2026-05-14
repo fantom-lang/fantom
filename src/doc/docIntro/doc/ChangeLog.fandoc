@@ -9,7 +9,7 @@
 *Build 1.0.84 (working)*
 - Replace legacy JS compiler with new ES compiler
 - Str.truncate
-- StrBuf.spaces, nl
+- StrBuf.tab, sp, nl
 - Win.evalToFunc
 - Lock.withLock
 
