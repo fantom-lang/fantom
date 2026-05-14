@@ -94,6 +94,11 @@ final class StrBuf
   This addTrim(Str x)
 
   **
+  ** Add given number of spaces to the buffer
+  **
+  This addSpaces(Int num)
+
+  **
   ** Add x.toStr to the end of the buffer.  If the buffer is not
   ** empty, then first add the specified separator which defaults
   ** to a space if not specified.  Return this.

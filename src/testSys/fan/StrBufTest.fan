@@ -208,6 +208,26 @@ class StrBufTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// AddSpaces
+//////////////////////////////////////////////////////////////////////////
+
+  Void testAddSpaces()
+  {
+    s := StrBuf()
+    verifyAddSpaces(StrBuf().addSpaces(0), "")
+    verifyAddSpaces(StrBuf().addSpaces(1), " ")
+    verifyAddSpaces(StrBuf().add("{").addSpaces(0).add("}"), "{}")
+    verifyAddSpaces(StrBuf().add("{").addSpaces(1).add("}"), "{ }")
+    verifyAddSpaces(StrBuf().add("{").addSpaces(2).add("}"), "{  }")
+    verifyAddSpaces(StrBuf().add("{").addSpaces(3).add("}"), "{   }")
+  }
+
+  Void verifyAddSpaces(StrBuf s, Str expect)
+  {
+    verifyEq(s.toStr, expect)
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // TrimEnd
 //////////////////////////////////////////////////////////////////////////
 

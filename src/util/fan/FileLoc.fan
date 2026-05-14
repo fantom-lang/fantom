@@ -15,7 +15,7 @@
 @Js
 const class FileLoc
 {
-  ** Constant for an unknown location
+  ** Constant for an unknown location (or not applicable)
   static const FileLoc unknown := make("unknown")
 
   ** Constant for evalation location

@@ -121,6 +121,14 @@ public class StrBuf
     return this;
   }
 
+  public StrBuf addSpaces(long num)
+  {
+    int numi = (int)num;
+    for (int i=0; i<numi; ++i)
+      sb.append(' ');
+    return this;
+  }
+
   public StrBuf join(Object x) { return join(x, " "); }
   public StrBuf join(Object x, String sep)
   {
