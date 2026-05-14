@@ -214,12 +214,13 @@ class StrBufTest : Test
   Void testAddSpaces()
   {
     s := StrBuf()
-    verifyAddSpaces(StrBuf().addSpaces(0), "")
-    verifyAddSpaces(StrBuf().addSpaces(1), " ")
-    verifyAddSpaces(StrBuf().add("{").addSpaces(0).add("}"), "{}")
-    verifyAddSpaces(StrBuf().add("{").addSpaces(1).add("}"), "{ }")
-    verifyAddSpaces(StrBuf().add("{").addSpaces(2).add("}"), "{  }")
-    verifyAddSpaces(StrBuf().add("{").addSpaces(3).add("}"), "{   }")
+    verifyAddSpaces(StrBuf().spaces(0), "")
+    verifyAddSpaces(StrBuf().spaces(1), " ")
+    verifyAddSpaces(StrBuf().add("{").spaces(0).add("}"), "{}")
+    verifyAddSpaces(StrBuf().add("{").spaces(1).add("}"), "{ }")
+    verifyAddSpaces(StrBuf().add("{").spaces(2).add("}"), "{  }")
+    verifyAddSpaces(StrBuf().add("{").spaces(3).add("}"), "{   }")
+    verifyAddSpaces(StrBuf().add("{").spaces(3).add("}").nl, "{   }\n")
   }
 
   Void verifyAddSpaces(StrBuf s, Str expect)

@@ -96,7 +96,12 @@ final class StrBuf
   **
   ** Add given number of spaces to the buffer
   **
-  This addSpaces(Int num)
+  This spaces(Int num)
+
+  **
+  ** Convenience for adding newline char
+  **
+  This nl()
 
   **
   ** Add x.toStr to the end of the buffer.  If the buffer is not

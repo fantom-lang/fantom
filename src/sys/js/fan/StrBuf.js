@@ -52,9 +52,14 @@ class StrBuf extends Obj {
     return this;
   }
 
-  addSpaces(num) {
+  spaces(num) {
     for (i=0; i<num; ++i)
       this.#str += " "
+    return this;
+  }
+
+  nl() {
+    this.#str += "\n"
     return this;
   }
 
