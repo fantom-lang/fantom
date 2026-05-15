@@ -31,12 +31,16 @@ class CertTest : CryptoTest
   {
     keys   := crypto.genKeyPair("RSA", 2048)
     subjectDn := "CN=test,OU=engineering,O=Example Corp,C=US"
-    csr    := crypto.genCsr(keys, subjectDn, ["subjectAltNames": ["fantom.org", "www.fantom.org"]])
+    csr    := crypto.genCsr(keys, subjectDn)
     cert   := crypto.certSigner(csr)
                 .notBefore(Date.today)
                 .notAfter(Date.today + 90day)
-                .subjectAltName(`https://fantom.org/doc`)
-                .subjectAltName(San.email("test@fantom.org"))
+                .subjectAltName(San.dnsName("www.fantom.org"))
+                .subjectAltName(San.uri("https://fantom.org/download"))
+                .subjectAltName(San.rfc822Name("test@fantom.org"))
+                .subjectAltName(San.ipAddr("192.168.1.1"))
+                .subjectAltName(San.registeredId("1.2.3.4.5.6"))
+                .subjectAltName(San.dirName("C=US,O=Fantom,CN=dev"))
                 .basicConstraints
                 .sign
 
@@ -49,64 +53,16 @@ class CertTest : CryptoTest
     verifyFalse(cert.isCA)
 
     sans := cert.subjectAltNames
-    verifyEq(sans.size, 4)
+    verifyEq(sans.size, 6)
 
     Str[] values := sans.mapNotNull |san->Str| { san.toStr }
-    verifyEq(values, Str["DNS:fantom.org",
-                         "DNS:www.fantom.org",
-                         "URI:https://fantom.org/doc",
-                         "email:test@fantom.org"])
+    verifyEq(values, Str["DNS:www.fantom.org",
+                         "URI:https://fantom.org/download",
+                         "email:test@fantom.org",
+                         "IP:192.168.1.1",
+                         "registeredId:1.2.3.4.5.6",
+                         "dirName:C=US,O=Fantom,CN=dev"])
 
-  }
-
-  Void testOpensslCert()
-  {
-    openssl := Str<|-----BEGIN CERTIFICATE-----
-                    MIIERzCCAy+gAwIBAgIUBTfsUVyALGR75QYjsDdGljs70IAwDQYJKoZIhvcNAQEL
-                    BQAwZzELMAkGA1UEBhMCVVMxETAPBgNVBAgMCFZpcmdpbmlhMREwDwYDVQQHDAhS
-                    aWNobW9uZDEPMA0GA1UECgwGRmFudG9tMQwwCgYDVQQLDANEZXYxEzARBgNVBAMM
-                    CmZhbnRvbS5vcmcwHhcNMjYwNDI4MjExNDA3WhcNMjcwNDI4MjExNDA3WjBnMQsw
-                    CQYDVQQGEwJVUzERMA8GA1UECAwIVmlyZ2luaWExETAPBgNVBAcMCFJpY2htb25k
-                    MQ8wDQYDVQQKDAZGYW50b20xDDAKBgNVBAsMA0RldjETMBEGA1UEAwwKZmFudG9t
-                    Lm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKSTT58CquioZfXB
-                    s1Wvhcseivdvo0DP/KchqtBNQMGrljco7qdwDU2FXQzM+H6idj5qPH97nd11j2J+
-                    2QVPR/VDGxUZyvCyv4UM1Lp79YBO9s4STWUk/KlhBiQxN01vfTE4JXQl3vyNneF9
-                    2YsKEWY1QA01VOJKapKlptGFDTuSyh5ZWeMBzGQh8bZleK3dSL287S8BT6g4nbdv
-                    8BiPSoA+mZdGi7Z1RQUGuUwCja/TZschV3qT1Cwxj6Rk9FwwtYDpu9h4h6lm6482
-                    n4BsHAWOTDVhPB3KM+TNVZN50AoIopCxjFtGGi8MXhyj09T+R2QSsUp68dlUs3YV
-                    NcDVESMCAwEAAaOB6jCB5zCBxQYDVR0RBIG9MIG6ggpmYW50b20ub3Jngg53d3cu
-                    ZmFudG9tLm9yZ4cEwKgBAYEQYWRtaW5AZmFudG9tLm9yZ4YSaHR0cHM6Ly9mYW50
-                    b20ub3JniAUqAwQFBqRHMEUxCzAJBgNVBAYTAlVTMQ8wDQYDVQQKDAZGYW50b20x
-                    DjAMBgNVBAsMBVNhbGVzMRUwEwYDVQQDDAxhbHQtZGlyLW5hbWWgIAYKKwYBBAGC
-                    NxQCA6ASDBB1c2VyQGV4YW1wbGUuY29tMB0GA1UdDgQWBBRgGJuunoaOX+l2Mub1
-                    F16ucZ3SojANBgkqhkiG9w0BAQsFAAOCAQEAcqTgYGfzeHkrHxk87wDHiWHInmQs
-                    23IJiqQany88AI/USY2D9p6F66VhncdKVCFIwlga4z6kfbkhNMdIK+MEZo8FZT3a
-                    iD5mN6oOb2ITGRh/UXVSanGirlQA6c4xegu12Xm+B5qbAvM1Updm5fFTG/Q1KZmv
-                    Wpqpnf/XtCIPZC/16+UmL+Te8WUr/aEV4zpNycgr446ujUn3pWr40ErQ6QBPS5RM
-                    wbA3ePaUP3CVXqh3IaBeQ9UAqMKbvCkulYTStVjNTIu2llyAHrYuNKYAgTR3JtP0
-                    p0+zauSmwyW9s1MMpWmmcqHjJWbsiimkIbq+fH1HUIH9MYtui8wMNufE1Q==
-                    -----END CERTIFICATE-----|>
-
-    decodedCert := crypto.loadPem(openssl.in) as Cert
-    verifyNotNull(decodedCert)
-    verifyTrue(decodedCert.isSelfSigned)
-    verifyFalse(decodedCert.isCA)
-    verifyEq(decodedCert.subject, "C=US,ST=Virginia,L=Richmond,O=Fantom,OU=Dev,CN=fantom.org")
-    verifyEq(decodedCert->notBefore, Date("2026-04-28"))
-    verifyEq(decodedCert->notAfter, Date("2027-04-28"))
-
-    sans := decodedCert.subjectAltNames
-    verifyEq(sans.size, 8)
-
-    Str[] values := sans.mapNotNull |san->Str| { san.toStr }
-    verifyEq(values, Str["DNS:fantom.org",
-                         "DNS:www.fantom.org",
-                         "IP Address:192.168.1.1",
-                         "email:admin@fantom.org",
-                         "URI:https://fantom.org",
-                         "Registered ID:1.2.3.4.5.6",
-                         "DirName:C=US,O=Fantom,OU=Sales,CN=alt-dir-name",
-                         "othername:<bytes>"])
   }
 
   Void testOpensslCA()
@@ -162,7 +118,7 @@ class CertTest : CryptoTest
                 .notBefore(Date.today)
                 .notAfter(Date.today + 90day)
                 .subjectAltName(`https://fantom.org/doc`)
-                .subjectAltName(San.email("test@fantom.org"))
+                .subjectAltName(San.rfc822Name("test@fantom.org"))
                 .basicConstraints
                 .sign
 
@@ -186,6 +142,56 @@ class CertTest : CryptoTest
                          "DNS:www.fantom.org",
                          "URI:https://fantom.org/doc",
                          "email:test@fantom.org"])
+  }
+
+  Void testOpensslCert()
+  {
+    openssl := Str<|-----BEGIN CERTIFICATE-----
+                    MIIERzCCAy+gAwIBAgIUBTfsUVyALGR75QYjsDdGljs70IAwDQYJKoZIhvcNAQEL
+                    BQAwZzELMAkGA1UEBhMCVVMxETAPBgNVBAgMCFZpcmdpbmlhMREwDwYDVQQHDAhS
+                    aWNobW9uZDEPMA0GA1UECgwGRmFudG9tMQwwCgYDVQQLDANEZXYxEzARBgNVBAMM
+                    CmZhbnRvbS5vcmcwHhcNMjYwNDI4MjExNDA3WhcNMjcwNDI4MjExNDA3WjBnMQsw
+                    CQYDVQQGEwJVUzERMA8GA1UECAwIVmlyZ2luaWExETAPBgNVBAcMCFJpY2htb25k
+                    MQ8wDQYDVQQKDAZGYW50b20xDDAKBgNVBAsMA0RldjETMBEGA1UEAwwKZmFudG9t
+                    Lm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKSTT58CquioZfXB
+                    s1Wvhcseivdvo0DP/KchqtBNQMGrljco7qdwDU2FXQzM+H6idj5qPH97nd11j2J+
+                    2QVPR/VDGxUZyvCyv4UM1Lp79YBO9s4STWUk/KlhBiQxN01vfTE4JXQl3vyNneF9
+                    2YsKEWY1QA01VOJKapKlptGFDTuSyh5ZWeMBzGQh8bZleK3dSL287S8BT6g4nbdv
+                    8BiPSoA+mZdGi7Z1RQUGuUwCja/TZschV3qT1Cwxj6Rk9FwwtYDpu9h4h6lm6482
+                    n4BsHAWOTDVhPB3KM+TNVZN50AoIopCxjFtGGi8MXhyj09T+R2QSsUp68dlUs3YV
+                    NcDVESMCAwEAAaOB6jCB5zCBxQYDVR0RBIG9MIG6ggpmYW50b20ub3Jngg53d3cu
+                    ZmFudG9tLm9yZ4cEwKgBAYEQYWRtaW5AZmFudG9tLm9yZ4YSaHR0cHM6Ly9mYW50
+                    b20ub3JniAUqAwQFBqRHMEUxCzAJBgNVBAYTAlVTMQ8wDQYDVQQKDAZGYW50b20x
+                    DjAMBgNVBAsMBVNhbGVzMRUwEwYDVQQDDAxhbHQtZGlyLW5hbWWgIAYKKwYBBAGC
+                    NxQCA6ASDBB1c2VyQGV4YW1wbGUuY29tMB0GA1UdDgQWBBRgGJuunoaOX+l2Mub1
+                    F16ucZ3SojANBgkqhkiG9w0BAQsFAAOCAQEAcqTgYGfzeHkrHxk87wDHiWHInmQs
+                    23IJiqQany88AI/USY2D9p6F66VhncdKVCFIwlga4z6kfbkhNMdIK+MEZo8FZT3a
+                    iD5mN6oOb2ITGRh/UXVSanGirlQA6c4xegu12Xm+B5qbAvM1Updm5fFTG/Q1KZmv
+                    Wpqpnf/XtCIPZC/16+UmL+Te8WUr/aEV4zpNycgr446ujUn3pWr40ErQ6QBPS5RM
+                    wbA3ePaUP3CVXqh3IaBeQ9UAqMKbvCkulYTStVjNTIu2llyAHrYuNKYAgTR3JtP0
+                    p0+zauSmwyW9s1MMpWmmcqHjJWbsiimkIbq+fH1HUIH9MYtui8wMNufE1Q==
+                    -----END CERTIFICATE-----|>
+
+    decodedCert := crypto.loadPem(openssl.in) as Cert
+    verifyNotNull(decodedCert)
+    verifyTrue(decodedCert.isSelfSigned)
+    verifyFalse(decodedCert.isCA)
+    verifyEq(decodedCert.subject, "C=US,ST=Virginia,L=Richmond,O=Fantom,OU=Dev,CN=fantom.org")
+    verifyEq(decodedCert->notBefore, Date("2026-04-28"))
+    verifyEq(decodedCert->notAfter, Date("2027-04-28"))
+
+    sans := decodedCert.subjectAltNames
+    verifyEq(sans.size, 8)
+
+    Str[] values := sans.mapNotNull |san->Str| { san.toStr }
+    verifyEq(values, Str["DNS:fantom.org",
+                         "DNS:www.fantom.org",
+                         "IP:192.168.1.1",
+                         "email:admin@fantom.org",
+                         "URI:https://fantom.org",
+                         "registeredId:1.2.3.4.5.6",
+                         "dirName:C=US,O=Fantom,OU=Sales,CN=alt-dir-name",
+                         "otherName:<bytes>"])
   }
 
 }

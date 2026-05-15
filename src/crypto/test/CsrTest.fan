@@ -73,12 +73,12 @@ class CsrTest : CryptoTest
     Str[] values := sans.mapNotNull |san->Str| { san.toStr }
     verifyEq(values, Str["DNS:fantom.org",
                          "DNS:www.fantom.org",
-                         "IP Address:192.168.1.1",
+                         "IP:192.168.1.1",
                          "email:admin@fantom.org",
                          "URI:https://fantom.org",
-                         "Registered ID:1.2.3.4.5.6",
-                         "DirName:C=US,O=Fantom,OU=Sales,CN=alt-dir-name",
-                         "othername:<bytes>"])
+                         "registeredId:1.2.3.4.5.6",
+                         "dirName:C=US,O=Fantom,OU=Sales,CN=alt-dir-name",
+                         "otherName:<bytes>"])
   }
 
 //////////////////////////////////////////////////////////////////////////

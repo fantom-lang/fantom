@@ -27,7 +27,6 @@ class Build : BuildPod
                 "vcs.uri":      "https://github.com/fantom-lang/fantom",
                ]
     depends  = ["sys 1.0",
-                "asn1 1.0",
                ]
     srcDirs  = [`fan/`,
                 `test/`,

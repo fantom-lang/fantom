@@ -423,18 +423,20 @@ const class SubjectAltNames : V3Ext
     switch(san.type)
     {
       case SanType.rfc822Name:
-      case SanType.dNSName:
-      case SanType.uniformResourceIdentifier:
+      case SanType.dnsName:
+      case SanType.uri:
         return Asn.tag(AsnTag.context(tagId).implicit).str(san.val, AsnTag.univIa5Str)
 
-      case SanType.iPAddress:
+      case SanType.ipAddr:
         return Asn.tag(AsnTag.context(tagId).implicit).octets(((IpAddr)san.val).bytes)
 
-      case SanType.registeredID:
+      case SanType.registeredId:
         return Asn.tag(AsnTag.context(tagId).implicit).oid(san.val)
 
+      case SanType.dirName:
+        return Dn.fromStr(san.val).asn.push(AsnTag.context(tagId).explicit)
+
       case SanType.otherName:
-      case SanType.directoryName:
       case SanType.x400Address:
       case SanType.ediPartyName:
       default:
@@ -448,39 +450,52 @@ const class SubjectAltNames : V3Ext
     switch (type)
     {
       case SanType.otherName:
-        if (name is AsnBin) return San.other(((AsnBin)name).buf)
+        if (name is AsnBin) return San.otherName(((AsnBin)name).buf)
         throw ParseErr("Cannot decode SanType.otherName")
 
       case SanType.rfc822Name:
-        if (name is AsnBin) return San.email(((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str)
-        return San.email(name.str)
-      case SanType.dNSName:
-        if (name is AsnBin) return San.dns(((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str)
-        return San.dns(name.str)
-      case SanType.uniformResourceIdentifier:
+        if (name is AsnBin) return San.rfc822Name(((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str)
+        return San.rfc822Name(name.str)
+      case SanType.dnsName:
+        if (name is AsnBin) return San.dnsName(((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str)
+        return San.dnsName(name.str)
+      case SanType.uri:
         if (name is AsnBin) return San.uri(((AsnBin)name).decode(Asn.str("", AsnTag.univIa5Str)).str)
         return San.uri(name.str)
 
-      case SanType.directoryName:
-        if (name is AsnBin)
+      case SanType.dirName:
+        // dirName uses EXPLICIT tagging [4], so name should be a collection containing the DN
+        if (name is AsnColl)
+        {
+          vals := ((AsnColl)name).vals
+          if (!vals.isEmpty && vals[0] is AsnSeq)
+          {
+            dnSeq := vals[0] as AsnSeq
+            return San.dirName(Dn.fromSeq(dnSeq).toX500)
+          }
+        }
+        else if (name is AsnBin)
         {
           buf := ((AsnBin)name).buf
           try
           {
             dnSeq := BerReader(buf.in).readObj as AsnSeq
             if (dnSeq != null)
-              return San.dn(Dn(dnSeq).toX500)
+            {
+              dn := Dn.fromSeq(dnSeq)
+              return San.dirName(dn.toX500)
+            }
           }
           catch (Err e) { }
         }
-        return San.dn(Dn(name.toStr).toX500)
+        throw ParseErr("Cannot decode SanType.dirName")
 
-      case SanType.iPAddress:
+      case SanType.ipAddr:
         buf := name.buf
-        if (buf.size == 0) throw ParseErr("Cannot decode SanType.iPAddress")
-        return San.ip(IpAddr.makeBytes(buf))
+        if (buf.size == 0) throw ParseErr("Cannot decode SanType.ipAddr")
+        return San.ipAddr(IpAddr.makeBytes(buf))
 
-      case SanType.registeredID:
+      case SanType.registeredId:
 
         if (name is AsnBin)
         {
@@ -494,10 +509,10 @@ const class SubjectAltNames : V3Ext
 
           oidBuf.flip
           oid := BerReader(oidBuf.in).readObj
-          if (oid is AsnOid) return San.registeredID(oid)
+          if (oid is AsnOid) return San.registeredId(oid)
         }
-        else if (name.isOid) return San.registeredID(name.oid)
-        throw ParseErr("Cannot decode SanType.registeredID")
+        else if (name.isOid) return San.registeredId(name.oid)
+        throw ParseErr("Cannot decode SanType.registeredId")
 
       case SanType.x400Address:
       case SanType.ediPartyName:

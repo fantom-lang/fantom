@@ -173,23 +173,23 @@ final public class X509 extends FanObj implements fan.crypto.Cert
             if (value instanceof byte[])
             {
               Buf buf = new ConstBuf((byte[])value);
-              sans.add(fan.crypto.San.other(buf));
+              sans.add(fan.crypto.San.otherName(buf));
             }
             break;
 
-          case 1: sans.add(fan.crypto.San.email((String)value)); break;
-          case 2: sans.add(fan.crypto.San.dns((String)value)); break;
+          case 1: sans.add(fan.crypto.San.rfc822Name((String)value)); break;
+          case 2: sans.add(fan.crypto.San.dnsName((String)value)); break;
           case 6: sans.add(fan.crypto.San.uri((String)value)); break;
-          case 7: sans.add(fan.crypto.San.ip((String)value)); break;
+          case 7: sans.add(fan.crypto.San.ipAddr((String)value)); break;
 
           case 4: // directoryName - X.500 principal name (String)
             // Java returns the DN as a String - normalize to standard X.500 order
-            sans.add(fan.crypto.San.dn(parseDn((String)value))); break;
+            sans.add(fan.crypto.San.dirName(parseDn((String)value))); break;
 
           case 8: // registeredID - OID (String in dotted notation)
             // Java returns OID as String like "1.2.840.113549.1.9.1"
             // Pass string to Fantom layer; it will convert to AsnOid
-            sans.add(fan.crypto.San.registeredID((String)value));
+            sans.add(fan.crypto.San.registeredId((String)value));
             break;
 
           case 3: // x400Address - not supported

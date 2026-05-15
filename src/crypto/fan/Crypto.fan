@@ -55,6 +55,20 @@ const mixin Crypto
   **                           - 'sha512WithRSAEncryption'
   **  - 'subjectAltNames': (Obj[]) - List of subject alternative names
   **
+  ** The subject alternative names may be one of the following types:
+  **  - 'Str': Created as `SanType.dnsName`
+  **  - 'Uri': Created as `SanType.uri`
+  **  - 'IpAddr': Created as `SanType.ipAddr`
+  **  - 'AsnOid': Created as `SanType.registeredId`
+  **  - 'San': `San` Instance (see supported types)
+  **
+  ** Supported `San` types:
+  **  - `SanType.dnsName`
+  **  - `SanType.ipAddr`
+  **  - `SanType.uri`
+  **  - `SanType.rfc822Name`
+  **  - `SanType.registeredId`
+  **
   **   // Generate a csr signed with the default algorithm
   **   csr := Crypto.cur.genCsr(pair, "cn=test")
   **

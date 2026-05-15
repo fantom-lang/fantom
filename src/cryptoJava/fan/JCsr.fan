@@ -31,31 +31,32 @@ const class JCsr : Csr
     this.pub     = keys.pub
     this.priv    = keys.priv
     this.subject = Dn.fromStr(subjectDn).toX500
-    this.opts    = opts
     this.sigAlg  = AlgId.fromOpts(opts)
-    this.subjectAltNames = Obj[,]
+    this.opts = opts.ro
 
-    if (opts.containsKey("subjectAltNames"))
+    optsSanList := opts["subjectAltNames"] as List
+    if (optsSanList != null && !optsSanList.isEmpty)
     {
-      optsSanList := opts["subjectAltNames"] as List
-      if (optsSanList != null && !optsSanList.isEmpty)
+      builder := AsnColl.builder
+      sanList := San[,]
+      optsSanList.each |name|
       {
-        builder := AsnColl.builder
-        sanList := San[,]
-        optsSanList.each |name|
+        try
         {
-          try
-          {
-            jSan := San.fromValue(name)
-            SubjectAltNames.encodeName(jSan, builder)
-            sanList.add(jSan)
-          }
-          catch (Err e) { } //Skip names that cannot be parsed
+          jSan := San.fromValue(name)
+          SubjectAltNames.encodeName(jSan, builder)
+          sanList.add(jSan)
         }
-        this.san = builder.toSeq
-        this.subjectAltNames = sanList
+        catch (Err e) { } //Skip names that cannot be parsed
       }
+      this.san = builder.toSeq
+      this.subjectAltNames = sanList
     }
+    else
+    {
+      this.subjectAltNames = San[,]
+    }
+
   }
 
 //////////////////////////////////////////////////////////////////////////
