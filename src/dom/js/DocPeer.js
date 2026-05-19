@@ -36,6 +36,11 @@ class DocPeer extends sys.Obj {
     return this.doc.hasFocus();
   }
 
+  isHidden(self)
+  {
+    return this.doc.hidden;
+  }
+
   activeElem(self)
   {
     const elem = this.doc.activeElement;

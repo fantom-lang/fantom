@@ -13,6 +13,7 @@
 - StrBuf.tab, sp, nl
 - Win.evalToFunc
 - Lock.withLock
+- Doc.isHidden
 
 *Build 1.0.83 (12 Mar 2026)*
 - Future support for JS promises

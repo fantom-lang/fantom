@@ -47,6 +47,9 @@ class Doc
   ** the document has focus.
   native Bool hasFocus()
 
+  ** Return 'true' if page is considered hidden.
+  native Bool isHidden()
+
   ** Get the currently focused element, or 'null' for none.
   native Elem? activeElem()
 
