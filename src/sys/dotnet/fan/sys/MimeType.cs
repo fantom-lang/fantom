@@ -44,7 +44,7 @@ namespace Fan.Sys
             if (s == "text/xml; charset=utf-8")   return m_textXmlUtf8;
             break;
           case 'x':
-            if (s == "x-directory/normal") return m_dir;
+            if (s == "application/x-directory") return m_dir;
             break;
         }
 
@@ -301,7 +301,7 @@ namespace Fan.Sys
     internal static MimeType m_textPlain  = parse("text/plain");
     internal static MimeType m_textHtml   = parse("text/html");
     internal static MimeType m_textXml    = parse("text/xml");
-    internal static MimeType m_dir        = parse("x-directory/normal");
+    internal static MimeType m_dir        = parse("application/x-directory");
     internal static MimeType m_textPlainUtf8 = parse("text/plain; charset=utf-8");
     internal static MimeType m_textHtmlUtf8  = parse("text/html; charset=utf-8");
     internal static MimeType m_textXmlUtf8   = parse("text/xml; charset=utf-8");
@@ -313,3 +313,4 @@ namespace Fan.Sys
 
   }
 }
+

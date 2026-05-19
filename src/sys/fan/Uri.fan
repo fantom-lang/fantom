@@ -418,7 +418,7 @@ const final class Uri
   **
   ** Return the MimeType mapped by the `ext` or null if
   ** no mapping.  If this uri is to a directory, then
-  ** "x-directory/normal" is returned.
+  ** "application/x-directory" is returned.
   **
   ** Examples:
   **   `file.txt`  =>  text/plain
@@ -658,3 +658,4 @@ const final class Uri
   Str toCode()
 
 }
+

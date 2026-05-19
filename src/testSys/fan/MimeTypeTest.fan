@@ -40,7 +40,7 @@ class MimeTypeTest : Test
     verifyPredefined("text", "plain")
     verifyPredefined("text", "html")
     verifyPredefined("text", "xml")
-    verifyPredefined("x-directory", "normal")
+    verifyPredefined("application", "x-directory")
 
     verifyPredefinedText("text/plain; charset=utf-8")
     verifyPredefinedText("text/html; charset=utf-8")

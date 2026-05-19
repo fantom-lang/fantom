@@ -8,6 +8,7 @@
 
 *Build 1.0.84 (working)*
 - Replace legacy JS compiler with new ES compiler
+- Directory mime type x-directory/normal -> application/x-directory
 - Str.truncate
 - StrBuf.tab, sp, nl
 - Win.evalToFunc

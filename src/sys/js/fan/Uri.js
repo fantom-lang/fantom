@@ -45,13 +45,13 @@ class Uri extends Obj {
   #encoded;
 
   static #defVal;
-  static defVal() { 
-    if (Uri.#defVal === undefined) Uri.#defVal = Uri.fromStr(""); 
+  static defVal() {
+    if (Uri.#defVal === undefined) Uri.#defVal = Uri.fromStr("");
     return Uri.#defVal;
   }
 
   static #_parentRange;
-  static #parentRange() { 
+  static #parentRange() {
     if (!Uri.#_parentRange) Uri.#_parentRange = Range.make(0, -2, false);
     return Uri.#_parentRange;
   }
@@ -324,7 +324,7 @@ class Uri extends Obj {
   }
 
   mimeType() {
-    if (this.isDir()) return MimeType.fromStr("x-directory/normal");
+    if (this.isDir()) return MimeType.fromStr("application/x-directory");
     return MimeType.forExt(this.ext());
   }
 
@@ -1451,3 +1451,4 @@ class UriEncoder {
     return buf;
   }
 }
+

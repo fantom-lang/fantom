@@ -32,6 +32,8 @@ public final class MimeType
       // common interned mime types
       switch (s.charAt(0))
       {
+        case 'a':
+          if (s.equals("application/x-directory")) return dir;
         case 'i':
           if (s.equals("image/png"))  return imagePng;
           if (s.equals("image/jpeg")) return imageJpeg;
@@ -44,9 +46,6 @@ public final class MimeType
           if (s.equals("text/plain; charset=utf-8")) return textPlainUtf8;
           if (s.equals("text/html; charset=utf-8"))  return textHtmlUtf8;
           if (s.equals("text/xml; charset=utf-8"))   return textXmlUtf8;
-          break;
-        case 'x':
-          if (s.equals("x-directory/normal")) return dir;
           break;
       }
 
@@ -333,7 +332,7 @@ public final class MimeType
   static final MimeType textPlain  = parse("text/plain");
   static final MimeType textHtml   = parse("text/html");
   static final MimeType textXml    = parse("text/xml");
-  static final MimeType dir        = parse("x-directory/normal");
+  static final MimeType dir        = parse("application/x-directory");
   static final MimeType textPlainUtf8 = parse("text/plain; charset=utf-8");
   static final MimeType textHtmlUtf8  = parse("text/html; charset=utf-8");
   static final MimeType textXmlUtf8   = parse("text/xml; charset=utf-8");

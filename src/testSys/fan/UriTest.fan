@@ -360,7 +360,7 @@ class UriTest : Test
       verifyEq(uri.isPathRel, !pathStr.startsWith("/"))
       verifyEq(uri.path.isImmutable, true)
       verifyEq(uri.isDir, pathStr.size > 0 && pathStr[-1] == '/')
-      if (uri.isDir) verifyEq(uri.mimeType.toStr, "x-directory/normal")
+      if (uri.isDir) verifyEq(uri.mimeType.toStr, "application/x-directory")
       if (path.size > 0) verifyEq(uri.name, path[-1])
     }
 
@@ -1275,3 +1275,4 @@ class UriTest : Test
   }
 
 }
+
