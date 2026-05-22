@@ -31,6 +31,16 @@ public abstract class File
 
   public static File os(String osPath)
   {
+    // special handling for ~ not handled by Java
+    if (osPath.startsWith("~"))
+    {
+      String userHome = System.getProperty("user.home");
+      if (osPath.equals("~"))
+        return new LocalFile(new java.io.File(userHome));
+      else if (osPath.startsWith("~/"))
+        return new LocalFile(new java.io.File(userHome, osPath.substring(2)));
+    }
+
     return new LocalFile(new java.io.File(osPath));
   }
 
