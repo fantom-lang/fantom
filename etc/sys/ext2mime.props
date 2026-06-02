@@ -3,6 +3,7 @@
 //
 
 as=text/plain; charset=utf-8
+apidoc=text/plain; charset=utf-8
 atom=application/atom+xml
 c=text/plain; charset=utf-8
 class=application/java
