@@ -66,6 +66,7 @@ ttl=text/turtle
 tsv=text/tab-separated-values
 wasm=application/wasm
 wav=audio/wav
+webp=image/webp
 woff=font/woff
 woff2=font/woff2
 xhtml=application/xhtml+xml
