@@ -32,6 +32,9 @@ const class FilePack : Weblet
   ** Construct a bundle for the given list of text files
   static new makeFiles(File[] files, MimeType? mimeType := null)
   {
+    // empty file list
+    if (files.isEmpty) throw ArgErr("FilePack has no files")
+
     // calculate buffer size to avoid resizes assuming 25% gzip compression
     totalSize := 0
     files.each |f| { totalSize += f.size ?: 0 }
