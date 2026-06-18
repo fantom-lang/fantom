@@ -877,6 +877,15 @@ public final class Uri
     return false;
   }
 
+  public String origin()
+  {
+    if (scheme == null || host == null) return null;
+    StringBuilder s = new StringBuilder();
+    s.append(scheme).append("://").append(FanStr.lower(host));
+    if (port != null) s.append(':').append(port);
+    return s.toString();
+  }
+
   public String scheme()
   {
     return scheme;

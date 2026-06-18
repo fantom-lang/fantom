@@ -76,8 +76,10 @@ const final class Uri
   ** All Uris are automatically normalized as follows:
   **   - Replacing "." and ".." segments in the middle of a path
   **   - Scheme always normalizes to lowercase
+  **   - If absolute with scheme then a null path normalizes to /
   **   - If http then port 80 normalizes to null
-  **   - If http then a null path normalizes to /
+  **   - If https then port 443 normalizes to null
+  **   - If ftp then port 21 normalizes to null
   **
   static new fromStr(Str s, Bool checked := true)
 
@@ -259,6 +261,19 @@ const final class Uri
   **   `/a/?q`.isDir  =>  true
   **
   Bool isDir()
+
+  **
+  ** Return the origin "scheme://host[:port]" (host lowercased, default
+  ** port omitted), or null if relative or hostless.  Two relative URIs
+  ** both yield null and thus compare equal; guard for null if you need
+  ** opaque origins to never match.
+  **
+  ** Examples:
+  **   `http://foo/a?q`.origin      =>  "http://foo"
+  **   `https://Foo:8443/x`.origin  =>  "https://foo:8443"
+  **   `/a/b`.origin                =>  null
+  **
+  Str? origin()
 
   **
   ** Return the scheme component or null if not absolute.  The

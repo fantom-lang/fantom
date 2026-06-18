@@ -11,6 +11,7 @@
 - Directory mime type x-directory/normal -> application/x-directory
 - Str.truncate
 - StrBuf.tab, sp, nl
+- Uri.origin
 - Win.evalToFunc
 - Lock.withLock
 - Doc.isHidden

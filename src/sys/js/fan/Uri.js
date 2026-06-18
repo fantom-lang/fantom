@@ -262,6 +262,13 @@ class Uri extends Obj {
     return false;
   }
 
+  origin() {
+    if (this.#scheme == null || this.#host == null) return null;
+    let s = this.#scheme + "://" + Str.lower(this.#host);
+    if (this.#port != null) s += ":" + this.#port;
+    return s;
+  }
+
   scheme() { return this.#scheme; }
 
   auth() {
