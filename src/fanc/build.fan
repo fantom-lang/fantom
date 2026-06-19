@@ -28,8 +28,8 @@ class Build : BuildPod
     depends  = ["sys 1.0", "build 1.0", "compiler 1.0", "util 1.0"]
     srcDirs  = [`fan/`,
                 `fan/java/`,
+                `fan/py/`,
                 `fan/util/`]
     docSrc   = true
   }
 }
-
