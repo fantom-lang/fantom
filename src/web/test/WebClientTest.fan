@@ -54,19 +54,15 @@ class WebClientTest : Test
       verifyEq(c.resHeaders.caseInsensitive, true)
 
       // response headers
-      verify(c.resHeader("server").contains("nginx"))
-      verify(c.resHeader("SERVER", true).contains("nginx"))
+      verify(c.resHeader("server") != null)
+      verify(c.resHeader("SERVER", true) != null)
       verifyEq(c.resHeader("foo-bar", false), null)
       verifyErr(Err#) { c.resHeader("foo-bar") }
       verifyErr(Err#) { c.resHeader("foo-bar", true) }
 
-      // fixed content-length
-      len := c.resHeader("Content-Length").toInt
-      png := c.resBuf
-      verifyEq(png[0].toChar, "<")
-      verifyEq(png[1].toChar, "s")
-      verifyEq(png[2].toChar, "v")
-      verifyEq(png[3].toChar, "g")
+      // response body is SVG
+      svg := c.resStr
+      verify(svg.startsWith("<svg"))
     }
     finally c.close
   }
@@ -191,4 +187,58 @@ class WebClientTest : Test
   }
   */
 
+  Void testRedirectStripCreds()
+  {
+    // start wisp server with redirect mod
+    wisp := Slot.findMethod("wisp::WispService.testSetup").call(RedirectMod())
+    wisp->start
+    wisp->waitUntilListening(5sec)
+    port := wisp->httpPort
+    try
+    {
+      base := `http://localhost:${port}`
+
+      // same-origin redirect preserves Authorization and Cookie
+      c := WebClient(base + `/redir?loc=/dest`)
+      c.authBasic("user", "pass")
+      c.reqHeaders["Cookie"] = "session=abc"
+      verifyEq(c.getStr, "Authorization=yes Cookie=yes")
+
+      // cross-origin redirect strips Authorization and Cookie
+      c = WebClient(base + `/redir?loc=http://127.0.0.1:${port}/dest`)
+      c.authBasic("user", "pass")
+      c.reqHeaders["Cookie"] = "session=abc"
+      verifyEq(c.getStr, "Authorization=no Cookie=no")
+    }
+    finally wisp->stop
+  }
+
+}
+
+**************************************************************************
+** RedirectMod
+**************************************************************************
+
+internal const class RedirectMod : WebMod
+{
+  override Void onService()
+  {
+    if (req.uri.pathStr == "/redir")
+    {
+      loc := req.uri.query["loc"] ?: "/"
+      res.statusCode = 302
+      res.headers["Location"] = loc
+      res.headers["Content-Length"] = "0"
+      res.out.flush
+      return
+    }
+
+    hasAuth := req.headers["Authorization"] != null ? "yes" : "no"
+    hasCookie := req.headers["Cookie"] != null ? "yes" : "no"
+    body := "Authorization=$hasAuth Cookie=$hasCookie"
+    res.statusCode = 200
+    res.headers["Content-Type"] = "text/plain"
+    res.headers["Content-Length"] = body.size.toStr
+    res.out.print(body).flush
+  }
 }

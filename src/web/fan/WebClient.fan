@@ -580,6 +580,15 @@ class WebClient
       newUri := Uri.decode(loc)
       if (!newUri.isAbs) newUri = reqUri + newUri
       if (reqUri == newUri && numRedirects > 20) throw Err("Cyclical redirect: $newUri")
+
+      // strip sensitive headers across an origin boundary
+      if (reqUri.origin != newUri.origin)
+      {
+        reqHeaders.remove("Authorization")
+        reqHeaders.remove("Cookie")
+        reqHeaders.remove("Proxy-Authorization")
+      }
+
       reqUri = newUri
       writeReq
       readRes

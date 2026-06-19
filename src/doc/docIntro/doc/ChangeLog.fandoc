@@ -15,6 +15,7 @@
 - Win.evalToFunc
 - Lock.withLock
 - Doc.isHidden
+- WebClient strips auth headers on redirect to different origin
 
 *Build 1.0.83 (12 Mar 2026)*
 - Future support for JS promises
