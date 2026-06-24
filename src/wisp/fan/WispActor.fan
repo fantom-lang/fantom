@@ -104,8 +104,7 @@ internal const class WispActor : Actor
     }
     finally
     {
-      Actor.locals.remove("web.req")
-      Actor.locals.remove("web.res")
+      Actor.locals.clear
       if (close) try { socket.close } catch {}
     }
   }
