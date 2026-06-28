@@ -17,7 +17,7 @@ mixin Graphics
   abstract Paint paint
 
   ** Convenience for setting paint to a solid color.  If the paint
-  ** is currently not a solid color, then get returns `Paint.asColorPaint`.
+  ** is currently not a solid color, then get returns [Paint.asColorPaint].
   abstract Color color
 
   ** Current stroke defines how the shapes are outlined
@@ -88,18 +88,19 @@ mixin Graphics
 
   ** Translate the coordinate system to the new origin.
   ** This call is a convenience for:
-  **   transform(Transform.translate(x, y))
+  **
+  **     transform(Transform.translate(x, y))
   abstract This translate(Float x, Float y)
 
   ** Perform an affine transformation on the coordinate system
   abstract This transform(Transform transform)
 
   ** Push the current graphics state onto an internal stack.  Reset the
-  ** state back to its current state via `pop`.  If 'r' is non-null, the
+  ** state back to its current state via [pop].  If `r` is non-null, the
   ** graphics state is automatically translated and clipped to the bounds.
   abstract This push(Rect? r := null)
 
-  ** Pop the graphics stack and reset the state to the the last `push`.
+  ** Pop the graphics stack and reset the state to the the last [push].
   abstract This pop()
 
   ** Dispose of this graphics context and release underyling OS resources.

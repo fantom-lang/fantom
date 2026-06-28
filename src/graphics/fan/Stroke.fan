@@ -21,12 +21,14 @@ const class Stroke
 
   **
   ** Parse from string format:
-  **    width [dash] cap join
+  **
+  **      width [dash] cap join
   **
   ** Examples:
-  **   0.5
-  **   2 [1, 2]
-  **   round radius
+  **
+  **     0.5
+  **     2 [1, 2]
+  **     round radius
   **
   static new fromStr(Str s, Bool checked := true)
   {
@@ -147,7 +149,7 @@ const class Stroke
     return makeFields(width*ratio, scaleDash, cap, join)
   }
 
-  ** Return string format - see `fromStr`
+  ** Return string format - see [fromStr]
   override Str toStr()
   {
     s := StrBuf()

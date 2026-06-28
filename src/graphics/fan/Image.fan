@@ -7,13 +7,13 @@
 //
 
 **
-** Graphical image.  Images are loaded from a file using `GraphicsEnv.image`.
+** Graphical image.  Images are loaded from a file using [GraphicsEnv.image].
 **
 @Js
 mixin Image
 {
   ** Render a new image with the given MIME type and size using the
-  ** provided Graphics instance. Throws 'UnsupportedErr' if rendering
+  ** provided Graphics instance. Throws `UnsupportedErr` if rendering
   ** is not supported in this env.
   static Image render(MimeType mime, Size size, |Graphics| f)
   {
@@ -35,15 +35,15 @@ mixin Image
   abstract Uri uri()
 
   ** Is this image completely loaded into memory for use.  When a given
-  ** uri is first accessed by `GraphicsEnv.image` it may be asynchronously
+  ** uri is first accessed by [GraphicsEnv.image] it may be asynchronously
   ** loaded in the background and false is returned until load is complete.
   abstract Bool isLoaded()
 
   ** Image format based on file type:
-  **   - 'image/png'
-  **   - 'image/gif'
-  **   - 'image/jpeg'
-  **   - 'image/svg+xml'
+  **   - `image/png`
+  **   - `image/gif`
+  **   - `image/jpeg`
+  **   - `image/svg+xml`
   abstract MimeType mime()
 
   ** Get the natural size of this image.
@@ -57,7 +57,7 @@ mixin Image
   virtual Float h() { size.h }
 
   ** Write image content to the given output stream, where encoding
-  ** is based on `mime` type.  Throws 'UnsupportedErr' if write is
+  ** is based on [mime] type.  Throws `UnsupportedErr` if write is
   ** not supported in this env.
   virtual Void write(OutStream out)
   {
@@ -65,8 +65,8 @@ mixin Image
   }
 
   ** Image properties
-  **  - 'colorSpace' (Str) - the image color space (e.g.RGB, RGBA, CMYK)
-  **  - 'colorSpaceBits' (Int) - bits-per-channel of the color space
+  **  - `colorSpace` (Str) - the image color space (e.g.RGB, RGBA, CMYK)
+  **  - `colorSpaceBits` (Int) - bits-per-channel of the color space
   @NoDoc @Operator abstract Obj? get(Str prop)
 
   ** Map file extension for GraphicsEnv.image

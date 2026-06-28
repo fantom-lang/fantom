@@ -43,7 +43,7 @@ const mixin GraphicsEnv
   ** JPEG, and SVG.
   abstract Image image(Uri uri, Buf? data := null)
 
-  ** Make a new rendered image instance or throw 'Err' if not supported.
+  ** Make a new rendered image instance or throw `Err` if not supported.
   @NoDoc virtual Image renderImage(MimeType mime, Size size, |Graphics| f)
   {
     throw Err("Not supported in this env")

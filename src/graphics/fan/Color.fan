@@ -52,7 +52,7 @@ const final class Color : Paint
   **   - saturation as 0.0 to 1.0
   **   - lightness (or brightness) as 0.0 to 1.0
   **   - alpha as 0.0 to 1.0
-  ** Also see `h`, `s`, `l`.
+  ** Also see [h], [s], [l].
   static Color makeHsl(Float h, Float s, Float l, Float a := 1.0f)
   {
     c := (1f - (2f * l - 1f).abs) * s
@@ -93,11 +93,12 @@ const final class Color : Paint
   ** arguments.
   **
   ** Examples:
-  **   Color.fromStr("red")
-  **   Color.fromStr("#8A0")
-  **   Color.fromStr("#88AA00")
-  **   Color.fromStr("rgba(255, 0, 0, 0.3)")
-  **   Color.fromStr("rgb(100% 0% 0% 25%)")
+  **
+  **     Color.fromStr("red")
+  **     Color.fromStr("#8A0")
+  **     Color.fromStr("#88AA00")
+  **     Color.fromStr("rgba(255, 0, 0, 0.3)")
+  **     Color.fromStr("rgb(100% 0% 0% 25%)")
   static new fromStr(Str s, Bool checked := true)
   {
     try
@@ -236,7 +237,7 @@ const final class Color : Paint
   Int b() { rgb.and(0xff) }
 
   ** Hue as a float between 0.0 and 360.0 of the HSL model (hue,
-  ** saturation, lightness).  Also see `makeHsl`, `s`, `l`.
+  ** saturation, lightness).  Also see [makeHsl], [s], [l].
   Float h()
   {
     r := this.r.toFloat
@@ -259,7 +260,7 @@ const final class Color : Paint
   }
 
   ** Saturation as a float between 0.0 and 1.0 of the HSL model (hue,
-  ** saturation, lightness).  Also see `makeHsl`, `h`, `l`.
+  ** saturation, lightness).  Also see [makeHsl], [h], [l].
   Float s()
   {
     min := r.min(b.min(g)).toFloat
@@ -270,7 +271,7 @@ const final class Color : Paint
   }
 
   ** Lightness (brightness) as a float between 0.0 and 1.0 of the HSL
-  ** model (hue, saturation, lightness). Also see `makeHsl`, `h`, `s`.
+  ** model (hue, saturation, lightness). Also see [makeHsl], [h], [s].
   Float l()
   {
     max := r.max(b.max(g)).toFloat
@@ -293,8 +294,8 @@ const final class Color : Paint
     return x.rgb == rgb && x.a == a
   }
 
-  ** If the alpha component is 1.0, then format as '"#RRGGBB"' hex
-  ** string, otherwise format as '"rbga()"' notation.
+  ** If the alpha component is 1.0, then format as `"#RRGGBB"` hex
+  ** string, otherwise format as `"rbga()"` notation.
   override Str toStr()
   {
     if (a >= 1.0f) return toHexStr
@@ -331,11 +332,11 @@ const final class Color : Paint
 // Utils
 //////////////////////////////////////////////////////////////////////////
 
-  ** Return if `a` is zero, fully transparent
+  ** Return if [a] is zero, fully transparent
   Bool isTransparent() { a <= 0f }
 
   ** Adjust the opacity of this color and return new instance,
-  ** where 'opacity' is between 0.0  and 1.0.
+  ** where `opacity` is between 0.0  and 1.0.
   Color opacity(Float opacity := 1f)
   {
     make(rgb, a * opacity)
@@ -366,7 +367,7 @@ const final class Color : Paint
     return makeHsl(h, s, l)
   }
 
-  ** Convenience for 'saturate(-percentage)'.
+  ** Convenience for `saturate(-percentage)`.
   Color desaturate(Float percentage := 0.2f)
   {
     saturate(-percentage)

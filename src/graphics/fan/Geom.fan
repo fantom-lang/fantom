@@ -18,7 +18,7 @@
 @Serializable { simple = true }
 const class Point
 {
-  ** Default instance is '0,0'.
+  ** Default instance is `0,0`.
   const static Point defVal := Point(0f, 0f)
 
   ** Construct with x, y.
@@ -41,7 +41,7 @@ const class Point
     return null
   }
 
-  ** Return 'x+tx, y+ty'
+  ** Return `x+tx, y+ty`
   Point translate(Point t) { make(x+t.x, y+t.y) }
 
   ** Return hash of x and y.
@@ -55,7 +55,7 @@ const class Point
     return this.x == that.x && this.y == that.y
   }
 
-  ** Return '"x y"'
+  ** Return `"x y"`
   override Str toStr() { GeomUtil.formatFloats2(x, y) }
 
   ** X coordinate
@@ -76,7 +76,7 @@ const class Point
 @Serializable { simple = true }
 const class Size
 {
-  ** Default instance is '0,0'.
+  ** Default instance is `0,0`.
   const static Size defVal := Size(0f, 0f)
 
   ** Construct with w, h.
@@ -99,7 +99,7 @@ const class Size
     return null
   }
 
-  ** Return '"w h"'
+  ** Return `"w h"`
   override Str toStr() { GeomUtil.formatFloats2(w, h) }
 
   ** Return hash of w and h.
@@ -191,7 +191,7 @@ const class Rect
   }
 
   ** Compute the intersection between this rectangle and that rectangle.
-  ** If there is no intersection, then return `defVal`.
+  ** If there is no intersection, then return [defVal].
   Rect intersection(Rect that)
   {
     ax1 := this.x; ay1 := this.y; ax2 := ax1 + this.w; ay2 := ay1 + this.h
@@ -218,7 +218,7 @@ const class Rect
     return make(rx1, ry1, rw, rh)
   }
 
-  ** Return '"x y w h"'
+  ** Return `"x y w h"`
   override Str toStr() { return GeomUtil.formatFloats4(x, y, w, h) }
 
   ** Return hash of x, y, w, and h.
@@ -267,9 +267,9 @@ const class Insets
   ** Construct with top, and optional right, bottom, left.  If one side
   ** is not specified, it is reflected from the opposite side:
   **
-  **   Insets(5)     => Insets(5,5,5,5)
-  **   Insets(5,6)   => Insets(5,6,5,6)
-  **   Insets(5,6,7) => Insets(5,6,7,6)
+  **     Insets(5)     => Insets(5,5,5,5)
+  **     Insets(5,6)   => Insets(5,6,5,6)
+  **     Insets(5,6,7) => Insets(5,6,7,6)
   **
   new make(Num top, Num? right := null, Num? bottom := null, Num? left := null)
   {
@@ -299,8 +299,8 @@ const class Insets
     return null
   }
 
-  ** If all four sides are equal return '"len"'
-  ** otherwise return '"top right bottom left"'.
+  ** If all four sides are equal return `"len"`
+  ** otherwise return `"top right bottom left"`.
   override Str toStr()
   {
     if (top == right && top == bottom && top == left)

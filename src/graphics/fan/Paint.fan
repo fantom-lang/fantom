@@ -8,7 +8,7 @@
 
 **
 ** Paint models the color, image, or pattern used to stroke or fill a shape.
-** Currently there is only one implementation: `Color`.
+** Currently there is only one implementation: [Color].
 **
 @Js
 const mixin Paint

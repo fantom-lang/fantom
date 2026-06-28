@@ -9,9 +9,9 @@
 **
 ** Transform models an affine transformation matrix:
 **
-**   |a  c  e|
-**   |b  d  f|
-**   |0  0  1|
+**     |a  c  e|
+**     |b  d  f|
+**     |0  0  1|
 **
 @Js
 @Serializable { simple = true }
@@ -19,12 +19,13 @@ const class Transform
 {
   **
   ** Parse from SVG string format:
-  **   matrix(<a> <b> <c> <d> <e> <f>)
-  **   translate(<x> [<y>])
-  **   scale(<x> [<y>])
-  **   rotate(<a> [<x> <y>])
-  **   skewX(<a>)
-  **   skewY(<a>)
+  **
+  **     matrix(<a> <b> <c> <d> <e> <f>)
+  **     translate(<x> [<y>])
+  **     scale(<x> [<y>])
+  **     rotate(<a> [<x> <y>])
+  **     skewX(<a>)
+  **     skewY(<a>)
   **
   static new fromStr(Str s, Bool checked := true)
   {
@@ -130,7 +131,7 @@ const class Transform
     return this.toStr == that.toStr
   }
 
-  ** Return in 'matrix(<a> <b> <c> <d> <e> <f>)' format
+  ** Return in `matrix(<a> <b> <c> <d> <e> <f>)` format
   override Str toStr()
   {
     s := StrBuf()

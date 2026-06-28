@@ -37,13 +37,14 @@ const class Font
   ** Parse font from string using CSS shorthand format for
   ** supported properties:
   **
-  **   [<style>] [<weight>] <size> <names>
+  **     [<style>] [<weight>] <size> <names>
   **
   ** Examples:
-  **   Font.fromStr("12pt Arial")
-  **   Font.fromStr("bold 10pt Courier")
-  **   Font.fromStr("italic bold 8pt Times")
-  **   Font.fromStr("italic 300 10pt sans-serif")
+  **
+  **     Font.fromStr("12pt Arial")
+  **     Font.fromStr("bold 10pt Courier")
+  **     Font.fromStr("italic bold 8pt Times")
+  **     Font.fromStr("italic 300 10pt sans-serif")
   static new fromStr(Str s, Bool checked := true)
   {
     try
@@ -98,7 +99,7 @@ const class Font
 //////////////////////////////////////////////////////////////////////////
 
   ** Construct from a map of CSS props such as font-family, font-size.
-  ** Also see `toProps`.
+  ** Also see [toProps].
   static new fromProps(Str:Str props)
   {
     if (props["font-family"] == null) return null
@@ -110,7 +111,7 @@ const class Font
   }
 
   ** Get CSS style properties for this font.
-  ** Also see `fromProps`
+  ** Also see [fromProps]
   Str:Str toProps()
   {
     acc := Str:Str[:] { ordered = true }
@@ -125,7 +126,7 @@ const class Font
 // Font
 //////////////////////////////////////////////////////////////////////////
 
-  ** First family name in `names`
+  ** First family name in [names]
   Str name() { names.first }
 
   ** List of prioritized family names
@@ -161,7 +162,7 @@ const class Font
            style  == x.style
   }
 
-  ** Format as '"[style] [weight] <size>pt <names>"'
+  ** Format as `"[style] [weight] <size>pt <names>"`
   override Str toStr()
   {
     s := StrBuf()
@@ -230,7 +231,7 @@ const class Font
   **
   ** DO NOT USE - this design is deprecated in favor of Graphics.metrics
   **
-  ** Get font metrics for this font.  If this is not a [normalized]`normalize`
+  ** Get font metrics for this font.  If this is not a [normalized](normalize)
   ** font with built-in metrics, then raise UnsupportedErr.
   **
   @NoDoc
@@ -249,7 +250,7 @@ const class Font
 **************************************************************************
 
 **
-** FontMetrics represents font size information for a `Font` within
+** FontMetrics represents font size information for a [Font] within
 ** a specific graphics context.
 **
 @Js

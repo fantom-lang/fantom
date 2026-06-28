@@ -11,7 +11,7 @@
 ** predefined set of fonts.  For each font style we store a list of
 ** unique widths (in points) for the font at 1000pt.  Then we map the
 ** width for each char in the range using a single ASCII char as an
-** index to the width table with the char '%' 37 + index (we use '%'
+** index to the width table with the char `%` 37 + index (we use `%`
 ** because is avoids both double quote and dollar chars).
 **
 @Js @NoDoc
