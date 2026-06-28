@@ -12,20 +12,20 @@ using concurrent
 ** FileLogger appends Str log entries to a file.  You
 ** can add a FileLogger as a Log handler:
 **
-**    sysLogger := FileLogger
-**    {
-**      dir = scriptDir
-**      filename = "sys-{YYMM}.log"
-**    }
-**    Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
+**      sysLogger := FileLogger
+**      {
+**        dir = scriptDir
+**        filename = "sys-{YYMM}.log"
+**      }
+**      Log.addHandler |rec| { sysLogger.writeLogRec(rec) }
 **
-** See `filename` for specifying a datetime pattern for your log files.
+** See [filename] for specifying a datetime pattern for your log files.
 **
 const class FileLogger : ActorPool
 {
 
   **
-  ** Constructor must set `dir` and `filename`
+  ** Constructor must set [dir] and [filename]
   **
   new make(|This|? f := null) : super(f) {}
 
@@ -36,7 +36,7 @@ const class FileLogger : ActorPool
 
   **
   ** Log filename pattern.  The name may contain a pattern between
-  ** '{}' using the pattern format of `sys::DateTime.toLocale`.  For
+  ** `{}` using the pattern format of [sys::DateTime.toLocale].  For
   ** example to maintain a log file per month, use a filename such
   ** as "mylog-{YYYY-MM}.log".
   **

@@ -12,36 +12,36 @@ using concurrent
 **
 ** AbstractMain provides conveniences for writing the main routine
 ** of an app. Command line arguments are configured as fields
-** with the `Arg` facet:
+** with the [Arg] facet:
 **
-**   @Arg { help = "source file to process" }
-**   File? src
+**     @Arg { help = "source file to process" }
+**     File? src
 **
 ** Arguments are ordered by the field declaration order.  The
 ** last argument may be declared as a list to handle a variable
 ** numbers of arguments.
 **
 ** Command line options are configured as fields with
-** the `Opt` facet :
+** the [Opt] facet :
 **
-**   @Opt { help = "http port"; aliases=["p"] }
-**   Int port := 8080
+**     @Opt { help = "http port"; aliases=["p"] }
+**     Int port := 8080
 **
 ** Bool fields should always default to false and are considered
 ** flag options.  All other arg and opt fields must be a Str, File,
-** or have a type which supports a 'fromStr' method.
+** or have a type which supports a `fromStr` method.
 **
 ** Option fields may include the "Opt" suffix, and arguments the
 ** "Arg" suffix.  These suffixes can be used when a field conflicts
 ** with an existing slot name.
 **
-** AbstractMain will automatically implement `usage` and
-** `parseArgs` based on the fields which are declared as options
-** and arguments.  In general subclasses only need to override `run`.
+** AbstractMain will automatically implement [usage] and
+** [parseArgs] based on the fields which are declared as options
+** and arguments.  In general subclasses only need to override [run].
 ** If writing a daemon main, then you'll probably want to configure
-** your services then call `runServices`.
+** your services then call [runServices].
 **
-** See [example]`examples::util-main`.
+** See [example](examples::util-main).
 **
 abstract class AbstractMain
 {
@@ -64,7 +64,7 @@ abstract class AbstractMain
   }
 
   **
-  ** Log for this application; defaults to `appName`.
+  ** Log for this application; defaults to [appName].
   **
   virtual Log log() { Log.get(appName) }
 
@@ -93,7 +93,7 @@ abstract class AbstractMain
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get all the fields annotated with the [@Arg]`Arg` facet.
+  ** Get all the fields annotated with the [@Arg](Arg) facet.
   **
   virtual Field[] argFields()
   {
@@ -101,7 +101,7 @@ abstract class AbstractMain
   }
 
   **
-  ** Get all the fields annotated with the [@Opt]`Opt` facet.
+  ** Get all the fields annotated with the [@Opt](Opt) facet.
   **
   virtual Field[] optFields()
   {
@@ -311,7 +311,7 @@ abstract class AbstractMain
   **   - java version info if JVM
   **   - node version if running in NodeJS
   **   - fan version
-  ** Map vals are Strs or Lists to indent. Also see `printProps`
+  ** Map vals are Strs or Lists to indent. Also see [printProps]
   static Str:Obj runtimeProps([Str:Obj]? acc := null)
   {
     env := Env.cur
@@ -344,8 +344,8 @@ abstract class AbstractMain
   ** Print a map of key/value pairs to output with values justified.
   ** Values that are lists are indented and separated by newlines.
   ** Options:
-  **   - 'out': OutStream to print to (default is Env.cur.out)
-  **   - 'indent': Str spaces (default is "")
+  **   - `out`: OutStream to print to (default is Env.cur.out)
+  **   - `indent`: Str spaces (default is "")
   static Void printProps(Str:Obj props, [Str:Obj]? opts := null)
   {
     out := opts?.get("out") as OutStream ?: Env.cur.out
@@ -377,7 +377,7 @@ abstract class AbstractMain
 
   **
   ** Run the application.  This method is called after the
-  ** command line has been parsed.  See `runServices` to
+  ** command line has been parsed.  See [runServices] to
   ** launch a deamon application.  Return status code, zero
   ** for success.
   **
@@ -412,10 +412,10 @@ abstract class AbstractMain
 
   **
   ** Main performs the following tasks:
-  **   1. Calls `parseArgs` to parse command line
+  **   1. Calls [parseArgs] to parse command line
   **   2. If args were incomplete or -help was specified
   **      then dump usage and return 1
-  **   3. Call `run` and return 0
+  **   3. Call [run] and return 0
   **   4. If an exception is raised log it and return 1
   **
   virtual Int main(Str[] args := Env.cur.args)
@@ -455,7 +455,7 @@ abstract class AbstractMain
 **************************************************************************
 
 **
-** Facet for annotating an `AbstractMain` argument field.
+** Facet for annotating an [AbstractMain] argument field.
 **
 facet class Arg
 {
@@ -468,7 +468,7 @@ facet class Arg
 **************************************************************************
 
 **
-** Facet for annotating an `AbstractMain` option field.
+** Facet for annotating an [AbstractMain] option field.
 **
 facet class Opt
 {

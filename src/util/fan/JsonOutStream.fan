@@ -10,14 +10,14 @@
 **
 ** JsonOutStream writes objects in Javascript Object Notation (JSON).
 **
-** See [pod doc]`pod-doc#json` for details.
+** See [pod doc](pod-doc#json) for details.
 **
 @Js
 class JsonOutStream : OutStream
 {
 
   **
-  ** Convenience for `writeJson` to an in-memory string.
+  ** Convenience for [writeJson] to an in-memory string.
   **
   public static Str writeJsonToStr(Obj? obj)
   {
@@ -42,7 +42,7 @@ class JsonOutStream : OutStream
   new make(OutStream out) : super(out) {}
 
   **
-  ** Flag to escape characters over 0x7f using '\uXXXX'
+  ** Flag to escape characters over 0x7f using `\uXXXX`
   **
   Bool escapeUnicode := true
 
@@ -61,8 +61,8 @@ class JsonOutStream : OutStream
   **   - Str
   **   - Str:Obj?
   **   - Obj?[]
-  **   - [simple]`docLang::Serialization#simple` (written as JSON string)
-  **   - [serializable]`docLang::Serialization#serializable` (written as JSON object)
+  **   - [simple](docLang::Serialization#simple) (written as JSON string)
+  **   - [serializable](docLang::Serialization#serializable) (written as JSON object)
   **
   This writeJson(Obj? obj)
   {

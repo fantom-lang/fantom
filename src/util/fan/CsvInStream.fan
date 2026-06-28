@@ -10,15 +10,15 @@
 ** CsvInStream is used to read delimiter-separated values
 ** as specified by RFC 4180.  Format details:
 **   - rows are delimited by a newline
-**   - cells are separated by `delimiter` char
-**   - cells may be quoted with '"' character
+**   - cells are separated by [delimiter] char
+**   - cells may be quoted with `"` character
 **   - quoted cells may contain the delimiter
 **   - quoted cells may contain newlines (always normalized to "\n")
-**   - quoted cells must escape '"' with '""'
-**   - the `trim` flag trims leading/trailing whitespace from non-quoted
+**   - quoted cells must escape `"` with `""`
+**   - the [trim] flag trims leading/trailing whitespace from non-quoted
 **     cells (note that RFC 4180 specifies that whitespace is significant)
 **
-** Also see `CsvOutStream`.
+** Also see [CsvOutStream].
 **
 @Js
 class CsvInStream : InStream

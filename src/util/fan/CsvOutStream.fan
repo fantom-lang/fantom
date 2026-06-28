@@ -10,11 +10,11 @@
 ** CsvOutStream is used to write delimiter-separated values
 ** as specified by RFC 4180.  Format details:
 **   - rows are delimited by a newline
-**   - cells are separated by `delimiter` char
-**   - cells containing the delimiter, '"' double quote, or
-**     newline are quoted; quotes are escaped as '""'
+**   - cells are separated by [delimiter] char
+**   - cells containing the delimiter, `"` double quote, or
+**     newline are quoted; quotes are escaped as `""`
 **
-** Also see `CsvInStream`.
+** Also see [CsvInStream].
 **
 @Js
 class CsvOutStream : OutStream
@@ -32,7 +32,7 @@ class CsvOutStream : OutStream
 
   **
   ** Write the row of cells with the configured delimiter.
-  ** Also see `writeCell`.
+  ** Also see [writeCell].
   **
   virtual This writeRow(Str[] row)
   {
@@ -45,7 +45,7 @@ class CsvOutStream : OutStream
   }
 
   **
-  ** Write a single cell.  If `isQuoteRequired` returns true,
+  ** Write a single cell.  If [isQuoteRequired] returns true,
   ** then quote it.
   **
   virtual This writeCell(Str cell)
@@ -63,7 +63,7 @@ class CsvOutStream : OutStream
   **
   ** Return if the given cell string contains:
   **  - the configured delimiter
-  **  - double quote '"' char
+  **  - double quote `"` char
   **  - leading/trailing whitespace
   **  - newlines
   **

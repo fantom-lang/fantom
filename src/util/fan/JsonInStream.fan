@@ -10,7 +10,7 @@
 **
 ** JsonInStream reads objects from Javascript Object Notation (JSON).
 **
-** See [pod doc]`pod-doc#json` for details.
+** See [pod doc](pod-doc#json) for details.
 **
 @Js
 class JsonInStream : InStream
@@ -32,7 +32,7 @@ class JsonInStream : InStream
   **   - Str:Obj?
   **   - Obj?[]
   **
-  ** See [Str.in]`sys::Str.in` to read from an in-memory string.
+  ** See [Str.in](sys::Str.in) to read from an in-memory string.
   **
   Obj? readJson()
   {

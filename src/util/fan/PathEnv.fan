@@ -17,7 +17,7 @@ const class PathEnv : Env
 
   **
   ** Constructor initializes the search path using the
-  ** 'FAN_ENV_PATH' environment variable (see `sys::Env.vars`).
+  ** `FAN_ENV_PATH` environment variable (see [sys::Env.vars]).
   **
   new make() : super(Env.cur)
   {
@@ -92,18 +92,18 @@ const class PathEnv : Env
 
   **
   ** Search path of directories in priority order.  The
-  ** last item in the path is always the `sys::Env.homeDir`
+  ** last item in the path is always the [sys::Env.homeDir]
   **
   override File[] path() { pathRef.val }
   private const AtomicRef pathRef
 
   **
-  ** Working directory is always first item in `path`.
+  ** Working directory is always first item in [path].
   **
   override File workDir() { path.first }
 
   **
-  ** Temp directory is always under `workDir`.
+  ** Temp directory is always under [workDir].
   **
   override File tempDir() { workDir + `temp/` }
 
@@ -141,7 +141,7 @@ const class PathEnv : Env
   override const Str:Str vars
 
   **
-  ** Search `path` for given file.
+  ** Search [path] for given file.
   **
   override File? findFile(Uri uri, Bool checked := true)
   {
@@ -157,7 +157,7 @@ const class PathEnv : Env
   }
 
   **
-  ** Search `path` for all versions of given file.
+  ** Search [path] for all versions of given file.
   **
   override File[] findAllFiles(Uri uri)
   {
@@ -171,7 +171,7 @@ const class PathEnv : Env
   }
 
   **
-  ** Search `path` for all "lib/fan/*.pod" files.
+  ** Search [path] for all "lib/fan/*.pod" files.
   **
   override Str[] findAllPodNames()
   {

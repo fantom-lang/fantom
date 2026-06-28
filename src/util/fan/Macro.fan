@@ -9,7 +9,7 @@
 **
 ** Macro provides a way to replace macro expressions within a pattern
 ** using a pluggable implementation for the macro resolution. See
-** `apply` for macro syntax.
+** [apply] for macro syntax.
 **
 @Js const class Macro
 {
@@ -39,22 +39,22 @@
 // Macro
 //////////////////////////////////////////////////////////////////////////
 
-  ** The `pattern` text is scanned for keys delimited by
-  ** '{{' and '}}'. The text between the delimiters is the key.
+  ** The [pattern] text is scanned for keys delimited by
+  ** `{{` and `}}`. The text between the delimiters is the key.
   ** The supplied callback is invoked to resolve the key and the macro
   ** is replaced with that value in the text. Returns the resulting Str
-  ** after the macro has been applied. Throws `sys::ParseErr` if the pattern
+  ** after the macro has been applied. Throws [sys::ParseErr] if the pattern
   ** contains invalid macros.
   **
-  **   Macro("{{hello}} {{world}}!").apply { it.upper } => HELLO WORLD!
-  **   Macro("{{notTerminated").apply { it.upper } => ParseErr
+  **     Macro("{{hello}} {{world}}!").apply { it.upper } => HELLO WORLD!
+  **     Macro("{{notTerminated").apply { it.upper } => ParseErr
   **
   ** No lexical restriction is placed on the macro keys. The callback
   ** is entirely reponsible for validating keys. For example, all the following
   ** are perfectly acceptable keys as far as parsing the macro goes:
-  **   - '{{}}'      - empty key
-  **   - '{{  }}'    - all white space
-  **   - '{{ foo }}' - leading and trailing white space
+  **   - `{{}}`      - empty key
+  **   - `{{  }}`    - all white space
+  **   - `{{ foo }}` - leading and trailing white space
   **
   Str apply(|Str key->Str| resolve)
   {
@@ -108,10 +108,10 @@
   }
 
   ** Get a list of all the macro keys in the order they appear in the macro
-  ** `pattern`. Duplicates are not removed.
+  ** [pattern]. Duplicates are not removed.
   **
-  **   Macro("{{hello}} {{world}}! Good-bye {{world}}").keys
-  **      => ["hello", "world", "world"]
+  **     Macro("{{hello}} {{world}}! Good-bye {{world}}").keys
+  **        => ["hello", "world", "world"]
   **
   Str[] keys()
   {

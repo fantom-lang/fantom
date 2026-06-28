@@ -7,7 +7,7 @@
 //
 
 **
-** TestRunner executes `sys::Test` classes and reports success/failure.
+** TestRunner executes [sys::Test] classes and reports success/failure.
 **
 @Js
 class TestRunner

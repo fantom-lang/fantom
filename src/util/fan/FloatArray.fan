@@ -42,14 +42,14 @@ native class FloatArray
   ** Negative indices are *not* supported.
   @Operator Void set(Int index, Float val)
 
-  ** Copy the floats from 'that' array into this array and return
-  ** this.  The 'thatRange' parameter may be used to specify
-  ** a specific range of floats from the 'that' parameter (negative
-  ** indices *are* allowed) to copy.  If 'thatRange' is null then the entire
-  ** range of 'that' is copied.  Or 'thisOffset' specifies the starting index
+  ** Copy the floats from `that` array into this array and return
+  ** this.  The `thatRange` parameter may be used to specify
+  ** a specific range of floats from the `that` parameter (negative
+  ** indices *are* allowed) to copy.  If `thatRange` is null then the entire
+  ** range of `that` is copied.  Or `thisOffset` specifies the starting index
   ** of this index to copy the first float.  Raise an exception if this
   ** array is not properly sized or is not of the same signed/byte count
-  ** as the 'that' array.
+  ** as the `that` array.
   This copyFrom(FloatArray that, Range? thatRange := null, Int thisOffset := 0)
 
   ** Fill this array with the given float value.  If range is null

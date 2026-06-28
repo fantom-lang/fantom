@@ -57,14 +57,14 @@ native class IntArray
   ** Negative indices are *not* supported.
   @Operator Void set(Int index, Int val)
 
-  ** Copy the integers from 'that' array into this array and return
-  ** this.  The 'thatRange' parameter may be used to specify
-  ** a specific range of integers from the 'that' parameter (negative
-  ** indices *are* allowed) to copy.  If 'thatRange' is null then the entire
-  ** range of 'that' is copied.  Or 'thisOffset' specifies the starting index
+  ** Copy the integers from `that` array into this array and return
+  ** this.  The `thatRange` parameter may be used to specify
+  ** a specific range of integers from the `that` parameter (negative
+  ** indices *are* allowed) to copy.  If `thatRange` is null then the entire
+  ** range of `that` is copied.  Or `thisOffset` specifies the starting index
   ** of this index to copy the first integer.  Raise an exception if this
   ** array is not properly sized or is not of the same signed/byte count
-  ** as the 'that' array.
+  ** as the `that` array.
   This copyFrom(IntArray that, Range? thatRange := null, Int thisOffset := 0)
 
   ** Fill this array with the given integer value.  If range is null

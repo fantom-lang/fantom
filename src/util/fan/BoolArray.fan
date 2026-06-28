@@ -53,7 +53,7 @@ native final class BoolArray
   ** Iterate each index set to true
   Void eachTrue(|Int index| f)
 
-  ** Copy the booleans from 'that' array into this array and return this.
+  ** Copy the booleans from `that` array into this array and return this.
   This copyFrom(BoolArray that)
 
 }

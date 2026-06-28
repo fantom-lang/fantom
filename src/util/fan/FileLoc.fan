@@ -46,7 +46,7 @@ const class FileLoc
     this.col  = col
   }
 
-  ** Parse location formatted from `toStr`
+  ** Parse location formatted from [toStr]
   @NoDoc static FileLoc parse(Str s)
   {
     // by convention this should be called fromStr but that

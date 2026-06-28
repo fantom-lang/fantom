@@ -10,7 +10,7 @@ using concurrent
 
 **
 ** Console provides utilities to interact with the terminal console.
-** For Java this API is designed to use [jline]`docTools::Setup#jline`
+** For Java this API is designed to use [jline](docTools::Setup#jline)
 ** if installed.  In browser JavaScript environments this APIs uses
 ** the JS debugging window.
 **
