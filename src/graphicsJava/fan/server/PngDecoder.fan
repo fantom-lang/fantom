@@ -34,7 +34,7 @@ internal class PngDecoder
   ** PNG magic number
   static const Int magic := 0x89_50_4e_47_0d_0a_1a_0a
 
-  ** Returns true if Buf starts with `magic` number.
+  ** Returns true if Buf starts with [magic] number.
   ** The buf is not modified.
   static Bool isPng(Buf buf) { magic == buf[0..<8].readS8 }
 

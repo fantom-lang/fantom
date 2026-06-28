@@ -217,7 +217,7 @@ class Java2DGraphics : Graphics
 
   ** Draw an image at the given coordinate for the top/left corner.
   ** If the width or height does not correspond to the image's natural size
-  ** then the image is scaled to fit.  Also see `copyImage`.
+  ** then the image is scaled to fit.  Also see [copyImage].
   override This drawImage(Image img, Float x, Float y, Float w := img.w, Float h := img.h)
   {
     awt := ((Java2DImage)img).awt
@@ -231,7 +231,7 @@ class Java2DGraphics : Graphics
   ** The src rectangle defines the region of the soure image to copy.  The
   ** dst rectangle identifies the destination location.  If the src size
   ** does not correspond to the dst size, then the image is scaled to fit.
-  ** Also see `drawImage`.
+  ** Also see [drawImage].
   override This drawImageRegion(Image img, Rect src, Rect dst)
   {
     awt := ((Java2DImage)img).awt
@@ -266,7 +266,7 @@ class Java2DGraphics : Graphics
   }
 
   ** Push the current graphics state onto an internal stack.  Reset
-  ** the state back to its current state via `pop`.  If 'r' is non-null
+  ** the state back to its current state via [pop].  If `r` is non-null
   ** the graphics state is automatically translated and clipped to the
   ** bounds.
   override This push(Rect? r := null)
@@ -279,7 +279,7 @@ class Java2DGraphics : Graphics
     return this
   }
 
-  ** Pop the graphics stack and reset the state to the the last `push`.
+  ** Pop the graphics stack and reset the state to the the last [push].
   override This pop()
   {
     if (stack.isEmpty) throw Err("Stack is empty")

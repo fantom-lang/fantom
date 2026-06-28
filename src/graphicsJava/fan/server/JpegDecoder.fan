@@ -36,7 +36,7 @@ internal class JpegDecoder
   ** JPEG magic number
   static const Int magic := 0xff_d8
 
-  ** Returns true if Buf starts with `magic` number.
+  ** Returns true if Buf starts with [magic] number.
   ** The buf is not modified.
   static Bool isJpeg(Buf buf) { magic == buf[0..<2].readU2() }
 
