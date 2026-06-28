@@ -1,0 +1,258 @@
+<!--
+title:      Dom
+author:     Andy Frank
+created:    11 Jan 2017
+copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+When we refer to DomKit, we implicitly include the low-level [dom](dom::index)
+pod. And while this pod is a stand-alone API and can be used independently of
+DomKit, it provides most of the heavy lifting for DomKit.
+
+The Dom APIs generally track the W3C DOM specification verbatim so we can reuse
+existing knowlege and terminology. But also so we avoid creating conflicts down
+the line as new features are added by browser vendors.
+
+This chapter will give a brief overview of the major [dom](dom::index) API
+features.  Some of the more advanced topics such as Drag and Drop and Animation
+will be covered in subsequent chapters
+
+# Win
+The [Win](dom::Win) class maps to the W3C Window object. Most API calls will
+stem from the current Win instance:
+
+    // get the current Win instance for this Window
+    win := Win.cur
+
+Some sample APIs available on [Win](dom::Win):
+
+    win.alert("Hello!")  // display a modal dialog
+    win.uri              // the URI for this page
+    win.hyperlink(uri)   // hyperlink to new page
+    win.hisBack          // go to previous page in session history
+    win.viewport         // get size of window viewport
+
+    // timers
+    win.setTimeout(10sec) { ... }        // invoke func in 10sec
+    id := win.setInterval(1sec) { ... }  // invoke func every 1sec
+    win.clearInterval(id)                // cancel timer with id
+
+See [Win](dom::Win) for complete Win API.
+
+# Doc
+The [Doc](dom::Doc) class maps to the W3C Document object.
+
+    // get the Doc for the current Win instance
+    doc := Win.cur.doc
+
+Some sample APIs available on [Doc](dom::Doc):
+
+    doc.elemById("someId")            // return the Elem with id='someId'
+    doc.createElem("div")             // create a new <div> element
+    doc.querySelector("div.foo")      // find first <div> element where class='foo'
+    doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
+
+See [Doc](dom::Doc) for complete Doc API.
+
+# Elem
+The [Elem](dom::Elem) class maps to the W3C Element object.
+
+    // create Elems
+    Elem("div")   // create new unattached <div> element
+    Elem("img")   // create new unattached <img> element
+
+    // add Elem to parent
+    p := Elem("p") { it.text="Lorem ipsum" }
+    parent.add(p)
+
+## Attributes
+Elem attribute access APIs:
+
+    elem["alt"]                 // get an attr value
+    elem["alt"] = "Alt text"    // set an attr value
+    elem.attr("alt")            // get an attr (equivalent to elem["alt"])
+    elem.setAttr("alt", "...")  // set an attr (equivalent to elem["alt"] = "...")
+    elem.attrs                  // map of all defined Elem attributes
+
+    elem.tagName                // tag name of this element
+    elem.id                     // 'id' attribute
+    elem.enabled                // 'enabled' attribute
+    elem.text = "Foo"           // set innerText content of this element
+    elem.html = "<b>Foo</b>"    // set innerHTML content of this element
+
+## Properties
+Elem property APIs access the JavaScript properties on the backing DOM object
+instance:
+
+    elem.prop("tabIndex")           // get a prop
+    elem.setProp("tabIndex", true)  // set a prop
+
+Note that unlike attributes, property names are case-sensitive.
+
+## FFI
+The [trap](sys::Obj.trap) operator can be used as a convenience to
+[prop](dom::Elem.prop) and [setProp](dom::Elem.setProp):
+
+    elem->tabIndex          // get a prop
+    elem->tabIndex = true   // set a prop
+
+See [Elem.trap](dom::Elem.trap) for details when using a non-HTML namespace.
+
+The [invoke](dom::Elem.invoke) method can be used to be used to invoke
+JavaScript functions not exposed by the Elem API:
+
+    a.invoke("click")
+
+## Tree Operations
+Methods for querying and modifying the DOM tree:
+
+    elem.parent                   // parent element
+    elem.prevSibling              // prev sibling
+    elem.nextSibling              // next sibling
+    elem.children                 // List of child elements
+    elem.firstChild               // first child, or null if no children
+    elem.lastChild                // last child, or null if no children
+    elem.containsChild(child)     // is child a descendant of parent
+    elem.add(child)               // add a new child element
+    elem.replace(cur, newChild)   // replace a child with new element
+    elem.remove(child)            // remove a child element
+    elem.querySelector("img")     // find first <img> descendant
+    elem.querySelectorAll("img")  // find all <img> descendants
+
+See [Elem](dom::Elem) for complete Elem API.
+
+# Style
+[Style](dom::Style) provides access to both inline and class CSS styling, and
+is accessed with the `style` method:
+
+    style := elem.style
+
+## Classes
+Methods for working with CSS style classes:
+
+    style.classes                // return the current class name(s)
+    style.hasClass("alpha")      // does elem have the given class name?
+    style.addClass("beta")       // add a new class to current class list
+    style.removeClass("gamma")   // remove a class, leaving others remaining
+    style.toggleClass("beta")    // add class if missing, remove if exists
+
+## Properties
+Methods for working with CSS properties:
+
+    style["background-color"] = "#f00"  // set style background-color: #f00
+    style->backgroundColor = "#f00"     // set style background-color: #f00
+    style["color"]                      // get color property value
+    style->color                        // get color property value
+    style.computed("color")             // get the computed color property value
+
+    style.setAll(["color":"#f00", "background:"#eee"])  // set list of properties
+    style.setCss("color: #f00; background: #eee")       // set with CSS grammar
+
+Note in the examples above the [trap](sys::Obj.trap) operator can be used as a
+convenience to [get](dom::Style.get) and [set](dom::Style.set). Hyphenated
+properties should be specified using camel case when using trap:
+
+    style->backgroundColor == style["background-color"]
+
+## Psuedo-Classes
+The [addPseudoClass](dom::Style.addPseudoClass) method can be used to define
+CSS pseudo classes at runtime:
+
+    style.addPseudoClass(":hover", "background: #eee")
+
+## Vendor Prefixes
+Style will automatically handle adding appropriate vendor prefixes, and
+therefore should not be specified in implementors code.
+
+See [Style](dom::Style) for complete Style API.
+
+# Events
+DOM user events are modeled with [Event](dom::Event). Event callbacks can be
+added to Win using [Win.onEvent](dom::Win.onEvent):
+
+    win.onEvent("hashchange", false) |e| { Win.cur.alert("hashchanged!") }
+
+Likewise Elem can register callbacks using [Elem.onEvent](dom::Elem.onEvent):
+
+    elem.onEvent("mousedown", false) |e| { echo("Pressed $e.target" }
+
+To remove a registered event handler, pass the function instance to
+`removeEvent`:
+
+    func := elem.onEvent("mousedown", false) { ... }
+    elem.removeEvent("mousedown", false, func)
+
+See [Win](dom::Win), [Elem](dom::Elem) and [Event](dom::Event) for complete API
+details.
+
+# HttpReq
+The [HttpReq](dom::HttpReq) object is used to make background HTTP requests
+from the browser using XmlHttpRequest. For both sync and async requests, the
+[response](dom::HttpRes) is passed to you in the callback closure:
+
+    req := HttpReq { uri=`/foo` }
+    req.send("POST", "some content") |res|
+    {
+      Win.cur.alert(res.content)
+    }
+
+Convenience methods are available for the common request methods:
+
+    HttpReq { uri=`/foo` }.get |res| {...}
+    HttpReq { uri=`/foo` }.post("some content") |res| {...}
+    HttpReq { uri=`/foo` }.postForm(["name":"Barney Stinson"]) |res| {...}
+
+The postForm method will automatically encode the request to look like a normal
+HTML form submission.
+
+Example setting request headers:
+
+    req := HttpReq {}
+    req.uri = `/foo`
+    req.headers["Content-Type"] = "text/csv; charset=utf-8"
+    req.post("a,b,c") |res| { ... }
+
+See [HttpReq](dom::HttpReq) and [HttpRes](dom::HttpRes) for complete API.
+
+# Web Storage
+The [Win](dom::Win) API provides methods for accessing both session and local
+browser [storage](dom::Storage):
+
+    // local
+    win.localStorage["bar"]           // return value for bar from local storage
+    win.localStorage["foo"] = 25      // store foo:25 in local storage
+    win.localStorage.remove("foo")    // remove foo from local storage
+    win.localStorage.clear            // clear all contents from local storage
+
+    // session
+    win.sessionStorage["bar"]         // return value for bar from session storage
+    win.sessionStorage["foo"] = 33    // store foo:33 in session storage
+    win.sessionStorage.remove("foo")  // remove foo from session storage
+    win.sessionStorage.clear          // clear all contents from session storage
+
+See [Storage](dom::Storage) for complete API.
+
+# MutationObserver
+[MutationObserver](dom::MutationObserver) provides access to the W3C Mutation
+Event API.  To use a MutationObserver first create an instance and provide the
+callback function to invoke when a mutation occurs:
+
+    observer := MutationObserver() |recs|
+    {
+      // callback when DOM mutation occurs where
+      // recs is the list of mutations
+    }
+
+Each mutation is modeled with [MutationRec](dom::MutationRec). Then attach your
+observer to a DOM node to start listening for events:
+
+    // listen for child add/remove events on elem
+    observer.observe(elem, ["childList":true])
+
+If you wish to stop receiving all events for your observer instance, call
+`disconnect`
+
+    // detach this observer instance from all mutation events
+    observer.disconnect

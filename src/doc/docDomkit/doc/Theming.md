@@ -1,0 +1,250 @@
+<!--
+title:      Theming
+author:     Andy Frank
+created:    2 Oct 2017
+copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+DomKit is designed to be customized purely in CSS by overriding style classes.
+Controls primarily inherit from the following "base" style classes:
+
+     .domkit-control
+     .domkit-control-button
+     .domkit-control-text
+
+Each DomKit control type further defines a specific style class using the
+convention `domkit-<TypeName>`. For example [Button](domkit::Button) uses the
+class `domkit-Button`. A skeleton [sample theme](#sample) is included at the
+bottom of this page for reference.
+
+# Fonts
+DomKit inherits all fonts from a parent or `<body>`. Setting the font on your
+page should be all that is needed to customize control fonts. The "base"
+control styles or specific type classes can be used to customize specific
+controls. Examples:
+
+     body { font: 14px 'Helvetica Neue', Arial, sans-serif; }
+
+    .domkit-control-text { font: 14px Monaco, Courier, monospace; }
+
+    div.domkit-TextArea { font: 12px Monaco, Courier, monospace; }
+
+# Valign
+Controls are designed to automatically vertical align when placed inline with
+each other. Since controls are font agnostic (see Fonts above) this is
+accomplished by giving all controls a consistent `line-height` and adjusting
+`padding` to account for borders.
+
+     .domkit-control {
+       padding: 5px 0;
+     }
+
+     .domkit-control-button {
+       border: 1px solid #ccc;
+       padding: 4px 10px;  // -1px for border to keep valign with .domkit-control
+     }
+
+     .domkit-control-text {
+       border: 1px solid #ccc;
+       padding: 4px 10px;  // -1px for border to keep valign with .domkit-control
+     }
+
+# Borders
+DomKit defines several classes that can be used to provide a standard border
+color and style:
+
+    .domkit-border
+    .domkit-border-top
+    .domkit-border-left
+    .domkit-border-right
+    .domkit-border-bottom
+
+These borders are used for more complex controls such as [Table](domkit::Table)
+and [Tree](domkit::Tree).  Example use patterns:
+
+    // adding a border
+    Box { it.style.addClass("domkit-border") }
+
+    // adding a bottom-border
+    Box { it.style.addClass("domkit-border-bottom") }
+
+    // removing a left/right borders
+    Table {
+      it.style.removeClass("domkit-border")
+      it.style.addClass("domkit-border-top").addClass("domkit-border-bottom")
+    }
+
+# Selection
+Selected items can be denoted by adding the `domkit-sel` class to an element.
+Focus is taken into account when possible, so we need to specify both the
+focused and unfocused selection styles:
+
+    .domkit-sel {
+      background-color: #dcdcdc !important;
+    }
+
+    :focus .domkit-sel, .domkit-sel.pin {
+      background-color: #3498db !important;
+      color: #fff !important;
+    }
+
+# Focus
+Focus rings for controls can be customized with `:focus` pseudo class:
+
+    .domkit-control-button:focus
+    .domkit-control-text:focus
+
+# Modals
+Basic [Dialog](domkit::Dialog) styles can be configured using the
+`.domkit-Dialog-frame` and `.domkit-Dialog-title` styles. The title bar also
+inherits `.domkit-control`.
+
+    div.domkit-Dialog-frame {
+      background: #f2f2f2;
+      border: 1px solid #aaa;
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    div.domkit-Dialog-title {
+      text-align: center;
+      font-weight: 500;
+    }
+
+For [Popup](domkit::Popup) style:
+
+    div.domkit-Popup {
+      background: rgba(248, 248, 248, 0.95);
+      border: 1px solid #ddd;
+      box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+    }
+
+A background mask is displayed under modals to prevent user input. This mask
+is styled using `.domkit-Dialog-mask`:
+
+    div.domkit-Dialog-mask {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    div.domkit-Popup-mask {
+      background: none;
+    }
+
+# Table
+The primary [Table](domkit::Table) styles are:
+
+    div.domkit-Table
+    div.domkit-Table-header
+    div.domkit-Table-cell
+    div.domkit-Table-cell.odd
+    div.domkit-Table-cell.even
+
+Table is a bit unique in that the cell size must be hard-coded to provide high
+performance for large data sets. So the `-header` and `-cell` styles will *not*
+inherit the parents font sizes (only the style).  Additionally if the font size
+is increased, you may need to configure your
+[rowHeight](domkit::TableModel.rowHeight):
+
+    div.domkit-Table-header { font-size: 13px; }
+    div.domkit-Table-cell   { font-size: 14px; }
+
+    @Js class MyModel : TableModel
+    {
+      override Int rowHeight() { 30 }
+    }
+
+# Fullscreen
+To force the document body to fill the browser viewport similar to a desktop
+application, add the following styles:
+
+    html { height: 100%; }
+    body { height: 100%; overflow: hidden; }
+
+# Sample
+Below is a sample starting point for a custom style sheet:
+
+    .domkit-sel {
+      background-color: #dcdcdc !important;
+    }
+
+    :focus .domkit-sel, .domkit-sel.pin {
+      background-color: #8e44ad !important;
+      color: #fff !important;
+    }
+
+    :focus .domkit-sel a {
+      color: #fff !important;
+    }
+
+    .domkit-control {
+      font: 16px 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .domkit-control-button {
+      background: #f8f8f8;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .domkit-control-button:hover { background: #f0f0f0; }
+    .domkit-control-button.down  { background: #ccc; }
+    .domkit-control-button.selected,
+    .domkit-control-button.selected:hover {
+      color: #fff;
+      background-color: #8e44ad;
+      border-color: #6d2f87;
+    }
+
+    .domkit-control-text {
+      background: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .domkit-control-button:focus, .domkit-control-text:focus {
+      border-color: #8e44ad;
+    }
+
+    div.domkit-Table-header {
+      font: bold 13px 'Helvetica Neue', Arial, sans-serif;
+    }
+    div.domkit-Table-cell {
+      font: 14px 'Helvetica Neue', Arial, sans-serif;
+    }
+    div.domkit-Table-cell.odd  { background: #fff; }
+    div.domkit-Table-cell.even { background: #f8f8f8; }
+
+    div.domkit-Tree {
+      font: 16px 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    div.domkit-Dialog-frame {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    div.domkit-Dialog-title {
+      text-align: center;
+      font-weight: bold;
+      background: #f8f8f8;
+      border-bottom: 1px solid #ccc;
+    }
+
+    div.domkit-Dialog-mask {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    div.domkit-Popup {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    div.domkit-Popup-mask {
+      background: none;
+    }

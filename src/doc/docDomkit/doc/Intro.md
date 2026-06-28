@@ -1,17 +1,16 @@
-**************************************************************************
-** title:      Intro
-** author:     Andy Frank
-** created:    11 Jan 2017
-** copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Intro
+author:     Andy Frank
+created:    11 Jan 2017
+copyright:  Copyright (c) 2017, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
+# Overview
 DomKit is a HTML5 UI toolkit designed for building Web-based user interfaces.
 Collectivity DomKit is composed of two layers:
 
-  - **dom**: The [dom]`dom::index` pod provides low-level access to the browser DOM
+  - **dom**: The [dom](dom::index) pod provides low-level access to the browser DOM
   - **domkit**: A library of reusable widgets and utilities used to construct UI's
 
 One of the chief design goals for DomKit is to minimize the abstractions added
@@ -23,26 +22,26 @@ the the W3C DOM, which has several benefits:
   - Keeps library smaller and simpler
 
 A key point to emphasize is a DomKit "widget" is nothing more than a standard
-DOM element node (i.e. a '<div>'). It can be used and placed anywhere in your
+DOM element node (i.e. a `<div>`). It can be used and placed anywhere in your
 DOM tree. Likewise a "widget" can also contain most any valid HTML content as
 children.
 
 This manual is organized into 6 main sections:
 
-  - **`Dom`**: Low-level DOM API overview
-  - **`Layout`**: Overview of DomKit layout containers
-  - **`Controls`**: Overview of standard DomKit controls
-  - **`Modals`**: Overview of DomKit modal elements
-  - **[Drag and Drop]`Dnd`**: Overview of DomKit drag and drop API
-  - **[Theming]`Theming`**: Overview of customizing DomKit CSS
+  - **[Dom]**: Low-level DOM API overview
+  - **[Layout]**: Overview of DomKit layout containers
+  - **[Controls]**: Overview of standard DomKit controls
+  - **[Modals]**: Overview of DomKit modal elements
+  - **[Drag and Drop](Dnd)**: Overview of DomKit drag and drop API
+  - **[Theming]**: Overview of customizing DomKit CSS
 
 To get a feel for what is available in Domkit and some example use cases, you
 can run the test suite:
 
-   $ fan testDomkit
+     $ fan testDomkit
 
 This command will start a local web server on port 8080 which you can then open
 in your browser:
 
-   http://localhost:8080/
+     http://localhost:8080/
 
