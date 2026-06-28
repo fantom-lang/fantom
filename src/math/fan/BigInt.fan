@@ -28,7 +28,7 @@ native const class BigInt
   static const BigInt one
 
   ** Returns a BigInt whose value is equal to that of
-  ** the specified Int. 
+  ** the specified Int.
   new makeInt(Int val)
 
   ** Translates a byte array containing the two's-complement binary

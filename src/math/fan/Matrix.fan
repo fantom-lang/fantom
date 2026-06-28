@@ -20,11 +20,11 @@ mixin Matrix
   ** Return true if the matrix is square.
   abstract Bool isSquare()
 
-  ** Get the element at 'A[i,j]', where 'i' is the row index, and 'j' is
+  ** Get the element at `A[i,j]`, where `i` is the row index, and `j` is
   ** column index.
   abstract Float get(Int i, Int j)
 
-  ** Set the element at 'A[i,j]', where 'i' is the row index, and 'j' is
+  ** Set the element at `A[i,j]`, where `i` is the row index, and `j` is
   ** column index.
   abstract This set(Int i, Int j, Float val)
 
@@ -34,16 +34,16 @@ mixin Matrix
   ** Get the transpose of the matrix.
   abstract Matrix transpose()
 
-  ** Computes 'x * A'.
+  ** Computes `x * A`.
   abstract This multScalar(Float x)
 
-  ** Computes 'A + B' and returns a new matrix.
+  ** Computes `A + B` and returns a new matrix.
   @Operator abstract Matrix plus(Matrix b)
 
-  ** Computes 'A - B' and returns a new matrix.
+  ** Computes `A - B` and returns a new matrix.
   @Operator abstract Matrix minus(Matrix b)
 
-  ** Computes 'A * B' and returns a new matrix.
+  ** Computes `A * B` and returns a new matrix.
   @Operator abstract Matrix mult(Matrix b)
 
   ** Compute the determinant of the matrix. The matrix must be square.

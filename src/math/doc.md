@@ -1,0 +1,18 @@
+<!--
+title:      Math
+author:     Matthew Giannini
+created:    14 Aug 20
+copyright:  Copyright (c) 2020, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The [math](math::index) pod defines standard classes and utilities for performing
+math computations.
+
+# Matrix
+The library includes a [Matrix] API and a default implementation. A matrix can be created
+using the [Math.matrix] utility.
+
+    matrix := Math.matrix(2,2)
+

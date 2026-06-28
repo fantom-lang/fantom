@@ -12,7 +12,7 @@
 **
 final class Math
 {
-  ** Create a new `Matrix` with the given number of rows and columns.
+  ** Create a new [Matrix] with the given number of rows and columns.
   ** All elements of the matrix are initialized to zero.
   static Matrix matrix(Int numRows, Int numCols) { MMatrix(numRows, numCols) }
 }
