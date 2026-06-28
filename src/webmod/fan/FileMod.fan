@@ -11,12 +11,12 @@ using web
 **
 ** FileMod is a web module which publishes a file or directory.
 **
-** See [pod doc]`pod-doc#file`
+** See [pod doc](pod-doc#filemod)
 **
 const class FileMod : WebMod
 {
   **
-  ** Constructor with it-block, must set `file`
+  ** Constructor with it-block, must set [file]
   **
   new make(|This|? f) { f?.call(this) }
 

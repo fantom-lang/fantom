@@ -11,7 +11,7 @@ using web
 **
 ** PipelineMod routes seriallly through a list of sub-WebMods.
 **
-** See [pod doc]`pod-doc#pipeline`
+** See [pod doc](pod-doc#pipelinemod)
 **
 const class PipelineMod : WebMod
 {
@@ -26,24 +26,24 @@ const class PipelineMod : WebMod
   }
 
   **
-  ** Steps to run serially regardless of 'WebRes.isDone'
+  ** Steps to run serially regardless of `WebRes.isDone`
   ** before every request.
   **
   const WebMod[] before := WebMod[,]
 
   **
-  ** Steps to run serially until 'WebRes.isDone' returns true.
+  ** Steps to run serially until `WebRes.isDone` returns true.
   **
   const WebMod[] steps := WebMod[,]
 
   **
-  ** Steps to run serially regardless of 'WebRes.isDone'
+  ** Steps to run serially regardless of `WebRes.isDone`
   ** after every request.
   **
   const WebMod[] after := WebMod[,]
 
   **
-  ** Call 'onStart' on sub-mods.
+  ** Call `onStart` on sub-mods.
   **
   override Void onStart()
   {
@@ -53,7 +53,7 @@ const class PipelineMod : WebMod
   }
 
   **
-  ** Call 'onStop' on sub-mods.
+  ** Call `onStop` on sub-mods.
   **
   override Void onStop()
   {

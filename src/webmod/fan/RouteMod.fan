@@ -11,7 +11,7 @@ using web
 **
 ** RouteMod routes a level of the URI path to sub-WebMods.
 **
-** See [pod doc]`pod-doc#route`
+** See [pod doc](pod-doc#routemod)
 **
 const class RouteMod : WebMod
 {
@@ -46,12 +46,12 @@ const class RouteMod : WebMod
   }
 
   **
-  ** Call 'onStart' on sub-mods.
+  ** Call `onStart` on sub-mods.
   **
   override Void onStart() { routes.each |mod| { mod.onStart } }
 
   **
-  ** Call 'onStop' on sub-mods.
+  ** Call `onStop` on sub-mods.
   **
   override Void onStop() { routes.each |mod| { mod.onStop } }
 

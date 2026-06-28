@@ -12,7 +12,7 @@ using util
 **
 ** LogMod is used log requests according to the W3C extended log file format.
 **
-** See [pod doc]`pod-doc#log`
+** See [pod doc](pod-doc#logmod)
 **
 const class LogMod : WebMod
 {
@@ -47,7 +47,7 @@ const class LogMod : WebMod
 
   **
   ** Log filename pattern.  The name may contain a pattern between
-  ** '{}' using the pattern format of `sys::DateTime.toLocale`.  For
+  ** `{}` using the pattern format of [sys::DateTime.toLocale].  For
   ** example to maintain a log file per month, use a filename such
   ** as "web-{YYYY-MM}.log".
   **
@@ -55,7 +55,7 @@ const class LogMod : WebMod
 
   **
   ** Format of the log records as a string of #Fields names.
-  ** See [pod doc]`pod-doc#log`
+  ** See [pod doc](pod-doc#logmod)
   **
   const Str fields := "date time c-ip cs(X-Real-IP) cs-method cs-uri-stem cs-uri-query sc-status time-taken cs(User-Agent) cs(Referer)"
 
