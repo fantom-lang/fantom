@@ -94,7 +94,7 @@ class CreateZip : Task
   ** directory.
   File[]? inDirs
 
-  ** This function is called on each file under 'inDir'; if true
+  ** This function is called on each file under `inDir`; if true
   ** returned it is included in the zip, if false then it is excluded.
   ** Returning false for a directory will skip recursing the entire
   ** directory.
@@ -102,7 +102,7 @@ class CreateZip : Task
 
   **
   ** Specifies the top level directory inside the zip file
-  ** prefixed to all the files.  For example use 'acme/' to
+  ** prefixed to all the files.  For example use `acme/` to
   ** put everything inside the zip file inside a "acme" directory.
   ** The URI used must end with a slash.  If null, then no path
   ** prefix is used.

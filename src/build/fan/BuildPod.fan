@@ -12,7 +12,7 @@ using compiler
 ** BuildPod is the base class for build scripts used to manage
 ** building a Fantom source code and resources into a Fantom pod.
 **
-** See `docTools::Build` for details.
+** See [docTools::Build] for details.
 **
 abstract class BuildPod : BuildScript
 {
@@ -32,24 +32,24 @@ abstract class BuildPod : BuildScript
   Str? summary := null
 
   **
-  ** Version of the pod - default is set to `BuildScript.config`
-  ** prop 'buildVersion'.
+  ** Version of the pod - default is set to [BuildScript.config]
+  ** prop `buildVersion`.
   **
   Version version := Version(config("buildVersion", "0"))
 
   **
-  ** List of dependencies for pod formatted as `sys::Depend`.
-  ** Strings are automatically run through `BuildScript.applyMacros`.
+  ** List of dependencies for pod formatted as [sys::Depend].
+  ** Strings are automatically run through [BuildScript.applyMacros].
   **
   Str[] depends := Str[,]
 
   **
-  ** Pod meta-data name/value pairs to compile into pod.  See `sys::Pod.meta`.
+  ** Pod meta-data name/value pairs to compile into pod.  See [sys::Pod.meta].
   **
   Str:Str meta := Str:Str[:] { ordered = true }
 
   **
-  ** Pod index name/value pairs to compile into pod.  See `sys::Env.index`.
+  ** Pod index name/value pairs to compile into pod.  See [sys::Env.index].
   ** The index values can be a single Str or a Str[] if there are
   ** multiple values mapped to one key.
   **
@@ -108,9 +108,9 @@ abstract class BuildPod : BuildScript
   Uri[]? jsDirs
 
   **
-  ** List of Uris relative to build script that should be searched for '.props'
+  ** List of Uris relative to build script that should be searched for `.props`
   ** files to compile to JavaScript. You may also give relative paths to files
-  ** with a '.props' ext.  If this field is null, it defaults to `resDirs`.
+  ** with a `.props` ext.  If this field is null, it defaults to [resDirs].
   **
   Uri[]? jsProps
 
@@ -119,7 +119,7 @@ abstract class BuildPod : BuildScript
   ** potentially their recursive dependencies).  If null then we
   ** use the compiler's own pod definitions via reflection (which
   ** is more efficient).  As a general rule you shouldn't mess
-  ** with this field - it is used by the 'build' and 'compiler'
+  ** with this field - it is used by the `build` and `compiler`
   ** build scripts for bootstrap build.
   **
   Uri? dependsDir := null
@@ -160,7 +160,7 @@ abstract class BuildPod : BuildScript
 
   **
   ** Compile the source into a pod file and all associated
-  ** natives.  See `compileFan`, `compileJava`, and `compileDotnet`.
+  ** natives.  See [compileFan], [compileJava], and [compileDotnet].
   **
   @Target { help = "Compile to pod file and associated natives" }
   virtual Void compile()
@@ -566,7 +566,7 @@ abstract class BuildPod : BuildScript
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Run the unit tests using 'fant' for this pod
+  ** Run the unit tests using `fant` for this pod
   **
   @Target { help = "Run the pod unit tests via fant" }
   virtual Void test()

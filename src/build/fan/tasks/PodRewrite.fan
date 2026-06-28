@@ -10,7 +10,7 @@
 ** PodRewrite is used to update the contents of one or more pod files.
 ** It can be used to strip javascript, source code, and docs.  However it
 ** cannot strip test code - that requires a recompile from source with
-** the 'stripTest' flag.
+** the `stripTest` flag.
 **
 class PodRewrite : Task
 {

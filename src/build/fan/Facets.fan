@@ -7,7 +7,7 @@
 //
 
 **
-** Target facet is applied to a `BuildScript` method to
+** Target facet is applied to a [BuildScript] method to
 ** indicate it is a build target or goal.
 **
 facet class Target

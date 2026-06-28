@@ -13,7 +13,7 @@ using compiler
 ** the command line interface, argument parsing, environment, and
 ** target execution.
 **
-** See `docTools::Build` for details.
+** See [docTools::Build] for details.
 **
 abstract class BuildScript
 {
@@ -39,8 +39,8 @@ abstract class BuildScript
 
   **
   ** Home directory of development installation.  By default this
-  ** value is initialized by 'devHome' config prop, otherwise
-  ** `sys::Env.homeDir` is used.
+  ** value is initialized by `devHome` config prop, otherwise
+  ** [sys::Env.homeDir] is used.
   **
   const File devHomeDir := configDir("devHome", Env.cur.homeDir)
 
@@ -63,7 +63,7 @@ abstract class BuildScript
   **
   ** Get the list of published targets for this script.  The
   ** first target should be the default.  The list of targets
-  ** is defined by all the methods with the `Target` facet.
+  ** is defined by all the methods with the [Target] facet.
   **
   virtual once TargetMethod[] targets()
   {
@@ -82,9 +82,9 @@ abstract class BuildScript
 
   **
   ** Get a config property using the following rules:
-  **   1. `sys::Env.vars` with 'FAN_BUILD_$name.upper'
-  **   2. `sys::Env.config` for build pod
-  **   3. fallback to 'def' parameter
+  **   1. [sys::Env.vars] with `FAN_BUILD_$name.upper`
+  **   2. [sys::Env.config] for build pod
+  **   3. fallback to `def` parameter
   **
   Str? config(Str name, Str? def := null)
   {
@@ -93,7 +93,7 @@ abstract class BuildScript
   }
 
   **
-  ** Get a `config` prop which identifies a directory.
+  ** Get a [config] prop which identifies a directory.
   ** If the prop isn't configured or doesn't map to a
   ** valid directory, then return def.
   **
@@ -124,7 +124,7 @@ abstract class BuildScript
   ** Apply a set of macro substitutions to the given pattern.
   ** Substitution keys are indicated in the pattern using "@{key}"
   ** and replaced by definition in macros map.  If a substitution
-  ** key is undefined then raise an exception.  The `configs`
+  ** key is undefined then raise an exception.  The [configs]
   ** method is used for default macro key/value map.
   **
   Str applyMacros(Str pattern, Str:Str macros := this.configs)

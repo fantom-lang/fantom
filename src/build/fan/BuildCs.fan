@@ -23,8 +23,8 @@ abstract class BuildCs : BuildScript
   Uri? output
 
   **
-  ** Required output type. Possible values are 'exe',
-  ** 'winexe', 'library' or 'module'.
+  ** Required output type. Possible values are `exe`,
+  ** `winexe`, `library` or `module`.
   **
   Str? targetType
 

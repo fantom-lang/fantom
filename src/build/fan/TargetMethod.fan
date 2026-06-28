@@ -10,7 +10,7 @@
 ** TargetMethod wraps a build target method which may be executed independently
 ** within a build script.  Targets are the top level unit for organizing
 ** build scripts - each script publishes its available targets via
-** `BuildScript.targets`.
+** [BuildScript.targets].
 **
 class TargetMethod
 {
@@ -52,7 +52,7 @@ class TargetMethod
 
   **
   ** Summary description for usage help, derived
-  ** from `Target` facet on method.
+  ** from [Target] facet on method.
   **
   virtual Str help() { method.facet(Target#)->help }
 

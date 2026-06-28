@@ -53,7 +53,7 @@ class JdkTask : Task
 //////////////////////////////////////////////////////////////////////////
 
   ** Home directory for jdk installation
-  ** configured via config prop 'jdkHome'
+  ** configured via config prop `jdkHome`
   File jdkHomeDir
 
   ** JDK bin for executables: {jdkHomeDir}/bin/
