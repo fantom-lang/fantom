@@ -1,47 +1,45 @@
-**************************************************************************
-** title:      Bootstrap
-** author:     Brian Frank
-** created:    05 Jan 08
-** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Bootstrap
+author:     Brian Frank
+created:    05 Jan 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
+# Overview
 The Fantom compiler is written in Fantom itself - which presents a chicken
 and the egg problem.  How do you compile the compiler without having
 a compiler?  The problem is further compounded by the fact that the build
 scripts themselves are written in Fantom.  To solve this problem, the
 bootstrap process requires two Fantom installations:
 
-  1.  *rel*: known good Fantom installation (typically the last build)
-  2.  *dev*: development environment to build (probably pulled from github)
+  1. *rel*: known good Fantom installation (typically the last build)
+  2. *dev*: development environment to build (probably pulled from github)
 
 By convention we structure our development directory tree like this:
 
-  work/
-    rel/
-      bin/
-      lib/
-      ...
-    fan/
-      bin/
-      lib/
-      src/
-      ...
+    work/
+      rel/
+        bin/
+        lib/
+        ...
+      fan/
+        bin/
+        lib/
+        src/
+        ...
 
 The "rel" directory always contains the last released build.  The "fan"
 directory contains our main development code branch.
 
-Bootstrap Script [#script]
-**************************
+# Bootstrap Script
 The easiest way to perform a bootstrap build from git is to use the
 "bootstrap.fan" script:
-  1. Download latest released build from `https://fantom.org/`
-  2. Unzip that build to '{relHome}'
-  3. Ensure 'git' is installed in your path (see [Git]`https://git-scm.com/`)
-  4. Verify 'java_home' env var points to your JDK installation
-  5. Execute '{relHome}/bin/fan {relHome}/adm/bootstrap.fan'
+  1. Download latest released build from [https://fantom.org/]
+  2. Unzip that build to `{relHome}`
+  3. Ensure `git` is installed in your path (see [Git](https://git-scm.com/))
+  4. Verify `java_home` env var points to your JDK installation
+  5. Execute `{relHome}/bin/fan {relHome}/adm/bootstrap.fan`
   6. Go grab a cup of coffee
 
 NOTE: the default setup requries JDK 1.8 to recompile Fantom.
@@ -58,8 +56,7 @@ This script will perform a number of steps:
 The rest of this chapter covers all the internal details required to
 fully understand bootstrap building.
 
-Dev Home [#devHome]
-*******************
+# Dev Home
 By default the build assumes *devHome* to be the home directory of Fantom
 installation.  For example if you rebuild the Java runtime, then the output
 goes into "devHome/lib/java/sys.jar".  In the case of the *rel*
@@ -68,26 +65,25 @@ ourselves (which leads to some nasty problems).  So you need to set
 the *devHome* prop in "etc/build/config.props" of your *rel* installation
 to reference the *dev* directory using a URI (not OS path):
 
-  // Must be configured boot build in substitute/release installation
-  devHome=file:/C:/work/fan/
+    // Must be configured boot build in substitute/release installation
+    devHome=file:/C:/work/fan/
 
 If you forget to do this, then you will get a build error which
 looks something like this:
 
-  C:\work\fan\src>sys\java\build
-  ERR: Must update 'devHome' for bootstrap build
-  BUILD FAILED [12ms]!
+    C:\work\fan\src>sys\java\build
+    ERR: Must update 'devHome' for bootstrap build
+    BUILD FAILED [12ms]!
 
-Substitutes [#substitutes]
-**************************
+# Substitutes
 On a clean machine with only source code, we don't have any pods compiled
-such as 'sys', 'build', or 'compiler'.  In order to run the build scripts
+such as `sys`, `build`, or `compiler`.  In order to run the build scripts
 to compile these pods, we need to use our *rel* installation.
 
 All bootstrap build scripts should have the following unix shebang line as the
 first line in the script. This should be done even if you are only building on Windows.
 
-  #! /usr/bin/env fansubstitute
+    #! /usr/bin/env fansubstitute
 
 On Unix, the fansubstitute script explicitly sets FAN_HOME to the value
 of the FAN_SUBSTITUTE variable before launching.  On Windows, the launcher
@@ -96,65 +92,61 @@ sets FAN_HOME to the value of the FAN_SUBSTITUTE before launching.
 So, in either case, you will need to export FAN_SUBSTITUTE to reference your *rel* installation.
 And of course you have to run your scripts as executables so that the shebang takes effect.
 
-JDK [#otherTools]
-********************************
+# JDK
 You need JDK 1.8 to compile from source.
 
 In order to compile from source you will need to setup some config
 properties to reference your JDK home directory:
 
-  jdkHome=/C:/dev/tools/java/
+    jdkHome=/C:/dev/tools/java/
 
 This paths should be formatted as file system Uris (not OS paths).
 This property should be configured in "etc/build/config.props"
 of **both** your *rel* and *dev* environments.
 
-Buildall [#buildall]
-********************
+# Buildall
 The "buildall.fan" script is the top level build script for compiling
 the Fantom distribution.  We commonly run this command to rebuild everything
 and run tests on every pod:
 
-  buildall full test
+    buildall full test
 
 The "buildall" script is executed by the *rel* substitute runtime and
 in turn launches two sub-scripts.  The "buildboot.fan" script manages
 rebuilding the core runtime modules:
 
-  sys/build.fan
-  sys/java/build.fan
-  sys/dotnet/build.fan
-  sys/js/build.fan
-  compiler/build.fan
-  compilerJava/build.fan
-  build/build.fan
+    sys/build.fan
+    sys/java/build.fan
+    sys/dotnet/build.fan
+    sys/js/build.fan
+    compiler/build.fan
+    compilerJava/build.fan
+    build/build.fan
 
 Once the bootstrap modules are compiled, the development environment is
 self hosting and can be used to compile the remainder of itself.  This
 is done via the "buildpods.fan" script.
 
-Dependencies [#dependencies]
-****************************
+# Dependencies
 The bootstrap issue can cause some confusing dependency issues which
 are summarized here:
 
-  - The *rel* compiler will be generating the 'sys', 'compiler', and 'build'
+  - The *rel* compiler will be generating the `sys`, `compiler`, and `build`
     pod files.  This means that the *rel* compiler must be able to
     generate fcode that the *dev* runtime can read.  It also means that
     the *rel* compiler must be able to read any new syntax used by *dev*
-    versions of 'sys', 'compiler', and 'build'.
+    versions of `sys`, `compiler`, and `build`.
 
   - The *rel* compiler will actually use the *dev* versions of the pods
     to resolve dependencies.  For example *dev* compiler can reference
     new sys APIs defined in *dev* but not *rel*.  Under the covers this
-    works because the 'compiler' and 'build' pod's build scripts specify
-    a non-default [dependsDir]`build::BuildPod.dependsDir`.
+    works because the `compiler` and `build` pod's build scripts specify
+    a non-default [dependsDir](build::BuildPod.dependsDir).
 
 Because of these restrictions, adding new language features and fcode
 changes require some careful planning.
 
-Debugging [#debugging]
-**********************
+# Debugging
 You can use the "dumpEnv" build target to dump key aspects of your
 build script environment.  You can run target on "buildall.fan", although
 a more concise report is to dumpEnv on "buildboot.fan" and one of the
@@ -166,8 +158,7 @@ Key things to note about your environment:
   3. non-bootbuild scripts like testSys should be using *dev* for fanHome
   4. verify javaHome for sys/javafan/build.fan
 
-Summary [#summary]
-******************
+# Summary
 In summary, you want to make sure of a couple key things:
 
   1. setup your *rel* installation and never touch it (consider it readonly)

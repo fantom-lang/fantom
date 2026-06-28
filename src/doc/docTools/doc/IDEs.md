@@ -1,0 +1,73 @@
+<!--
+title:      IDEs
+author:     Brian Frank
+created:    23 Nov 08
+copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Despite Fantom being such a young language, there are many projects
+for bringing Fantom support to your favorite IDE.  Note many of these
+projects are still in early development.
+
+# Eclipse F4 (xored software)
+F4 is an Eclipse-based IDE for Fantom which is written mostly in Fantom
+itself. It can be installed as a set of plugins via Eclipse update site
+or as a standalone application:
+
+  - [Home Page](https://github.com/xored/f4)
+
+# IntelliJ
+Fantom syntax highlighting for IntelliJ
+
+  - [GitHub](https://github.com/anboralabs/fantom-lang-intellij)
+
+# Netbeans FantomIDE (tcolar)
+FantomIDE is an IDE for the Fantom language based on Netbeans
+It can be installed *as a plugin* to an existing Netbeans installation
+or as a *standalone IDE*.  It contains out of the box support for
+Fantom as well as Java, Javascript, CSS, HTML, XML, Subversion, Mercurial.
+
+  - [Home Page](http://fantomide.colar.net/home)
+  - [Download](http://fantomide.colar.net/install)
+
+This project is obsolete and not maintained anymore.
+
+# TextMate Bundle (msl)
+Fantom bundle for TextMate:
+
+ - [Home Page](http://github.com/martinlau/fantom-textmate-bundle)
+
+# Sublime Text 3 (mgiannini)
+Fantom package for the [Sublime Text 3](https://www.sublimetext.com) text editor.
+
+- [sublime-fantom](https://github.com/mgiannini/sublime-fantom)
+
+# Atom Editor (mgiannini)
+Fantom package for the [Atom](https://atom.io/) editor.
+
+ - [language-fantom](https://github.com/mgiannini/language-fantom)
+
+# Visual Studio Code (a-mackay)
+Fantom syntax highlighting for the [Visual Studio Code](https://code.visualstudio.com/) editor.
+
+- [a-mackay/fantom-syntax-highlighting](https://github.com/a-mackay/fantom-syntax-highlighting)
+
+# Text Editors
+The Fantom distro contains configuration files for many common text editors
+under "adm/tools" including:
+  - Emacs
+  - jEedit
+  - TextPad
+  - Vim
+
+# Flux
+The Fantom FWT repo includes a very basic editor called [Flux](https://github.com/fantom-lang/fwt/blob/master/flux.md)
+which provides syntax color coding for Fantom, Java, C#, etc.
+
+# Camembert (tcolar)
+Camembert is a Free, Open source, lightweight IDE, purely written
+in Fantom.
+
+  - [Home Page](http://www.status302.com/camembert)

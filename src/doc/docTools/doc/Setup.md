@@ -1,17 +1,16 @@
-**************************************************************************
-** title:      Setup
-** author:     Brian Frank
-** created:    04 Jan 08
-** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Setup
+author:     Brian Frank
+created:    04 Jan 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Unix Setup [#unix]
-******************
+# Unix Setup
 The Fantom distribution is packaged as a zip file.  Once unpacked
 you should add "bin" into your path:
 
-  PATH=$PATH:/apps/fantom/bin
+    PATH=$PATH:/apps/fantom/bin
 
 The Fantom launchers are implemented as a set of Bash shell
 scripts which all route to common code sourced in "bin/fanlaunch".
@@ -23,62 +22,58 @@ set on script files, then the "adm/unixsetup" script will
 automatically call "chmod +x" on all the shell scripts and Fan
 build scripts:
 
-  bash adm/unixsetup
+    bash adm/unixsetup
 
-Executable Scripts [#executableUnix]
-=====================================
+## Executable Scripts
 Fantom allows the first line of a source file to start with "#!" to run
 as a Unix shell script:
 
-  #! /usr/bin/env fan
-  class Script { static Void main() { echo("hi") } }
+    #! /usr/bin/env fan
+    class Script { static Void main() { echo("hi") } }
 
-  chmod +x myscript.fan
-  ./myscript.fan
+    chmod +x myscript.fan
+    ./myscript.fan
 
-Windows Setup [#windows]
-************************
+# Windows Setup
 The Fantom distribution is packaged as a zip file. Once unzipped, you should add
 the "bin" directory to your path:
 
-  PATH=%PATH%;C:\dev\fan\bin
+    PATH=%PATH%;C:\dev\fan\bin
 
 The Fantom launchers are implemented as a set of Windows Batch scripts
 which all route to common code in "bin\fanlaunch.bat". If your path is configured
 properly, you should be able to run
 
-  fan -version
+    fan -version
 
-Executable Scripts [#executableWindows]
-=======================================
-You can always use the [fan]`Fan` launcher to run a script by passing
+## Executable Scripts
+You can always use the [fan](Fan) launcher to run a script by passing
 it on the command line.  But ideally you will want to setup your environment
 so that you can call fan scripts directly as an executable file:
 
-  fan build.fan    // call using fan launcher explicitly
-  build            // call as executable script
+    fan build.fan    // call using fan launcher explicitly
+    build            // call as executable script
 
 The following series of console commands will make ".fan" files
 executable assuming we installed to "c:\dev\fan":
 
-  assoc .fan=Fan
-  ftype Fan=cmd.exe /c call "C:\dev\fan\bin\fan.bat" "%1" %*
-  set pathext=%pathext%;.fan
+    assoc .fan=Fan
+    ftype Fan=cmd.exe /c call "C:\dev\fan\bin\fan.bat" "%1" %*
+    set pathext=%pathext%;.fan
 
-Java Runtime [#javaRuntime]
-===========================
+## Java Runtime
 The launcher for Windows and Unix determines which java to use in the following order:
 
-1. If the 'FAN_JAVA' environment variable is set, then we assume it points to the
+1. If the `FAN_JAVA` environment variable is set, then we assume it points to the
 "java.exe" to run.
-2. If the 'JAVA_HOME' environment variable is set, then we use "${JAVA_HOME}/bin/java"
+2. If the `JAVA_HOME` environment variable is set, then we use "${JAVA_HOME}/bin/java"
 3. Otherwise, we fallback to the system "java" executable
 
 You can configure the JVM options by editing "etc/sys/config.props" and setting the
 "java.options" property. This is useful for modifying memory settings for the JVM.
 
-  // etc/sys/config.props
-  java.options=-Xmx128M
+    // etc/sys/config.props
+    java.options=-Xmx128M
 
 Fantom currently requires Java version 1.8 or greater to run.
 Java 1.8 is required to compile from source.
@@ -87,25 +82,23 @@ You can also run Fantom directly without the launcher by adding "sys.jar"
 to your classpath and ensuring either the "fan_home" environment variable
 is set or the "fan.home" Java system property is set:
 
-  // via env var
-  C:\>set fan_home=c:\dev\fan
-  C:\>java -cp %fan_home%\lib\java\sys.jar fanx.tools.Fan -version
+    // via env var
+    C:\>set fan_home=c:\dev\fan
+    C:\>java -cp %fan_home%\lib\java\sys.jar fanx.tools.Fan -version
 
-  // via system property
-  C:\>java -cp c:\dev\fan\lib\java\sys.jar -Dfan.home=%fan_home% fanx.tools.Fan -version
+    // via system property
+    C:\>java -cp c:\dev\fan\lib\java\sys.jar -Dfan.home=%fan_home% fanx.tools.Fan -version
 
-Each of the tools maps to a different class, for example to run 'fant' then run
-the Java class 'fanx.tools.Fant'.
+Each of the tools maps to a different class, for example to run `fant` then run
+the Java class `fanx.tools.Fant`.
 
-Substitutes [#substitutes]
-==========================
+## Substitutes
 Another feature of the launcher scripts is the ability to map
 specific script files to use an alternate Fantom runtime.  This technique
-is used to manage the [bootstrap build]`Bootstrap#substitutes` process.
+is used to manage the [bootstrap build](Bootstrap#substitutes) process.
 
-Fantom Programs as Windows Services [#windowsServices]
-===================================
-The Fantom installation includes a binary called 'fansc.exe' in the "bin\" directory
+## Fantom Programs as Windows Services
+The Fantom installation includes a binary called `fansc.exe` in the "bin\" directory
 of the installation. The "fansc" (Fan Service Control) binary can be used to install
 and uninstall a Fantom program as a Windows Service. You can run the program without
 any arguments to see the usage.  There are a few requirements for using fansc
@@ -118,21 +111,20 @@ privileges.
 The following example illustrates installing the default WispService as a windows
 service:
 
-pre>
+```fantom
 // Create the bin/wisp.bat file with these contents:
 @echo off
 call %~dp0\fanlaunch.bat Fan wisp::WispService %*
 
 // Now install it, configuring it to run on port 8080
 C:\dev\fantom\fan\bin\> fansc.exe install MyWispService C:\dev\fantom\fan\bin\wisp.bat -port 8080
-<pre
+```
 
-Java Extensions [#javaExt]
-**************************
+# Java Extensions
 You can add Java JARs to the following directories to have them automatically
 loaded by the Fantom class loader:
-  - '{home}/lib/java/ext/'
-  - '{home}/lib/java/ext/{platform}'
+  - `{home}/lib/java/ext/`
+  - `{home}/lib/java/ext/{platform}`
 
 The platform directory is used for JARs which vary by platform.  For
 example the SWT JARs are distributed in platform specific directories.
@@ -141,30 +133,28 @@ You can verify your platform running "fan -version".
 The preferred mechanism to add Java JARs into your Fantom environment
 is to convert them into a pod.
 
-Also see [JavaFFI]`docLang::JavaFFI#classpathRuntime`.
+Also see [JavaFFI](docLang::JavaFFI#class-path--runtime).
 
-JLine [#jline]
-**************
-Running command line applications such as [fansh]`Fansh` in the Java VM can
+# JLine
+Running command line applications such as [fansh](Fansh) in the Java VM can
 be unpleasant in Unix and OS X environments because control keys such as the
-arrow keys are not handled.  You can add [JLine]`https://github.com/jline/jline3`
+arrow keys are not handled.  You can add [JLine](https://github.com/jline/jline3)
 to your system classpath to fix this.  The built-in bash launcher scripts will
 automatically add "lib/java/jline.jar" into the classpath.  Both JLine3 LineReader
 and JLine2 ConsoleReader are supported.  Although more features are supported
-if using JLine3. If JLine is not found, then 'java.io.Console' is used as a
+if using JLine3. If JLine is not found, then `java.io.Console` is used as a
 fallback.  To integrate command line support into your application use the
-`util::Console` API.
+[util::Console] API.
 
-Newer versions of Java do not support adding jars to '{java-home}/lib/ext'.
+Newer versions of Java do not support adding jars to `{java-home}/lib/ext`.
 Instead if you would like jline to be globally available across all installations
 of Fantom, then set the classpath as environment variable like this:
 
-  export CLASSPATH=/work/stuff/jline/jline-3.9.0.jar
+    export CLASSPATH=/work/stuff/jline/jline-3.9.0.jar
 
-Env [#env]
-**********
+# Env
 The default behavior of Fantom is to manage all its files under the
 installation directory.  But you can boot Fantom using alternative
 environments to customize how your deployment is structured.
-See `docLang::Env` for details.
+See [docLang::Env] for details.
 
