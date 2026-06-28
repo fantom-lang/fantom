@@ -11,7 +11,7 @@ using inet
 **
 ** WebRes encapsulates a response to a web request.
 **
-** See [pod doc]`pod-doc#webRes`
+** See [pod doc](pod-doc#webres)
 **
 abstract class WebRes
 {
@@ -29,7 +29,7 @@ abstract class WebRes
 
   **
   ** Reason phrase to include in HTTP response line.  If null, then
-  ** a status phrase is used based on the `statusCode`.
+  ** a status phrase is used based on the [statusCode].
   **
   abstract Str? statusPhrase
 
@@ -46,15 +46,17 @@ abstract class WebRes
   ** response is already committed.
   **
   ** Example:
-  **   res.cookies.add(Cookie("foo", "123"))
-  **   res.cookies.add(Cookie("persistent", "some val") { maxAge = 3day })
+  **
+  **     res.cookies.add(Cookie("foo", "123"))
+  **     res.cookies.add(Cookie("persistent", "some val") { maxAge = 3day })
   **
   abstract Cookie[] cookies()
 
   **
   ** Remove a cookie for this response.  This method is a
   ** convenience for:
-  **   res.cookies.add(Cookie(name, "") { maxAge=0day }
+  **
+  **     res.cookies.add(Cookie(name, "") { maxAge=0day }
   **
   Void removeCookie(Str name)
   {
@@ -65,7 +67,7 @@ abstract class WebRes
   ** Return true if this response has been commmited.  A committed
   ** response has written its response headers, and can no longer
   ** modify its status code or headers.  A response is committed
-  ** the first time that `out` is called.
+  ** the first time that [out] is called.
   **
   abstract Bool isCommitted()
 
@@ -83,19 +85,19 @@ abstract class WebRes
   **
   ** Send a redirect response to the client using the specified status
   ** code and url.  If this response has already been committed this
-  ** method throws an Err.  This method implicitly calls `done`.
+  ** method throws an Err.  This method implicitly calls [done].
   **
   abstract Void redirect(Uri uri, Int statusCode := 303)
 
   **
   ** Send an error response to client using the specified status and
   ** HTML formatted message.  If this response has already been committed
-  ** this method throws an Err.  This method implicitly calls `done`.
+  ** this method throws an Err.  This method implicitly calls [done].
   **
   abstract Void sendErr(Int statusCode, Str? msg := null)
 
   **
-  ** Return if this response is complete - see `done`.
+  ** Return if this response is complete - see [done].
   **
   abstract Bool isDone()
 

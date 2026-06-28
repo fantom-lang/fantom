@@ -10,7 +10,7 @@
 ** WebMod defines a web modules which is plugged into a
 ** web server's URI namespace to service web requests.
 **
-** See [pod doc]`pod-doc#webmod`.
+** See [pod doc](pod-doc#webmods).
 **
 abstract const class WebMod : Weblet
 {
@@ -26,7 +26,7 @@ abstract const class WebMod : Weblet
   virtual Void onStop() {}
 
   **
-  ** Create WebOutStream from socket output stream to use for 'WebRes.out'.
+  ** Create WebOutStream from socket output stream to use for `WebRes.out`.
   ** This method is call on the current WebMod during the response commit.
   **
   @NoDoc virtual WebOutStream? makeResOut(OutStream out)

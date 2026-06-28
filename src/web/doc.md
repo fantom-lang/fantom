@@ -1,0 +1,189 @@
+<!--
+title:      Web
+author:     Brian Frank
+created:    06 Apr 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The [web](web::index) pod defines the standard APIs used to handle
+both client and server side HTTP requests.
+
+Client side HTTP requests:
+
+  - [WebClient](web::WebClient): manages client side of the HTTP protocol
+
+Server side web APIs are organized into the primary classes:
+
+  - [WebReq](web::WebReq): models an incoming web request such
+    as the method, uri, request headers, and input stream.
+  - [WebRes](web::WebRes): models the outgoing web response
+    such as the status code, response headers, and output stream.
+  - [Weblet](web::Weblet): an entity which processes a web
+    request.
+  - [WebMod](web::WebMod): a web module which may be composed with
+    other modules to build up a web solution.
+
+# WebClient
+The `WebClient` class is used to manage client side HTTP requests
+and responses.  The basic lifecycle of WebClient:
+  1. configure request fields such as `reqUri`, `reqMethod`, and `reqHeaders`
+  2. send request headers via `writeReq`
+  3. optionally write request body via `reqOut`
+  4. read response status and headers via `readRes`
+  5. process response fields such as `resCode` and `resHeaders`
+  6. optionally read response body via `resIn`
+
+Using the low level methods `writeReq` and `readRes` enables HTTP
+pipelining (multiple requests and responses on the same TCP socket
+connection).  There are also a series of convenience methods which
+make common cases easier.
+
+See [examples](examples::web-client) for sample code.
+
+# Weblets
+Pretty much anything that touches a HTTP request should be implement
+[web::Weblet].  The lifecycle of a Weblet is quite simple:
+  - all web requests are guaranteed to be called on their own
+    actor/thread with the actor locals "web.req" and "web.res"
+  - `req` and `res`: the current actor's `WebReq` and `WebRes` are
+    available with these methods - so there no need to pass the
+    request and response around
+  - `onService`: the `onService` method can be overridden directly to
+    handle the request, or the default implementation will route
+    to the `doGet`, `doPost`, etc methods
+
+# WebReq
+The [web::WebReq] class models the request side of a HTTP request.
+Common methods you will use include:
+  - [method](web::WebReq.method): HTTP method such as "GET" or "POST"
+  - [uri](web::WebReq.uri): the request URI parsed into a [sys::Uri]
+    which allows you access the parsed path and query segments.
+  - [mod](web::WebReq.mod): web module currently responsible for request
+  - [modBase](web::WebReq.modBase): URI used to route to current module
+  - [modRel](web::WebReq.modRel): module relative URI used for module
+    internal processing
+  - [headers](web::WebReq.headers): a case insensitive `Str:Str` map
+    of the request HTTP headers
+  - [in](web::WebReq.in): access to the raw input stream of the request
+  - [form](web::WebReq.form):  access to the parsed form data
+  - [cookies](web::WebReq.cookies): a `Str:Str` map of cookies
+  - [session](web::WebReq.session): a `Str:Obj` map used to stash
+    stuff for the browser "connection" between HTTP requests
+  - [stash](web::WebReq.stash): a `Str:Obj` map used to stash stuff
+    only for the life of request
+
+# WebRes
+The [web::WebRes] class models the response side of a HTTP request.
+A `WebRes` has the following lifecycle:
+  - **Uncommitted**: at this point nothing has been written back on the
+    TCP socket and `statusCode`, `headers`, and `cookies` are
+    still configurable
+  - **Committed**: at this point the HTTP response headers have been
+    written, and you can write the response content via the out
+    stream.  Once a response is committed, attempts to access `statusCode`,
+    `headers`, `cookies`, `redirect`, or `sendErr` will raise an exception
+  - **Done**: at this point the response is complete - for example once
+    the `redirect` or `sendErr` method is called, the response
+    is done
+
+Common methods you will use include:
+  - [statusCode](web::WebRes.statusCode): sets the HTTP status
+    code - must be set before commit
+  - [headers](web::WebRes.headers): a `Str:Str` map of HTTP
+    headers - must be set before commit
+  - [cookies](web::WebRes.cookies): used to set the cookie
+    header - must be set before commit
+  - [out](web::WebRes.out): the output stream for writing
+    the content - first call commits the response
+  - [isCommitted](web::WebRes.isCommitted): check commit state
+  - [isDone](web::WebRes.isDone): check done state
+  - [sendErr](web::WebRes.sendErr): used to send an error status code
+  - [redirect](web::WebRes.redirect): used to send a redirect status code
+
+WebRes is a fairly low level API which requires the commit state
+model to avoid buffering the content.
+
+# WebSessions
+The [web::WebSession] class models the client session which allows you to
+persist state between HTTP requests.  WebSessions in Fantom are cookie
+based using the cookie name "fanws".  The default session implementation
+stores sessions in memory for up to 24 hours, then clears them from
+the cache - session state is not persisted between VM restarts.
+
+WebSession provides a `Str:Obj?` map to store arbitrary name/value pairs.
+You can use the [map](web::WebSession.map), [get](web::WebSession.get),
+or [set](web::WebSession.set) methods to manage session state.  You
+can use [delete](web::WebSession.delete) to explicitly delete the session
+cookie and server side state.  The values stored in a WebSession should
+always be [serializable](docLang::Serialization) objects.
+
+WebSessions are created and accessed via the [WebReq.session](web::WebReq.session)
+method.  The first time a session is accessed it sets the cookie header
+in the response - therefore sessions should always be accessed before the
+response is committed.  Deleting a session also requires setting the cookie
+header and must done before the response is committed.
+
+Example of storing a counter in a session:
+
+    override Void doGet()
+    {
+      Int count := req.session.get("counter", 0)
+      req.session["counter"] = count + 1
+
+      res.headers["Content-Type"] = "text/plain"
+      res.statusCode = 200
+      res.out.printLine("session counter=$count")
+    }
+
+# WebMods
+The [web::WebMod] class is the base class for plugging in web server
+modules.  WebMods are immutable Weblets which may be composed together
+to build higher level modules or to configure the entire web server.
+
+During processing of a given web request, there is always exactly one
+WebMod responsible for the request which is available via the
+[WebReq.mod](web::WebReq.mod) method.  The URI used to route to the
+module is accessed by [WebReq.modBase](web::WebReq.modBase),
+and the remainder of the URI which is internal to the module via
+[WebReq.modRel](web::WebReq.modRel).  Using these methods you can
+write modules which can be freely plugged anywhere into a server's
+URI namespace.
+
+WebMods receive the `onStart` and `onStop` callbacks when the web server
+is started and stopped.  These callbacks can be used to perform
+initialization and cleanup such as managing actors.
+
+The [webmod](WebMod) pod includes a library of modules which are
+designed to handle common tasks such publishing static files, routing,
+and pipelining.
+
+# Expect Continue
+Using "Expect: 100-continue" allows the server to fail-fast and
+report an error to the client before the client sends the request
+body.  This technique is often used before posting large files
+to verify preconditions.
+
+The [WebClient] API does not provide automatic support for using the
+Expect header.  You must manually handle flow control yourself.  Here
+is a simple example showing how to post a file using the Expect header:
+
+    c := WebClient(`http://example.com/post-file`)
+    c.reqMethod = "POST"
+    c.reqHeaders["Content-Type"] = file.mimeType.toStr
+    c.reqHeaders["Content-Length"] = file.size.toStr
+    c.reqHeaders["Expect"] = "100-continue"
+    c.writeReq
+    c.readRes
+    if (c.resCode != 100) throw IOErr("Expecting 100, not $c.resCode")
+    file.in.pipe(c.reqOut, file.size)
+    c.reqOut.close
+    c.readRes
+    if (c.resCode != 200) throw IOErr("Expecting 200, not $c.resCode")
+
+Server side processing of the Expect header is automatic.
+When a Weblet acquires the [WebReq.in] stream for the first time, the
+request is checked for the "Expect: 100-continue" header and if
+specified, then a 100 Continue is automatically sent.
+

@@ -11,7 +11,7 @@ using inet
 **
 ** WebReq encapsulates a web request.
 **
-** See [pod doc]`pod-doc#webReq`.
+** See [pod doc](pod-doc#webreq).
 **
 abstract class WebReq
 {
@@ -48,23 +48,26 @@ abstract class WebReq
 
   **
   ** The request URI including the query string relative to
-  ** this authority.  Also see `absUri`, `modBase`, and `modRel`.
+  ** this authority.  Also see [absUri], [modBase], and [modRel].
   **
   ** Examples:
-  **   /a/b/c
-  **   /a?q=bar
+  **
+  **     /a/b/c
+  **     /a?q=bar
   **
   abstract Uri uri()
 
   **
   ** The absolute request URI including the full authority
-  ** and the query string.  Also see `uri`, `modBase`, and `modRel`.
+  ** and the query string.  Also see [uri], [modBase], and [modRel].
   ** This method is equivalent to:
-  **   "http://" + headers["Host"] + uri
+  **
+  **     "http://" + headers["Host"] + uri
   **
   ** Examples:
-  **   http://www.foo.com/a/b/c
-  **   http://www.foo.com/a?q=bar
+  **
+  **     http://www.foo.com/a/b/c
+  **     http://www.foo.com/a?q=bar
   **
   virtual once Uri absUri()
   {
@@ -82,18 +85,20 @@ abstract class WebReq
   **
   ** Base URI of the current WebMod.  This Uri always ends in a slash.
   ** This is the URI used to route to the WebMod itself.  The remainder
-  ** of `uri` is stored in `modRel` so that the following always
+  ** of [uri] is stored in [modRel] so that the following always
   ** holds true (with exception of a trailing slash):
-  **   modBase + modRel == uri
   **
-  ** For example if the current WebMod is mounted as '/mod' then:
-  **   uri          modBase   modRel
-  **   ----------   -------   -------
-  **   `/mod`       `/mod/`   ``
-  **   `/mod/`      `/mod/`   ``
-  **   `/mod?q`     `/mod/`   `?q`
-  **   `/mod/a`     `/mod/`   `a`
-  **   `/mod/a/b`   `/mod/`   `a/b`
+  **     modBase + modRel == uri
+  **
+  ** For example if the current WebMod is mounted as `/mod` then:
+  **
+  **     uri          modBase   modRel
+  **     ----------   -------   -------
+  **     `/mod`       `/mod/`   ``
+  **     `/mod/`      `/mod/`   ``
+  **     `/mod?q`     `/mod/`   `?q`
+  **     `/mod/a`     `/mod/`   `a`
+  **     `/mod/a/b`   `/mod/`   `a/b`
   **
   Uri modBase := `/`
   {
@@ -107,24 +112,25 @@ abstract class WebReq
   }
 
   **
-  ** WebMod relative part of the URI - see `modBase`.
+  ** WebMod relative part of the URI - see [modBase].
   **
   Uri modRel() { modRelVal ?: uri }
   private Uri? modRelVal
 
   **
   ** Map of HTTP request headers.  The headers map is readonly
-  ** and case insensitive (see `sys::Map.caseInsensitive`).
+  ** and case insensitive (see [sys::Map.caseInsensitive]).
   **
   ** Examples:
-  **   req.headers["Accept-Language"]
+  **
+  **     req.headers["Accept-Language"]
   **
   abstract Str:Str headers()
 
   **
   ** Get the accepted locales for this request based on the
   ** "Accept-Language" HTTP header.  List is sorted by preference, where
-  ** 'locales.first' is best, and 'locales.last' is worst.  This list is
+  ** `locales.first` is best, and `locales.last` is worst.  This list is
   ** guarenteed to contain Locale("en").
   **
   virtual once Locale[] locales()
@@ -177,7 +183,7 @@ abstract class WebReq
   ** Get the key/value pairs of the form data.  If the request
   ** content type is "application/x-www-form-urlencoded", then the
   ** first time this method is called the request content is read
-  ** and parsed using `sys::Uri.decodeQuery`.  If the content
+  ** and parsed using [sys::Uri.decodeQuery].  If the content
   ** type is not "application/x-www-form-urlencoded" this method
   ** returns null.
   **
@@ -194,13 +200,13 @@ abstract class WebReq
   }
 
   **
-  ** Get the stream to read request body.  See `WebUtil.makeContentInStream`
+  ** Get the stream to read request body.  See [WebUtil.makeContentInStream]
   ** to check under which conditions request content is available.
   ** If request content is not available, then throw an exception.
   **
   ** If the client specified the "Expect: 100-continue" header, then the first
   ** access of the request input stream will automatically send the client
-  ** a [100 Continue]`pod-doc#expectContinue` response.
+  ** a [100 Continue](pod-doc#expect-continue) response.
   **
   abstract InStream in()
 
@@ -226,7 +232,7 @@ abstract class WebReq
   ** Given a web request:
   **   1. check that the content-type is form-data
   **   2. get the boundary string
-  **   3. invoke callback for each part (see `WebUtil.parseMultiPart`)
+  **   3. invoke callback for each part (see [WebUtil.parseMultiPart])
   **
   ** For each part in the stream call the given callback function with
   ** the part's form name, headers, and an input stream used to read the

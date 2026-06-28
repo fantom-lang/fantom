@@ -12,14 +12,14 @@ using concurrent
 ** FilePack is an in-memory cache of multiple text files to service
 ** static resources via HTTP.  It takes one or more text files and
 ** creates one compound file.  The result is stored in RAM using GZIP
-** compression.  Or you can use the `pack` utility method to store
+** compression.  Or you can use the [pack] utility method to store
 ** the result to your own files/buffers.
 **
-** The `onGet` method is used to service GET requests for the bundle.
+** The [onGet] method is used to service GET requests for the bundle.
 ** The Content-Type header is set based on file extension of files bundled.
 ** It also implictly supports ETag/Last-Modified for 304 optimization.
 **
-** The core factory is the `makeFiles` constructor.  A suite of utility
+** The core factory is the [makeFiles] constructor.  A suite of utility
 ** methods is provided for standard bundling of Fantom JavaScrit and CSS
 ** files.
 **
@@ -152,9 +152,9 @@ const class FilePack : Weblet
 
   ** Given a set of pods return a list of JavaScript files that
   ** form a complete Fantom application:
-  **   - flatten the pods using `sys::Pod.flattenDepends`
-  **   - order them by dependencies using `sys::Pod.orderByDepends`
-  **   - insert `toEtcJsFiles` immediately after "sys.js"
+  **   - flatten the pods using [sys::Pod.flattenDepends]
+  **   - order them by dependencies using [sys::Pod.orderByDepends]
+  **   - insert [toEtcJsFiles] immediately after "sys.js"
   static File[] toAppJsFiles(Pod[] pods)
   {
     pods = Pod.flattenDepends(pods)
@@ -193,9 +193,9 @@ const class FilePack : Weblet
   }
 
   ** Return the required sys etc files:
-  **  - add `toMimeJsFile`
-  **  - add `toUnitsJsFile`
-  **  - add `toIndexPropsJsFile`
+  **  - add [toMimeJsFile]
+  **  - add [toUnitsJsFile]
+  **  - add [toIndexPropsJsFile]
   static File[] toEtcJsFiles()
   {
     [toMimeJsFile, toUnitsJsFile, toIndexPropsJsFile]
@@ -258,7 +258,7 @@ const class FilePack : Weblet
   ** Otherwise if the file is another JavaScript file (such as units.js) then
   ** we just add the appropiate offset.
   **
-  ** The 'sourceRoot' option may be passed in to replace "/dev/{podName}"
+  ** The `sourceRoot` option may be passed in to replace "/dev/{podName}"
   ** as the root URI used to fetch source files from the server.
   static File toPodJsMapFile(File[] files, [Str:Obj]? options := null)
   {
@@ -274,9 +274,9 @@ const class FilePack : Weblet
 
   ** Given a set of pods return a list of CSS files that
   ** form a complete Fantom application:
-  **   - flatten the pods using `sys::Pod.flattenDepends`
-  **   - order them by dependencies using `sys::Pod.orderByDepends`
-  **   - return `toPodCssFiles`
+  **   - flatten the pods using [sys::Pod.flattenDepends]
+  **   - order them by dependencies using [sys::Pod.orderByDepends]
+  **   - return [toPodCssFiles]
   static File[] toAppCssFiles(Pod[] pods)
   {
     pods = Pod.flattenDepends(pods)

@@ -11,7 +11,7 @@ using concurrent
 **
 ** Weblet services a web request.
 **
-** See [pod doc]`pod-doc#weblet`.
+** See [pod doc](pod-doc#weblets).
 **
 mixin Weblet
 {
@@ -50,7 +50,7 @@ mixin Weblet
 
   **
   ** Service a web request. The default implementation routes
-  ** to `onGet`, `onPost`, etc based on the request's method.
+  ** to [onGet], [onPost], etc based on the request's method.
   **
   virtual Void onService()
   {

@@ -8,7 +8,7 @@
 
 **
 ** WebUtil encapsulates several useful utility web methods.
-** Also see `sys::MimeType` and its utility methods.
+** Also see [sys::MimeType] and its utility methods.
 **
 @Js
 class WebUtil
@@ -22,10 +22,11 @@ class WebUtil
   ** Return if the specified string is a valid HTTP token production
   ** which is any ASCII character which is not a control char or a
   ** separator.  The separators characters are:
-  **   "(" | ")" | "<" | ">" | "@" |
-  **   "," | ";" | ":" | "\" | <"> |
-  **   "/" | "[" | "]" | "?" | "=" |
-  **   "{" | "}" | SP | HT
+  **
+  **     "(" | ")" | "<" | ">" | "@" |
+  **     "," | ";" | ":" | "\" | <"> |
+  **     "/" | "[" | "]" | "?" | "=" |
+  **     "{" | "}" | SP | HT
   **
   static Bool isToken(Str s)
   {
@@ -35,7 +36,7 @@ class WebUtil
 
   **
   ** Return if given char unicode point is allowable within the
-  ** HTTP token production.  See `isToken`.
+  ** HTTP token production.  See [isToken].
   **
   static Bool isTokenChar(Int c)
   {
@@ -60,7 +61,7 @@ class WebUtil
   ** to RFC 2616 Section 2.2.  The result is wrapped in quotes.  Throw
   ** ArgErr if any character is outside of the ASCII range of 0x20
   ** to 0x7e.  The quote char itself is backslash escaped.
-  ** See `fromQuotedStr`.
+  ** See [fromQuotedStr].
   **
   static Str toQuotedStr(Str s)
   {
@@ -78,7 +79,7 @@ class WebUtil
 
   **
   ** Decode a HTTP quoted string according to RFC 2616 Section 2.2.
-  ** The given string must be wrapped in quotes.  See `toQuotedStr`.
+  ** The given string must be wrapped in quotes.  See [toQuotedStr].
   **
   static Str fromQuotedStr(Str s)
   {
@@ -104,7 +105,7 @@ class WebUtil
   ** Parse a series of HTTP headers according to RFC 2616 section
   ** 4.2.  The final CRLF which terminates headers is consumed with
   ** the stream positioned immediately following.  The headers are
-  ** returned as a [case insensitive]`sys::Map.caseInsensitive` map.
+  ** returned as a [case insensitive](sys::Map.caseInsensitive) map.
   ** Throw ParseErr if headers are malformed.
   **
   static Str:Str parseHeaders(InStream in) { doParseHeaders(in, null) }
@@ -187,8 +188,9 @@ class WebUtil
   ** name/q-value pairs.  This map has a def value of 0.
   **
   ** Example:
-  **   compress,gzip              =>  ["compress":1f, "gzip":1f]
-  **   compress;q=0.5,gzip;q=0.0  =>  ["compress":0.5f, "gzip":0.0f]
+  **
+  **     compress,gzip              =>  ["compress":1f, "gzip":1f]
+  **     compress;q=0.5,gzip;q=0.0  =>  ["compress":0.5f, "gzip":0.0f]
   **
   static Str:Float parseQVals(Str s)
   {
@@ -245,11 +247,11 @@ class WebUtil
   **
   ** Given a set of headers, wrap the specified input stream
   ** to read the content body:
-  **   1. If Content-Encoding is 'gzip' then wrap via `sys::Zip.gzipInStream`
-  **   2. If Content-Length then `makeFixedInStream`
-  **   3. If Transfer-Encoding is chunked then `makeChunkedInStream`
+  **   1. If Content-Encoding is `gzip` then wrap via [sys::Zip.gzipInStream]
+  **   2. If Content-Length then [makeFixedInStream]
+  **   3. If Transfer-Encoding is chunked then [makeChunkedInStream]
   **   4. If Content-Type assume non-pipelined connection and
-  **      return 'in' directly
+  **      return `in` directly
   **
   ** If a stream is returned, then it is automatically configured
   ** with the correct content encoding based on the Content-Type.
@@ -296,9 +298,9 @@ class WebUtil
   **
   ** Given a set of headers, wrap the specified output stream
   ** to write the content body:
-  **   1. If Content-Length then `makeFixedOutStream`
+  **   1. If Content-Length then [makeFixedOutStream]
   **   2. If Content-Type then set Transfer-Encoding header to
-  **      chunked and return `makeChunkedOutStream`
+  **      chunked and return [makeChunkedOutStream]
   **   3. Assume no content and return null
   **
   ** If a stream is returned, then it is automatically configured
@@ -329,7 +331,7 @@ class WebUtil
 
   **
   ** Wrap the given input stream to read a fixed number of bytes.
-  ** Once 'fixed' bytes have been read from the underlying input
+  ** Once `fixed` bytes have been read from the underlying input
   ** stream, the wrapped stream will return end-of-stream.  Closing
   ** the wrapper stream does not close the underlying stream.
   **
@@ -351,7 +353,7 @@ class WebUtil
 
   **
   ** Wrap the given output stream to write a fixed number of bytes.
-  ** Once 'fixed' bytes have been written, attempting to further
+  ** Once `fixed` bytes have been written, attempting to further
   ** bytes will throw IOErr.  Closing the wrapper stream does not
   ** close the underlying stream.
   **
@@ -393,7 +395,7 @@ class WebUtil
   ** stream call the given callback function with the part's headers
   ** and an input stream used to read the part's body.  Each callback
   ** must completely drain the input stream to prepare for the next
-  ** part.  Also see `WebReq.parseMultiPartForm`.
+  ** part.  Also see [WebReq.parseMultiPartForm].
   **
   static Void parseMultiPart(InStream in, Str boundary, |Str:Str headers, InStream in| cb)
   {
@@ -417,20 +419,20 @@ class WebUtil
   **
   ** Generate the method invocation code used to boostrap into
   ** JavaScript from a webpage.  This *must* be called inside the
-  ** '<head>' tag for the page.  The main method will be invoked
-  ** using the 'onLoad' DOM event.
+  ** `<head>` tag for the page.  The main method will be invoked
+  ** using the `onLoad` DOM event.
   **
-  ** The 'main' argument can be either a type or method.  If no
-  ** method is specified, 'main' is used.  If the method is not
+  ** The `main` argument can be either a type or method.  If no
+  ** method is specified, `main` is used.  If the method is not
   ** static, a new instance of type is created:
   **
-  **   "foo::Instance"     =>  Instance().main()
-  **   "foo::Instance.bar" =>  Instance().bar()
-  **   "foo::Static"       =>  Static.main()
-  **   "foo::Static.bar"   =>  Static.bar()
+  **     "foo::Instance"     =>  Instance().main()
+  **     "foo::Instance.bar" =>  Instance().bar()
+  **     "foo::Static"       =>  Static.main()
+  **     "foo::Static.bar"   =>  Static.bar()
   **
-  ** If 'env' is specified, then vars will be added to and available
-  ** from `sys::Env.vars` on client-side.
+  ** If `env` is specified, then vars will be added to and available
+  ** from [sys::Env.vars] on client-side.
   **
   @Deprecated { msg="use WebOutStream.initJs" }
   static Void jsMain(OutStream out, Str main, [Str:Str]? env := null)

@@ -10,9 +10,9 @@
 ** WebSession provides a name/value map associated with a specific
 ** browser "connection" to the web server.  Any values stored in a
 ** WebSession must be both immutable and serializable.  Get the
-** current WebSession via `WebReq.session`.
+** current WebSession via [WebReq.session].
 **
-** See [pod doc]`pod-doc#sessions`.
+** See [pod doc](pod-doc#websessions).
 **
 abstract class WebSession
 {
@@ -22,7 +22,7 @@ abstract class WebSession
   abstract Str id()
 
   **
-  ** Return `id`.
+  ** Return [id].
   **
   override Str toStr() { id }
 

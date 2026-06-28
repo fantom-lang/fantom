@@ -9,9 +9,9 @@
 
 **
 ** Cookie models an HTTP cookie used to pass data between the server
-** and user agent as defined by [RFC 6265]`http://tools.ietf.org/html/rfc6265`.
+** and user agent as defined by [RFC 6265](http://tools.ietf.org/html/rfc6265).
 **
-** See `WebReq.cookies` and `WebRes.cookies`.
+** See [WebReq.cookies] and [WebRes.cookies].
 **
 @Js
 const class Cookie
@@ -19,7 +19,7 @@ const class Cookie
 
   **
   ** Parse a HTTP cookie header name/value pair. The parsing of the name-value pair
-  ** is done according to the algorithm outlined in [§ 5.2]`http://tools.ietf.org/html/rfc6265#section-5.2`
+  ** is done according to the algorithm outlined in [§ 5.2](http://tools.ietf.org/html/rfc6265#section-5.2)
   ** of the RFC.
   **
   ** Throw ParseErr or return null if not formatted correctly.
@@ -60,8 +60,8 @@ const class Cookie
   **
   ** Construct a cookie to use for session management.
   ** The following web config properties are used:
-  **   - secureSessionCookie: force use of 'Secure' cookie option
-  **   - sameSiteSessionCookie: force use of 'SameSite:strict' cookie option
+  **   - secureSessionCookie: force use of `Secure` cookie option
+  **   - sameSiteSessionCookie: force use of `SameSite:strict` cookie option
   **
   @NoDoc static Cookie makeSession(Str name, Str val, [Field:Obj?]? overrides := null)
   {
@@ -77,9 +77,9 @@ const class Cookie
 
   **
   ** Construct with name and value.  The name must be a valid
-  ** HTTP token and must not start with "$" (see `WebUtil.isToken`).
+  ** HTTP token and must not start with "$" (see [WebUtil.isToken]).
   ** The value string must be an ASCII string within the inclusive
-  ** range of 0x20 and 0x7e (see `WebUtil.toQuotedStr`) with the
+  ** range of 0x20 and 0x7e (see [WebUtil.toQuotedStr]) with the
   ** exception of the semicolon.
   **
   ** Fantom cookies will use quoted string values, however some browsers
@@ -88,11 +88,11 @@ const class Cookie
   ** include non-ASCII characters or semicolons, then consider encoding
   ** using something like Base64:
   **
-  **   // write response
-  **   res.cookies.add(Cookie("baz", val.toBuf.toBase64))
+  **     // write response
+  **     res.cookies.add(Cookie("baz", val.toBuf.toBase64))
   **
-  **   // read from request
-  **   val := Buf.fromBase64(req.cookies.get("baz", "")).readAllStr
+  **     // read from request
+  **     val := Buf.fromBase64(req.cookies.get("baz", "")).readAllStr
   **
   new make(Str name, Str val, |This|? f := null)
   {
@@ -165,9 +165,9 @@ const class Cookie
   **
   ** If this value is non-null, then we add the SameSite attribute to
   ** the cookie. Valid values are
-  **   - 'lax'
-  **   - 'strict'
-  ** By default we set the attribute to 'strict'
+  **   - `lax`
+  **   - `strict`
+  ** By default we set the attribute to `strict`
   **
   const Str? sameSite := "strict"
 

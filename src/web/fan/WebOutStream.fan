@@ -48,7 +48,7 @@ class WebOutStream : OutStream
   }
 
   **
-  ** Convenience for writeChar('\n').
+  ** Convenience for writeChar(`\n`).
   **
   This nl()
   {
@@ -197,30 +197,30 @@ class WebOutStream : OutStream
 
   **
   ** Customize how the JavaScript runtime environment is initialized.
-  ** This method *must* be called inside the '<head>' tag, and also
-  ** before 'sys.js' is loaded in order to take effect.
+  ** This method *must* be called inside the `<head>` tag, and also
+  ** before `sys.js` is loaded in order to take effect.
   **
   ** Note this method is not necessary if no customization is needed.
   ** The JS runtime will automatically initialize using default values.
   **
   ** The following variables are supported:
   **
-  **   - 'timezone': set the default TimeZone for JsVM
+  **   - `timezone`: set the default TimeZone for JsVM
   **
-  **   - 'locale': set the default Locale for the JsVM. Note you
+  **   - `locale`: set the default Locale for the JsVM. Note you
   **     must manually provide the locale config.props files. See
-  **     `FilePack.toLocaleJsFile`.
+  **     [FilePack.toLocaleJsFile].
   **
-  **   - 'main': an optional method to invoke after the page has
-  **     been loaded. The 'main' argument can be either a type or
-  **     method.  If no method is specified, 'main' is used. If
+  **   - `main`: an optional method to invoke after the page has
+  **     been loaded. The `main` argument can be either a type or
+  **     method.  If no method is specified, `main` is used. If
   **     the method is not static, a new instance of type is
   **     created:
   **
-  **       "foo::Instance"     =>  Instance().main()
-  **       "foo::Instance.bar" =>  Instance().bar()
-  **       "foo::Static"       =>  Static.main()
-  **       "foo::Static.bar"   =>  Static.bar()
+  **         "foo::Instance"     =>  Instance().main()
+  **         "foo::Instance.bar" =>  Instance().bar()
+  **         "foo::Static"       =>  Static.main()
+  **         "foo::Static.bar"   =>  Static.bar()
   **
   This initJs(Str:Str env)
   {
@@ -268,9 +268,9 @@ class WebOutStream : OutStream
 
   **
   ** Write a complete <link> tag for a favicon.  You must specifiy
-  ** the MIME type for your icon in the 'attrs' argument:
+  ** the MIME type for your icon in the `attrs` argument:
   **
-  **   out.favIcon(`/fav.png`, "type='image/png'")
+  **     out.favIcon(`/fav.png`, "type='image/png'")
   **
   This favIcon(Uri href, Str? attrs := null)
   {
@@ -841,11 +841,11 @@ class WebOutStream : OutStream
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write 'obj.toStr' to the stream as valid XML text.  The
+  ** Write `obj.toStr` to the stream as valid XML text.  The
   ** special control characters amp, lt, apos and quot are
   ** always escaped.  The gt char is escaped only if it is
-  ** the first char or if preceeded by the ']' char.  Also
-  ** see `sys::Str.toXml`.  If obj is null, then "null" is
+  ** the first char or if preceeded by the `]` char.  Also
+  ** see [sys::Str.toXml].  If obj is null, then "null" is
   ** written.
   **
   This esc(Obj? obj)

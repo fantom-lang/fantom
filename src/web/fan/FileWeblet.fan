@@ -7,7 +7,7 @@
 //
 
 **
-** FileWeblet is used to service an HTTP request on a `sys::File`.
+** FileWeblet is used to service an HTTP request on a [sys::File].
 ** It handles all the dirty details for cache control, compression,
 ** modification time, ETags, etc.
 **
@@ -69,7 +69,7 @@ class FileWeblet : Weblet
   ** If it is not, a 404 response is immediately sent, short-circuiting
   ** any further attempts to serve the file.
   **
-  **   FileWeblet(file).checkUnderDir(dir).onService
+  **     FileWeblet(file).checkUnderDir(dir).onService
   **
   This checkUnderDir(File dir)
   {

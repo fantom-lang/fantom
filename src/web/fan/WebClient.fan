@@ -12,21 +12,21 @@
 using inet
 
 **
-** The 'WebClient' class is used to manage client side HTTP requests
+** The `WebClient` class is used to manage client side HTTP requests
 ** and responses.  The basic lifecycle of WebClient:
-**   1. configure request fields such as 'reqUri', 'reqMethod', and 'reqHeaders'
-**   2. send request headers via 'writeReq'
-**   3. optionally write request body via 'reqOut'
-**   4. read response status and headers via 'readRes'
-**   5. process response fields such as 'resCode' and 'resHeaders'
-**   6. optionally read response body via 'resIn'
+**   1. configure request fields such as `reqUri`, `reqMethod`, and `reqHeaders`
+**   2. send request headers via `writeReq`
+**   3. optionally write request body via `reqOut`
+**   4. read response status and headers via `readRes`
+**   5. process response fields such as `resCode` and `resHeaders`
+**   6. optionally read response body via `resIn`
 **
-** Using the low level methods 'writeReq' and 'readRes' enables HTTP
+** Using the low level methods `writeReq` and `readRes` enables HTTP
 ** pipelining (multiple requests and responses on the same TCP socket
 ** connection).  There are also a series of convenience methods which
 ** make common cases easier.
 **
-** See [pod doc]`pod-doc#webClient` and [examples]`examples::web-client`.
+** See [pod doc](pod-doc#webclient) and [examples](examples::web-client).
 **
 class WebClient
 {
@@ -46,7 +46,7 @@ class WebClient
     reqHeaders["Accept-Encoding"] = "gzip"
   }
 
-  ** The `inet::SocketConfig` to use for creating sockets
+  ** The [inet::SocketConfig] to use for creating sockets
   SocketConfig socketConfig := SocketConfig.cur
 
 //////////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ class WebClient
   **
   ** The HTTP headers to use for the next request.  This map uses
   ** case insensitive keys.  The "Host" header is implicitly defined
-  ** by 'reqUri' and must not be defined in this map.
+  ** by `reqUri` and must not be defined in this map.
   **
   Str:Str reqHeaders := Str:Str[:] { caseInsensitive = true }
 
@@ -147,7 +147,7 @@ class WebClient
   ** the correct character encoding if one is specified in the
   ** "Content-Type" response header.
   **
-  ** Also see convenience methods: `resStr` and `resBuf`.
+  ** Also see convenience methods: [resStr] and [resBuf].
   **
   InStream? resIn(Bool checked := true)
   {
@@ -158,7 +158,7 @@ class WebClient
 
   **
   ** Return the entire response back as an in-memory string.
-  ** Convenience for 'resIn.readAllStr'.
+  ** Convenience for `resIn.readAllStr`.
   **
   Str resStr()
   {
@@ -167,7 +167,7 @@ class WebClient
 
   **
   ** Return the entire response back as an in-memory byte buffer.
-  ** Convenience for 'resIn.readAllBuf'.
+  ** Convenience for `resIn.readAllBuf`.
   **
   Buf resBuf()
   {
@@ -213,7 +213,7 @@ class WebClient
 
   **
   ** When set to true a 3xx response with a Location header
-  ** will automatically update the `reqUri` field and retry the
+  ** will automatically update the [reqUri] field and retry the
   ** request using the alternate URI.  Redirects are not followed
   ** if the request has a content body.
   **
@@ -319,7 +319,7 @@ class WebClient
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Convenience for 'writeForm("POST", form).readRes'
+  ** Convenience for `writeForm("POST", form).readRes`
   **
   This postForm(Str:Str form)
   {
@@ -327,7 +327,7 @@ class WebClient
   }
 
   **
-  ** Convenience for 'writeStr("POST", content).readRes'
+  ** Convenience for `writeStr("POST", content).readRes`
   **
   This postStr(Str content)
   {
@@ -335,7 +335,7 @@ class WebClient
   }
 
   **
-  ** Convenience for 'writeBuf("POST", content).readRes'
+  ** Convenience for `writeBuf("POST", content).readRes`
   **
   This postBuf(Buf buf)
   {
@@ -343,7 +343,7 @@ class WebClient
   }
 
   **
-  ** Convenience for 'writeFile("POST", file).readRes'
+  ** Convenience for `writeFile("POST", file).readRes`
   **
   This postFile(File file)
   {
@@ -353,7 +353,7 @@ class WebClient
   **
   ** Make a request with the given HTTP method to the URI with the given form data.
   ** Set the Content-Type to application/x-www-form-urlencoded.
-  ** This method does not support the ["Expect" header]`pod-doc#expectContinue` (it
+  ** This method does not support the ["Expect" header](pod-doc#expect-continue) (it
   ** writes all form data before reading response). Should primarily be used for POST
   ** and PATCH requests.
   **
@@ -373,7 +373,7 @@ class WebClient
   ** Make a request with the given HTTP method to the URI using UTF-8 encoding of given
   ** string.  If Content-Type is not already set, then set it
   ** to "text/plain; charset=utf-8".  This method does not support the
-  ** ["Expect" header]`pod-doc#expectContinue` (it writes full string
+  ** ["Expect" header](pod-doc#expect-continue) (it writes full string
   ** before reading response). Should primarily be used for "POST" and "PATCH"
   ** requests.
   **
@@ -394,7 +394,7 @@ class WebClient
   **
   ** Write a binary buffer using the given HTTP method to the URI.  If Content-Type
   ** header is not already set, then it is set as ""application/octet-stream". This
-  ** method does not support the ["Expect" header]`pod-doc#expectContinue`
+  ** method does not support the ["Expect" header](pod-doc#expect-continue)
   **
   This writeBuf(Str method, Buf content)
   {
@@ -413,7 +413,7 @@ class WebClient
   **
   ** Write a file using the given HTTP method to the URI.  If Content-Type header is not already
   ** set, then it is set from the file extension's MIME type. This method does
-  ** not support the ["Expect" header]`pod-doc#expectContinue` (it
+  ** not support the ["Expect" header](pod-doc#expect-continue) (it
   ** writes full file before reading response). Should primarily be used for "POST" and
   ** "PATCH" requests.
   **
@@ -438,8 +438,8 @@ class WebClient
 
   **
   ** Write the request line and request headers.  Once this method
-  ** completes the request body may be written via `reqOut`, or the
-  ** response may be immediately read via `readRes`.  Throw IOErr
+  ** completes the request body may be written via [reqOut], or the
+  ** response may be immediately read via [readRes].  Throw IOErr
   ** if there is a network or protocol error.  Return this.
   **
   This writeReq()
@@ -514,10 +514,10 @@ class WebClient
 
   **
   ** Read the response status line and response headers.  This method
-  ** may be called after the request has been written via `writeReq`
-  ** and `reqOut`.  Once this method completes the response status and
+  ** may be called after the request has been written via [writeReq]
+  ** and [reqOut].  Once this method completes the response status and
   ** headers are available.  If there is a response body, it is available
-  ** for reading via `resIn`.  Throw IOErr if there is a network or
+  ** for reading via [resIn].  Throw IOErr if there is a network or
   ** protocol error.  Return this.
   **
   This readRes()
