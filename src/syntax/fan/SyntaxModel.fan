@@ -82,7 +82,7 @@ enum class SyntaxType
   ** Normal text
   text(null),
 
-  ** Bracket such as '{', '}', '(', ')', '[', or ']'
+  ** Bracket such as `{`, `}`, `(`, `)`, `[`, or `]`
   bracket("b"),
 
   ** Language specific keyword

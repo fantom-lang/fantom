@@ -113,11 +113,11 @@ const class SyntaxStr
 {
   ** Token which delimits the start and end of the string.
   ** If the end delimiter is different, then also set the
-  ** `delimiterEnd` field.
+  ** [delimiterEnd] field.
   const Str delimiter := "\""
 
   ** Token which delimits the end of the string, or if
-  ** null, then `delimiter` is assumed to be both the
+  ** null, then [delimiter] is assumed to be both the
   ** start and end of the string.
   const Str? delimiterEnd
 
