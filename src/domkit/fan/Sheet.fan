@@ -27,7 +27,7 @@ using dom
   ** Can this sheet be dismissed by clicking anywhere in the window?
   Bool canDismiss := false
 
-  ** Return 'true' if this sheet currently open.
+  ** Return `true` if this sheet currently open.
   Bool isOpen { private set }
 
   ** Optional delay for open animation.
@@ -38,7 +38,7 @@ using dom
 
   ** Callback when a key is pressed while Dialog is open, including
   ** events that where dispatched outside the dialog. This callback
-  ** is only fired if `canDismiss` is 'false'.
+  ** is only fired if [canDismiss] is `false`.
   protected Void onKeyDown(|Event e| f) { this.cbKeyDown = f }
 
   ** Open this sheet over given element. If sheet
@@ -79,7 +79,7 @@ using dom
   }
 
   ** Close this sheet. If sheet is already closed this method does
-  ** nothing. This method takes an `onClose` callback as a convenience
+  ** nothing. This method takes an [onClose] callback as a convenience
   ** to set and close in a single operation.
   Void close(|This|? f := null)
   {

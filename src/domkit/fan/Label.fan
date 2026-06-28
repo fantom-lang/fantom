@@ -11,7 +11,7 @@ using dom
 **
 ** Simple text based element.
 **
-** See also: [docDomkit]`docDomkit::Controls#label`
+** See also: [docDomkit](docDomkit::Controls#label)
 **
 @Js class Label : Elem
 {

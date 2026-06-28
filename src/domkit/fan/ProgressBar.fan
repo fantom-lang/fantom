@@ -11,7 +11,7 @@ using dom
 **
 ** ProgressBar visualizes progress of a long running operation
 **
-** See also: [docDomkit]`docDomkit::Controls#progressBar`
+** See also: [docDomkit](docDomkit::Controls#progressbar)
 **
 @Js class ProgressBar : Elem
 {
@@ -52,10 +52,10 @@ using dom
     }
   }
 
-  ** Callback to get progress bar text when `val` is modified.
+  ** Callback to get progress bar text when [val] is modified.
   Void onText(|ProgressBar->Str| f) { this.cbText=f }
 
-  ** Callback to get progress bar color (as CSS color value) when `val` is modified.
+  ** Callback to get progress bar color (as CSS color value) when [val] is modified.
   Void onBarColor(|ProgressBar->Str| f) { this.cbBarColor=f }
 
   private Void update()

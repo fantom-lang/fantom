@@ -11,7 +11,7 @@ using dom
 **
 ** ToggleButton models a boolean state toggled by pressing a button.
 **
-** See also: [docDomkit]`docDomkit::Controls#toggleButton`, `Button`
+** See also: [docDomkit](docDomkit::Controls#togglebutton), [Button]
 **
 @Js class ToggleButton : Button
 {
@@ -41,16 +41,16 @@ using dom
   }
 
   ** Optional content to display when selected. If the argument
-  ** is not an [Elem]`dom::Elem` instance, one will be created
-  ** with text content using 'toStr'.
+  ** is not an [Elem](dom::Elem) instance, one will be created
+  ** with text content using `toStr`.
   Obj? elemOn := null
   {
     set { val := it; &elemOn = it is Elem ? val : Elem { it.text=val.toStr }}
   }
 
   ** Optional content to display when not selected. If the argument
-  ** is not an [Elem]`dom::Elem` instance, one will be created
-  ** with text content using 'toStr'.
+  ** is not an [Elem](dom::Elem) instance, one will be created
+  ** with text content using `toStr`.
   Obj? elemOff := null
   {
     set { val := it; &elemOff = it is Elem ? val : Elem { it.text=val.toStr }}

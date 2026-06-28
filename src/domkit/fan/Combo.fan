@@ -13,7 +13,7 @@ using dom
 ** that allows a user to select from a list or manually enter a
 ** value.
 **
-** See also: [docDomkit]`docDomkit::Controls#combo`
+** See also: [docDomkit](docDomkit::Controls#combo)
 **
 @Js class Combo : Elem
 {
@@ -57,9 +57,9 @@ using dom
     set { button.items = it }
   }
 
-  ** Callback to create an 'Elem' representation for a given list
-  ** item.  If function does not return an 'Elem' instance, one will
-  ** be created using 'toStr' of value.
+  ** Callback to create an `Elem` representation for a given list
+  ** item.  If function does not return an `Elem` instance, one will
+  ** be created using `toStr` of value.
   Void onElem(|Obj->Obj| f)
   {
     this.button.onElem(f)

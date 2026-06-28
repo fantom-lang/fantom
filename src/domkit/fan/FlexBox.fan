@@ -13,7 +13,7 @@ using dom
 ** primarily lays out items along a single axis (the main axis).  Alignment can
 ** also be specified for the opposite axis (the cross axis).
 **
-** See also: [docDomkit]`docDomkit::Layout#flexBox`
+** See also: [docDomkit](docDomkit::Layout#flexbox)
 **
 @Js class FlexBox : Box
 {
@@ -75,7 +75,7 @@ using dom
   Str alignLines := "stretch"
 
   **
-  ** Convenience to configure the shorthand 'flex' values outside
+  ** Convenience to configure the shorthand `flex` values outside
   ** of child items, where the list position maps to the index of
   ** the child node. Any value here will override the value specified
   ** in the child.

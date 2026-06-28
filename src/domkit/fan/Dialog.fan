@@ -12,7 +12,7 @@ using dom
 **
 ** Dialog manages a modal window above page content.
 **
-** See also: [docDomkit]`docDomkit::Modals#dialog`
+** See also: [docDomkit](docDomkit::Modals#dialog)
 **
 @Js class Dialog : Box
 {
@@ -24,8 +24,8 @@ using dom
     this->tabIndex = 0
   }
 
-  ** 'Str' or 'Elem' content displayed in title bar, or
-  ** 'null' to hide title bar.
+  ** `Str` or `Elem` content displayed in title bar, or
+  ** `null` to hide title bar.
   Obj? title := null
 
   ** Protected sub-class callback invoked directly before dialog is opened.

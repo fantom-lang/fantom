@@ -13,8 +13,8 @@ using graphics
 ** ListButton allows user selection of an item in a list by
 ** showing a listbox popup on button press.
 **
-** See also: [docDomkit]`docDomkit::Controls#listButton`,
-** `Button`, `ToggleButton`
+** See also: [docDomkit](docDomkit::Controls#listbutton),
+** [Button], [ToggleButton]
 **
 @Js class ListButton : Button
 {
@@ -46,9 +46,9 @@ using graphics
   ** Callback when selected item has changed.
   Void onSelect(|This| f) { this.cbSelect = f }
 
-  ** Callback to create an 'Elem' representation for a given list
-  ** item.  If function does not return an 'Elem' instance, one will
-  ** be created using 'toStr' of value.
+  ** Callback to create an `Elem` representation for a given list
+  ** item.  If function does not return an `Elem` instance, one will
+  ** be created using `toStr` of value.
   Void onElem(|Obj->Obj| f)
   {
     this.cbElem = f

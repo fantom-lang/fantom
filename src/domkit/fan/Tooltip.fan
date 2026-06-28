@@ -13,7 +13,7 @@ using dom
 ** Tooltip displays a small popup when the mouse hovers over the
 ** bound node element, and is dismissed when the mouse moves out.
 **
-** See also: [docDomkit]`docDomkit::Controls#tooltip`
+** See also: [docDomkit](docDomkit::Controls#tooltip)
 **
 @Js class Tooltip : Elem
 {
@@ -26,7 +26,7 @@ using dom
   }
 
   ** Time mouse must be over bound node before opening the
-  ** Tooltip. If 'null' the Tooltip is displayed immediatly.
+  ** Tooltip. If `null` the Tooltip is displayed immediatly.
   Duration? delay := 750ms
 
   ** Bind this tooltip the given node.

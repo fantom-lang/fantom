@@ -13,7 +13,7 @@ using graphics
 ** SashBox lays out children in a single direction allowing both
 ** fixed and pertange sizes that can fill the parent container.
 **
-** See also: [docDomkit]`docDomkit::Layout#sashBox`
+** See also: [docDomkit](docDomkit::Layout#sashbox)
 **
 @Js class SashBox : Box
 {
@@ -27,21 +27,21 @@ using graphics
 
   **
   ** Direction to layout child elements:
-  **   - 'Dir.right': layout children left to right
-  **   - 'Dir.down': layout childrent top to bottom
+  **   - `Dir.right`: layout children left to right
+  **   - `Dir.down`: layout childrent top to bottom
   **
   Dir dir := Dir.right
 
-  ** Allow user to resize sash positions. See `div`.
+  ** Allow user to resize sash positions. See [div].
   Bool resizable := false
 
-  ** Callback when user resizes a sash pane if `resizable` is 'true'.
+  ** Callback when user resizes a sash pane if [resizable] is `true`.
   Void onSashResize(|This| f) { this.cbSashResize = f }
 
   **
-  ** Size to apply to each child, width or height based on `dir`.  Fixed
-  ** 'px' and percentage sizes are allowed.  Percentage sizes will be
-  ** subtracted from total fixed size using CSS 'calc()' method.
+  ** Size to apply to each child, width or height based on [dir].  Fixed
+  ** `px` and percentage sizes are allowed.  Percentage sizes will be
+  ** subtracted from total fixed size using CSS `calc()` method.
   **
   Str[] sizes := [,]
   {
@@ -53,12 +53,12 @@ using graphics
     }
   }
 
-  ** Minimum size a child can be resized to if 'resizable' is 'true'.
+  ** Minimum size a child can be resized to if `resizable` is `true`.
   ** Only percentage sizes allowed.
   Str minSize := "10%"
 
   ** Create a new divider element for resizing children. Dividers are
-  ** required between children when `resizable` is 'true'.
+  ** required between children when [resizable] is `true`.
   static Elem div()
   {
     Box { it.style.addClass("domkit-SashBox-div") }
@@ -254,7 +254,7 @@ using graphics
     cbSashResize?.call(this)
   }
 
-  ** Convert `sizes` to %
+  ** Convert [sizes] to %
   @NoDoc Void sizesToPercent()
   {
     // short-circuit if already converted

@@ -11,7 +11,7 @@ using dom
 **
 ** Text field input element.
 **
-** See also: [docDomkit]`docDomkit::Controls#textField`
+** See also: [docDomkit](docDomkit::Controls#textfield)
 **
 @Js class TextField : Elem
 {
@@ -30,7 +30,7 @@ using dom
     }
   }
 
-  ** Preferred width of field in columns, or 'null' for default.
+  ** Preferred width of field in columns, or `null` for default.
   Int? cols
   {
     get { this->size }
@@ -38,7 +38,7 @@ using dom
   }
 
   ** Hint that is displayed in the field before a user enters a
-  ** value that describes the expected input, or 'null' for no
+  ** value that describes the expected input, or `null` for no
   ** placeholder text.
   Str? placeholder
   {
@@ -46,14 +46,14 @@ using dom
     set { this->placeholder = it }
   }
 
-  ** Set to 'true' to set field to readonly mode.
+  ** Set to `true` to set field to readonly mode.
   Bool ro
   {
     get { this.prop("readOnly") }
     set { this.setProp("readOnly", it) }
   }
 
-  ** Set to 'true' to mask characters inputed into field.
+  ** Set to `true` to mask characters inputed into field.
   Bool password
   {
     get { this->type == "password" }
@@ -70,7 +70,7 @@ using dom
   ** Callback when value is modified by user.
   Void onModify(|This| f) { this.cbModify = f }
 
-  ** Callback when 'enter' key is pressed.
+  ** Callback when `enter` key is pressed.
   Void onAction(|This| f) { this.cbAction = f }
 
   ** Select given range of text

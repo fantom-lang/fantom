@@ -11,7 +11,7 @@ using dom
 **
 ** FilePicker allows selection of files.
 **
-** See also: [docDomkit]`docDomkit::Controls#filePicker`
+** See also: [docDomkit](docDomkit::Controls#filepicker)
 **
 @Js class FilePicker : Elem
 {
@@ -30,11 +30,11 @@ using dom
   ** The value must be a comma-separated list of unique
   ** content type specifiers:
   **
-  **   - A file extension starting with a '.': (e.g. .jpg, .png, .doc)
+  **   - A file extension starting with a `.`: (e.g. .jpg, .png, .doc)
   **   - A valid MIME type with no extensions
-  **   - 'audio/*' representing sound files
-  **   - 'video/*' representing video files
-  **   - 'image/*' representing image files
+  **   - `audio/*` representing sound files
+  **   - `video/*` representing video files
+  **   - `image/*` representing image files
   Str? accept
   {
     get { this->accept }

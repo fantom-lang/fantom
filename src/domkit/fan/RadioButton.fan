@@ -10,10 +10,10 @@ using dom
 
 **
 ** RadioButton displays a radio button.  RadioButtons should be belong to
-** a `ButtonGroup`, where only one button in the group can be selected at
+** a [ButtonGroup], where only one button in the group can be selected at
 ** a time.
 **
-** See also: [docDomkit]`docDomkit::Controls#radioButton`
+** See also: [docDomkit](docDomkit::Controls#radiobutton)
 **
 @Js class RadioButton : Elem
 {

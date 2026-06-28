@@ -12,8 +12,8 @@ using graphics
 **
 ** Button is a widget that invokes an action when pressed.
 **
-** See also: [docDomkit]`docDomkit::Controls#button`,
-** `ToggleButton`, `ListButton`
+** See also: [docDomkit](docDomkit::Controls#button),
+** [ToggleButton], [ListButton]
 **
 @Js class Button : Elem
 {
@@ -71,7 +71,7 @@ using graphics
   ** Callback to create Popup to display when button is pressed.
   Void onPopup(|Button->Popup| f) { this.cbPopup = f }
 
-  ** Offset to apply to default origin for `onPopup`.
+  ** Offset to apply to default origin for [onPopup].
   @NoDoc Point popupOffset := Point.defVal
 
 // TODO: how should this work?

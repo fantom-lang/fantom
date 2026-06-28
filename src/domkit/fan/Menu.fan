@@ -12,7 +12,7 @@ using graphics
 **
 ** Popup menu
 **
-** See also: [docDomkit]`docDomkit::Controls#menu`, `MenuItem`
+** See also: [docDomkit](docDomkit::Controls#menu), [MenuItem]
 **
 @Js class Menu : Popup
 {
@@ -157,7 +157,7 @@ using graphics
 }
 
 **
-** MenuItem for a `Menu`
+** MenuItem for a [Menu]
 **
 @Js class MenuItem : Elem
 {

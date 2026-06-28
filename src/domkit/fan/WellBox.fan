@@ -19,8 +19,8 @@ using dom
   }
 
 // TODO: this isn't working right
-  ** Return a new 'Elem' merging this 'WellBox' with the given 'header'
-  ** element, where 'halign' specifies if 'header' should be left, center,
+  ** Return a new `Elem` merging this `WellBox` with the given `header`
+  ** element, where `halign` specifies if `header` should be left, center,
   ** or right aligned with well.
   @NoDoc Elem mergeHeader(Elem header, Align halign := Align.left)
   {

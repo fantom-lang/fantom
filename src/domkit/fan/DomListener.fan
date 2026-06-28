@@ -14,9 +14,9 @@ using graphics
 ** DomListener monitors the DOM and invokes callbacks when modifications occur.
 **
 ** DomListener works by registering a global
-** [MutationObserver]`dom::MutationObserver` on the 'body' tag and collects
-** all 'childList' events for his subtree.  All mutation events are queued and
-** processed on a [reqAnimationFrame]`dom::Win.reqAnimationFrame`.  Registered
+** [MutationObserver](dom::MutationObserver) on the `body` tag and collects
+** all `childList` events for his subtree.  All mutation events are queued and
+** processed on a [reqAnimationFrame](dom::Win.reqAnimationFrame).  Registered
 ** nodes are held with weak references, and will be garbage collected when out
 ** of scope.
 **

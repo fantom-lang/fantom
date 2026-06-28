@@ -13,7 +13,7 @@ using graphics
 **
 ** Popup window which can be closed clicking outside of element.
 **
-** See also: [docDomkit]`docDomkit::Modals#popup`
+** See also: [docDomkit](docDomkit::Modals#popup)
 **
 @Js class Popup : Elem
 {
@@ -31,12 +31,12 @@ using graphics
   **  - Align.right: align right edge of popup to (x,y)
   Align halign := Align.left
 
-  ** Return 'true' if this popup currently open.
+  ** Return `true` if this popup currently open.
   Bool isOpen { private set }
 
   ** Open this popup in the current Window. If popup is already
   ** open this method does nothing. This method always invokes
-  ** `fitBounds` to verify popup does not overflow viewport.
+  ** [fitBounds] to verify popup does not overflow viewport.
   Void open(Float x, Float y)
   {
     if (isOpen) return
@@ -85,7 +85,7 @@ using graphics
   ** Fit popup with current window bounds. This may move the origin of
   ** where popup is opened, or modify the width or height, or both.
   **
-  ** This method is called automatically by `open`.  For content that
+  ** This method is called automatically by [open].  For content that
   ** is asynchronusly loaded after popup is visible, and that may modify
   ** the initial size, it is good practice to invoke this method to
   ** verify content does not overflow the viewport.

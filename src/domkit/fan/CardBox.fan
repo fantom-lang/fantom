@@ -12,7 +12,7 @@ using dom
 ** CardBox lays out child elements as a stack of cards, where
 ** only one card may be visible at a time.
 **
-** See also: [docDomkit]`docDomkit::Layout#cardBox`
+** See also: [docDomkit](docDomkit::Layout#cardbox)
 **
 @Js class CardBox : Box
 {
@@ -39,16 +39,16 @@ using dom
   }
 
   **
-  ** Transition effect to apply when 'selIndex' is changed.
+  ** Transition effect to apply when `selIndex` is changed.
   ** If null, no effect is applied.
   **
   ** Valid values are:
-  **   - 'slideLeft': animate cards sliding in from right-to-left
-  **   - 'slideRight': animate cards sliding in from left-to-right
+  **   - `slideLeft`: animate cards sliding in from right-to-left
+  **   - `slideRight`: animate cards sliding in from left-to-right
   **
   Str? effect := null
 
-  ** Duratin for `effect` animation to last.
+  ** Duratin for [effect] animation to last.
   Duration effectDur := 350ms
 
   protected override Void onAdd(Elem c)    { updateStyle }

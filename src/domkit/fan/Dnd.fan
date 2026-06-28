@@ -18,7 +18,7 @@ using graphics
 ** DragTarget converts an Elem into a drag target for
 ** a drag-and-drop events.
 **
-** See also: [docDomkit]`docDomkit::Dnd`
+** See also: [docDomkit](docDomkit::Dnd)
 **
 @Js class DragTarget
 {
@@ -73,11 +73,11 @@ using graphics
 
 **
 ** DropTarget converts an Elem into a drop target for drag and drop
-** events. The 'canDrop' callback is used to indicate if 'data' can be
-** dropped on this target.  The 'onDrop' callback is invoked when a
+** events. The `canDrop` callback is used to indicate if `data` can be
+** dropped on this target.  The `onDrop` callback is invoked when a
 ** drop event completes.
 **
-** See also: [docDomkit]`docDomkit::Dnd`
+** See also: [docDomkit](docDomkit::Dnd)
 **
 @Js class DropTarget
 {
@@ -126,14 +126,14 @@ using graphics
     }
   }
 
-  ** Callback to indicate if 'data' can be dropped on this target.
+  ** Callback to indicate if `data` can be dropped on this target.
   Void canDrop(|Obj data->Bool| f) { this.cbCanDrop = f }
 
-  ** Callback when 'data' is dropped on this target.
+  ** Callback when `data` is dropped on this target.
   Void onDrop(|Obj data| f) { this.cbDrop = f }
 
   ** Callback when drag target is over this drop target, where
-  ** 'pagePos' is the current drag node.
+  ** `pagePos` is the current drag node.
   Void onOver(|Point pagePos| f) { this.cbOver = f }
 
   ** Callback when drag target has left this drop target.

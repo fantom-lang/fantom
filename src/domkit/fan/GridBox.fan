@@ -11,7 +11,7 @@ using dom
 **
 ** GridBox lays its children out in a two dimensional grid.
 **
-** See also: [docDomkit]`docDomkit::Layout#gridBox`
+** See also: [docDomkit](docDomkit::Layout#gridbox)
 **
 @Js class GridBox : Box
 {
@@ -26,7 +26,7 @@ using dom
   }
 
   ** How grid content is aligned horizontally against left-over
-  ** space. Valid values are 'left', 'right', 'center', or 'fill'.
+  ** space. Valid values are `left`, `right`, `center`, or `fill`.
   Align halign := Align.left
   {
     set
@@ -42,7 +42,7 @@ using dom
   }
 
   **
-  ** Set style for cells. Valid values for 'col' and 'row':
+  ** Set style for cells. Valid values for `col` and `row`:
   **  - Specific index (0, 1, 2, etc)
   **  - Range of indexes (0..4, 7..<8, etc)
   **  - "*":    apply to all row or columns
@@ -107,7 +107,7 @@ using dom
   }
 
   ** Return the row index that this child exists under, or
-  ** 'null' if child was not found in this GridBox.
+  ** `null` if child was not found in this GridBox.
   Int? rowIndexOf(Elem child)
   {
     tbody.children.findIndex |row|

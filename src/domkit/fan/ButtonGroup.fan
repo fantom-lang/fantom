@@ -12,8 +12,8 @@ using dom
 ** ButtonGroup groups a set of toggle or radio buttons and handles
 ** making sure only one button in group is selected at a time.
 **
-** See also: [docDomkit]`docDomkit::Controls#buttonGroup`,
-** `ToggleButton`, `RadioButton`
+** See also: [docDomkit](docDomkit::Controls#buttongroup),
+** [ToggleButton], [RadioButton]
 **
 @Js class ButtonGroup
 {
@@ -23,7 +23,7 @@ using dom
     set { &buttons=it; update }
   }
 
-  ** Convenience to add a button to `buttons`.
+  ** Convenience to add a button to [buttons].
   This add(Elem button)
   {
     if (inheritEnabled) button.enabled = this.enabled
@@ -31,8 +31,8 @@ using dom
     return this
   }
 
-  ** If 'true', child buttons will inherit the `enabled` state
-  ** of this 'ButtonGroup'.  If 'false' buttons can be enabled
+  ** If `true`, child buttons will inherit the [enabled] state
+  ** of this `ButtonGroup`.  If `false` buttons can be enabled
   ** or disabled independent of group.
   Bool inheritEnabled := true
 
@@ -46,7 +46,7 @@ using dom
     }
   }
 
-  ** Index of selected button, or 'null' if none selected.
+  ** Index of selected button, or `null` if none selected.
   Int? selIndex := null
   {
     set
@@ -59,8 +59,8 @@ using dom
     }
   }
 
-  ** Callback before a selection changes.  Return 'true' to
-  ** select the new button (default), or 'false' to keep the
+  ** Callback before a selection changes.  Return `true` to
+  ** select the new button (default), or `false` to keep the
   ** currently selected button.
   Void onBeforeSelect(|ButtonGroup g, Int newIndex->Bool| f)
   {

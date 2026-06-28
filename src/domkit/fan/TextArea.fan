@@ -11,7 +11,7 @@ using dom
 **
 ** Multi-line text input element
 **
-** See also: [docDomkit]`docDomkit::Controls#textArea`
+** See also: [docDomkit](docDomkit::Controls#textarea)
 **
 @Js class TextArea : Elem
 {
@@ -21,14 +21,14 @@ using dom
     this.onEvent("input", false) |e| { fireModify(e) }
   }
 
-  ** Preferred width of text area in columns, or 'null' for default.
+  ** Preferred width of text area in columns, or `null` for default.
   Int? cols
   {
     get { this->cols }
     set { this->cols = it }
   }
 
-  ** Preferred height of text area in rows, or 'null' for default.
+  ** Preferred height of text area in rows, or `null` for default.
   Int? rows
   {
     get { this->rows }
@@ -36,7 +36,7 @@ using dom
   }
 
   ** Hint that is displayed in the text area before a user enters
-  ** value that describes the expected input, or 'null' for no
+  ** value that describes the expected input, or `null` for no
   ** placeholder text.
   Str? placeholder
   {
@@ -44,7 +44,7 @@ using dom
     set { this->placeholder = it }
   }
 
-  ** Set to 'true' to set text area to readonly mode.
+  ** Set to `true` to set text area to readonly mode.
   Bool ro
   {
     get { this.prop("readOnly") }

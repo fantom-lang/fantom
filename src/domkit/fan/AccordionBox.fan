@@ -13,7 +13,7 @@ using dom
 ** information in a limited amount of vertical space, where the
 ** header element is used to collapse or expand the child content.
 **
-** See also: [docDomkit]`docDomkit::Layout`
+** See also: [docDomkit](docDomkit::Layout)
 **
 @Js class AccordionBox : Box
 {
@@ -24,7 +24,7 @@ using dom
   }
 
   ** Add a new group with given header and child nodes. Optionally
-  ** configure default expansion state with 'expanded' paramter
+  ** configure default expansion state with `expanded` paramter
   ** (defaults to collapsed).
   This addGroup(Elem header, Elem[] kids, Bool expanded := false)
   {
@@ -45,7 +45,7 @@ using dom
     return this
   }
 
-  ** Return 'true' if given group is expanded, or 'false' if not.
+  ** Return `true` if given group is expanded, or `false` if not.
   Bool isExpanded(Int groupIndex)
   {
     group := this.children.getSafe(groupIndex)

@@ -11,7 +11,7 @@ using dom
 **
 ** FlowBox lays out its children in a one-directional flow.
 **
-** See also: [docDomkit]`docDomkit::Layout#flowBox`
+** See also: [docDomkit](docDomkit::Layout#flowbox)
 **
 @Js class FlowBox : Box
 {
@@ -21,14 +21,14 @@ using dom
   }
 
   ** How to align children inside container.  Valid values
-  ** are 'left', 'center', 'right'.
+  ** are `left`, `center`, `right`.
   Align halign := Align.left
   {
     set { &halign=it; style->textAlign=it.toStr }
   }
 
-  ** Gaps to insert between child elements.  If 'gaps.length' is less
-  ** than the number of children, then 'gaps' will be cycled to
+  ** Gaps to insert between child elements.  If `gaps.length` is less
+  ** than the number of children, then `gaps` will be cycled to
   ** apply to all children.
   Str[] gaps := Str[,]
   {
