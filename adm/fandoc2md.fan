@@ -500,11 +500,13 @@ internal class FandocConverter
     }
     else
     {
-      // relative: doc#frag - use current pod from base
+      // relative: doc#frag - resolve against current pod from base
       if (base == null) return uri
+      // base is "pod::doc" for chapters, or bare "pod" for .fan files
       colons := base.index("::")
-      if (colons == null) return uri
-      qname = base[0..<colons] + "::" + docPart
+      pod    := colons == null ? base : base[0..<colons]
+      // "pod-doc" is the standard alias for a pod's pod.fandoc/doc.md chapter
+      qname  = pod + "::" + (docPart == "pod-doc" ? "pod" : docPart)
     }
 
     if (qname == null) return uri

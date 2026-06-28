@@ -202,12 +202,12 @@ class WritePod : CompilerStep
   }
 
   **
-  ** If there is a *.fandoc as peer to build.fan then
+  ** If there is a *.fandoc or *.md as peer to build.fan then
   ** copy it into doc/
   **
   private Void writePodDocs(Zip zip)
   {
-    files := compiler.input.baseDir.list.findAll |f| { f.ext == "fandoc" }
+    files := compiler.input.baseDir.list.findAll |f| { f.ext == "fandoc" || f.ext == "md" }
     files.each |f|
     {
       writeRes(zip, f, `doc/${f.name}`)

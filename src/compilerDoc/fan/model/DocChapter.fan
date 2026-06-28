@@ -21,7 +21,7 @@ const class DocChapter : Doc
   internal new make(DocPodLoader loader, File f)
   {
     this.pod    = loader.pod
-    this.name   = f.name == "pod.fandoc" ? "pod-doc" : f.basename
+    this.name   = (f.name == "pod.fandoc" || f.name == "doc.md") ? "pod-doc" : f.basename
     this.loc    = DocLoc("${pod}::${f.name}", 1)
     this.doc    = DocFandoc(this.loc, f.in.readAllStr)
     this.format = DocFormat.fromFileExt(f.ext)
