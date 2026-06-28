@@ -33,7 +33,7 @@ native class HttpSocket
   Void onOpen(|Event| f)
 
   ** Event fired when the web socket receives a message.
-  ** The message payload is available as a Str or Buf via `Event.data`
+  ** The message payload is available as a Str or Buf via [Event.data]
   Void onReceive(|Event| f)
 
   ** Event fired when the web socket is closed

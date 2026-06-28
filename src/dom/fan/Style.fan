@@ -35,10 +35,10 @@ using concurrent
 
   **
   ** Toggle the presence of the given CSS class name based on
-  ** the 'cond' argument:
-  **   - 'null': remove class if present, or add if missing
-  **   - 'true': always add class (see `addClass`)
-  **   - 'false': always remove class(see `removeClass`)
+  ** the `cond` argument:
+  **   - `null`: remove class if present, or add if missing
+  **   - `true`: always add class (see [addClass])
+  **   - `false`: always remove class(see [removeClass])
   **
   This toggleClass(Str name, Bool? cond := null)
   {
@@ -49,11 +49,11 @@ using concurrent
 
   **
   ** Add a psuedo-class CSS definietion to this element. A new
-  ** class name is auto-generated and used to prefix 'name',
-  ** 'name' must start with the ':' character.  Returns the
+  ** class name is auto-generated and used to prefix `name`,
+  ** `name` must start with the `:` character.  Returns the
   ** generated class name.
   **
-  **   style.addPseudoClass(":hover", "background: #eee")
+  **     style.addPseudoClass(":hover", "background: #eee")
   **
   Str addPseudoClass(Str name, Str css)
   {
@@ -85,7 +85,7 @@ using concurrent
   **
   ** Get the effetive style property value, which is the most
   ** specific style or CSS rule in effect on this node. Returns
-  ** 'null' if no rule in effect for given property.
+  ** `null` if no rule in effect for given property.
   **
   ** This method is restricted to stylesheets that have originated
   ** from the same domain as the document. Any rules that may be
@@ -94,12 +94,14 @@ using concurrent
   native Obj? effective(Str name)
 
   ** Get the given property value.
-  **   color := style["color"]
+  **
+  **     color := style["color"]
   @Operator native Obj? get(Str name)
 
-  ** Set the given propery value.  If 'val' is null this
+  ** Set the given propery value.  If `val` is null this
   ** property is removed.
-  **   style["color"] = "#f00"
+  **
+  **     style["color"] = "#f00"
   @Operator This set(Str name, Obj? val)
   {
     if (val == null) { setProp(name, null); return this }
@@ -130,7 +132,8 @@ using concurrent
   }
 
   ** Set all the given property values.
-  **   style.setAll(["color":"#f00", "font-weight":"bold"])
+  **
+  **     style.setAll(["color":"#f00", "font-weight":"bold"])
   This setAll(Str:Obj? map)
   {
     map.each |v,n| { set(n,v) }
@@ -138,7 +141,8 @@ using concurrent
   }
 
   ** Set properties via CSS text.
-  **   style.setCss("color: #f00; font-weight: bold;")
+  **
+  **     style.setCss("color: #f00; font-weight: bold;")
   This setCss(Str css)
   {
     css.split(';').each |s|
@@ -155,7 +159,8 @@ using concurrent
   **
   ** Get or set an attribute.  Attribute names should be specifed
   ** in camel case:
-  **    style->backgroundColor == style["background-color"]
+  **
+  **      style->backgroundColor == style["background-color"]
   **
   override Obj? trap(Str name, Obj?[]? args := null)
   {
@@ -180,7 +185,7 @@ using concurrent
     return h.toStr
   }
 
-  ** Convenience for `toVendor` on a list.
+  ** Convenience for [toVendor] on a list.
   static internal Str[] toVendors(Str[] names)
   {
     acc := Str[,]

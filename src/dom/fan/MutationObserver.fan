@@ -24,12 +24,12 @@ class MutationObserver
 
   ** Register to receive DOM mutation events for given node.
   ** At least one option is required:
-  **  - "childList": 'true' to observe node additions and removals on target (including text nodes)
-  **  - "attrs":  'true' to observe target attribute mutations
-  **  - "charData": 'true' to observe target data mutation
-  **  - "subtree": 'true' to observe target and target's descendant mutations
-  **  - "attrOldVal": 'true' to capture attribute value before mutation (requires "attrs":'true')
-  **  - "charDataOldVal": 'true' to capture target's data before mutation (requires "charData":'true')
+  **  - "childList": `true` to observe node additions and removals on target (including text nodes)
+  **  - "attrs":  `true` to observe target attribute mutations
+  **  - "charData": `true` to observe target data mutation
+  **  - "subtree": `true` to observe target and target's descendant mutations
+  **  - "attrOldVal": `true` to capture attribute value before mutation (requires "attrs":'true')
+  **  - "charDataOldVal": `true` to capture target's data before mutation (requires "charData":'true')
   **  - "attrFilter": Str[] whitelist of attribute names to observe (requires "attrs":'true')
   native This observe(Elem target, Str:Obj opts)
 
@@ -60,7 +60,7 @@ class MutationRec
   **  - "childList" if it was a mutation to the tree of nodes
   Str type
 
-  ** Target node that mutation affected, depending on the 'type':
+  ** Target node that mutation affected, depending on the `type`:
   **  - For "attrs", it is the element whose attribute changed
   **  - For "charData", it is the CharacterData node
   **  - For "childList", it is the node whose children changed
@@ -86,7 +86,7 @@ class MutationRec
   ** Namespace of the changed attribute, or null if no attribute was changed.
   Str? attrNs
 
-  ** Old value, depending on 'type':
+  ** Old value, depending on `type`:
   **  - For "attrs", it is the value of the changed attribute before the change
   **  - For "charData", it is the data of the changed node before the change
   **  - For "childList", it is null

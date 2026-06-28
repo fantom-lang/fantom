@@ -11,7 +11,7 @@
 **
 @Js class DomFile
 {
-  ** Create a `DomFile` instance from a native JavaScript DOM file.
+  ** Create a [DomFile] instance from a native JavaScript DOM file.
   @Js static native DomFile fromNative(Obj file)
 
   ** Name of file. This is just the file name, and does not
@@ -19,7 +19,7 @@
   native Str name()
 
   ** Return file name extension (everything after the last dot)
-  ** or 'null' name has no dot.
+  ** or `null` name has no dot.
   Str? ext()
   {
     n := this.name
@@ -34,7 +34,7 @@
   ** the type could not be determined.
   native Str type()
 
-  ** Asynchronously load file contents as a 'data:' URI
+  ** Asynchronously load file contents as a `data:` URI
   ** representing the file's contents.
   native Void readAsDataUri(|Uri| f)
 

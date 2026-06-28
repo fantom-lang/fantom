@@ -16,16 +16,16 @@ using web
 @Js
 class WeakMap
 {
-  ** Return 'true' if key exists in this map.
+  ** Return `true` if key exists in this map.
   native Bool has(Obj key)
 
-  ** Returns the value associated to the key, or 'null' if there is none.
+  ** Returns the value associated to the key, or `null` if there is none.
   @Operator native Obj? get(Obj key)
 
   ** Sets value for given key in this map.  Returns this.
   @Operator native This set(Obj key, Obj val)
 
-  ** Removes any value associated to the key. Returns 'true'
+  ** Removes any value associated to the key. Returns `true`
   ** if an element has been removed successfully.
   native Bool delete(Obj key)
 }

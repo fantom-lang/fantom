@@ -30,25 +30,25 @@ final const class Svg
     Elem(tagName, ns)
   }
 
-  ** Convenience to create 'line' element
+  ** Convenience to create `line` element
   static Elem line(Num x1, Num y1, Num x2, Num y2)
   {
     elem("line") { it->x1 = x1; it->y1 = y1; it->x2 = x2; it->y2 = y2 }
   }
 
-  ** Convenience to create 'rect' element
+  ** Convenience to create `rect` element
   static Elem rect(Num x, Num y, Num w, Num h)
   {
     elem("rect") { it->x = x; it->y = y; it->width = w; it->height = h }
   }
 
-  ** Convenience to create 'text' element
+  ** Convenience to create `text` element
   static Elem text(Str text, Num x, Num y)
   {
     elem("text") {  it.text = text; it->x = x; it->y = y }
   }
 
-  ** Convenience to create a 'image' element
+  ** Convenience to create a `image` element
   static Elem image(Uri href, Float x, Float y, Float w, Float h)
   {
     elem("image")
@@ -63,7 +63,7 @@ final const class Svg
 
   ** Auto-generate an id for the def element and mount it into
   ** the svg document's defs section.  This method will automatically
-  ** generate a '<defs>' child in the svg document as needed.
+  ** generate a `<defs>` child in the svg document as needed.
   ** If defs already has an id or is already mounted, then no
   ** action is taken.
   static Str def(Elem svgElem, Elem defElem)
@@ -96,7 +96,7 @@ final const class Svg
 
   private static const AtomicInt genId := AtomicInt()
 
-  ** Mount a definition element using `def` and return a CSS URL
+  ** Mount a definition element using [def] and return a CSS URL
   ** to the fragment identifier such as "url(#def-d)".  This is used
   ** to reference gradient and clip definitions.
   static Str defUrl(Elem svgElem, Elem defElem)

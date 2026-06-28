@@ -10,7 +10,7 @@
 **
 ** HttpRes models the response side of an XMLHttpRequest instance.
 **
-** See [pod doc]`pod-doc#xhr` for details.
+** See [pod doc](pod-doc#xmlhttprequest) for details.
 **
 @Js
 class HttpRes
@@ -25,11 +25,11 @@ class HttpRes
   Str:Str headers := Str:Str[:] { it.caseInsensitive = true }
 
   ** The text content of the response when the XMLHttpRequest
-  ** `HttpReq.resType` is "text"
+  ** [HttpReq.resType] is "text"
   Str content := ""
 
   ** The binary content of the response when the XMLHttpRequest
-  ** `HttpReq.resType` is "arraybuffer"
+  ** [HttpReq.resType] is "arraybuffer"
   Buf contentBuf := Buf(0)
 }
 

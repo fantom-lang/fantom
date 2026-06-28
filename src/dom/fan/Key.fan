@@ -182,7 +182,7 @@ const class Key
     return name == x.name
   }
 
-  ** Return `name`.
+  ** Return [name].
   override Str toStr() { name }
 
   ** Key code

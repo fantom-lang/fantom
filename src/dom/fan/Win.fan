@@ -12,7 +12,7 @@ using graphics
 **
 ** Win models the DOM window object.
 **
-** See [pod doc]`pod-doc#win` for details.
+** See [pod doc](pod-doc#win) for details.
 **
 @Js
 class Win
@@ -50,7 +50,7 @@ class Win
   native Win open(Uri uri := `about:blank`, Str? winName := null, [Str:Str]? opts := null)
 
   ** Close this window.  Only applicable to windows created with
-  ** `open`. Otherwise method has no effect.  Returns this.
+  ** [open]. Otherwise method has no effect.  Returns this.
   native Win close()
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ class Win
   native Void alert(Obj obj)
 
   ** Display a confirmation dialog box with the given text.
-  ** Returns 'true' if 'ok' was selected, 'false' othterwise.
+  ** Returns `true` if `ok` was selected, `false` othterwise.
   native Bool confirm(Obj obj)
 
   ** Return the size of the window viewport in pixels.
@@ -96,7 +96,7 @@ class Win
 
   ** Dynamically create a new Func with the given parameter names
   ** and JavaScript code.  This is essentially a wrapper around
-  ** JavaScript's 'Function' constructor that takes a source code
+  ** JavaScript's `Function` constructor that takes a source code
   ** string for the function body.
   static native Func evalToFunc(Str[] paramNames, Str jsBody)
 
@@ -126,7 +126,7 @@ class Win
   ** Hyperlink to the given Uri in this window.
   native Void hyperlink(Uri uri)
 
-  ** Reload the current page. Use 'force' to bypass browse cache.
+  ** Reload the current page. Use `force` to bypass browse cache.
   native Void reload(Bool force := false)
 
 //////////////////////////////////////////////////////////////////////////
@@ -165,11 +165,11 @@ class Win
   native Str:Obj hisState()
 
   **
-  ** Push a new history item onto the history stack. Use 'onpopstate'
+  ** Push a new history item onto the history stack. Use `onpopstate`
   ** to listen for changes:
   **
-  **   // Event.stash contains state map passed into pushState
-  **   Win.cur.onEvent("popstate", false) |e| { echo("# state: $e.stash") }
+  **     // Event.stash contains state map passed into pushState
+  **     Win.cur.onEvent("popstate", false) |e| { echo("# state: $e.stash") }
   **
   native Void hisPushState(Str title, Uri uri, Str:Obj map)
 
@@ -196,18 +196,18 @@ class Win
 //////////////////////////////////////////////////////////////////////////
 
   ** Call the specified function after a specified delay. Returns
-  ** a timeoutId that can be used in `clearTimeout`.
+  ** a timeoutId that can be used in [clearTimeout].
   native Int setTimeout(Duration delay, |This win| f)
 
-  ** Clears the delay set by `setTimeout`.
+  ** Clears the delay set by [setTimeout].
   native Void clearTimeout(Int timeoutId)
 
   ** Calls a function repeatedly, with a fixed time delay between
   ** each call to that function. Returns an intervalId that can be
-  ** used in `clearInterval`.
+  ** used in [clearInterval].
   native Int setInterval(Duration delay, |This win| f)
 
-  ** Cancels a repeated action which was set up using `setInterval`.
+  ** Cancels a repeated action which was set up using [setInterval].
   native Void clearInterval(Int intervalId)
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,12 +221,12 @@ class Win
   ** Register a handler function that will be called automatically each
   ** time the position of the device changes. This method returns a watch
   ** ID value that then can be used to unregister the handler with the
-  ** `geoClearWatch` method. This feature is only available in secure
+  ** [geoClearWatch] method. This feature is only available in secure
   ** contexts (HTTPS).
   native Int geoWatchPosition(|DomCoord| onSuccess, |Err|? onErr := null, [Str:Obj]? opts := null)
 
   ** Unregister location/error monitoring handlers previously installed
-  ** using `geoWatchPosition`. This feature is only available in secure
+  ** using [geoWatchPosition]. This feature is only available in secure
   ** contexts (HTTPS).
   native Void geoClearWatch(Int id)
 

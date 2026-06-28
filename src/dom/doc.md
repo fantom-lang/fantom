@@ -1,0 +1,149 @@
+<!--
+title:      Dom
+author:     Andy Frank
+created:    17 Apr 2009
+copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The [dom](dom::index) pod provides a framework for interoperating with
+the browser DOM and related browser APIs.  For the most part, these map
+one-to-one:
+
+    Browser           Fantom
+    --------------    ---------------
+    Window            Win
+    Document          Doc
+    Element           Elem
+    Event             Event
+    XmlHttpRequest    HttpReq/HttpRes
+
+# Win
+
+    // basics
+    win := Win.cur       // get current Win instance
+    win.alert("Hello!")  // display a modal dialog
+    win.uri              // the URI for this page
+    win.hyperlink(uri)   // hyperlink to new page
+    win.viewport         // get size of window viewport
+
+    // event handlers
+    win.onEvent("hashchange", false) |e| { Win.cur.alert("hashchanged!") }
+
+    // storage
+    win.localStorage["bar"]         // return value for bar from local storage
+    win.localStorage["foo"] = 25    // store foo:25 in local storage
+    win.localStorage.remove("foo")  // remove foo from local storage
+    win.localStorage.clear          // clear all contents from local storage
+
+# Doc
+
+    doc := Win.cur.doc                // get doc instance for this window
+    doc.elem("someId")                // return the Elem with id='someId'
+    doc.createElem("div")             // create a new <div> element
+    doc.querySelector("div.foo")      // find first <div> element where class='foo'
+    doc.querySelectorAll("div.bar")   // find all <div> elements where class='bar'
+
+# Elem
+
+    // create Elems
+    Elem("div")   // create new unattached <div> element
+    Elem("img")   // create new unattached <img> element
+
+    // attributes
+    elem.id                          // 'id' attribute
+    elem.tagName                     // tag name of this element
+    elem.attr("alt")                 // get an attribute value
+    elem.setAttr("alt", "Alt text")  // set an attribute value
+    elem.removeAttr("alt")           // remove an attribute
+    elem["alt"]                      // get operator is a convenience for elem.attr
+    elem["alt"] = "Alt text"         // set operator is a convenience for elem.setAttr
+
+    // properties
+    elem.prop("value")               // get a DOM property value
+    elem.setProp("value", "foo")     // set a DOM property value
+    elem->value                      // trap getter is a convenience for elem.prop
+    elem->value = "foo"              // trap setter is a convenience for elem.setProp
+
+    // CSS classes
+    elem.style.classes               // return the current class name(s)
+    elem.style.hasClass("alpha")     // does this element have the given class name?
+    elem.style.addClass("beta")      // add a new class name to any current class names
+    elem.style.removeClass("gamma")  // remove a class name, leaving any others remaining
+    elem.style.toggleClass("beta")   // add class if not present, or remove if already exists
+
+    // CSS properties
+    elem.style["background-color"] = "#f00"  // set style background-color: #f00
+    elem.style->backgroundColor = "#f00"     // set style background-color: #f00
+    elem.style["color"]                      // get color property value
+    elem.style->color                        // get color property value
+    elem.style.computed("color")             // get the computed color property value
+    elem.style.setAll(["color":"#f00", "background:"#eee"])  // set list of style properties
+    elem.style.setCss("color: #f00; background: #eee")       // set style with CSS grammar
+
+    // tree
+    elem.parent             // parent element
+    elem.prevSibling        // prev sibling
+    elem.nextSibling        // next sibling
+    elem.children           // List of child elements
+    elem.firstChild         // first child, or null if no children
+    elem.lastChild          // last child, or null if no children
+    elem.add(child)         // add a new child element
+    elem.remove(child)      // remove a child element
+
+    // forms
+    elem->name              // the 'name' attribute
+    elem->checked           // true/false for checkboxes
+    elem->checked = true    // set 'checked' attribute
+    elem->value             // the 'value' attribute
+    elem->value = "foo"     // set 'value' attribute
+
+    // position and size
+    elem.bounds             // pos and size of element
+    elem.pos                // pos of element in pixels
+    elem.size               // size of element in pixels
+    elem.scrollPos          // scroll pos of element
+    elem.scrollSize         // scroll size of elemen
+
+    // event handlers
+    elem.focus              // focus element
+    elem.onEvent("click", false) |e| { Win.cur.alert("$e.target clicked!") }
+
+    // query
+    elem.querySelector("img")                  // find first <img> descendant
+    elem.querySelectorAll("img")               // find all <img> descendants
+    elem.querySelector("input[name='email']")  // find the <input> where name is "email"
+
+    // animation
+
+# XmlHttpRequest
+
+The [HttpReq](dom::HttpReq) object is used to make background HTTP
+requests from the browser.  For both sync and async requests, the response
+is passed to you in the callback closure:
+
+    HttpReq { uri=`/foo` }.send("POST", "some content") |res|
+    {
+      Win.cur.alert(res.content)
+    }
+
+Convenience methods are availabe for the common request methods:
+
+    HttpReq { uri=`/foo` }.get |res| {...}
+    HttpReq { uri=`/foo` }.post("some content") |res| {...}
+    HttpReq { uri=`/foo` }.postForm(["name":"Barney Stinson"]) |res| {...}
+
+The [postForm](dom::HttpReq.postForm) will automatically encode the
+request to look like a normal HTML form submission.
+
+# Observers
+
+[ResizeObserver](dom::ResizeObserver) provides a callback when the size of
+a given element or list of elements is modified:
+
+      ResizeObserver {
+        it.observe(elem)
+        it.onResize |e| { echo("new size: ${e.first.size}") }
+      }
+

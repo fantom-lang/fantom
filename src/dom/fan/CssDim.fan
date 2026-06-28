@@ -52,7 +52,7 @@ const class CssDim
     }
   }
 
-  ** Hash is 'toStr.hash'.
+  ** Hash is `toStr.hash`.
   override Int hash() { toStr.hash }
 
   ** Return if obj is same CssDim value.
@@ -63,7 +63,7 @@ const class CssDim
     return this.val == that.val && this.unit == that.unit
   }
 
-  ** Return '"<val><unit>"'
+  ** Return `"<val><unit>"`
   override Str toStr()
   {
     this === autoVal ? "auto" : "${val}$unit"

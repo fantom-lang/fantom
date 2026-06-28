@@ -42,7 +42,7 @@ using web
 ** ResizeObserverEntry
 *************************************************************************
 
-** ResizeObserverEntry models a resize event for `ResizeObserver`.
+** ResizeObserverEntry models a resize event for [ResizeObserver].
 @Js class ResizeObserverEntry
 {
   ** It-block ctor invoked from ResizeObserverPeer.
@@ -51,7 +51,7 @@ using web
   ** Elem that has been resized.
   Elem target { private set }
 
-  ** New size of `target` element.
+  ** New size of [target] element.
   const Size size
 
   override Str toStr()

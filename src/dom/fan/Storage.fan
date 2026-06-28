@@ -9,7 +9,7 @@
 **
 ** Storage models a DOM Storage.
 **
-** See [pod doc]`pod-doc#win` for details.
+** See [pod doc](pod-doc#win) for details.
 **
 @Js
 class Storage
@@ -33,7 +33,7 @@ class Storage
   native Str[] keys()
 
   ** Return the key value for this index. If the index is greater
-  ** than or equal to 'size' returns null.
+  ** than or equal to `size` returns null.
   native Str? key(Int index)
 
   ** Return Obj stored under this key, or null if key does not exist.

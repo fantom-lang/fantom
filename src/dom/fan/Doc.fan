@@ -13,7 +13,7 @@ using web
 **
 ** Doc models the DOM document object.
 **
-** See [pod doc]`pod-doc#doc` for details.
+** See [pod doc](pod-doc#doc) for details.
 **
 @Js
 class Doc
@@ -43,25 +43,25 @@ class Doc
   ** Get the body element.
   native Elem body()
 
-  ** Return 'true' if this document or any element inside
+  ** Return `true` if this document or any element inside
   ** the document has focus.
   native Bool hasFocus()
 
-  ** Return 'true' if page is considered hidden.
+  ** Return `true` if page is considered hidden.
   native Bool isHidden()
 
-  ** Get the currently focused element, or 'null' for none.
+  ** Get the currently focused element, or `null` for none.
   native Elem? activeElem()
 
   **
-  ** Get the element with this 'id', or 'null' if no
-  ** element is found with this 'id'.
+  ** Get the element with this `id`, or `null` if no
+  ** element is found with this `id`.
   **
   native Elem? elemById(Str id)
 
   **
   ** Get the topmost element at the specified coordinates
-  ** (relative to the viewport), or 'null' if none found.
+  ** (relative to the viewport), or `null` if none found.
   **
   native Elem? elemFromPos(Point p)
 
@@ -76,7 +76,7 @@ class Doc
   ** Create a new element with the given tag name.  If the
   ** attrib map is specified, set the new elements attributes
   ** to the given values. Optionally a namespace for the
-  ** element can be specified with 'ns'.
+  ** element can be specified with `ns`.
   **
   native Elem createElem(Str tagName, [Str:Str]? attrib := null, Uri? ns := null)
 
@@ -98,22 +98,22 @@ class Doc
   native Elem[] querySelectorAll(Str selectors)
 
   **
-  ** Invoke `querySelectorAll` but use given 'type' when wrapping
-  ** native DOM nodes. See `Elem.fromNative` for more details.
+  ** Invoke [querySelectorAll] but use given `type` when wrapping
+  ** native DOM nodes. See [Elem.fromNative] for more details.
   **
   @NoDoc native Elem[] querySelectorAllType(Str selectors, Type type)
 
   **
   ** Render the given image to an offscreen <canvas> element and
-  ** export the contents to a data URI of type 'image/png'.
+  ** export the contents to a data URI of type `image/png`.
   **
   @NoDoc native Str exportPng(Elem img)
 
   **
   ** Render the given image to an offscreen <canvas> element and
-  ** export the contents to a data URI of type 'image/jpeg'. The
+  ** export the contents to a data URI of type `image/jpeg`. The
   ** image quality can be configured by specifying a number
-  ** between '0f' and '1f' for 'quality'.  If 'quality' is null
+  ** between `0f` and `1f` for `quality`.  If `quality` is null
   ** the default value will be used.
   **
   @NoDoc native Str exportJpg(Elem img, Float? quality)
@@ -130,12 +130,12 @@ class Doc
   ** handler was not registered, this method does nothing.
   native Void removeEvent(Str type, Bool useCapture, Func handler)
 
-  ** When a HTML document has been switched to 'designMode', the document
-  ** object exposes the 'exec' method which allows one to run commands to
+  ** When a HTML document has been switched to `designMode`, the document
+  ** object exposes the `exec` method which allows one to run commands to
   ** manipulate the contents of the editable region.
-  **   - 'name': the command name to execute
-  **   - 'defUi': flag to indicate if default user interface is shown
-  **   - 'val': optional value for commands that take an argument
+  **   - `name`: the command name to execute
+  **   - `defUi`: flag to indicate if default user interface is shown
+  **   - `val`: optional value for commands that take an argument
   native Bool exec(Str name, Bool defUi := false, Obj? val := null)
 
 //////////////////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ class Doc
 
   **
   ** Return a WebOutStream for writing content into this
-  ** document. You should call 'close' on the stream when
+  ** document. You should call `close` on the stream when
   ** done writing to notify browser load is complete.
   **
   native WebOutStream out()
