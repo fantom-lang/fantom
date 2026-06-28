@@ -50,6 +50,9 @@ The following are the standardized user defined keys:
     [OSI](http://www.opensource.org/licenses/alphabetical)
   - `vcs.name`: name of the version control system: "Mercurial", "Git", "Subversion"
   - `vcs.uri`: URI of the public version control repository
+  - `doc.format`: format used for the pod's documentation; set to "markdown"
+    to author type/slot doc comments and chapter files in markdown.  See
+    [Documentation](#documentation)
 
 The following are the standardized keys automatically defined by compiler:
 
@@ -70,4 +73,38 @@ The following are the standardized keys automatically defined by compiler:
   - `build.host`: compile env host name, see [Env.host](sys::Env.host)
   - `build.user`: compile env user name, see [Env.user](sys::Env.user)
   - `build.compiler`: compiler pod version
+
+# Documentation
+Pod documentation is authored in two places:
+  - **type/slot docs**: the `**` doc comments on your types and slots
+  - **chapters**: standalone files under the pod's "doc/" directory, plus an
+    optional pod-level doc named "doc.md" (historically "pod.fandoc") as a peer
+    of the build script
+
+Fantom documentation uses a flavor of markdown called
+[xetodoc](https://github.com/Project-Haystack/xeto/blob/master/src/xeto/doc.xeto/Xetodoc.md):
+  - formally based on Commonmark
+  - link shortcuts for types and slot names such as `[Str]`
+  - Github style heading anchors
+  - Github style tables
+  - Nested HTML is disallowed
+
+New pods should author all doc comments and chapters in markdown and opt-in
+by adding `doc.format` to the build script meta:
+
+    meta = ["doc.format": "markdown", ...]
+
+Historically Fantom documentation used [fandoc](fandoc::pod-doc), a wiki-style
+markup.  The two formats differ in key ways:
+  - **links** use markdown syntax `[text](uri)` and the shortcut `[uri]`
+    instead of fandoc's backtick `` `uri` ``
+  - **inline code** uses backticks `` `code` `` instead of fandoc's single
+    quotes `'code'`
+  - **code blocks** use fenced ``` blocks instead of `pre>`/`<pre>`
+  - **headings** use `#` prefixes instead of underlines, and anchors are derived
+    from the heading text (github style) rather than explicit `[#id]` ids
+
+When `doc.format` is absent the legacy fandoc renderer is used for backward
+compatibility.  Use the `adm/fandoc2md.fan` script to convert existing fandoc
+sources to markdown.
 

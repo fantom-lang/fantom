@@ -20,7 +20,7 @@ as follows:
       +- locale/     // localization files
       +- test/       // ".fan" unit tests
       +- build.fan   // build script for pod
-      +- pod.fandoc  // pod level documentation
+      +- doc.md      // pod level documentation (markdown)
 
 Each of those directories may contain arbitrary sub-directories under it,
 although it is not required.
@@ -94,10 +94,10 @@ Fantom supports three styles of comments:
     way to comment out large sections of code
   - `//` end of line comments ignore everything to the end
     of the line
-  - `**` fandoc comments
+  - `**` doc comments
 
 The `**` comment is used for documentation.  Like `//` comments, it
-comments everything to the end of the line.  Fandoc comments are similar
+comments everything to the end of the line.  Doc comments are similar
 to `/** */` Javadoc or `///` C# documentation comments.  You prefix one
 more lines of `**` comments to specify the documentation for a type
 or slot definition:
@@ -109,9 +109,11 @@ or slot definition:
       Void justDoIt() {}
     }
 
-The documentation is written in plain text using a special set of rules
-for structure called [fandoc](fandoc::pod-doc).  Fandoc allows you to write
-documentation that looks good in plain text source files, but can be
-translated into other formats such as nicely formatted HTML.
+The documentation is written in plain text using markdown (see
+[Pods](Pods#documentation)).  Markdown lets you write documentation that
+looks good in plain text source files, but can be translated into other
+formats such as nicely formatted HTML.  Older pods may still use the legacy
+[fandoc](fandoc::pod-doc) format; the build script meta key `doc.format`
+selects which format the pod uses.
 
 

@@ -7,12 +7,16 @@ license:    Licensed under the Academic Free License version 3.0
 -->
 
 # Overview
-Fandoc is documentation format written in plaintext similiar to
-[Markdown](http://daringfireball.net/projects/markdown/).  Fandoc
-is the format used for:
-  - Fantom source code documentation via the `**` [comment](docLang::CompilationUnits#comments)
-  - All the documentation manuals (including this document itself)
-  - Comments on fantom.org discussion groups
+Fandoc is a documentation format written in plaintext similar to
+[Markdown](http://daringfireball.net/projects/markdown/).  Historically
+fandoc was the format used for Fantom source code documentation and the
+documentation manuals.
+
+NOTE: fandoc is now a **legacy** format.  Pod documentation has moved to
+markdown (see [Pods](docLang::Pods#documentation)).  New code should author
+type/slot doc comments and chapters in markdown and set `doc.format` to
+"markdown" in the build script.  Fandoc remains supported for backward
+compatibility and for fantom.org discussion group comments.
 
 You can use the [fandoc APIs](#fandoc-api) to parse fandoc plaintext
 into a document object model and generate HTML.
