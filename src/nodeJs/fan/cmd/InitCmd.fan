@@ -28,7 +28,7 @@ internal class InitCmd : NodeJsCmd
     return 0
   }
 
-  ** Write 'fantom.js' which ensures that all the supporting
+  ** Write `fantom.js` which ensures that all the supporting
   ** sys libraries are run.
   private Void writeFantomJs()
   {
@@ -44,7 +44,7 @@ internal class InitCmd : NodeJsCmd
     ms.writeEndModule(out).flush.close
   }
 
-  ** Write 'sys.t.ds'
+  ** Write `sys.t.ds`
   private Void writeTsDecl()
   {
     sysDecl := ms.moduleDir.plus(`sys.d.ts`)

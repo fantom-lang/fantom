@@ -54,7 +54,7 @@ class GenTsDecl
   private Bool genNoDoc() { opts["genNoDoc"] == true }
 
   ** Check if this node should be generated based on its @NoDoc facet
-  ** and the 'genNoDoc' option.
+  ** and the `genNoDoc` option.
   private Bool isNoDoc(CNode node) { node.isNoDoc && !genNoDoc }
 
 //////////////////////////////////////////////////////////////////////////
@@ -297,11 +297,11 @@ class GenTsDecl
   ** Gets the name of the given type in JS. For example, a map type
   ** could show up as Map, sys.Map, Map<string, string>, etc.
   **
-  ** 'thisPod' is the pod you are writing the type in; if 'type' is
+  ** `thisPod` is the pod you are writing the type in; if `type` is
   ** from a different pod, it will have its pod name prepended to it,
   ** e.g. sys.Map rather than just Map.
   **
-  ** 'thisType' should only be non-null if instances of sys::This should
+  ** `thisType` should only be non-null if instances of sys::This should
   ** be written as that type instead of "this". For example, Int methods
   ** which are non-static in Fantom but static in JS cannot use the "this"
   ** type.

@@ -34,7 +34,7 @@ internal class TestCmd : NodeJsCmd
     return 0
   }
 
-  ** Get all pods from target specifications. Always include 'util'
+  ** Get all pods from target specifications. Always include `util`
   ** so that we can reflect to run TestRunner
   private Pod[] targetPods()
   {

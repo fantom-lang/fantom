@@ -72,7 +72,7 @@ internal class EmitUtil
     ms.writePackageJson(json)
   }
 
-  ** Copy all pod js files into '<dir>/node_modules/'.
+  ** Copy all pod js files into `<dir>/node_modules/`.
   ** Also copies in mime.js, units.js, and indexed-props.js
   Void writeNodeModules()
   {
@@ -85,7 +85,7 @@ internal class EmitUtil
     writeIndexedPropsJs
   }
 
-  ** Write 'es6.js' (grab it from sys.js)
+  ** Write `es6.js` (grab it from sys.js)
   Void writeFanJs()
   {
     out := ms.file("fan").out
@@ -93,7 +93,7 @@ internal class EmitUtil
     out.flush.close
   }
 
-  ** Write 'node.js'
+  ** Write `node.js`
   Void writeNode()
   {
     modules := ["os", "path", "fs", "crypto", "url", "zlib"]
@@ -139,7 +139,7 @@ internal class EmitUtil
     finally out.flush.close
   }
 
-  ** Write the code for configuring MIME types to 'fan_mime.js'
+  ** Write the code for configuring MIME types to `fan_mime.js`
   Void writeMimeJs()
   {
     out := ms.file("fan_mime").out
@@ -147,7 +147,7 @@ internal class EmitUtil
     out.flush.close
   }
 
-  ** Write the unit database to 'fan_units.js'
+  ** Write the unit database to `fan_units.js`
   Void writeUnitsJs()
   {
     out := ms.file("fan_units").out
