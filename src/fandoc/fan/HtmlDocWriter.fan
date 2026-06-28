@@ -9,7 +9,7 @@
 **
 ** HtmlDocWriter outputs a fandoc model to XHTML
 **
-** See [pod doc]`pod-doc#api` for usage.
+** See [pod doc](pod-doc#fandoc-api) for usage.
 **
 @Js
 class HtmlDocWriter : DocWriter

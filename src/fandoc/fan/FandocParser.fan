@@ -10,7 +10,7 @@
 ** FandocParser translate fandoc text into an in-memory
 ** representation of the document.
 **
-** See [pod doc]`pod-doc#api` for usage.
+** See [pod doc](pod-doc#fandoc-api) for usage.
 **
 @Js
 class FandocParser
@@ -390,9 +390,10 @@ class FandocParser
   **
   ** Return if line starting at index i is an ordered
   ** list item:
-  **   number* "." sp  (digits)
-  **   letter  "." sp  (a-z | A-Z single letter only)
-  **   roman*  "." sp  (ivx | IVX combos)
+  **
+  **     number* "." sp  (digits)
+  **     letter  "." sp  (a-z | A-Z single letter only)
+  **     roman*  "." sp  (ivx | IVX combos)
   **
   private static Bool isOrderedListMark(Str line, Int i)
   {
@@ -505,7 +506,7 @@ class FandocParser
   ** List of errors detected
   FandocErr[] errs := FandocErr[,]
 
-  ** If true, then leading lines starting with '**' are parsed as header
+  ** If true, then leading lines starting with `**` are parsed as header
   Bool parseHeader := true
 
   internal Str filename := "" // filename for reporting errors

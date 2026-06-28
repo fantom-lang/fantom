@@ -1,32 +1,30 @@
-**************************************************************************
-** title:      Fandoc
-** author:     Brian Frank
-** created:    10 Apr 08
-** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Fandoc
+author:     Brian Frank
+created:    10 Apr 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
+# Overview
 Fandoc is documentation format written in plaintext similiar to
-[Markdown]`http://daringfireball.net/projects/markdown/`.  Fandoc
+[Markdown](http://daringfireball.net/projects/markdown/).  Fandoc
 is the format used for:
-  - Fantom source code documentation via the '**' [comment]`docLang::CompilationUnits#comments`
+  - Fantom source code documentation via the `**` [comment](docLang::CompilationUnits#comments)
   - All the documentation manuals (including this document itself)
   - Comments on fantom.org discussion groups
 
-You can use the [fandoc APIs]`#api` to parse fandoc plaintext
+You can use the [fandoc APIs](#fandoc-api) to parse fandoc plaintext
 into a document object model and generate HTML.
 
-Header [#header]
-****************
+# Header
 The begining of a Fandoc document may be prefixed with a header block.  The
-header block includes a series of lines which begin with '**'.  If
+header block includes a series of lines which begin with `**`.  If
 the line includes a colon, then it is added a key/value pair to
-[Doc.meta]`fandoc::Doc.meta`.  For example, we use the following
+[Doc.meta](fandoc::Doc.meta).  For example, we use the following
 header in the standard documentation:
 
-pre>
+```fantom
   **************************************************************************
   ** title:      Fandoc
   ** author:     Brian Frank
@@ -34,37 +32,35 @@ pre>
   ** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
   ** license:    Licensed under the Academic Free License version 3.0
   **************************************************************************
-<pre>
+```
 
-Inline Formatting [#inline]
-***************************
-pre>
+# Inline Formatting
+```fantom
   - Inline code: 'FandocParser'
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Strong+Emphasis: ** *foo bar* **
   - Hyperlink: `https://fantom.org/`
   - Hyperlink: [Fantom Home Page]`https://fantom.org/`
-<pre
+```
 
-  - Code inline: 'FandocParser'
+  - Code inline: `FandocParser`
   - Strong: **foo bar**
   - Emphasis: *foo bar*
   - Strong+Emphasis: ** *foo bar* **
-  - Hyperlink: `https://fantom.org/`
-  - Hyperlink: [Fantom Home Page]`https://fantom.org/`
+  - Hyperlink: [https://fantom.org/]
+  - Hyperlink: [Fantom Home Page](https://fantom.org/)
 
-Paragraphs [#p]
-***************
+# Paragraphs
 Paragraphs are separated by a blank line:
 
-pre>
+```fantom
 Lorem ipsum dolor sit amet, consectetur adipisicing elit,
 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
 nisi ut aliquip ex ea commodo consequat.
-<pre
+```
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit,
 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -72,57 +68,56 @@ sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
 nisi ut aliquip ex ea commodo consequat.
 
-Preformatted [#pre]
-*******************
+# Preformatted
 When documenting a programming language, you tend to include
 lots of code snippets.  Anything indented two or more spaces is
 considered preformatted (like the pre tag in HTML).  Preformatted
 code cannot start with a dash/space, number/dot/space, or
 letter/dot/space otherwise it considerded a list:
 
-pre>
+```fantom
   Examples:
     "abcd"[0..2]   => "abc"
     "abcd"[3..3]   => "d"
     "abcd"[-2..-1] => "cd"
-<pre
+```
 
 Examples:
-  "abcd"[0..2]   => "abc"
-  "abcd"[3..3]   => "d"
-  "abcd"[-2..-1] => "cd"
+
+    "abcd"[0..2]   => "abc"
+    "abcd"[3..3]   => "d"
+    "abcd"[-2..-1] => "cd"
 
 You can also denote a block of text as preformatted by wrapping
-it with the special tokens 'pre>' and '<pre':
+it with the special tokens `pre>` and `<pre`:
 
-pre>
+```fantom
   pre>
   - No markup
   - I mean it!
   <pre
-<pre
+```
 
-pre>
+```fantom
 - No markup
 - I mean it!
-<pre
+```
 
-Blocks annotated with the 'pre>' token are trimmed based on the line
+Blocks annotated with the `pre>` token are trimmed based on the line
 with the left most margin.
 
-Unordered List [#ul]
-********************
+# Unordered List
 Unordered lists use a dash followed by a space.  Use indentation
 to indicate list hierarchy (two or more spaces):
 
-pre>
+```fantom
   - item 1
   - item 2
   - item 3
      - sub 3a
      - sub 3b
   - item 4
-<pre
+```
 
   - item 1
   - item 2
@@ -131,13 +126,12 @@ pre>
      - sub 3b
   - item 4
 
-Ordered List [#ol]
-******************
+# Ordered List
 Ordered lists use an identifier followed by a dot and space.  The identifier
 can be a number, letter, or roman numeral (lower or upper case).  Use
 indentation to indicate list hierarchy (two or more spaces):
 
-pre>
+```fantom
  I. Chapter I
    1. Section 1
    2. Section 2
@@ -148,7 +142,7 @@ pre>
    B. Section B
      i. Subsection i
      ii.Subsection ii
-<pre
+```
 
  I. Chapter I
    1. Section 1
@@ -161,17 +155,16 @@ pre>
      i. Subsection i
      ii. Subsection ii
 
-Horizontal Rules [#hr]
-**********************
-Horizontal rules start with '---', and must be preceded by a blank line:
+# Horizontal Rules
+Horizontal rules start with `---`, and must be preceded by a blank line:
 
-pre>
+```fantom
   Above the rule
 
   ---
 
   Below the rule
-<pre
+```
 
 Above the rule
 
@@ -179,18 +172,17 @@ Above the rule
 
 Below the rule
 
-Block Quotes [#blockQuotes]
-***************************
+# Block Quotes
 Block quotes start the first line (or every line) of the paragraph
 with the ">" character followed by a space:
 
-pre>
+```fantom
   > Lorem ipsum dolor sit amet, consectetur adipisicing elit,
   > sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
   > Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
   nisi ut aliquip ex ea commodo consequat.
-<pre
+```
 
 > Lorem ipsum dolor sit amet, consectetur adipisicing elit,
 > sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -198,41 +190,39 @@ pre>
 > Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
 nisi ut aliquip ex ea commodo consequat.
 
-Images [#images]
-****************
+# Images
 Images use the same syntax as a hyperlink with anchor text, but
 are prefixed with a bang:
 
-pre>
+```fantom
   ![fan logo]`https://fantom.org/pod/fantomws/res/img/fantom.png`
-<pre
+```
 
-![fan logo]`https://fantom.org/pod/fantomws/res/img/fantom.png`
+![](https://fantom.org/pod/fantomws/res/img/fantom.png)
 
 You can set an explicit size for the image as follows:
 
-pre>
+```fantom
   ![fan logo][80x18]`https://fantom.org/pod/fantomws/res/img/fantom.png`
-<pre
+```
 
-![fan logo][80x18]`https://fantom.org/pod/fantomws/res/img/fantom.png`
+![](https://fantom.org/pod/fantomws/res/img/fantom.png)
 
 You can make an image a link as follows with no spaces between the
 brackets:
 
-pre>
+```fantom
  [![alt]`https://fantom.org/pod/fantomws/res/img/fantom.png`]`https://fantom.org/`
-<pre
+```
 
-[![alt]`https://fantom.org/pod/fantomws/res/img/fantom.png`]`https://fantom.org/`
+[](https://fantom.org/)
 
 
-Headings [#headings]
-********************
+# Headings
 Headings are a title line followed by an "underline".  Documentation
 should define an anchor id for each heading:
 
-pre>
+```fantom
   Ex Heading 1 [#h1]
   ##################
 
@@ -244,32 +234,27 @@ pre>
 
   Ex Heading 4 [#h4]
   ------------------
-<pre
+```
 
-Ex Heading 1 [#h1]
-##################
+# Ex Heading 1
 
-Ex Heading 2 [#h2]
-******************
+# Ex Heading 2
 
-Ex Heading 3 [#h3]
-==================
+## Ex Heading 3
 
-Ex Heading 4 [#h4]
-------------------
+### Ex Heading 4
 
 Note: By convention top level sections of a chapter use heading level 2.
 Heading level 1 is reserved for the chapter title.
 
-Hyperlinks [#hyperlinks]
-************************
-The [compilerDoc]`compilerDoc::index` pod is used to compile API or stand-alone
+# Hyperlinks
+The [compilerDoc](compilerDoc::index) pod is used to compile API or stand-alone
 documentation.  It allows you to use abstract uris to create cross reference
 hyperlinks.  During the compilation these uris are translated into relative links
 to the appropiate HTML files.  Hyperlinks to types and slots are automatically
 formatted as inline code.
 
-pre>
+```fantom
   **APIs:**
   - `sys::index`: pod index
   - `web::pod-doc`: pod documentation
@@ -285,58 +270,57 @@ pre>
   - `docLang::Closures#syntax`: anchor within chapter
   - `Env`: chapter (internal to pod)
   - `Env#index`: anchor within chapter (internal to pod)
-<pre
+```
 
 **APIs:**
-  - `sys::index`: pod index
-  - `web::pod-doc`: pod documentation
-  - `sys::Str`: API for type
-  - `sys::Str.getRange`: API for slot
-  - `sys::Int`: API for type (internal to pod)
-  - `sys::Int.toHex` API for slot (internal to pod)
-  - [now]`sys::Duration.now` API with achor text
+  - [sys::index]\: pod index
+  - [web::pod-doc]\: pod documentation
+  - [sys::Str]\: API for type
+  - [sys::Str.getRange]\: API for slot
+  - [sys::Int]\: API for type (internal to pod)
+  - [sys::Int.toHex] API for slot (internal to pod)
+  - [now](sys::Duration.now) API with achor text
 
 **Manuals:**
-  - `docLang::index`: pod index
-  - `docLang::Closures`: chapter
-  - `docLang::Closures#syntax`: anchor within chapter
-  - [Env]`docLang::Env`: chapter (internal to pod)
-  - [Env#index]`docLang::Env#index`: anchor within chapter (internal to pod)
+  - [docLang::index]\: pod index
+  - [docLang::Closures]\: chapter
+  - [docLang::Closures#syntax]\: anchor within chapter
+  - [Env](docLang::Env): chapter (internal to pod)
+  - [Env#index](docLang::Env#indexed-props): anchor within chapter (internal to pod)
 
-Fandoc API [#api]
-*****************
-The [FandocParser]`fandoc::FandocParser` class is used to parse fandoc
-plaintext into a document object model.  The [DocNode]`fandoc::DocNode` is
+# Fandoc API
+The [FandocParser](fandoc::FandocParser) class is used to parse fandoc
+plaintext into a document object model.  The [DocNode](fandoc::DocNode) is
 the base class of all nodes in the document tree.  The tree is organized
-as subclasses of [DocElems]`fandoc::DocElem`.  The leaves of the
-tree which contain the actual text content are [DocText]`fandoc::DocText`.
+as subclasses of [DocElems](fandoc::DocElem).  The leaves of the
+tree which contain the actual text content are [DocText](fandoc::DocText).
 
 Once a tree has been parsed into a DOM, you can translate into alternate
-formats via the [DocWriter]`fandoc::DocWriter` class.  You can use
-[HtmlDocWriter]`fandoc::HtmlDocWriter` to translate to XHTML:
+formats via the [DocWriter](fandoc::DocWriter) class.  You can use
+[HtmlDocWriter](fandoc::HtmlDocWriter) to translate to XHTML:
 
-  // parse into document tree
-  doc := FandocParser.make.parseStr("you want to do *what*!")
+    // parse into document tree
+    doc := FandocParser.make.parseStr("you want to do *what*!")
 
-  // write as html snippet (we don't write the
-  // document itself, just its children)
-  doc.writeChildren(HtmlDocWriter.make)
+    // write as html snippet (we don't write the
+    // document itself, just its children)
+    doc.writeChildren(HtmlDocWriter.make)
 
-  // outputs
-  <p>you want to do <em>what</em>!</p>
+    // outputs
+    <p>you want to do <em>what</em>!</p>
 
-  // write as full html document with head/body tags
-  doc.write(HtmlDocWriter.make)
+    // write as full html document with head/body tags
+    doc.write(HtmlDocWriter.make)
 
-  // outputs
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-  <html>
-  <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-  </head>
-  <body>
-  <p>you want to do <em>what</em>!</p>
-  </body>
+    // outputs
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html>
+    <head>
+      <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    </head>
+    <body>
+    <p>you want to do <em>what</em>!</p>
+    </body>
 
 

@@ -5,7 +5,7 @@
 
 **
 ** MarkdownDocWriter outputs a fandoc model to
-** [Markdown]`http://daringfireball.net/projects/markdown/`
+** [Markdown](http://daringfireball.net/projects/markdown/)
 **
 @Js class MarkdownDocWriter : DocWriter
 {

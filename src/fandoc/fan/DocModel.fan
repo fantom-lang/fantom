@@ -38,7 +38,7 @@ enum class DocNodeId
 ** DocNode is the base class for nodes in a fandoc model.
 ** There are two type of nodes:  DocElem and DocText.
 **
-** See [pod doc]`pod-doc#api` for usage.
+** See [pod doc](pod-doc#fandoc-api) for usage.
 **
 @Js
 abstract class DocNode
@@ -78,8 +78,8 @@ abstract class DocNode
   //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the `DocElem` that contains this node.
-  ** Return 'null' if not parented.
+  ** Get the [DocElem] that contains this node.
+  ** Return `null` if not parented.
   **
   DocElem? parent { internal set }
 
@@ -100,7 +100,7 @@ abstract class DocNode
 
   **
   ** Get the index of this node in its parent's children.
-  ** Return 'null' if not parented.
+  ** Return `null` if not parented.
   **
   Int? pos()
   {
@@ -108,7 +108,7 @@ abstract class DocNode
   }
 
   **
-  ** Return 'true' if this node is the first child in its parent.
+  ** Return `true` if this node is the first child in its parent.
   **
   Bool isFirst()
   {
@@ -116,7 +116,7 @@ abstract class DocNode
   }
 
   **
-  ** Return 'true' if this node is the last child in its parent.
+  ** Return `true` if this node is the last child in its parent.
   **
   Bool isLast()
   {
@@ -136,7 +136,7 @@ abstract class DocNode
 **
 ** DocText segment.
 **
-** See [pod doc]`pod-doc#api` for usage.
+** See [pod doc](pod-doc#fandoc-api) for usage.
 **
 @Js
 class DocText : DocNode
@@ -166,7 +166,7 @@ class DocText : DocNode
 **
 ** DocElem is a container node which models a branch of the doc tree.
 **
-** See [pod doc]`pod-doc#api` for usage.
+** See [pod doc](pod-doc#fandoc-api) for usage.
 **
 @Js
 abstract class DocElem : DocNode
@@ -261,7 +261,7 @@ abstract class DocElem : DocNode
   }
 
   **
-  ** Convenicence to call `add` for each node in the given list.
+  ** Convenicence to call [add] for each node in the given list.
   **
   This addAll(DocNode[] nodes)
   {
@@ -305,7 +305,7 @@ abstract class DocElem : DocNode
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Covariant override to narrow path to list of `DocElem`.
+  ** Covariant override to narrow path to list of [DocElem].
   **
   final override DocElem[] path()
   {
