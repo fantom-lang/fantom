@@ -11,8 +11,8 @@
 **************************************************************************
 
 **
-** A KeyPair contains a [private key]`PrivKey` and its corresponding
-** [public key]`PubKey` in an asymmetric key pair.
+** A KeyPair contains a [private key](PrivKey) and its corresponding
+** [public key](PubKey) in an asymmetric key pair.
 **
 const mixin KeyPair
 {
@@ -69,7 +69,7 @@ const mixin AsymKey : Key
 
 **
 ** A private key in an asymmetric key pair. A private key
-** can be used to `sign` and `decrypt` data.
+** can be used to [sign] and [decrypt] data.
 **
 const mixin PrivKey : AsymKey
 {
@@ -77,14 +77,14 @@ const mixin PrivKey : AsymKey
   ** digest algorithm and return the signature. Throws Err if the
   ** digest algorithm is not supported.
   **
-  **    signature := privKey.sign("Message".toBuf, "SHA512")
+  **      signature := privKey.sign("Message".toBuf, "SHA512")
   **
   abstract Buf sign(Buf data, Str digest)
 
   ** Decrypt the contents of the data buffer and return the result.
   ** Throws Err if the decryption fails for any reason.
   **
-  **    msg := privKey.decrypt(encrypted)
+  **      msg := privKey.decrypt(encrypted)
   **
   abstract Buf decrypt(Buf data, Str padding := "PKCS1Padding")
 }
@@ -95,7 +95,7 @@ const mixin PrivKey : AsymKey
 
 **
 ** A public key in an asymmetric key pair. A public key
-** can be used to `verify` and `encrypt` data.
+** can be used to [verify] and [encrypt] data.
 **
 const mixin PubKey : AsymKey
 {
@@ -105,7 +105,7 @@ const mixin PubKey : AsymKey
 
   ** Throws an Err if the digest algorithm is not supported.
   **
-  **    valid := pubKey.verify("Message".toBuf, "SHA512", signature)
+  **      valid := pubKey.verify("Message".toBuf, "SHA512", signature)
   **
   abstract Bool verify(Buf data, Str digest, Buf signature)
 
@@ -114,7 +114,7 @@ const mixin PubKey : AsymKey
   ** Throws an Err if the algorithm does not support encryption, or if the
   ** padding is not supported for the algorithm.
   **
-  **    encrypted := pubKey.encrypt("Message".toBuf)
+  **      encrypted := pubKey.encrypt("Message".toBuf)
   **
   abstract Buf encrypt(Buf data, Str padding := "PKCS1Padding")
 }

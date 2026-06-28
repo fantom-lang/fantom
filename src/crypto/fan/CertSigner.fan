@@ -8,9 +8,9 @@
 
 **
 ** The CertSigner allows you to configure various options for signing
-** a certificate from a [CSR]`Csr` to generate a signed [certifcate]`Cert`.
+** a certificate from a [CSR](Csr) to generate a signed [certifcate](Cert).
 **
-** See [RFC5280]`https://datatracker.ietf.org/doc/html/rfc5280` for more information
+** See [RFC5280](https://datatracker.ietf.org/doc/html/rfc5280) for more information
 ** on configuring v3 extension values.
 **
 mixin CertSigner
@@ -30,7 +30,7 @@ mixin CertSigner
   abstract This notAfter(Date date)
 
   ** Configure the signature algorithm to sign the certificate with. This map
-  ** is configured the same as a `Crypto.genCsr`. By default, an implementation
+  ** is configured the same as a [Crypto.genCsr]. By default, an implementation
   ** should choose a "strong" signing algorithm.
   abstract This signWith(Str:Obj opts)
 
@@ -59,18 +59,18 @@ mixin CertSigner
   ** Add a Subject Alternative Name to the certificate. This
   ** method may be called multiple times to add different SANs.
   **
-  ** The 'name' may be one of the following types:
-  **  - 'Str': Created as `SanType.dnsName`
-  **  - 'Uri': Created as `SanType.uri`
-  **  - 'IpAddr': Created as `SanType.ipAddr`
-  **  - 'AsnOid': Created as `SanType.registeredId`
-  **  - 'San': `San` Instance (see supported types)
+  ** The `name` may be one of the following types:
+  **  - `Str`: Created as [SanType.dnsName]
+  **  - `Uri`: Created as [SanType.uri]
+  **  - `IpAddr`: Created as [SanType.ipAddr]
+  **  - `AsnOid`: Created as [SanType.registeredId]
+  **  - `San`: [San] Instance (see supported types)
   **
-  ** Supported `San` types:
-  **  - `SanType.dnsName`
-  **  - `SanType.ipAddr`
-  **  - `SanType.uri`
-  **  - `SanType.rfc822Name`
-  **  - `SanType.registeredId`
+  ** Supported [San] types:
+  **  - [SanType.dnsName]
+  **  - [SanType.ipAddr]
+  **  - [SanType.uri]
+  **  - [SanType.rfc822Name]
+  **  - [SanType.registeredId]
   abstract This subjectAltName(Obj name)
 }

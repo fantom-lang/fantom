@@ -8,9 +8,9 @@
 
 **
 ** KeyStore stores keys[`Key`] and certificates[`Cert`] in an aliased
-** [keystore entry]`KeyStoreEntry`. Aliases are case-insensitive.
+** [keystore entry](KeyStoreEntry). Aliases are case-insensitive.
 **
-** See `Crypto.loadKeyStore`
+** See [Crypto.loadKeyStore]
 **
 const mixin KeyStore
 {
@@ -25,7 +25,7 @@ const mixin KeyStore
   ** Get all the aliases in the key store.
   abstract Str[] aliases()
 
-  ** Get the number of [entries]`KeyStoreEntry` in the key store.
+  ** Get the number of [entries](KeyStoreEntry) in the key store.
   abstract Int size()
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,24 +42,24 @@ const mixin KeyStore
   ** Get the entry with the given alias.
   abstract KeyStoreEntry? get(Str alias, Bool checked := true)
 
-  ** Convenience to get a `TrustEntry` from the keystore.
+  ** Convenience to get a [TrustEntry] from the keystore.
   virtual TrustEntry? getTrust(Str alias, Bool checked := true) { get(alias, checked) }
 
-  ** Convenience to get a `PrivKeyEntry` from the keystore.
+  ** Convenience to get a [PrivKeyEntry] from the keystore.
   virtual PrivKeyEntry? getPrivKey(Str alias, Bool checked := true) { get(alias, checked) }
 
   ** Return ture if the key store has an entry with the given alias.
   virtual Bool containsAlias(Str alias) { get(alias, false) != null }
 
-  ** Adds a `PrivKeyEntry` to the keystore with the given alias and returns it.
+  ** Adds a [PrivKeyEntry] to the keystore with the given alias and returns it.
   **
   ** Optionally add entry attributes (recommended attribute names are ASN.1 OIDs):
   **
-  **   ["1.3.6.1.4.1.99999.1": "Custom attribute",
-  **    "1.2.840.113549.1.9.20": "friendlyName"]
+  **     ["1.3.6.1.4.1.99999.1": "Custom attribute",
+  **      "1.2.840.113549.1.9.20": "friendlyName"]
   abstract This setPrivKey(Str alias, PrivKey priv, Cert[] chain, [Str:Str] attrs := [:])
 
-  ** Adds a `TrustEntry` to the keystore with the given alias and returns it.
+  ** Adds a [TrustEntry] to the keystore with the given alias and returns it.
   abstract This setTrust(Str alias, Cert cert)
 
   ** Set an alias to have the given entry. If the alias
@@ -82,7 +82,7 @@ const mixin KeyStore
 **************************************************************************
 
 **
-** Marker mixin for an entry in a [keystore]`KeyStore`
+** Marker mixin for an entry in a [keystore](KeyStore)
 **
 const mixin KeyStoreEntry
 {
@@ -108,13 +108,13 @@ const mixin PrivKeyEntry : KeyStoreEntry
   abstract Cert[] certChain()
 
   ** Get the end entity certificate from the certificate chain; this should
-  ** be the first entry in the `certChain`.
+  ** be the first entry in the [certChain].
   virtual Cert cert() { certChain.first }
 
-  ** Convenience to get the public key from the `cert`.
+  ** Convenience to get the public key from the [cert].
   virtual PubKey pub() { cert.pub }
 
-  ** Get the `KeyPair` for the entry. It consists of the `priv` and `pub`
+  ** Get the [KeyPair] for the entry. It consists of the [priv] and [pub]
   ** keys from this entry.
   abstract KeyPair keyPair()
 }

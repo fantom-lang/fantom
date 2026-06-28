@@ -7,7 +7,7 @@
 //
 
 **
-** Models a JSON Web Token (JWT) as specified by [RFC7519]`https://datatracker.ietf.org/doc/html/rfc7519`
+** Models a JSON Web Token (JWT) as specified by [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519)
 **
 ** A JWT includes three sections:
 **
@@ -23,16 +23,16 @@
 **
 ** The following JWS algorithms are supported:
 **
-**   -   HS256 - HMAC using SHA-256
-**   -   HS384 - HMAC using SHA-384
-**   -   HS512 - HMAC using SHA-512
-**   -   RS256 - RSASSA-PKCS1-v1_5 using SHA-256
-**   -   RS384 - RSASSA-PKCS1-v1_5 using SHA-384
-**   -   RS512 - RSASSA-PKCS1-v1_5 using SHA-512
-**   -   ES256 - ECDSA using P-256 and SHA-256
-**   -   ES384 - ECDSA using P-256 and SHA-384
-**   -   ES512 - ECDSA using P-256 and SHA-512
-**   -   none  - No digital signature or MAC performed
+**   - HS256 - HMAC using SHA-256
+**   - HS384 - HMAC using SHA-384
+**   - HS512 - HMAC using SHA-512
+**   - RS256 - RSASSA-PKCS1-v1_5 using SHA-256
+**   - RS384 - RSASSA-PKCS1-v1_5 using SHA-384
+**   - RS512 - RSASSA-PKCS1-v1_5 using SHA-512
+**   - ES256 - ECDSA using P-256 and SHA-256
+**   - ES384 - ECDSA using P-256 and SHA-384
+**   - ES512 - ECDSA using P-256 and SHA-512
+**   - none  - No digital signature or MAC performed
 **
 const class Jwt
 {
@@ -139,26 +139,26 @@ const class Jwt
 
   ** Expiration claim for this token
   **
-  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to 'TimeZone.utc'
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? exp
 
   ** Not before claim for this token
   **
-  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to 'TimeZone.utc'
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? nbf
 
   ** Issued at claim for this token
   **
-  ** When encoded, the value will be converted to 'TimeZone.utc', the epoch const will be subtracted
+  ** When encoded, the value will be converted to `TimeZone.utc`, the epoch const will be subtracted
   ** from this value and it will be converted to seconds
   **
-  ** When decoded, the value will be converted to 'TimeZone.utc'
+  ** When decoded, the value will be converted to `TimeZone.utc`
   const DateTime? iat
 
   ** JWT ID claim for this token
@@ -167,33 +167,33 @@ const class Jwt
   ** UNIX epoch
   private const DateTime epoch := DateTime("1970-01-01T00:00:00Z UTC")
 
-  ** Decode a `Jwt` from an encoded Str
+  ** Decode a [Jwt] from an encoded Str
   **
   ** The key parameter supports these types to verify the signature:
   **
-  **   - `Key` (`PubKey` or `SymKey`)
-  **   - `Jwk`[] - An error is thrown if the Jwt kid header parameter
+  **   - [Key] ([PubKey] or [SymKey])
+  **   - [Jwk][] - An error is thrown if the Jwt kid header parameter
   **               is missing or no matching kid is found in the list
   **
   ** If the exp and/or nbf claims exist, those will be verified
   **
-  **   jwk :=  [
-  **             "kty": "EC",
-  **             "use": "sig",
-  **             "crv": "P-256",
-  **             "kid": "abcd",
-  **             "x": "I59TOAdnJ7uPgPOdIxj-BhWSQBXKS3lsRZJwj5eIYAo",
-  **             "y": "8FJEvVIZDjVBnrBJPRUCwtgS86rHoFl1kBfbjX9rOng",
-  **             "alg": "ES256",
-  **           ]
+  **     jwk :=  [
+  **               "kty": "EC",
+  **               "use": "sig",
+  **               "crv": "P-256",
+  **               "kid": "abcd",
+  **               "x": "I59TOAdnJ7uPgPOdIxj-BhWSQBXKS3lsRZJwj5eIYAo",
+  **               "y": "8FJEvVIZDjVBnrBJPRUCwtgS86rHoFl1kBfbjX9rOng",
+  **               "alg": "ES256",
+  **             ]
   **
-  **   ecJwk := Crypto.cur.loadJwk(jwk)
+  **     ecJwk := Crypto.cur.loadJwk(jwk)
   **
-  **   jwt   := Jwt.decode("1111.2222.3333", ecJwk.key)
+  **     jwt   := Jwt.decode("1111.2222.3333", ecJwk.key)
   **
-  **   jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
+  **     jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
   **
-  **   jwt2  := Jwt.decodeJwks("4444.5555.6666", jwks)
+  **     jwt2  := Jwt.decodeJwks("4444.5555.6666", jwks)
   **
   static new decode(Str encoded, Obj key, Duration clockDrift := 60sec)
   {
@@ -206,11 +206,11 @@ const class Jwt
     throw ArgErr("The key parameter must be a Jwk[] or Key")
   }
 
-  ** Decode an unsigned `Jwt` from an encoded Str
+  ** Decode an unsigned [Jwt] from an encoded Str
   **
   ** No claims are verified
   **
-  **   jwt := Jwt.decode("1111.2222.")
+  **     jwt := Jwt.decode("1111.2222.")
   **
   @NoDoc
   static new decodeUnsigned(Str encoded)
@@ -300,7 +300,7 @@ const class Jwt
     }
   }
 
-  ** Provide a `Key` (`PrivKey` or `SymKey`) to sign and return the base64 encoded `Jwt`
+  ** Provide a [Key] ([PrivKey] or [SymKey]) to sign and return the base64 encoded [Jwt]
   **
   ** Null key will return an unsigned base64 encoded JWT
   **
@@ -308,26 +308,26 @@ const class Jwt
   **
   ** The following JWS Algorithms are supported:
   **
-  **   -   HS256 - HMAC using SHA-256
-  **   -   HS384 - HMAC using SHA-384
-  **   -   HS512 - HMAC using SHA-512
-  **   -   RS256 - RSASSA-PKCS1-v1_5 using SHA-256
-  **   -   RS384 - RSASSA-PKCS1-v1_5 using SHA-384
-  **   -   RS512 - RSASSA-PKCS1-v1_5 using SHA-512
-  **   -   ES256 - ECDSA using P-256 and SHA-256
-  **   -   ES384 - ECDSA using P-256 and SHA-384
-  **   -   ES512 - ECDSA using P-256 and SHA-512
-  **   -   none  - No digital signature or MAC performed
+  **   - HS256 - HMAC using SHA-256
+  **   - HS384 - HMAC using SHA-384
+  **   - HS512 - HMAC using SHA-512
+  **   - RS256 - RSASSA-PKCS1-v1_5 using SHA-256
+  **   - RS384 - RSASSA-PKCS1-v1_5 using SHA-384
+  **   - RS512 - RSASSA-PKCS1-v1_5 using SHA-512
+  **   - ES256 - ECDSA using P-256 and SHA-256
+  **   - ES384 - ECDSA using P-256 and SHA-384
+  **   - ES512 - ECDSA using P-256 and SHA-512
+  **   - none  - No digital signature or MAC performed
   **
-  **   pair   := Crypto.cur.genKeyPair("RSA", 2048)
-  **   priv   := pair.priv
+  **     pair   := Crypto.cur.genKeyPair("RSA", 2048)
+  **     priv   := pair.priv
   **
-  **   jwtStr := Jwt {
-  **                it.alg    = "RS256"
-  **                it.claims = ["myClaim": "ClaimValue"]
-  **                it.exp    = DateTime.nowUtc + 10min
-  **                it.iss    = "https://fantom.accounts.dev"
-  **             }.encode(priv)
+  **     jwtStr := Jwt {
+  **                  it.alg    = "RS256"
+  **                  it.claims = ["myClaim": "ClaimValue"]
+  **                  it.exp    = DateTime.nowUtc + 10min
+  **                  it.iss    = "https://fantom.accounts.dev"
+  **               }.encode(priv)
   **
   Str encode(Key? key)
   {
@@ -354,8 +354,8 @@ const class Jwt
   ** Throws Err if claim does not exist or expectedValue does not match (or is not
   ** contained in the List)
   **
-  **   jwt := Jwt.decode("1111.2222.3333", pubKey)
-  **             .verifyClaim("iss", "https://fantom.accounts.dev")
+  **     jwt := Jwt.decode("1111.2222.3333", pubKey)
+  **               .verifyClaim("iss", "https://fantom.accounts.dev")
   **
   This verifyClaim(Str claim, Obj? expectedValue := null)
   {

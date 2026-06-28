@@ -22,7 +22,7 @@ const mixin Cert
   ** Get the issuer DN from the certificate.
   abstract Str issuer()
 
-  ** Get the type of certificate (e.g. 'X.509')
+  ** Get the type of certificate (e.g. `X.509`)
   abstract Str certType()
 
   ** Get the encoded form of the certificate.

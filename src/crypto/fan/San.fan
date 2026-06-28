@@ -16,10 +16,10 @@ const class San
 // Construction
 //////////////////////////////////////////////////////////////////////////
 
-  ** Create as `SanType.dnsName`
+  ** Create as [SanType.dnsName]
   static new dnsName(Str name) { San(SanType.dnsName, name) }
 
-  ** Create as `SanType.uri` - Accepts Uri or Str (value stored as Str)
+  ** Create as [SanType.uri] - Accepts Uri or Str (value stored as Str)
   static new uri(Obj uri)
   {
     //Store uri as a string to avoid adding trailing slash
@@ -32,7 +32,7 @@ const class San
     throw ArgErr("Parameter must be Uri or Str")
   }
 
-  ** Create as `SanType.ipAddr` - Accepts IpAddr or Str (value stored as IpAddr)
+  ** Create as [SanType.ipAddr] - Accepts IpAddr or Str (value stored as IpAddr)
   static new ipAddr(Obj ip)
   {
     IpAddr := Type.find("inet::IpAddr")
@@ -41,16 +41,16 @@ const class San
     throw ArgErr("Parameter must be IpAddr or Str")
   }
 
-  ** Create as `SanType.rfc822Name`
+  ** Create as [SanType.rfc822Name]
   static new rfc822Name(Str email) { San(SanType.rfc822Name, email) }
 
-  ** Create as `SanType.dirName`
+  ** Create as [SanType.dirName]
   static new dirName(Str dn) { San(SanType.dirName, dn) }
 
-  ** Create as `SanType.otherName`
+  ** Create as [SanType.otherName]
   static new otherName(Buf buf) { San(SanType.otherName, buf.toImmutable) }
 
-  ** Create as `SanType.registeredId` - Accepts AsnOid or Str (value stored as Str)
+  ** Create as [SanType.registeredId] - Accepts AsnOid or Str (value stored as Str)
   static new registeredId(Obj oid)
   {
     AsnOid := Type.find("asn1::AsnOid")
@@ -67,13 +67,13 @@ const class San
 
   ** Convenience for creating a San from a value.
   **
-  ** The 'value' may be one of the following types:
-  **  - 'Str':    returns San.dnsName
-  **  - 'Uri':    returns San.uri
-  **  - 'AsnOid': returns San.registeredId
-  **  - 'Buf':    returns San.otherName
-  **  - 'IpAddr': returns San.ipAddr
-  **  - 'San':    returns itself
+  ** The `value` may be one of the following types:
+  **  - `Str`:    returns San.dnsName
+  **  - `Uri`:    returns San.uri
+  **  - `AsnOid`: returns San.registeredId
+  **  - `Buf`:    returns San.otherName
+  **  - `IpAddr`: returns San.ipAddr
+  **  - `San`:    returns itself
   static new fromValue(Obj value)
   {
     if (value is Str)         return San.dnsName(value)
@@ -95,13 +95,13 @@ const class San
   const SanType type
 
   ** Get the value determined by the SanType:
-  **  - `SanType.dnsName`:        Str
-  **  - `SanType.rfc822Name`:     Str
-  **  - `SanType.uri`:            Str
-  **  - `SanType.registeredId`:   Str
-  **  - `SanType.dirName`:        Str
-  **  - `SanType.ipAddr`:         IpAddr
-  **  - `SanType.otherName`:      Buf (DER-encoded SEQUENCE)
+  **  - [SanType.dnsName]\:        Str
+  **  - [SanType.rfc822Name]\:     Str
+  **  - [SanType.uri]\:            Str
+  **  - [SanType.registeredId]\:   Str
+  **  - [SanType.dirName]\:        Str
+  **  - [SanType.ipAddr]\:         IpAddr
+  **  - [SanType.otherName]\:      Buf (DER-encoded SEQUENCE)
   const Obj val
 
   ** Get a friendly encoding using the format: {SanType.text}:{value}
