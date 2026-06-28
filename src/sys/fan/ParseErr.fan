@@ -8,7 +8,7 @@
 
 **
 ** ParseErr indicates an invalid string format which cannot be parsed.
-** It is often used with 'fromStr' and 'fromLocale' methods.
+** It is often used with `fromStr` and `fromLocale` methods.
 **
 const class ParseErr : Err
 {

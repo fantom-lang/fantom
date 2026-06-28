@@ -19,7 +19,7 @@ final class Process
   **
   ** Construct a Process instance used to launch an external
   ** OS process with the specified command arguments.
-  ** The first item in the 'cmd' list is the executable
+  ** The first item in the `cmd` list is the executable
   ** itself, then rest are the parameters.
   **
   new make(Str[] cmd := Str[,], File? dir := null)
@@ -49,25 +49,25 @@ final class Process
 
   **
   ** If true, then stderr is redirected to the output
-  ** stream configured via the 'out' field, and the 'err'
+  ** stream configured via the `out` field, and the `err`
   ** field is ignored.  The default is true.
   **
   Bool mergeErr := true
 
   **
   ** The output stream used to sink the process stdout.
-  ** Default is to send to `Env.out`.  If set to null, then
+  ** Default is to send to [Env.out].  If set to null, then
   ** output is silently consumed like /dev/null.
   **
   OutStream? out := Env.cur.out
 
   **
   ** The output stream used to sink the process stderr.
-  ** Default is to send to `Env.err`.  If set to null, then
+  ** Default is to send to [Env.err].  If set to null, then
   ** output is silently consumed like /dev/null.  Note
-  ** this field is ignored if `mergeErr` is set
+  ** this field is ignored if [mergeErr] is set
   ** true, in which case stderr goes to the stream configured
-  ** via 'out'.
+  ** via `out`.
   **
   OutStream? err := Env.cur.err
 
@@ -83,14 +83,14 @@ final class Process
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Spawn this process.  See `join` to wait until the process
+  ** Spawn this process.  See [join] to wait until the process
   ** finishes and to get the exit code.  Return this.
   **
   This run()
 
   **
   ** Wait for this process to exit and return the exit code.
-  ** This method may only be called once after 'run'.
+  ** This method may only be called once after `run`.
   **
   Int join()
 

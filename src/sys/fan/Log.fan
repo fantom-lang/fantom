@@ -10,7 +10,7 @@
 **
 ** Log provides a simple, but standardized mechanism for logging.
 **
-** See `docLang::Logging` for details and [examples]`examples::sys-logging`.
+** See [docLang::Logging] for details and [examples](examples::sys-logging).
 **
 const class Log
 {
@@ -34,16 +34,16 @@ const class Log
   **
   ** Find an existing registered log by name or if not found then
   ** create a new registered Log instance with the given name.
-  ** Name must be valid according to `Uri.isName` otherwise
+  ** Name must be valid according to [Uri.isName] otherwise
   ** NameErr is thrown.
   **
   static Log get(Str name)
 
   **
   ** Create a new log by name.  The log is added to the VM log registry
-  ** only if 'register' is true.  If register is true and a log has already
+  ** only if `register` is true.  If register is true and a log has already
   ** been created for the specified name then throw ArgErr.  Name must
-  ** be valid according to `Uri.isName` otherwise NameErr is thrown.
+  ** be valid according to [Uri.isName] otherwise NameErr is thrown.
   **
   new make(Str name, Bool register)
 
@@ -103,30 +103,30 @@ const class Log
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Generate a `LogLevel.err` log entry.
+  ** Generate a [LogLevel.err] log entry.
   **
   Void err(Str msg, Err? err := null)
 
   **
-  ** Generate a `LogLevel.warn` log entry.
+  ** Generate a [LogLevel.warn] log entry.
   **
   Void warn(Str msg, Err? err := null)
 
   **
-  ** Generate a `LogLevel.info` log entry.
+  ** Generate a [LogLevel.info] log entry.
   **
   Void info(Str msg, Err? err := null)
 
   **
-  ** Generate a `LogLevel.debug` log entry.
+  ** Generate a [LogLevel.debug] log entry.
   **
   Void debug(Str msg, Err? err := null)
 
   **
-  ** Publish a log entry.  The convenience methods `err`, `warn`
-  ** `info`, and `debug` all route to this method for centralized
+  ** Publish a log entry.  The convenience methods [err], [warn]
+  ** [info], and [debug] all route to this method for centralized
   ** handling.  The standard implementation is to call each of the
-  ** installed `handlers` if the specified level is enabled.
+  ** installed [handlers] if the specified level is enabled.
   **
   virtual Void log(LogRec rec)
 

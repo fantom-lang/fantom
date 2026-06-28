@@ -8,7 +8,7 @@
 
 **
 ** LogRec all the information of a single logging event.
-** See `docLang::Logging` for details.
+** See [docLang::Logging] for details.
 **
 const class LogRec
 {
@@ -29,7 +29,7 @@ const class LogRec
   const LogLevel level
 
   **
-  ** Name of `Log` which generated the event
+  ** Name of [Log] which generated the event
   **
   const Str logName
 

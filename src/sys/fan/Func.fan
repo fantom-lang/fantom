@@ -13,7 +13,7 @@
 ** may also be defined via closures.
 **
 ** An immutable function is one proven to be thread safe:
-**   - Method functions are always immutable - see `sys::Method.func`
+**   - Method functions are always immutable - see [sys::Method.func]
 **   - Closures which only capture final, const variables are always
 **     immutable; toImmutable always returns this
 **   - Closures which capture non-final or non-const variables are
@@ -23,7 +23,7 @@
 **     false for isImmutable, but will provide a toImmutable method which
 **     attempts to bind to the current variables by calling toImmutable
 **     on each one
-**   - Functions created by [Func.bind]`sys::Func.bind` are immutable if
+**   - Functions created by [Func.bind](sys::Func.bind) are immutable if
 **     the original function is immutable *and* every bound argument is
 **     immutable
 **
@@ -31,7 +31,7 @@
 ** after it is initialized.  Any variable which is reassigned is considered
 ** a non-final variable.
 **
-** See `docLang::Functions` for details.
+** See [docLang::Functions] for details.
 **
 final class Func
 {
@@ -55,7 +55,7 @@ final class Func
   Type returns()
 
   **
-  ** Convenience for 'params.size'
+  ** Convenience for `params.size`
   **
   Int arity()
 
@@ -66,10 +66,11 @@ final class Func
 
   **
   ** Return the associated method if this function implements a
-  ** method slot.  Otherwise return 'null'.
+  ** method slot.  Otherwise return `null`.
   **
   ** Examples:
-  **   Int#plus.func.method  =>  sys::Int.plus
+  **
+  **     Int#plus.func.method  =>  sys::Int.plus
   **
   Method? method()
 
@@ -94,13 +95,13 @@ final class Func
   ** Convenience for dynamically invoking an instance method with
   ** specified target and arguments.  If this method maps to an
   ** instance method, then it is semantically equivalent to
-  ** 'callList([target, args[0], args[1] ...])'.  Throw UnsupportedErr
+  ** `callList([target, args[0], args[1] ...])`.  Throw UnsupportedErr
   ** if called on a function which is not an instance method.
   **
   virtual R callOn(Obj? target, Obj?[]? args)
 
   **
-  ** Optimized convenience for `callList` for zero to eight parameters.
+  ** Optimized convenience for [callList] for zero to eight parameters.
   **
   virtual R call(A a := null, B b := null, C c := null, D d := null,
                  E e := null, F f := null, G g := null, H h := null)
@@ -119,14 +120,15 @@ final class Func
   ** Return a new function which wraps this function but with
   ** a different reflective type signature.  No verification is
   ** done that this function actually conforms to the new signature.
-  ** This method implicitly calls `Type.toNonNullable` on 't'.
-  ** Throw ArgErr if 't' isn't a parameterized function type.
+  ** This method implicitly calls [Type.toNonNullable] on `t`.
+  ** Throw ArgErr if `t` isn't a parameterized function type.
   **
   ** Examples:
-  **   f := |a,b->Obj| { "$a, $b" }
-  **   g := f.retype(|Int,Int->Str|#)
-  **   f.type  =>  |Obj?,Obj?->Obj|
-  **   g.type  =>  |Int,Int->Str|
+  **
+  **     f := |a,b->Obj| { "$a, $b" }
+  **     g := f.retype(|Int,Int->Str|#)
+  **     f.type  =>  |Obj?,Obj?->Obj|
+  **     g.type  =>  |Int,Int->Str|
   **
   Func retype(Type t)
 

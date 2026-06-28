@@ -22,9 +22,9 @@ const final class Regex
   ** of ASCII chars.  In JavaScript the flags are passed directly to RegExp.
   ** In Java the flags are matched against known constants or ignored.
   ** The following cross-platform flags are supported:
-  **   - 'i': case insensitive
-  **   - 'm': multi-line support for start/end matching
-  **   - 's': dot all to allow "." to match newlines
+  **   - `i`: case insensitive
+  **   - `m`: multi-line support for start/end matching
+  **   - `s`: dot all to allow "." to match newlines
   **
   static new fromStr(Str pattern, Str flags := "")
 
@@ -62,7 +62,7 @@ const final class Regex
   override Bool equals(Obj? obj)
 
   **
-  ** Return 'toStr.hash'.
+  ** Return `toStr.hash`.
   **
   override Int hash()
 
@@ -81,26 +81,26 @@ const final class Regex
   Str flags()
 
   **
-  ** Convenience for [matcher(s).matches]`RegexMatcher.matches`.
+  ** Convenience for [matcher(s).matches](RegexMatcher.matches).
   **
   Bool matches(Str s)
 
   **
-  ** Return a 'RegexMatcher' instance to use for matching
+  ** Return a `RegexMatcher` instance to use for matching
   ** operations against the specified string.
   **
   RegexMatcher matcher(Str s)
 
   **
   ** Split the specified string around matches of this pattern.
-  ** The 'limit' parameter specifies how many times to apply
+  ** The `limit` parameter specifies how many times to apply
   ** the pattern:
-  **   - If 'limit' is greater than zero, the pattern is applied
-  **     at most 'limit-1' times and any remaining input will
+  **   - If `limit` is greater than zero, the pattern is applied
+  **     at most `limit-1` times and any remaining input will
   **     be returned as the list's last item.
-  **   - If 'limit' is less than zero, then the pattern is
+  **   - If `limit` is less than zero, then the pattern is
   **     matched as many times as possible.
-  **   - If 'limit' is zero, then the pattern is matched as many
+  **   - If `limit` is zero, then the pattern is matched as many
   **     times as possible, but trailing empty strings are
   **     discarded.
   **

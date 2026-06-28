@@ -9,7 +9,7 @@
 **
 ** Test is the base for Fantom unit tests.
 **
-** See `docTools::Fant`.
+** See [docTools::Fant].
 **
 abstract class Test
 {
@@ -30,7 +30,7 @@ abstract class Test
   **
   ** Get the current test method being executed or throw Err if
   ** not currently running a test.  This method is available during
-  ** both `setup` and `teardown` as well as during the test itself.
+  ** both [setup] and [teardown] as well as during the test itself.
   **
   Method curTestMethod()
 
@@ -51,14 +51,14 @@ abstract class Test
   **
   ** Verify that cond is true, otherwise throw a test
   ** failure exception.  If msg is non-null, include it
-  ** in a failure exception. Identical to `verifyTrue`.
+  ** in a failure exception. Identical to [verifyTrue].
   **
   Void verify(Bool cond, Str? msg := null)
 
   **
   ** Verify that cond is true, otherwise throw a test
   ** failure exception.  If msg is non-null, include it
-  ** in a failure exception.  Identical to `verify`.
+  ** in a failure exception.  Identical to [verify].
   **
   Void verifyTrue(Bool cond, Str? msg := null)
 
@@ -111,7 +111,7 @@ abstract class Test
   Void verifyNotSame(Obj? a, Obj? b, Str? msg := null)
 
   **
-  ** Verify that 'Type.of(obj)' equals the given type.
+  ** Verify that `Type.of(obj)` equals the given type.
   **
   Void verifyType(Obj obj, Type t)
 
@@ -122,7 +122,8 @@ abstract class Test
   ** tests only that an exception is thrown, not its type.
   **
   ** Example:
-  **   verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
+  **
+  **     verifyErr(ParseErr#) { x := Int.fromStr("@#!") }
   **
   Void verifyErr(Type? errType, |Test| c)
 
@@ -132,10 +133,11 @@ abstract class Test
   ** and the contained msg must be the same as errMsg.
   **
   ** Example:
-  **   verifyErrMsg(ParseErr#, "Invalid Int: 'ABC'")
-  **   {
-  **     x := Int.fromStr("ABC")
-  **   }
+  **
+  **     verifyErrMsg(ParseErr#, "Invalid Int: 'ABC'")
+  **     {
+  **       x := Int.fromStr("ABC")
+  **     }
   **
   Void verifyErrMsg(Type errType, Str errMsg, |Test| c)
 
@@ -164,7 +166,7 @@ abstract class Test
 **************************************************************************
 
 **
-** TestErr is thrown by `Test` when a test method fails a verify.
+** TestErr is thrown by [Test] when a test method fails a verify.
 **
 const class TestErr : Err
 {

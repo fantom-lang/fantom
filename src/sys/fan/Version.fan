@@ -9,7 +9,7 @@
 **
 ** Version is defined as a list of decimal digits separated
 ** by the dot.  Convention for Fantom pods is a four part version
-** format of 'major.minor.build.patch'.
+** format of `major.minor.build.patch`.
 **
 @Serializable { simple = true }
 const final class Version
@@ -56,10 +56,11 @@ const final class Version
   ** segment.
   **
   ** Examples:
-  **   1.6 > 1.4
-  **   2.0 > 1.9
-  **   1.2.3 > 1.2
-  **   1.11 > 1.9.3
+  **
+  **     1.6 > 1.4
+  **     2.0 > 1.9
+  **     1.2.3 > 1.2
+  **     1.11 > 1.9.3
   **
   override Int compare(Obj obj)
 

@@ -69,7 +69,8 @@ const final class Range
   ** Return start index.
   **
   ** Example:
-  **   (1..3).start  =>  1
+  **
+  **     (1..3).start  =>  1
   **
   Int start()
 
@@ -77,7 +78,8 @@ const final class Range
   ** Return end index.
   **
   ** Example:
-  **   (1..3).end  =>  3
+  **
+  **     (1..3).end  =>  3
   **
   Int end()
 
@@ -85,8 +87,9 @@ const final class Range
   ** Is the end index inclusive.
   **
   ** Example:
-  **   (1..3).inclusive   =>  true
-  **   (1..<3).inclusive  =>  false
+  **
+  **     (1..3).inclusive   =>  true
+  **     (1..<3).inclusive  =>  false
   **
   Bool inclusive()
 
@@ -94,38 +97,39 @@ const final class Range
   ** Is the end index exclusive.
   **
   ** Example:
-  **   (1..3).exclusive   =>  false
-  **   (1..<3).exclusive  =>  true
+  **
+  **     (1..3).exclusive   =>  false
+  **     (1..<3).exclusive  =>  true
   **
   Bool exclusive()
 
   **
   ** Return if this range contains no integer values.
-  ** Equivalent to 'toList.isEmpty'.
+  ** Equivalent to `toList.isEmpty`.
   **
   Bool isEmpty()
 
   **
   ** Get the minimum value of the range. If range contains
-  ** no values then return null.  Equivalent to 'toList.min'.
+  ** no values then return null.  Equivalent to `toList.min`.
   **
   Int? min()
 
   **
   ** Get the maximum value of the range. If range contains
-  ** no values then return null.  Equivalent to 'toList.max'.
+  ** no values then return null.  Equivalent to `toList.max`.
   **
   Int? max()
 
   **
   ** Get the first value of the range.   If range contains
-  ** no values then return null.  Equivalent to 'toList.first'.
+  ** no values then return null.  Equivalent to `toList.first`.
   **
   Int? first()
 
   **
   ** Get the last value of the range.   If range contains
-  ** no values then return null.  Equivalent to 'toList.last'.
+  ** no values then return null.  Equivalent to `toList.last`.
   **
   Int? last()
 
@@ -133,8 +137,9 @@ const final class Range
   ** Return if this range contains the specified integer.
   **
   ** Example:
-  **   (1..3).contains(2)  =>  true
-  **   (1..3).contains(4)  =>  false
+  **
+  **     (1..3).contains(2)  =>  true
+  **     (1..3).contains(4)  =>  false
   **
   Bool contains(Int i)
 
@@ -143,19 +148,21 @@ const final class Range
   ** start and end values.
   **
   ** Example:
-  **   (3..5).offset(2)   =>  5..7
-  **   (3..<5).offset(-2) =>  1..<3
+  **
+  **     (3..5).offset(2)   =>  5..7
+  **     (3..<5).offset(-2) =>  1..<3
   **
   Range offset(Int offset)
 
   **
   ** Call the specified function for each integer in the range.
-  ** Also see `Int.times`.
+  ** Also see [Int.times].
   **
   ** Example:
-  **   (1..3).each |i| { echo(i) }          =>  1, 2, 3
-  **   (1..<3).each |i| { echo(i) }         => 1, 2
-  **   ('a'..'z').each |Int i| { echo(i) }  => 'a', 'b', ... 'z'
+  **
+  **     (1..3).each |i| { echo(i) }          =>  1, 2, 3
+  **     (1..<3).each |i| { echo(i) }         => 1, 2
+  **     ('a'..'z').each |Int i| { echo(i) }  => 'a', 'b', ... 'z'
   **
   Void each(|Int i| c)
 
@@ -173,7 +180,8 @@ const final class Range
   ** the return type of c.
   **
   ** Example:
-  **   (10..15).map |i->Str| { i.toHex }  =>  Str[a, b, c, d, e, f]
+  **
+  **     (10..15).map |i->Str| { i.toHex }  =>  Str[a, b, c, d, e, f]
   **
   Obj?[] map(|Int i->Obj?| c)
 
@@ -181,16 +189,17 @@ const final class Range
   ** Convert this range into a list of Ints.
   **
   ** Example:
-  **   (2..4).toList   =>  [2,3,4]
-  **   (2..<4).toList  =>  [2,3]
-  **   (10..8).toList  =>  [10,9,8]
+  **
+  **     (2..4).toList   =>  [2,3,4]
+  **     (2..<4).toList  =>  [2,3]
+  **     (10..8).toList  =>  [10,9,8]
   **
   Int[] toList()
 
   **
-  ** Convenience for [Int.random(this)]`Int.random`.
-  ** Also see `Int.random`, `Float.random`, `List.random`,
-  ** and `util::Random`.
+  ** Convenience for [Int.random(this)](Int.random).
+  ** Also see [Int.random], [Float.random], [List.random],
+  ** and [util::Random].
   **
   Int random()
 

@@ -8,7 +8,7 @@
 
 **
 ** LogLevel provides a set of discrete levels used to customize logging.
-** See `docLang::Logging` for details.
+** See [docLang::Logging] for details.
 **
 enum class LogLevel
 {

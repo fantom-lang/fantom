@@ -33,8 +33,9 @@ const final class MimeType
   ** "= value", then the value is defaulted to "".
   **
   ** Examples:
-  **   a=b; c="d"       =>  ["a":"b", "c"="d"]
-  **   foo=bar; secure  =>  ["foo":"bar", "secure":""]
+  **
+  **     a=b; c="d"       =>  ["a":"b", "c"="d"]
+  **     foo=bar; secure  =>  ["foo":"bar", "secure":""]
   **
   static [Str:Str]? parseParams(Str s, Bool checked := true)
 
@@ -69,7 +70,7 @@ const final class MimeType
 
   **
   ** Encode as a MIME message according to RFC 822.  This
-  ** is always the exact same string passed to `fromStr`.
+  ** is always the exact same string passed to [fromStr].
   **
   override Str toStr()
 
@@ -79,27 +80,30 @@ const final class MimeType
 
   **
   ** The primary media type always in lowercase:
-  **   text/html  =>  text
+  **
+  **     text/html  =>  text
   **
   Str mediaType()
 
   **
   ** The subtype always in lowercase:
-  **   text/html  =>  html
+  **
+  **     text/html  =>  html
   **
   Str subType()
 
   **
   ** Additional parameters stored in case-insensitive map.
   ** If no parameters, then this is an empty map.
-  **   text/html; charset=utf-8    =>  [charset:utf-8]
-  **   text/html; charset="utf-8"  =>  [charset:utf-8]
+  **
+  **     text/html; charset=utf-8    =>  [charset:utf-8]
+  **     text/html; charset="utf-8"  =>  [charset:utf-8]
   **
   Str:Str params()
 
   **
   ** If a charset parameter is specified, then map it to
-  ** the 'Charset' instance, otherwise return 'Charset.utf8'.
+  ** the `Charset` instance, otherwise return `Charset.utf8`.
   **
   Charset charset()
 

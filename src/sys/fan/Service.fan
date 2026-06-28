@@ -13,17 +13,17 @@
 **
 ** The following table illustrates the service lifecycle:
 **
-**   Method        isInstalled  isRunning
-**   -----------   -----------  ----------
-**   constructed   false        false
-**   install       true         false
-**   start         true         true
-**   stop          true         false
-**   uninstall     false        false
+**     Method        isInstalled  isRunning
+**     -----------   -----------  ----------
+**     constructed   false        false
+**     install       true         false
+**     start         true         true
+**     stop          true         false
+**     uninstall     false        false
 **
 ** While the service is installed, it may be looked up in the
-** registry via `find` and `findAll`.  The running state is used
-** to invoke the `onStart` and `onStop` callbacks which gives
+** registry via [find] and [findAll].  The running state is used
+** to invoke the [onStart] and [onStop] callbacks which gives
 ** the service a chance to setup/shutdown its actors and associated
 ** resources.
 **
@@ -93,7 +93,7 @@ const mixin Service
 
   **
   ** Start this service.  If not installed, this method
-  ** automatically calls `install`.  If already running,
+  ** automatically calls [install].  If already running,
   ** do nothing.  Return this.
   **
   This start()
@@ -107,7 +107,7 @@ const mixin Service
   **
   ** Uninstall this service from the VM's service registry.
   ** If the service is running, this method automatically
-  ** calls `stop`.  If not installed, do nothing.  Return this.
+  ** calls [stop].  If not installed, do nothing.  Return this.
   **
   This uninstall()
 

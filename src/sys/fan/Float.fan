@@ -21,14 +21,14 @@ const final class Float : Num
   **
   ** Make a Float for the specified 64-bit representation according
   ** IEEE 754 floating-point double format bit layout.  This method is
-  ** paired with `Float.bits`.
+  ** paired with [Float.bits].
   **
   static Float makeBits(Int bits)
 
   **
   ** Make a Float for the specified 32-bit representation according
   ** IEEE 754 floating-point single format bit layout.  This method is
-  ** paired with `Float.bits32`.
+  ** paired with [Float.bits32].
   **
   static Float makeBits32(Int bits)
 
@@ -43,7 +43,7 @@ const final class Float : Num
 
   **
   ** Generate a random float between 0.0 inclusive and 1.0 exclusive.
-  ** Also see `Int.random`, `Range.random`, `List.random`, and `util::Random`.
+  ** Also see [Int.random], [Range.random], [List.random], and [util::Random].
   **
   static Float random()
 
@@ -89,7 +89,7 @@ const final class Float : Num
 
   **
   ** Return true if same float value.  Like Java, NaN != NaN.
-  ** Also see `compare`.
+  ** Also see [compare].
   **
   override Bool equals(Obj? obj)
 
@@ -99,8 +99,9 @@ const final class Float : Num
   ** using the magnitude of the two Floats.  It is useful for comparing
   ** Floats since often they lose a bit of precision during manipulation.
   ** This method is equivalent to:
-  **   if (tolerance == null) tolerance = min(abs(this/1e6), abs(r/1e6))
-  **   (this - r).abs < tolerance
+  **
+  **     if (tolerance == null) tolerance = min(abs(this/1e6), abs(r/1e6))
+  **     (this - r).abs < tolerance
   **
   Bool approx(Float r, Float? tolerance := null)
 
@@ -108,23 +109,24 @@ const final class Float : Num
   ** Compare based on floating point value.
   **
   ** NaN works as follows:
-  **   - for the '<=>' operator NaN is always less than other
+  **   - for the `<=>` operator NaN is always less than other
   **     values and equal to itself (so sort works as expected)
   **   - for all other comparison operators anything compared
   **     against NaN is false (normal Java semanatics)
   **
   ** Examples:
-  **   Float.nan <=> Float.nan  =>  0
-  **   2f <=> Float.nan         =>  1
-  **   Float.nan <=> 2f         =>  -1
-  **   2f < Float.nan           =>  false
-  **   Float.nan < 2f           =>  false
-  **   Float.nan <= Float.nan   =>  false
+  **
+  **     Float.nan <=> Float.nan  =>  0
+  **     2f <=> Float.nan         =>  1
+  **     Float.nan <=> 2f         =>  -1
+  **     2f < Float.nan           =>  false
+  **     Float.nan < 2f           =>  false
+  **     Float.nan <= Float.nan   =>  false
   **
   override Int compare(Obj obj)
 
   **
-  ** Return if this is Float.nan.  Also see `compare`.
+  ** Return if this is Float.nan.  Also see [compare].
   **
   Bool isNaN()
 
@@ -356,13 +358,13 @@ const final class Float : Num
 
   **
   ** Return 64-bit representation according IEEE 754 floating-point
-  ** double format bit layout.  This method is paired with `Float.makeBits`.
+  ** double format bit layout.  This method is paired with [Float.makeBits].
   **
   Int bits()
 
   **
   ** Return 32-bit representation according IEEE 754 floating-point
-  ** single format bit layout.  This method is paired with `Float.makeBits32`.
+  ** single format bit layout.  This method is paired with [Float.makeBits32].
   **
   Int bits32()
 
@@ -385,20 +387,22 @@ const final class Float : Num
   **
   ** Format this floating point number for the current locale.
   ** If pattern is null, then the locale's default pattern is used.
-  ** Also see `Num.localeDecimal`, `Num.localeGrouping`, etc.
+  ** Also see [Num.localeDecimal], [Num.localeGrouping], etc.
   **
   ** The pattern format:
-  **   #   optional digit
-  **   0   required digit
-  **   .   decimal point
-  **   ,   grouping separator (only last one before decimal matters)
+  **
+  **     #   optional digit
+  **     0   required digit
+  **     .   decimal point
+  **     ,   grouping separator (only last one before decimal matters)
   **
   ** Examples:
-  **   12345.786f.toLocale("#,###.0")  =>  12,345.8
-  **   7.1234f.toLocale("#.000")       =>  7.123
-  **   0.1234f.toLocale("#.000")       =>  .123
-  **   0.1234f.toLocale("0.00")        =>  0.12
-  **   70.12f.toLocale("0.0000")       =>  70.1200
+  **
+  **     12345.786f.toLocale("#,###.0")  =>  12,345.8
+  **     7.1234f.toLocale("#.000")       =>  7.123
+  **     0.1234f.toLocale("#.000")       =>  .123
+  **     0.1234f.toLocale("0.00")        =>  0.12
+  **     70.12f.toLocale("0.0000")       =>  70.1200
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 

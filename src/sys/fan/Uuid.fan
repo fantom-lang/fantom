@@ -27,7 +27,8 @@
 ** The string format for the UUID follows the canonical format of
 ** 32 hexadecimal digits displayed in five groups for "8-4-4-4-12".
 ** For example:
-**   03f0e2bb-8f1a-c800-e1f8-00623f7473c4
+**
+**     03f0e2bb-8f1a-c800-e1f8-00623f7473c4
 **
 @Serializable { simple = true }
 const final class Uuid
@@ -79,7 +80,7 @@ const final class Uuid
   override Bool equals(Obj? that)
 
   **
-  ** Hashcode is defined as 'bitsHi ^ bitsLow'
+  ** Hashcode is defined as `bitsHi ^ bitsLow`
   **
   override Int hash()
 

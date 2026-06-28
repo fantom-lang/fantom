@@ -28,13 +28,13 @@ final const class Method : Slot
 
   **
   ** Type returned by the method or sys::Void if no return value.
-  ** Convenience for 'func.returns'.
+  ** Convenience for `func.returns`.
   **
   Type returns()
 
   **
   ** Get the parameters of the method.
-  ** Convenience for 'func.params'.
+  ** Convenience for `func.params`.
   **
   Param[] params()
 
@@ -55,13 +55,13 @@ final const class Method : Slot
 // Call Conveniences
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience for 'func.callList'
+  ** Convenience for `func.callList`
   Obj? callList(Obj?[]? args)
 
-  ** Convenience for 'func.callOn'
+  ** Convenience for `func.callOn`
   Obj? callOn(Obj? target, Obj?[]? args)
 
-  ** Convenience for 'func.call'
+  ** Convenience for `func.call`
   Obj? call(Obj? a := null, Obj? b := null, Obj? c := null, Obj? d := null,
             Obj? e := null, Obj? f := null, Obj? g := null, Obj? h := null)
 

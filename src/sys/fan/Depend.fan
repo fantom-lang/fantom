@@ -9,19 +9,19 @@
 **
 ** Depend models a dependency as a pod name and a version
 ** constraint.  Convention for Fantom pods is a four part
-** version format of 'major.minor.build.patch'.
+** version format of `major.minor.build.patch`.
 **
 ** The string format for Depend:
 **
-**   <depend>        := <name> space* <constraints>
-**   <constraints>   := <constraint> [space* "," space* <constraint>]*
-**   <constraint>    := <versionSimple> | <versionPlus> | <versionRange>
-**   <versionSimple> := <version>
-**   <versionPlus>   := <version> space* "+"
-**   <versionRange>  := <version> space* "-" space* <version>
-**   <version>       := <digits> ["." <digits>]*
-**   <digits>        := <digit> [<digits>]*
-**   <digit>         := "0" - "9"
+**     <depend>        := <name> space* <constraints>
+**     <constraints>   := <constraint> [space* "," space* <constraint>]*
+**     <constraint>    := <versionSimple> | <versionPlus> | <versionRange>
+**     <versionSimple> := <version>
+**     <versionPlus>   := <version> space* "+"
+**     <versionRange>  := <version> space* "-" space* <version>
+**     <version>       := <digits> ["." <digits>]*
+**     <digits>        := <digit> [<digits>]*
+**     <digit>         := "0" - "9"
 **
 ** Note a simple version constraint such as "foo 1.2" really means
 ** "1.2.*" - it  will match all build numbers and patch numbers
@@ -34,13 +34,14 @@
 ** specify a list of potential constraints separated by commas - a match
 ** for the entire dependency is made if any one constraint is matched.
 **
-**  Examples:
-**    "foo 1.2"      Any version of foo 1.2 with any build or patch number
-**    "foo 1.2.64"   Any version of foo 1.2.64 with any patch number
-**    "foo 0+"       Any version of foo - version wildcard
-**    "foo 1.2+"     Any version of foo 1.2 or greater
-**    "foo 1.2-1.4"  Any version between 1.2 and 1.4 inclusive
-**    "foo 1.2,1.4"  Any version of 1.2 or 1.4
+** Examples:
+**
+**      "foo 1.2"      Any version of foo 1.2 with any build or patch number
+**      "foo 1.2.64"   Any version of foo 1.2.64 with any patch number
+**      "foo 0+"       Any version of foo - version wildcard
+**      "foo 1.2+"     Any version of foo 1.2 or greater
+**      "foo 1.2-1.4"  Any version between 1.2 and 1.4 inclusive
+**      "foo 1.2,1.4"  Any version of 1.2 or 1.4
 **
 @Serializable { simple = true }
 final const class Depend

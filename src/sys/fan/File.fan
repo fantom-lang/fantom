@@ -8,7 +8,7 @@
 
 **
 ** File is used to represent a Uri path to a file or directory.
-** See [examples]`examples::sys-files`.
+** See [examples](examples::sys-files).
 **
 abstract const class File
 {
@@ -25,7 +25,7 @@ abstract const class File
   ** is implicitly added.  However if a trailing slash is added, then
   ** the resulting File's uri will not match the uri passed to this method.
   ** If the file doesn't exist, then it is assumed to be to a directory
-  ** based on a trailing slash (see `isDir`).  If the Uri has a relative
+  ** based on a trailing slash (see [isDir]).  If the Uri has a relative
   ** path, then it is assumed to be relative to the current working
   ** directory.  Throw ArgErr if the Uri has a scheme other than null
   ** or "file:".
@@ -49,12 +49,13 @@ abstract const class File
   ** the specified prefix and suffix.  If dir is non-null then it is used
   ** as the file's parent directory, otherwise the system's default
   ** temporary directory is used.  If dir is specified it must be a
-  ** directory on the local file system.  See `deleteOnExit` if you wish
+  ** directory on the local file system.  See [deleteOnExit] if you wish
   ** to have the file automatically deleted on exit.  Throw IOErr on error.
   **
   ** Examples:
-  **   File.createTemp("x", ".txt") => `/tmp/x67392.txt`
-  **   File.createTemp.deleteOnExit => `/tmp/fan5284.tmp`
+  **
+  **     File.createTemp("x", ".txt") => `/tmp/x67392.txt`
+  **     File.createTemp.deleteOnExit => `/tmp/fan5284.tmp`
   **
   static File createTemp(Str prefix := "fan", Str suffix := ".tmp", File? dir := null)
 
@@ -73,12 +74,12 @@ abstract const class File
   override Bool equals(Obj? that)
 
   **
-  ** Return 'uri.hash'.
+  ** Return `uri.hash`.
   **
   override Int hash()
 
   **
-  ** Return 'uri.toStr'.
+  ** Return `uri.toStr`.
   **
   override Str toStr()
 
@@ -93,37 +94,37 @@ abstract const class File
   Uri uri()
 
   **
-  ** Convenience for [uri.isDir]`Uri.isDir`
+  ** Convenience for [uri.isDir](Uri.isDir)
   **
   Bool isDir()
 
   **
-  ** Convenience for [uri.path]`Uri.path`.
+  ** Convenience for [uri.path](Uri.path).
   **
   Str[] path()
 
   **
-  ** Convenience for [uri.pathStr]`Uri.pathStr`.
+  ** Convenience for [uri.pathStr](Uri.pathStr).
   **
   Str pathStr()
 
   **
-  ** Convenience for [uri.name]`Uri.name`.
+  ** Convenience for [uri.name](Uri.name).
   **
   Str name()
 
   **
-  ** Convenience for [uri.basename]`Uri.basename`.
+  ** Convenience for [uri.basename](Uri.basename).
   **
   Str basename()
 
   **
-  ** Convenience for [uri.ext]`Uri.ext`.
+  ** Convenience for [uri.ext](Uri.ext).
   **
   Str? ext()
 
   **
-  ** Default implementation is convenience for [uri.mimeType]`Uri.mimeType`.
+  ** Default implementation is convenience for [uri.mimeType](Uri.mimeType).
   **
   virtual MimeType? mimeType()
 
@@ -184,7 +185,7 @@ abstract const class File
 
   **
   ** Get the parent directory of this file or null.
-  ** Also see `Uri.parent`.
+  ** Also see [Uri.parent].
   **
   abstract File? parent()
 
@@ -239,8 +240,9 @@ abstract const class File
   ** checkSlash to have the slash implicitly added.
   **
   ** Examples:
-  **   File(`a/b/`) + `c` => File(`a/b/c`)
-  **   File(`a/b`) + `c`  => File(`a/c`)
+  **
+  **     File(`a/b/`) + `c` => File(`a/b/c`)
+  **     File(`a/b`) + `c`  => File(`a/c`)
   **
   @Operator abstract File plus(Uri path, Bool checkSlash := true)
 
@@ -266,8 +268,10 @@ abstract const class File
   abstract File create()
 
   **
-  ** Create a file under this directory.  Convenience for `create`:
-  **   return (this+name.toUri).create
+  ** Create a file under this directory.  Convenience for [create]\:
+  **
+  **     return (this+name.toUri).create
+  **
   ** Throw IOErr if this file is not a directory or if there is an
   ** error creating the new file.  Return the file created.
   **
@@ -275,8 +279,10 @@ abstract const class File
 
   **
   ** Create a sub-directory under this directory.  Convenience
-  ** for `create`:
-  **   return (this+name/.toUri).create
+  ** for [create]\:
+  **
+  **     return (this+name/.toUri).create
+  **
   ** Throw IOErr if this file is not a directory or if there is an
   ** error creating the new directory.  Return the directory created.
   **
@@ -295,15 +301,15 @@ abstract const class File
   ** If the "exclude" option is a Regex - each source file's Uri string
   ** is checked for a match to skip.  If a directory is skipped, then
   ** its children are skipped also.  The exclude option can also be a
-  ** function of type '|File f->Bool|' to check each file.  Exclude
+  ** function of type `|File f->Bool|` to check each file.  Exclude
   ** processing is performed first before checking for an overwrite.
   **
   ** If during the copy, an existing file of the same name is found,
-  ** then the "overwrite" option should be 'true' to overwrite or
-  ** 'false' to skip.  The overwrite option can also be a function
-  ** of type '|File to,File from->Bool|' which is passed every to/from file
+  ** then the "overwrite" option should be `true` to overwrite or
+  ** `false` to skip.  The overwrite option can also be a function
+  ** of type `|File to,File from->Bool|` which is passed every to/from file
   ** to be overwritten.  If the overwrite function throws an exception,
-  ** it is raised to the 'copyTo' caller.  If a directory overwrite is
+  ** it is raised to the `copyTo` caller.  If a directory overwrite is
   ** skipped, then its children are skipped too.  If options are null
   ** or overwrite is unspecified then the copy is immediately terminated
   ** with an IOErr.
@@ -312,14 +318,15 @@ abstract const class File
   ** terminates the copy and is raised to the caller, which might leave
   ** the copy in an unfinished state.
   **
-  ** Return the 'to' destination file.
+  ** Return the `to` destination file.
   **
   virtual File copyTo(File to, [Str:Obj]? options := null)
 
   **
   ** Copy this file under the specified directory and return
   ** the destination file.  This method is a convenience for:
-  **   return this.copyTo(dir + this.name, options)
+  **
+  **     return this.copyTo(dir + this.name, options)
   **
   virtual File copyInto(File dir, [Str:Obj]? options := null)
 
@@ -327,21 +334,23 @@ abstract const class File
   ** Move this file to the specified location.  If this file is
   ** a directory, then the entire directory is moved.  If the
   ** target file already exists or the move fails, then an IOErr
-  ** is thrown.  Return the 'to' destination file.
+  ** is thrown.  Return the `to` destination file.
   **
   abstract File moveTo(File to)
 
   **
   ** Move this file under the specified directory and return
   ** the destination file.  This method is a convenience for:
-  **   return this.moveTo(dir + this.name)
+  **
+  **     return this.moveTo(dir + this.name)
   **
   virtual File moveInto(File dir)
 
   **
   ** Renaming this file within its current directory.
   ** This method is a convenience for:
-  **   return this.moveTo(parent + newName)
+  **
+  **     return this.moveTo(parent + newName)
   **
   virtual File rename(Str newName)
 
@@ -373,7 +382,7 @@ abstract const class File
   **
   ** The Buf instance returned is backed by a random access file
   ** pointer. It provides the same functionality as a memory backed
-  ** buffer, except for a couple of exceptions such as `Buf.unread`.
+  ** buffer, except for a couple of exceptions such as [Buf.unread].
   ** The resulting Buf is a raw interface to the random access
   ** file, no buffering is provided at the framework level - so
   ** use methods which only access a few bytes carefully.  However
@@ -383,7 +392,7 @@ abstract const class File
   abstract Buf open(Str mode := "rw")
 
   **
-  ** Memory map the region of the file specified by 'pos' and 'size'.
+  ** Memory map the region of the file specified by `pos` and `size`.
   ** If size is null, then use the file's size as a default.  The
   ** file is paged into virtual memory on demand.  Modes are:
   **   - "r": map the file for reading only.  Throws IOErr
@@ -424,49 +433,49 @@ abstract const class File
   virtual Void withOut(|OutStream| f)
 
   **
-  ** Convenience for [in.readAllBuf]`InStream.readAllBuf`.
+  ** Convenience for [in.readAllBuf](InStream.readAllBuf).
   ** The input stream is guaranteed to be closed.
   **
   Buf readAllBuf()
 
   **
-  ** Convenience for [in.readAllLines]`InStream.readAllLines`.
+  ** Convenience for [in.readAllLines](InStream.readAllLines).
   ** The input stream is guaranteed to be closed.
   **
   Str[] readAllLines()
 
   **
-  ** Convenience for [in.eachLine]`InStream.eachLine`.
+  ** Convenience for [in.eachLine](InStream.eachLine).
   ** The input stream is guaranteed to be closed.
   **
   Void eachLine(|Str line| f)
 
   **
-  ** Convenience for [in.readAllStr]`InStream.readAllStr`.
+  ** Convenience for [in.readAllStr](InStream.readAllStr).
   ** The input stream is guaranteed to be closed.
   **
   Str readAllStr(Bool normalizeNewlines := true)
 
   **
-  ** Convenience for [in.readProps()]`InStream.readProps`.
+  ** Convenience for [in.readProps()](InStream.readProps).
   ** The input stream is guaranteed to be closed.
   **
   Str:Str readProps()
 
   **
-  ** Convenience for [out.writeProps()]`OutStream.writeProps`.
+  ** Convenience for [out.writeProps()](OutStream.writeProps).
   ** The output stream is guaranteed to be closed.
   **
   Void writeProps(Str:Str props)
 
   **
-  ** Convenience for [in.readObj]`InStream.readObj`
+  ** Convenience for [in.readObj](InStream.readObj)
   ** The input stream is guaranteed to be closed.
   **
   Obj? readObj([Str:Obj]? options := null)
 
   **
-  ** Convenience for [out.writeObj]`OutStream.writeObj`
+  ** Convenience for [out.writeObj](OutStream.writeObj)
   ** The output stream is guaranteed to be closed.
   **
   Void writeObj(Obj? obj, [Str:Obj]? options := null)

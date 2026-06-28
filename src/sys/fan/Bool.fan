@@ -69,13 +69,13 @@ const final class Bool
 
   **
   ** Bitwise "and" of this and b.  Note this method does not
-  ** short circuit like logical '&&' operator.
+  ** short circuit like logical `&&` operator.
   **
   Bool and(Bool b)
 
   **
   ** Bitwise "or" of this and b.  Note this method does not
-  ** short circuit like logical '||' operator.
+  ** short circuit like logical `||` operator.
   **
   Bool or(Bool b)
 
@@ -89,7 +89,7 @@ const final class Bool
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get this Bool as a Fantom code literal - returns `toStr`.
+  ** Get this Bool as a Fantom code literal - returns [toStr].
   **
   Str toCode()
 

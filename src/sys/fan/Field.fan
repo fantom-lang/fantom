@@ -21,14 +21,14 @@ final const class Field : Slot
   ** object.  The function can be passed to a constructor which
   ** takes an it-block to reflectively set const fields.  Example:
   **
-  **   const class Foo
-  **   {
-  **     new make(|This|? f := null) { f?.call(this) }
-  **     const Int x
-  **   }
+  **     const class Foo
+  **     {
+  **       new make(|This|? f := null) { f?.call(this) }
+  **       const Int x
+  **     }
   **
-  **   f := Field.makeSetFunc([Foo#x: 7])
-  **   Foo foo := Foo#.make([f])
+  **     f := Field.makeSetFunc([Foo#x: 7])
+  **     Foo foo := Foo#.make([f])
   **
   static |Obj| makeSetFunc(Field:Obj? vals)
 

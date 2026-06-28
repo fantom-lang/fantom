@@ -24,17 +24,17 @@ abstract const class Slot
   static Slot? find(Str qname, Bool checked := true)
 
   **
-  ** Convenience for '(Method)find(qname, checked)'
+  ** Convenience for `(Method)find(qname, checked)`
   **
   static Method? findMethod(Str qname, Bool checked := true)
 
   **
-  ** Convenience for '(Field)find(qname, checked)'
+  ** Convenience for `(Field)find(qname, checked)`
   **
   static Field? findField(Str qname, Bool checked := true)
 
   **
-  ** Convenience for 'findMethod(qname, checked).func'
+  ** Convenience for `findMethod(qname, checked).func`
   **
   static Func? findFunc(Str qname, Bool checked := true)
 
@@ -159,15 +159,15 @@ abstract const class Slot
   **
   ** Get the list of facets defined on this slot or return an empty
   ** list if no facets are defined. If looking up a facet by type, then
-  ** use the `facet` method which will provide better performance.
-  ** See [Facets Doc]`docLang::Facets` for details.
+  ** use the [facet] method which will provide better performance.
+  ** See [Facets Doc](docLang::Facets) for details.
   **
   Facet[] facets()
 
   **
   ** Get a facet by its type.  If not found on this slot then
   ** return null or throw UnknownFacetErr based on check flag.
-  ** See [Facets Doc]`docLang::Facets` for details.
+  ** See [Facets Doc](docLang::Facets) for details.
   **
   Facet? facet(Type type, Bool checked := true)
 

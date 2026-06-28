@@ -9,7 +9,7 @@
 **
 ** Map is a hash map of key/value pairs.
 **
-** See [examples]`examples::sys-maps`.
+** See [examples](examples::sys-maps).
 **
 @Serializable
 final class Map
@@ -33,11 +33,12 @@ final class Map
   ** of equal key/value pairs.
   **
   ** Examples:
-  **   a := Int:Str[1:"one", 2:"two"]
-  **   b := Int:Str[2:"two", 1:"one"]
-  **   c := Int:Str?[2:"two", 1:"one"]
-  **   a == b  =>  true
-  **   a == c  =>  false
+  **
+  **     a := Int:Str[1:"one", 2:"two"]
+  **     b := Int:Str[2:"two", 1:"one"]
+  **     c := Int:Str?[2:"two", 1:"one"]
+  **     a == b  =>  true
+  **     a == c  =>  false
   **
   override Bool equals(Obj? that)
 
@@ -64,8 +65,8 @@ final class Map
   **
   ** Get the value for the specified key.  If key is not mapped,
   ** then return the value of the def parameter.  If def is omitted
-  ** it defaults to the `def` field.  This method is readonly safe.
-  ** Shortcut is 'a[key]'.
+  ** it defaults to the [def] field.  This method is readonly safe.
+  ** Shortcut is `a[key]`.
   **
   @Operator V? get(K key, V? def := this.def)
 
@@ -115,7 +116,7 @@ final class Map
   @Operator M set(K key, V val)
 
   **
-  ** Call `set` if val is non-null otherwise do nothing.  Return this.
+  ** Call [set] if val is non-null otherwise do nothing.  Return this.
   **
   M setNotNull(K key, V? val)
 
@@ -132,7 +133,7 @@ final class Map
   M addIfNotNull(K key, V? val)
 
   **
-  ** Call `add` if val is non-null otherwise do nothing.  Return this.
+  ** Call [add] if val is non-null otherwise do nothing.  Return this.
   **
   M addNotNull(K key, V? val)
 
@@ -148,8 +149,9 @@ final class Map
   ** Append the specified map to this map by setting every key/value in
   ** m in this map.  Keys in m not yet mapped are added and keys already
   ** mapped are overwritten.  Return this.  Throw ReadonlyErr if readonly.
-  ** Also see `addAll`.  This method is semanatically equivalent to:
-  **   m.each |v, k| { this.set(k, v) }
+  ** Also see [addAll].  This method is semanatically equivalent to:
+  **
+  **     m.each |v, k| { this.set(k, v) }
   **
   M setAll(M m)
 
@@ -158,8 +160,9 @@ final class Map
   ** m in this map.  If any key in m is already mapped then this method
   ** will fail (any previous keys will remain mapped potentially leaving
   ** this map in an inconsistent state).  Return this.  Throw ReadonlyErr if
-  ** readonly.  Also see `setAll`. This method is semanatically equivalent to:
-  **   m.each |v, k| { this.add(k, v) }
+  ** readonly.  Also see [setAll]. This method is semanatically equivalent to:
+  **
+  **     m.each |v, k| { this.add(k, v) }
   **
   M addAll(M m)
 
@@ -168,12 +171,13 @@ final class Map
   ** and the keys are derived by calling the specified function on each item.
   ** If the function is null, then the items themselves are used as the keys.
   ** If any key is already mapped then it is overwritten.  Return this.  Throw
-  ** ReadonlyErr if readonly.  Also see `addList`.
+  ** ReadonlyErr if readonly.  Also see [addList].
   **
   ** Examples:
-  **   m := [0:"0", 2:"old"]
-  **   m.setList(["1","2"]) |Str s->Int| { return s.toInt }
-  **   m  =>  [0:"0", 1:"1", 2:"2"]
+  **
+  **     m := [0:"0", 2:"old"]
+  **     m.setList(["1","2"]) |Str s->Int| { return s.toInt }
+  **     m  =>  [0:"0", 1:"1", 2:"2"]
   **
   M setList(V[] list, |V item, Int index->K|? c := null)
 
@@ -183,12 +187,13 @@ final class Map
   ** If the function is null, then the items themselves are used as the keys.
   ** If any key is already mapped then this method will fail (any previous keys
   ** will remain mapped, potentially leaving this map in an inconsistent state).
-  ** Return this.  Throw ReadonlyErr if readonly.  Also see `setList`.
+  ** Return this.  Throw ReadonlyErr if readonly.  Also see [setList].
   **
   ** Examples:
-  **   m := [0:"0"]
-  **   m.addList(["1","2"]) |Str s->Int| { return s.toInt }
-  **   m  =>  [0:"0", 1:"1", 2:"2"]
+  **
+  **     m := [0:"0"]
+  **     m.addList(["1","2"]) |Str s->Int| { return s.toInt }
+  **     m  =>  [0:"0", 1:"1", 2:"2"]
   **
   M addList(V[] list, |V item, Int index->K|? c := null)
 
@@ -216,7 +221,7 @@ final class Map
   ** Getting this field is readonly safe.  If you attempt to set this method
   ** on a map which is not empty or not typed to use Str keys, then throw
   ** UnsupportedOperation.  Throw ReadonlyErr if set when readonly.  This
-  ** mode cannot be used concurrently with `ordered`.
+  ** mode cannot be used concurrently with [ordered].
   **
   Bool caseInsensitive := false
 
@@ -229,13 +234,13 @@ final class Map
   ** Getting this field is readonly safe.  If you attempt to set this method
   ** on a map which is not empty, then throw UnsupportedOperation.  Throw
   ** ReadonlyErr if set when readonly.  This mode cannot be used concurrently
-  ** with `caseInsensitive`.
+  ** with [caseInsensitive].
   **
   Bool ordered := false
 
   **
-  ** The default value to use for `get` when a key isn't mapped.
-  ** This field defaults to null.  The value of 'def' must be immutable
+  ** The default value to use for [get] when a key isn't mapped.
+  ** This field defaults to null.  The value of `def` must be immutable
   ** or NotImmutableErr is thrown.  Getting this field is readonly safe.
   ** Throw ReadonlyErr if set when readonly.
   **
@@ -257,15 +262,16 @@ final class Map
   ** is used.  This method is readonly safe.
   **
   ** Example:
-  **   m := ["a" : 1, "b" : 2]
-  **   m.join(" and ") |Int v, Str k->Str| { return "$v from $k" }
-  **     => 1 from a and 2 from b
+  **
+  **     m := ["a" : 1, "b" : 2]
+  **     m.join(" and ") |Int v, Str k->Str| { return "$v from $k" }
+  **       => 1 from a and 2 from b
   **
   Str join(Str separator, |V val, K key->Str|? c := null)
 
   **
   ** Get this map as a Fantom expression suitable for code generation.
-  ** The individual keys and values must all respond to the 'toCode' method.
+  ** The individual keys and values must all respond to the `toCode` method.
   **
   Str toCode()
 
@@ -298,15 +304,15 @@ final class Map
   **
   ** Return a new map containing the key/value pairs for which c
   ** returns true.  If c returns false for every item, then return
-  ** an empty map.  The inverse of this method is `exclude`.  If
-  ** this map is `ordered` or `caseInsensitive`, then the resulting
+  ** an empty map.  The inverse of this method is [exclude].  If
+  ** this map is [ordered] or [caseInsensitive], then the resulting
   ** map is too.  This method is readonly safe.
   **
   M findAll(|V val, K key->Bool| c)
 
   **
   ** Return a new map containing all the key/value pairs where
-  ** value is not null.  If this map is `ordered` or `caseInsensitive`,
+  ** value is not null.  If this map is [ordered] or [caseInsensitive],
   ** then the resulting map is too.  This method is readonly safe.
   **
   M findNotNull()
@@ -314,13 +320,14 @@ final class Map
   **
   ** Return a new map containing the key/value pairs for which c
   ** returns false.  If c returns true for every item, then return
-  ** an empty map.  The inverse of this method is `findAll`.  If
-  ** this map is `ordered` or `caseInsensitive`, then the resulting
+  ** an empty map.  The inverse of this method is [findAll].  If
+  ** this map is [ordered] or [caseInsensitive], then the resulting
   ** map is too.  This method is readonly safe.
   **
   ** Example:
-  **   map := ["off":0, "slow":50, "fast":100]
-  **   map.exclude |Int v->Bool| { return v == 0 } => ["slow":50, "fast":100]
+  **
+  **     map := ["off":0, "slow":50, "fast":100]
+  **     map.exclude |Int v->Bool| { return v == 0 } => ["slow":50, "fast":100]
   **
   M exclude(|V val, K key->Bool| c)
 
@@ -346,27 +353,29 @@ final class Map
   ** key/value pair.  This method is readonly safe.
   **
   ** Example:
-  **   m := ["2":2, "3":3, "4":4]
-  **   m.reduce(100) |Obj r, Int v->Obj| { return (Int)r + v } => 109
+  **
+  **     m := ["2":2, "3":3, "4":4]
+  **     m.reduce(100) |Obj r, Int v->Obj| { return (Int)r + v } => 109
   **
   Obj? reduce(Obj? init, |Obj? reduction, V val, K key->Obj?| c)
 
   **
   ** Create a new map with the same keys, but apply the specified
   ** closure to generate new values.  The new map is typed based
-  ** on the return type of c.  If this map is `ordered` or
-  ** `caseInsensitive`, then the resulting map is too.  This method
+  ** on the return type of c.  If this map is [ordered] or
+  ** [caseInsensitive], then the resulting map is too.  This method
   ** is readonly safe.
   **
   ** Example:
-  **   m := [2:2, 3:3, 4:4]
-  **   x := m.map |Int v->Int| { return v*2 }
-  **   x => [2:4, 3:6, 4:8]
+  **
+  **     m := [2:2, 3:3, 4:4]
+  **     x := m.map |Int v->Int| { return v*2 }
+  **     x => [2:4, 3:6, 4:8]
   **
   Obj:Obj? map(|V val, K key->Obj?| c)
 
   **
-  ** Convenience for `map` and `findNotNull`.  Each key/value pair is
+  ** Convenience for [map] and [findNotNull].  Each key/value pair is
   ** mapped by the given function and if null is returned it is
   ** excluded from the result.  The resulting type is based on
   ** the return type of c but non-nullable.  This method is
@@ -382,7 +391,7 @@ final class Map
   ** Return if this Map is readonly.  A readonly Map is guaranteed
   ** to be immutable (although its values may be mutable themselves).
   ** Any attempt to modify a readonly Map will result in ReadonlyErr.
-  ** Use `rw` to get a read-write Map from a readonly Map.  Methods
+  ** Use [rw] to get a read-write Map from a readonly Map.  Methods
   ** documented as "readonly safe" may be used safely with a readonly Map.
   ** This method is readonly safe.
   **
@@ -390,7 +399,7 @@ final class Map
 
   **
   ** Return if this Map is read-write.  A read-write Map is mutable
-  ** and may be modified.  Use `ro` to get a readonly Map from a
+  ** and may be modified.  Use [ro] to get a readonly Map from a
   ** read-write Map.  This method is readonly safe.
   **
   Bool isRW()

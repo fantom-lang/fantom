@@ -29,7 +29,7 @@ final class RegexMatcher
   **
   ** Match the entire region against the pattern.  If a match
   ** is made then return true - additional info is available
-  ** via the `group`, `start`, and `end` methods.  Return false
+  ** via the [group], [start], and [end] methods.  Return false
   ** if a match cannot be made.
   **
   Bool matches()
@@ -37,7 +37,7 @@ final class RegexMatcher
   **
   ** Attempt to find the next match.  If a match is made
   ** then return true - additional info is available via
-  ** the `group`, `start`, and `end` methods.  Return false
+  ** the [group], [start], and [end] methods.  Return false
   ** if a match cannot be made.
   **
   Bool find()
@@ -78,14 +78,14 @@ final class RegexMatcher
   Str? group(Int group := 0)
 
   **
-  ** Return the start index of the given `group`.
+  ** Return the start index of the given [group].
   ** Throw exception if failed to match input or group
   ** index is invalid.
   **
   Int start(Int group := 0)
 
   **
-  ** Return end index+1 of the given `group`.
+  ** Return end index+1 of the given [group].
   ** Throw exception if failed to match input or group
   ** index is invalid.
   **

@@ -29,12 +29,13 @@ const final class Int : Num
   ** Generate a random number.  If range is null then all 2^64
   ** integer values (both negative and positive) are produced with
   ** equal probability.  If range is non-null, then the result
-  ** is guaranteed to be inclusive of the range.  Also see `Float.random` ,
-  ** `Range.random` , `List.random` , and `util::Random`.
+  ** is guaranteed to be inclusive of the range.  Also see [Float.random] ,
+  ** [Range.random] , [List.random] , and [util::Random].
   **
   ** Examples:
-  **   r := Int.random
-  **   r := Int.random(0..100)
+  **
+  **     r := Int.random
+  **     r := Int.random(0..100)
   **
   static Int random(Range? r := null)
 
@@ -181,7 +182,7 @@ const final class Int : Num
   **
   ** Bitwise right shift of this by b.  Zero is shifted into the
   ** highest bits performing like an unsigned shift.  This is equivalent
-  ** to the Java '>>>' operator.
+  ** to the Java `>>>` operator.
   **
   Int shiftr(Int b)
 
@@ -189,7 +190,7 @@ const final class Int : Num
   **
   ** Bitwise arithmetic right-shift of this by b. The left-most bit is shifted
   ** into the highest bits performing like a signed shift. This is equivalent
-  ** to the Java '>>' operator.
+  ** to the Java `>>` operator.
   **
   Int shifta(Int b)
 
@@ -278,8 +279,9 @@ const final class Int : Num
   ** it as uppercase, otherwise return this.
   **
   ** Example:
-  **   'a'.upper => 'A'
-  **   '4'.upper => '4'
+  **
+  **     'a'.upper => 'A'
+  **     '4'.upper => '4'
   **
   Int upper()
 
@@ -288,8 +290,9 @@ const final class Int : Num
   ** it as lowercase, otherwise return this.
   **
   ** Example:
-  **   'A'.lower => 'a'
-  **   'h'.lower => 'h'
+  **
+  **     'A'.lower => 'a'
+  **     'h'.lower => 'h'
   **
   Int lower()
 
@@ -299,22 +302,24 @@ const final class Int : Num
   ** also returns true for a-f and A-F.
   **
   ** Example:
-  **   '3'.toDigit     => true
-  **   3.toDigit       => false
-  **   'B'.toDigit(16) => true
+  **
+  **     '3'.toDigit     => true
+  **     3.toDigit       => false
+  **     'B'.toDigit(16) => true
   **
   Bool isDigit(Int radix := 10)
 
   **
-  ** Convert this number into a Unicode char '0'-'9'.  If radix is
+  ** Convert this number into a Unicode char `0`-'9'.  If radix is
   ** greater than 10, then use a lower case letter.  Return null if
   ** this number cannot be represented as a single digit character for
   ** the specified radix.
   **
   ** Example:
-  **   3.toDigit      => '3'
-  **   15.toDigit(16) => 'f'
-  **   99.toDigit     => null
+  **
+  **     3.toDigit      => '3'
+  **     15.toDigit(16) => 'f'
+  **     99.toDigit     => null
   **
   Int? toDigit(Int radix := 10)
 
@@ -323,9 +328,10 @@ const final class Int : Num
   ** radix.  Return null if this char is not a valid digit.
   **
   ** Example:
-  **   '3'.fromDigit     => 3
-  **   'f'.fromDigit(16) => 15
-  **   '%'.fromDigit     => null
+  **
+  **     '3'.fromDigit     => 3
+  **     'f'.fromDigit(16) => 15
+  **     '%'.fromDigit     => null
   **
   Int? fromDigit(Int radix := 10)
 
@@ -342,33 +348,34 @@ const final class Int : Num
   **
   ** Format this integer number for the current locale.
   ** If pattern is null, then the locale's default pattern is used.
-  ** See `Float.toLocale` for pattern language.  Fractional formatting
+  ** See [Float.toLocale] for pattern language.  Fractional formatting
   ** is not supported for integers.
   **
-  ** In addition 'Int.toLocale' supports the "B" pattern which will
+  ** In addition `Int.toLocale` supports the "B" pattern which will
   ** format a number of bytes with the appropriate B, KB, MB, GB suffix
   ** based on the magnitude (1024B == 1KB).
   **
   ** Examples:
-  **   3.toLocale("00")             =>  03
-  **   3.toLocale("000")            =>  003
-  **   123456789.toLocale("#,###")  =>  123,456,789
-  **   123.toLocale("B")            =>  123B
-  **   1234.toLocale("B")           =>  1.2KB
-  **   100_000.toLocale("B")        =>  98KB
-  **   (3*1024*1024).toLocale("B")  =>  3MB
+  **
+  **     3.toLocale("00")             =>  03
+  **     3.toLocale("000")            =>  003
+  **     123456789.toLocale("#,###")  =>  123,456,789
+  **     123.toLocale("B")            =>  123B
+  **     1234.toLocale("B")           =>  1.2KB
+  **     100_000.toLocale("B")        =>  98KB
+  **     (3*1024*1024).toLocale("B")  =>  3MB
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Return if this Unicode char is an uppercase letter in
-  ** the current locale.  See also `localeIsLower` and `isUpper`.
+  ** the current locale.  See also [localeIsLower] and [isUpper].
   **
   Bool localeIsUpper()
 
   **
   ** Return if this Unicode char is a lowercase letter in
-  ** the current locale.  See also `localeIsUpper` and `isLower`.
+  ** the current locale.  See also [localeIsUpper] and [isLower].
   **
   Bool localeIsLower()
 
@@ -376,8 +383,8 @@ const final class Int : Num
   ** If this Unicode char is a lowercase char, then return
   ** it as uppercase according to the current locale.  Note that
   ** Unicode contains some case conversion rules that don't work
-  ** correctly on a single character, so `Str.localeUpper` should
-  ** be preferred.  See also `localeLower` and `upper`.
+  ** correctly on a single character, so [Str.localeUpper] should
+  ** be preferred.  See also [localeLower] and [upper].
   **
   Int localeUpper()
 
@@ -385,8 +392,8 @@ const final class Int : Num
   ** If this Unicode char is an uppercase char, then return
   ** it as lowercase according to the current locale.  Note that
   ** Unicode contains some case conversion rules that don't work
-  ** correctly on a single character, so `Str.localeLower` should
-  ** be preferred.  See also `localeUpper` and `lower`.
+  ** correctly on a single character, so [Str.localeLower] should
+  ** be preferred.  See also [localeUpper] and [lower].
   **
   Int localeLower()
 
@@ -405,8 +412,9 @@ const final class Int : Num
   ** of nibble characters.
   **
   ** Examples:
-  **   255.toHex     =>  "ff"
-  **   255.toHex(4)  =>  "00ff"
+  **
+  **     255.toHex     =>  "ff"
+  **     255.toHex(4)  =>  "00ff"
   **
   Str toHex(Int? width := null)
 
@@ -415,8 +423,9 @@ const final class Int : Num
   ** then leading zeros are prepended to ensure the specified width.
   **
   ** Examples:
-  **   255.toRadix(8)    =>  "377"
-  **   255.toRadix(8, 5) =>  "00377"
+  **
+  **     255.toRadix(8)    =>  "377"
+  **     255.toRadix(8, 5) =>  "00377"
   **
   Str toRadix(Int radix, Int? width := null)
 
@@ -432,13 +441,13 @@ const final class Int : Num
 
   **
   ** Convert nano-seconds ticks to a Duration.
-  ** Convenience for `Duration.make`.
+  ** Convenience for [Duration.make].
   **
   Duration toDuration()
 
   **
   ** Convert nano-seconds ticks since 1-Jan-2000 to a DateTime.
-  ** Convenience for `DateTime.makeTicks`.
+  ** Convenience for [DateTime.makeTicks].
   **
   DateTime toDateTime(TimeZone tz := TimeZone.cur)
 
@@ -448,10 +457,11 @@ const final class Int : Num
 
   **
   ** Call the specified function to this times passing the current counter.
-  ** The counter begins at zero.  Also see `Range.each`.
+  ** The counter begins at zero.  Also see [Range.each].
   **
   ** Example:
-  **   3.times |i| { echo(i) }  =>  0, 1, 2
+  **
+  **     3.times |i| { echo(i) }  =>  0, 1, 2
   **
   Void times(|Int i| c)
 

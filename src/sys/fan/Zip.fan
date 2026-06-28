@@ -10,13 +10,13 @@
 ** Zip is used to read/write compressed zip files and streams.  Zip may be
 ** used in three modes:
 **
-**   1. `Zip.open` is used to read a random access file and provides
+**   1. [Zip.open] is used to read a random access file and provides
 **      access to the entire contents with the ability to read select
 **      entries
-**   2. `Zip.read` is used to read a zip file from an input stream.
-**      Each entry is pulled off the stream using `readNext`
-**   3. `Zip.write` is used to write a zip file to an output stream.
-**      Each entry is written to the stream using `writeNext`
+**   2. [Zip.read] is used to read a zip file from an input stream.
+**      Each entry is pulled off the stream using [readNext]
+**   3. [Zip.write] is used to write a zip file to an output stream.
+**      Each entry is written to the stream using [writeNext]
 **
 final class Zip
 {
@@ -31,9 +31,10 @@ final class Zip
   ** access then throw IOErr.
   **
   ** Example:
-  **   zip := Zip.open(File(`test.zip`))
-  **   txt := zip.contents[`/notice.txt`].readAllStr
-  **   zip.close
+  **
+  **     zip := Zip.open(File(`test.zip`))
+  **     txt := zip.contents[`/notice.txt`].readAllStr
+  **     zip.close
   **
   static Zip open(File file)
 
@@ -41,14 +42,15 @@ final class Zip
   ** Create a Zip used to read a zip file from the specified input stream.
   **
   ** Example:
-  **   zip := Zip.read(File(`test.zip`).in)
-  **   File? entry
-  **   while ((entry = zip.readNext()) != null)
-  **   {
-  **     data := entry.readAllBuf
-  **     echo("$entry size=$data.size")
-  **   }
-  **   zip.close
+  **
+  **     zip := Zip.read(File(`test.zip`).in)
+  **     File? entry
+  **     while ((entry = zip.readNext()) != null)
+  **     {
+  **       data := entry.readAllBuf
+  **       echo("$entry size=$data.size")
+  **     }
+  **     zip.close
   **
   static Zip read(InStream in)
 
@@ -56,11 +58,12 @@ final class Zip
   ** Create a Zip used to write a zip file to the specified output stream.
   **
   ** Example:
-  **   zip := Zip.write(File(`test.zip`).out)
-  **   out := zip.writeNext(`/path/hello.txt`)
-  **   out.writeLine("hello zip")
-  **   out.close
-  **   zip.close
+  **
+  **     zip := Zip.write(File(`test.zip`).out)
+  **     out := zip.writeNext(`/path/hello.txt`)
+  **     out.writeLine("hello zip")
+  **     out.close
+  **     zip.close
   **
   static Zip write(OutStream out)
 
@@ -120,16 +123,17 @@ final class Zip
   ** NOTE: setting level to 0 sets method to STORE, else to DEFLATED.
   **
   ** Examples:
-  **   out := zip.writeNext(`/docs/test.txt`)
-  **   out.writeLine("test")
-  **   out.close
+  **
+  **     out := zip.writeNext(`/docs/test.txt`)
+  **     out.writeLine("test")
+  **     out.close
   **
   OutStream writeNext(Uri path, DateTime modifyTime := DateTime.now,  [Str:Obj?]? opts := null)
 
   **
   ** Finish writing the contents of this zip file, but leave the underlying
   ** OutStream open.  This method is guaranteed to never throw an IOErr.
-  ** Return true if the stream was finished successfully or false if 
+  ** Return true if the stream was finished successfully or false if
   ** an error occurred.  Throw UnsupportedErr if zip is not writing to
   ** an output stream.
   **

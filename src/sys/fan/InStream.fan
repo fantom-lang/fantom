@@ -21,12 +21,12 @@ class InStream
   ** All reads from this stream will be routed to the specified
   ** inner stream.
   **
-  ** If 'in' is null, then it is the subclass responsibility to
-  ** handle reads by overriding the following methods: `read`,
-  ** `readBuf`, and `unread`.
+  ** If `in` is null, then it is the subclass responsibility to
+  ** handle reads by overriding the following methods: [read],
+  ** [readBuf], and [unread].
   **
-  ** If 'in' is not null, then this stream will automatically
-  ** set its own charset to 'in.charset'.
+  ** If `in` is not null, then this stream will automatically
+  ** set its own charset to `in.charset`.
   **
   protected new make(InStream? in)
 
@@ -53,7 +53,7 @@ class InStream
   ** of bytes read and increment buf's size and position accordingly.
   ** Return null and leave buf's state untouched if end of stream.
   ** Note this method may not read the full number of n bytes, use
-  ** `readBufFully` if you must block until all n bytes read.
+  ** [readBufFully] if you must block until all n bytes read.
   ** Throw IOErr on error.
   **
   virtual Int? readBuf(Buf buf, Int n)
@@ -74,7 +74,7 @@ class InStream
   virtual Bool close()
 
   **
-  ** Attempt to skip 'n' number of bytes.  Return the number of bytes
+  ** Attempt to skip `n` number of bytes.  Return the number of bytes
   ** actually skipped which may be equal to or less than n.
   **
   virtual Int skip(Int n)
@@ -107,7 +107,7 @@ class InStream
 
   **
   ** Byte order mode for binary reads.
-  ** Default is `Endian.big` (network byte order).
+  ** Default is [Endian.big] (network byte order).
   **
   Endian endian
 
@@ -120,23 +120,23 @@ class InStream
 
   **
   ** Read the next byte as an unsigned 8-bit number.  This method may
-  ** be paired with `OutStream.write`.  Throw IOErr on error or if the
+  ** be paired with [OutStream.write].  Throw IOErr on error or if the
   ** end of stream is reached before one byte can be read.  This method
-  ** differs from `read` in that it will throw IOErr on end of stream
+  ** differs from [read] in that it will throw IOErr on end of stream
   ** rather than return null.
   **
   Int readU1()
 
   **
   ** Read the next byte as a signed 8-bit number.  This method may be
-  ** paired with `OutStream.write`.  Throw IOErr on error or if the end
+  ** paired with [OutStream.write].  Throw IOErr on error or if the end
   ** of stream is reached before one byte can be read.
   **
   Int readS1()
 
   **
   ** Read the next two bytes as an unsigned 16-bit number using configured
-  ** `endian`.  This method may be paired with `OutStream.writeI2`.
+  ** [endian].  This method may be paired with [OutStream.writeI2].
   ** Throw IOErr on error or if the end of stream is reached before
   ** two bytes can be read.
   **
@@ -144,7 +144,7 @@ class InStream
 
   **
   ** Read the next two bytes as a signed 16-bit number using configured
-  ** `endian`.  This method may be paired with `OutStream.writeI2`.
+  ** [endian].  This method may be paired with [OutStream.writeI2].
   ** Throw IOErr on error or if the end of stream is reached before
   ** two bytes can be read.
   **
@@ -152,7 +152,7 @@ class InStream
 
   **
   ** Read the next four bytes as an unsigned 32-bit number using configured
-  ** `endian`.  This method may be paired with `OutStream.writeI4`.
+  ** [endian].  This method may be paired with [OutStream.writeI4].
   ** Throw IOErr on error or if the end of stream is reached before
   ** four bytes can be read.
   **
@@ -160,7 +160,7 @@ class InStream
 
   **
   ** Read the next four bytes as a signed 32-bit number using configured
-  ** `endian`.  This method may be paired with `OutStream.writeI4`.
+  ** [endian].  This method may be paired with [OutStream.writeI4].
   ** Throw IOErr on error or if the end of stream is reached before
   ** four bytes can be read.
   **
@@ -168,7 +168,7 @@ class InStream
 
   **
   ** Read the next eight bytes as a signed 64-bit number using configured
-  ** `endian`.  This method may be paired with `OutStream.writeI8`.
+  ** [endian].  This method may be paired with [OutStream.writeI8].
   ** Throw IOErr on error or if the end of stream is reached before
   ** eight bytes can be read.  Note there is no readU8 (because Java
   ** doesn't support unsigned longs).
@@ -177,35 +177,35 @@ class InStream
 
   **
   ** Read the next four bytes as a 32-bit floating point number using
-  ** configured `endian` according to `Float.bits32`.  This method
-  ** may be paired with `OutStream.writeF4`.  Throw IOErr on error or if
+  ** configured [endian] according to [Float.bits32].  This method
+  ** may be paired with [OutStream.writeF4].  Throw IOErr on error or if
   ** the end of stream is reached before four bytes can be read.
   **
   Float readF4()
 
   **
   ** Read the next eight bytes as a 64-bit floating point number using
-  ** configured `endian` according to `Float.bits`.  This method may be
-  ** paired with `OutStream.writeF8`.  Throw IOErr on error or if the
+  ** configured [endian] according to [Float.bits].  This method may be
+  ** paired with [OutStream.writeF8].  Throw IOErr on error or if the
   ** end of stream is reached before four bytes can be read.
   **
   Float readF8()
 
   **
   ** Read the next byte and return true if nonzero.  This method may
-  ** be paired with `OutStream.writeBool`.  Throw IOErr on error or if
+  ** be paired with [OutStream.writeBool].  Throw IOErr on error or if
   ** the end of stream is reached before one byte can be read.
   **
   Bool readBool()
 
   **
-  ** Read a decimal string according to `readUtf`.
+  ** Read a decimal string according to [readUtf].
   **
   Decimal readDecimal()
 
   **
   ** Read a Str in modified UTF-8 format according to the java.io.DataInput
-  ** specification. This method may be paired with `OutStream.writeUtf`.
+  ** specification. This method may be paired with [OutStream.writeUtf].
   ** Throw IOErr on error, invalid UTF encoding, or if the end of stream
   ** is reached before the string is fully read.
   **
@@ -221,7 +221,7 @@ class InStream
 
   **
   ** Get number of bits left in current byte which have not been
-  ** read by `readBits` yet.  For example if three bits are read, then
+  ** read by [readBits] yet.  For example if three bits are read, then
   ** return 5 to indicate number of bits left to sync up up to byte
   ** boundaries.  Not part of public API!
   **
@@ -261,7 +261,7 @@ class InStream
 
   **
   ** Read the next n chars from the stream as a Str using the
-  ** current `charset`.  Block until exactly n chars have been
+  ** current [charset].  Block until exactly n chars have been
   ** read or throw IOErr if end of stream is reached first.
   **
   Str readChars(Int n)
@@ -284,13 +284,13 @@ class InStream
 
   **
   ** Read a Str token from the input stream which is terminated
-  ** when the specified function 'c' returns true.  The terminating
+  ** when the specified function `c` returns true.  The terminating
   ** char is unread and will be the next char read once this
   ** method returns.  Characters are read based on the currently
   ** configured charset.
   **
-  ** If 'c' is null then the default implementation tokenizes up
-  ** until the next character which returns true for `Int.isSpace`.
+  ** If `c` is null then the default implementation tokenizes up
+  ** until the next character which returns true for [Int.isSpace].
   **
   ** The max parameter specifies the maximum number of Unicode
   ** characters (not bytes) to read before truncating the line and
@@ -319,7 +319,7 @@ class InStream
   ** Read the entire stream into a list of Str lines based on the
   ** configured charset encoding.  Each Str in the list maps to a
   ** line terminated by \n, \r\n, \r, or EOF using the same semantics
-  ** as `readLine` with default max line length of null.  The Str lines
+  ** as [readLine] with default max line length of null.  The Str lines
   ** themselves do not contain a trailing newline.  Empty lines
   ** are returned as the empty Str "".  Return an empty list if
   ** currently at end of stream (not null).  Throw IOErr if there
@@ -333,7 +333,7 @@ class InStream
   ** Read the entire stream into Str lines based on the current
   ** encoding.  Call the specified function for each line read.
   ** Each line is terminated by \n, \r\n, \r, or EOF using the same
-  ** semantics as `readLine` with the null default max line length.
+  ** semantics as [readLine] with the null default max line length.
   ** The Str lines themselves do not contain a trailing newline.
   ** Empty lines are returned as the empty Str "".  This InStream is
   ** guaranteed to be closed upon return.
@@ -353,7 +353,7 @@ class InStream
 
   **
   ** Read a serialized object from the stream according to
-  ** the Fantom [serialization format]`docLang::Serialization`.
+  ** the Fantom [serialization format](docLang::Serialization).
   ** Throw IOErr or ParseErr on error.  This method may consume
   ** bytes/chars past the end of the serialized object (we may
   ** want to add a "full stop" token at some point to support
@@ -362,7 +362,7 @@ class InStream
   ** The options may be used to specify additional decoding
   ** logic:
   **   - "makeArgs": Obj[] arguments to pass to the root
-  **     object's make constructor via 'Type.make'
+  **     object's make constructor via `Type.make`
   **
   Obj? readObj([Str:Obj]? options := null)
 
@@ -371,30 +371,30 @@ class InStream
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Read the entire stream into a 'Str:Str' of name/value pairs using the
+  ** Read the entire stream into a `Str:Str` of name/value pairs using the
   ** Fantom props file format.  This format is similar to but different than
   ** the Java properties file format:
   **   - Input must be UTF-8 encoded (current charset is ignored)
-  **   - Name/value pairs formatted as logical line: '<name>=<value>'
+  **   - Name/value pairs formatted as logical line: `<name>=<value>`
   **   - Any Unicode character allowed in name or value
   **   - Leading and trailing whitespace trimmed from both name and value
   **   - Duplicate name keys within one file is an error condition
-  **   - Lines starting with '#' are comments
-  **   - Comment to end of line is '//' if start of line or preceeded
+  **   - Lines starting with `#` are comments
+  **   - Comment to end of line is `//` if start of line or preceeded
   **     by whitespace
-  **   - Block comment is '/* */' (may be nested)
-  **   - Use trailing '\' to continue logical line to another actual line,
+  **   - Block comment is `/* */` (may be nested)
+  **   - Use trailing `\` to continue logical line to another actual line,
   **     any leading whitespace (space or tab char) is trimmed from beginning
   **     of continued line
-  **   - Fantom Str literal escape sequences supported: '\n \r \t or \uxxxx'
-  **   - The '$' character is treated as a normal character and should not be
+  **   - Fantom Str literal escape sequences supported: `\n \r \t or \uxxxx`
+  **   - The `$` character is treated as a normal character and should not be
   **     escaped, but convention is to indicate a variable in a format string
   **   - Convention is that name is lower camel case with dot separators
   **
   ** Throw IOErr if there is a problem reading the stream or an invalid
   ** props format is encountered.  This InStream is guaranteed to be closed.
   **
-  ** Also see `Env.props`.
+  ** Also see [Env.props].
   **
   Str:Str readProps()
 

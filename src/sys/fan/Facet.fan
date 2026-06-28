@@ -9,7 +9,7 @@
 **
 ** Facet is a mixin included into every facet type.
 **
-** See `docLang::Facets` for details.
+** See [docLang::Facets] for details.
 **
 const mixin Facet
 {

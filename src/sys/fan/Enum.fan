@@ -7,7 +7,7 @@
 //
 
 **
-** Enum is the base class for enum classes defined using the 'enum'
+** Enum is the base class for enum classes defined using the `enum`
 ** keyword.  An enum models a fixed range of discrete values.  Each
 ** value has an Int ordinal and a Str name.
 **
@@ -19,7 +19,7 @@
 **   - a static method called "fromStr" which maps an enum name
 **     to an enum instance
 **
-** See `docLang::Enums` for details.
+** See [docLang::Enums] for details.
 **
 abstract const class Enum
 {

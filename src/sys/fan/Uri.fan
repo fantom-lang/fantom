@@ -8,26 +8,26 @@
 
 **
 ** Uri is used to immutably represent a Universal Resource Identifier
-** according to [RFC 3986]`http://tools.ietf.org/html/rfc3986`.
+** according to [RFC 3986](http://tools.ietf.org/html/rfc3986).
 ** The generic format for a URI is:
 **
-**   <uri>        := [<scheme> ":"] <body>
-**   <body>       := ["//" <auth>] ["/" <path>] ["?" <query>] ["#" <frag>]
-**   <auth>       := [<userInfo> "@"] <host> [":" <port>]
-**   <path>       := <name> ("/" <name>)*
-**   <name>       := <basename> ["." <ext>]
-**   <query>      := <queryPair> (<querySep> <queryPair>)*
-**   <querySep>   := "&" | ";"
-**   <queryPair>  := <queryKey> ["=" <queryVal>]
-**   <gen-delims> := ":" / "/" / "?" / "#" / "[" / "]" / "@"
+**     <uri>        := [<scheme> ":"] <body>
+**     <body>       := ["//" <auth>] ["/" <path>] ["?" <query>] ["#" <frag>]
+**     <auth>       := [<userInfo> "@"] <host> [":" <port>]
+**     <path>       := <name> ("/" <name>)*
+**     <name>       := <basename> ["." <ext>]
+**     <query>      := <queryPair> (<querySep> <queryPair>)*
+**     <querySep>   := "&" | ";"
+**     <queryPair>  := <queryKey> ["=" <queryVal>]
+**     <gen-delims> := ":" / "/" / "?" / "#" / "[" / "]" / "@"
 **
 ** Uris are expressed in the following forms:
 **   - Standard Form: any char allowed, general delimiters are "\" escaped
-**   - Encoded Form: '%HH' percent encoded
+**   - Encoded Form: `%HH` percent encoded
 **
 ** In standard form the full range of Unicode characters is allowed in all
 ** sections except the general delimiters which separate sections.  For
-** example '?' is barred in any section before the query, but is permissible
+** example `?` is barred in any section before the query, but is permissible
 ** in the query string itself or the fragment identifier.  The scheme must
 ** be strictly defined in terms of ASCII alphanumeric, ".", "+", or "-".
 ** Any general delimiter used outside of its normal role, must be
@@ -40,20 +40,20 @@
 ** Encoded form as defined by RFC 3986 uses a stricter set of rules for
 ** the characters allowed in each section of the URI (scheme, userInfo,
 ** host, path, query, and fragment).  Any character outside of the
-** allowed set is UTF-8 encoded into octets and '%HH' percent encoded.
+** allowed set is UTF-8 encoded into octets and `%HH` percent encoded.
 ** The encoded form should be used when working with external applications
 ** such as HTTP, HTML, or XML.
 **
 ** The Uri API is designed to work with the standard form of the Uri.
-** Access methods like `host`, `pathStr`, or `queryStr` all use standard
+** Access methods like [host], [pathStr], or [queryStr] all use standard
 ** form.  To summarize different ways of working with Uri:
-**   - `Uri.fromStr`:  parses a string from its standard form
-**   - `Uri.toStr`:    returns the standard form
-**   - `Uri.decode`:   parses a string from percent encoded form
-**   - `Uri.encode`:   translate into percent encoded form
+**   - [Uri.fromStr]\:  parses a string from its standard form
+**   - [Uri.toStr]\:    returns the standard form
+**   - [Uri.decode]\:   parses a string from percent encoded form
+**   - [Uri.encode]\:   translate into percent encoded form
 **
 ** Uri can be used to model either absolute URIs or relative references.
-** The `plus` and `relTo` methods can be used to resolve and relativize
+** The [plus] and [relTo] methods can be used to resolve and relativize
 ** relative references against a base URI.
 **
 @Serializable { simple = true }
@@ -68,7 +68,7 @@ const final class Uri
   ** Parse the specified string into a Uri.  If invalid format
   ** and checked is false return null,  otherwise throw ParseErr.
   ** Parses a standard form Unicode string into its generic parts.
-  ** It does not unescape '%' or '+' and handles normal Unicode
+  ** It does not unescape `%` or `+` and handles normal Unicode
   ** characters in the string.  If general delimiters such
   ** as the "?" or "#" characters are used outside their normal
   ** role, then they must be backslash escaped.
@@ -85,17 +85,17 @@ const final class Uri
 
   **
   ** Parse an ASCII percent encoded string into a Uri according to
-  ** RFC 3986.  All '%HH' escape sequences are translated into octets,
-  ** and then the octet sequence is UTF-8 decoded into a Str.  The '+'
+  ** RFC 3986.  All `%HH` escape sequences are translated into octets,
+  ** and then the octet sequence is UTF-8 decoded into a Str.  The `+`
   ** character in the query section is unescaped into a space.  If
   ** checked is true then throw ParseErr if the string is a malformed
   ** URI or if not encoded correctly, otherwise return null. Refer
-  ** to `fromStr` for normalization rules.
+  ** to [fromStr] for normalization rules.
   **
   static Uri? decode(Str s, Bool checked := true)
 
   **
-  ** Default value is '``'.
+  ** Default value is ````.
   **
   static const Uri defVal
 
@@ -111,16 +111,16 @@ const final class Uri
   **
   ** Decode a map of query parameters which are URL encoded according
   ** to the "application/x-www-form-urlencoded" MIME type.  This method
-  ** will unescape '%' percent encoding and '+' into space.  The parameters
-  ** are parsed into map using the same semantics as `Uri.query`.  Throw
-  ** ArgErr if the string is malformed.  See `encodeQuery`.
+  ** will unescape `%` percent encoding and `+` into space.  The parameters
+  ** are parsed into map using the same semantics as [Uri.query].  Throw
+  ** ArgErr if the string is malformed.  See [encodeQuery].
   **
   static Str:Str decodeQuery(Str s)
 
   **
   ** Encode a map of query parameters into URL percent encoding
   ** according to the "application/x-www-form-urlencoded" MIME type.
-  ** See `decodeQuery`.
+  ** See [decodeQuery].
   **
   static Str encodeQuery(Str:Str q)
 
@@ -130,19 +130,19 @@ const final class Uri
   ** long and can never be "." or "..".  The legal characters are
   ** defined as follows from RFC 3986:
   **
-  **   unreserved  =  ALPHA / DIGIT / "-" / "." / "_" / "~"
-  **   ALPHA       =  %x41-5A / %x61-7A   ; A-Z / a-z
-  **   DIGIT       =  %x30-39 ; 0-9
+  **     unreserved  =  ALPHA / DIGIT / "-" / "." / "_" / "~"
+  **     ALPHA       =  %x41-5A / %x61-7A   ; A-Z / a-z
+  **     DIGIT       =  %x30-39 ; 0-9
   **
   ** Although RFC 3986 does allow path segments to contain other
-  ** special characters such as 'sub-delims', Fantom takes a strict
+  ** special characters such as `sub-delims`, Fantom takes a strict
   ** approach to names to be used in URIs.
   **
   static Bool isName(Str name)
 
   **
   ** If the specified string is not a valid name according
-  ** to the `isName` method, then throw `NameErr`.
+  ** to the [isName] method, then throw [NameErr].
   **
   static Void checkName(Str name)
 
@@ -162,11 +162,12 @@ const final class Uri
   **
   ** Escape a token so that any delimiter for the given section
   ** is backslash escaped for use in normalized URI form.
-  ** Section must be `sectionPath`, `sectionQuery`, or `sectionFrag`.
+  ** Section must be [sectionPath], [sectionQuery], or [sectionFrag].
   **
   ** Examples:
-  **    Uri.escapeToken("a/b#c", Uri.sectionPath)   =>  "a\/b\#c"
-  **    Uri.escapeToken("a=b/c", Uri.sectionQuery)  =>  "a\=b/c"
+  **
+  **      Uri.escapeToken("a/b#c", Uri.sectionPath)   =>  "a\/b\#c"
+  **      Uri.escapeToken("a=b/c", Uri.sectionQuery)  =>  "a\=b/c"
   **
   static Str escapeToken(Str s, Int section)
 
@@ -174,31 +175,34 @@ const final class Uri
   ** Unescape all backslash escape sequences.
   **
   ** Examples:
-  **   Uri.unescapeToken(Str<|a\#b|>)  =>  "a#b"
+  **
+  **     Uri.unescapeToken(Str<|a\#b|>)  =>  "a#b"
   **
   static Str unescapeToken(Str s)
 
   **
   ** Encode a token so that any invalid character or delimiter for
   ** the given section is "%xx" percent encoding.  Section must
-  ** be `sectionPath`, `sectionQuery`, or `sectionFrag`.  Also see
-  ** `decodeToken`.
+  ** be [sectionPath], [sectionQuery], or [sectionFrag].  Also see
+  ** [decodeToken].
   **
   ** Examples:
-  **   Uri.encodeToken("a/b#c", Uri.sectionPath)   =>  "a%2Fb%23c"
-  **   Uri.encodeToken("a=b/c", Uri.sectionQuery)  =>  "a%3Db/c"
+  **
+  **     Uri.encodeToken("a/b#c", Uri.sectionPath)   =>  "a%2Fb%23c"
+  **     Uri.encodeToken("a=b/c", Uri.sectionQuery)  =>  "a%3Db/c"
   **
   static Str encodeToken(Str s, Int section)
 
   **
   ** Unescape "%xx" percent encoded string to its normalized form
   ** for the given section.  Any delimiters for the section are
-  ** backslash escaped.  Section must be `sectionPath`, `sectionQuery`,
-  ** or `sectionFrag`.  Also see `encodeToken`.
+  ** backslash escaped.  Section must be [sectionPath], [sectionQuery],
+  ** or [sectionFrag].  Also see [encodeToken].
   **
   ** Examples:
-  **   Uri.decodeToken("a%2Fb%23c", Uri.sectionPath)  =>  "a\/b\#c"
-  **   Uri.decodeToken("a%3Db/c", Uri.sectionQuery)   =>  "a\=b/c"
+  **
+  **     Uri.decodeToken("a%2Fb%23c", Uri.sectionPath)  =>  "a\/b\#c"
+  **     Uri.decodeToken("a%3Db/c", Uri.sectionQuery)   =>  "a\=b/c"
   **
   static Str decodeToken(Str s, Int section)
 
@@ -222,7 +226,7 @@ const final class Uri
   override Str toStr()
 
   **
-  ** Return `toStr`.  This method is used to enable 'toLocale' to
+  ** Return [toStr].  This method is used to enable `toLocale` to
   ** be used with duck typing across most built-in types.
   **
   Str toLocale()
@@ -231,7 +235,7 @@ const final class Uri
   ** Return the percent encoded string for this Uri according to
   ** RFC 3986.  Each section of the Uri is UTF-8 encoded into octets
   ** and then percent encoded according to its valid character set.
-  ** Spaces in the query section are encoded as '+'.
+  ** Spaces in the query section are encoded as `+`.
   **
   Str encode()
 
@@ -256,22 +260,24 @@ const final class Uri
   ** relative to their parent.
   **
   ** Examples:
-  **   `/a/b`.isDir   =>  false
-  **   `/a/b/`.isDir  =>  true
-  **   `/a/?q`.isDir  =>  true
+  **
+  **     `/a/b`.isDir   =>  false
+  **     `/a/b/`.isDir  =>  true
+  **     `/a/?q`.isDir  =>  true
   **
   Bool isDir()
 
   **
-  ** Return the origin "scheme://host[:port]" (host lowercased, default
+  ** Return the origin `"scheme://host[:port]"` (host lowercased, default
   ** port omitted), or null if relative or hostless.  Two relative URIs
   ** both yield null and thus compare equal; guard for null if you need
   ** opaque origins to never match.
   **
   ** Examples:
-  **   `http://foo/a?q`.origin      =>  "http://foo"
-  **   `https://Foo:8443/x`.origin  =>  "https://foo:8443"
-  **   `/a/b`.origin                =>  null
+  **
+  **     `http://foo/a?q`.origin      =>  "http://foo"
+  **     `https://Foo:8443/x`.origin  =>  "https://foo:8443"
+  **     `/a/b`.origin                =>  null
   **
   Str? origin()
 
@@ -280,20 +286,23 @@ const final class Uri
   ** scheme is always normalized into lowercase.
   **
   ** Examples:
-  **   `http://foo/a/b/c`.scheme      =>  "http"
-  **   `HTTP://foo/a/b/c`.scheme      =>  "http"
-  **   `mailto:who@there.com`.scheme  =>  "mailto"
+  **
+  **     `http://foo/a/b/c`.scheme      =>  "http"
+  **     `HTTP://foo/a/b/c`.scheme      =>  "http"
+  **     `mailto:who@there.com`.scheme  =>  "mailto"
   **
   Str? scheme()
 
   **
   ** The authority represents a network endpoint in the format:
-  **   [<userInfo> "@"] host [":" <port>]
+  **
+  **     [<userInfo> "@"] host [":" <port>]
   **
   ** Examples:
-  **   `http://user@host:99/`.auth  =>  "user@host:99"
-  **   `http://host/`.auth          =>  "host"
-  **   `/dir/file.txt`.auth         =>  null
+  **
+  **     `http://user@host:99/`.auth  =>  "user@host:99"
+  **     `http://host/`.auth          =>  "host"
+  **     `/dir/file.txt`.auth         =>  null
   **
   Str? auth()
 
@@ -304,12 +313,13 @@ const final class Uri
   ** absolute.
   **
   ** Examples:
-  **   `ftp://there:78/file`.host            =>  "there"
-  **   `http://www.cool.com/`.host           =>  "www.cool.com"
-  **   `http://user@10.162.255.4/index`.host =>  "10.162.255.4"
-  **   `http://[::192.9.5.5]/`.host          =>  "[::192.9.5.5]"
-  **   `//foo/bar`.host                      =>  "foo"
-  **   `/bar`.host                           =>  null
+  **
+  **     `ftp://there:78/file`.host            =>  "there"
+  **     `http://www.cool.com/`.host           =>  "www.cool.com"
+  **     `http://user@10.162.255.4/index`.host =>  "10.162.255.4"
+  **     `http://[::192.9.5.5]/`.host          =>  "[::192.9.5.5]"
+  **     `//foo/bar`.host                      =>  "foo"
+  **     `/bar`.host                           =>  null
   **
   Str? host()
 
@@ -318,8 +328,9 @@ const final class Uri
   ** the "@" character.  Its use is discouraged for security reasons.
   **
   ** Examples:
-  **   `http://brian:pass@host/`.userInfo  =>  "brian:pass"
-  **   `http://www.cool.com/`.userInfo     =>  null
+  **
+  **     `http://brian:pass@host/`.userInfo  =>  "brian:pass"
+  **     `http://www.cool.com/`.userInfo     =>  null
   **
   Str? userInfo()
 
@@ -329,8 +340,9 @@ const final class Uri
   ** return null.
   **
   ** Examples:
-  **   `http://foo:81/`.port        =>  81
-  **   `http://www.cool.com/`.port  =>  null
+  **
+  **     `http://foo:81/`.port        =>  81
+  **     `http://www.cool.com/`.port  =>  null
   **
   Int? port()
 
@@ -341,13 +353,14 @@ const final class Uri
   ** escaped.
   **
   ** Examples:
-  **   `mailto:me@there.com`  =>  ["me@there.com"]
-  **   `http://host`.path     =>  Str[,]
-  **   `http://foo/`.path     =>  Str[,]
-  **   `/`.path               =>  Str[,]
-  **   `/a`.path              =>  ["a"]
-  **   `/a/b`.path            =>  ["a", "b"]
-  **   `../a/b`.path          =>  ["..", "a", "b"]
+  **
+  **     `mailto:me@there.com`  =>  ["me@there.com"]
+  **     `http://host`.path     =>  Str[,]
+  **     `http://foo/`.path     =>  Str[,]
+  **     `/`.path               =>  Str[,]
+  **     `/a`.path              =>  ["a"]
+  **     `/a/b`.path            =>  ["a", "b"]
+  **     `../a/b`.path          =>  ["..", "a", "b"]
   **
   Str[] path()
 
@@ -357,12 +370,13 @@ const final class Uri
   ** escaped.
   **
   ** Examples:
-  **   `mailto:me@there.com`  =>  "me@there.com"
-  **   `http://host`          =>  ""
-  **   `http://foo/`.pathStr  =>  "/"
-  **   `/a`.pathStr           =>  "/a"
-  **   `/a/b`.pathStr         =>  "/a/b"
-  **   `../a/b`.pathStr       =>  "../a/b"
+  **
+  **     `mailto:me@there.com`  =>  "me@there.com"
+  **     `http://host`          =>  ""
+  **     `http://foo/`.pathStr  =>  "/"
+  **     `/a`.pathStr           =>  "/a"
+  **     `/a/b`.pathStr         =>  "/a/b"
+  **     `../a/b`.pathStr       =>  "../a/b"
   **
   Str pathStr()
 
@@ -371,15 +385,16 @@ const final class Uri
   ** pathStr is empty, then return false.
   **
   ** Examples:
-  **   `http://foo/`.isPathAbs    =>  true
-  **   `/dir/f.txt`.isPathAbs     =>  true
-  **   `dir/f.txt`.isPathAbs      =>  false
-  **   `../index.html`.isPathAbs  =>  false
+  **
+  **     `http://foo/`.isPathAbs    =>  true
+  **     `/dir/f.txt`.isPathAbs     =>  true
+  **     `dir/f.txt`.isPathAbs      =>  false
+  **     `../index.html`.isPathAbs  =>  false
   **
   Bool isPathAbs()
 
   **
-  ** Return logical-not of `isPathAbs` when path is empty
+  ** Return logical-not of [isPathAbs] when path is empty
   ** or does not start with a leading slash.
   **
   Bool isPathRel()
@@ -396,10 +411,11 @@ const final class Uri
   ** if the path is empty.
   **
   ** Examples:
-  **   `/`.name            =>  ""
-  **   `/a/file.txt`.name  =>  "file.txt"
-  **   `/a/file`.name      =>  "file"
-  **   `somedir/`.name     =>  "somedir"
+  **
+  **     `/`.name            =>  ""
+  **     `/a/file.txt`.name  =>  "file.txt"
+  **     `/a/file`.name      =>  "file"
+  **     `somedir/`.name     =>  "somedir"
   **
   Str name()
 
@@ -408,11 +424,12 @@ const final class Uri
   ** to the last dot) or "" if name is "".
   **
   ** Examples:
-  **   `/`.basename            =>  ""
-  **   `/a/file.txt`.basename  =>  "file"
-  **   `/a/file`.basename      =>  "file"
-  **   `/a/file.`.basename     =>  "file"
-  **   `..`.basename           =>  ".."
+  **
+  **     `/`.basename            =>  ""
+  **     `/a/file.txt`.basename  =>  "file"
+  **     `/a/file`.basename      =>  "file"
+  **     `/a/file.`.basename     =>  "file"
+  **     `..`.basename           =>  ".."
   **
   Str basename()
 
@@ -421,23 +438,25 @@ const final class Uri
   ** or null if name is null or name has no dot.
   **
   ** Examples:
-  **   `/`.ext            =>  null
-  **   `/a/file.txt`.ext  =>  "txt"
-  **   `/Foo.Bar`.ext     =>  "Bar"
-  **   `/a/file`.ext      =>  null
-  **   `/a/file.`.ext     =>  ""
-  **   `..`.ext           =>  null
+  **
+  **     `/`.ext            =>  null
+  **     `/a/file.txt`.ext  =>  "txt"
+  **     `/Foo.Bar`.ext     =>  "Bar"
+  **     `/a/file`.ext      =>  null
+  **     `/a/file.`.ext     =>  ""
+  **     `..`.ext           =>  null
   **
   Str? ext()
 
   **
-  ** Return the MimeType mapped by the `ext` or null if
+  ** Return the MimeType mapped by the [ext] or null if
   ** no mapping.  If this uri is to a directory, then
   ** "application/x-directory" is returned.
   **
   ** Examples:
-  **   `file.txt`  =>  text/plain
-  **   `somefile`  =>  null
+  **
+  **     `file.txt`  =>  text/plain
+  **     `somefile`  =>  null
   **
   MimeType? mimeType()
 
@@ -453,13 +472,14 @@ const final class Uri
   ** comma.
   **
   ** Examples:
-  **   `http://host/path?query`.query  =>  ["query":"true"]
-  **   `http://host/path`.query        =>  [:]
-  **   `?a=b;c=d`.query                =>  ["a":"b", "c":"d"]
-  **   `?a=b&c=d`.query                =>  ["a":"b", "c":"d"]
-  **   `?a=b;;c=d;`.query              =>  ["a":"b", "c":"d"]
-  **   `?a=b;;c`.query                 =>  ["a":"b", "c":"true"]
-  **   `?x=1&x=2&x=3`.query            =>  ["x":"1,2,3"]
+  **
+  **     `http://host/path?query`.query  =>  ["query":"true"]
+  **     `http://host/path`.query        =>  [:]
+  **     `?a=b;c=d`.query                =>  ["a":"b", "c":"d"]
+  **     `?a=b&c=d`.query                =>  ["a":"b", "c":"d"]
+  **     `?a=b;;c=d;`.query              =>  ["a":"b", "c":"d"]
+  **     `?a=b;;c`.query                 =>  ["a":"b", "c":"true"]
+  **     `?x=1&x=2&x=3`.query            =>  ["x":"1,2,3"]
   **
   Str:Str query()
 
@@ -470,11 +490,12 @@ const final class Uri
   ** or values such as "&", "=", or ";" are backslash escaped.
   **
   ** Examples:
-  **   `http://host/path?query#frag`.queryStr =>  "query"
-  **   `http://host/path?query`.queryStr      =>  "query"
-  **   `http://host/path`.queryStr            =>  null
-  **   `../foo?a=b&c=d`.queryStr              =>  "a=b&c=d"
-  **   `?a=b;c;`.queryStr                     =>  "a=b;c;"
+  **
+  **     `http://host/path?query#frag`.queryStr =>  "query"
+  **     `http://host/path?query`.queryStr      =>  "query"
+  **     `http://host/path`.queryStr            =>  null
+  **     `../foo?a=b&c=d`.queryStr              =>  "a=b&c=d"
+  **     `?a=b;c;`.queryStr                     =>  "a=b;c;"
   **
   Str? queryStr()
 
@@ -483,9 +504,10 @@ const final class Uri
   ** after the "#".  Return null if no fragment specified.
   **
   ** Examples:
-  **   `http://host/path?query#frag`.frag  =>  "frag"
-  **   `http://host/path`                  =>  null
-  **   `#h1`                               =>  "h1"
+  **
+  **     `http://host/path?query#frag`.frag  =>  "frag"
+  **     `http://host/path`                  =>  null
+  **     `#h1`                               =>  "h1"
   **
   Str? frag()
 
@@ -496,15 +518,16 @@ const final class Uri
   **
   ** Return the parent directory of this Uri or null if a parent
   ** path cannot be computed from this Uri.  If the path is not
-  ** empty, then this method is equivalent to 'getRange(0..-2)'.
+  ** empty, then this method is equivalent to `getRange(0..-2)`.
   **
   ** Examples:
-  **   `http://foo/a/b/c?q#f`.parent  =>  `http://foo/a/b/`
-  **   `/a/b/c/`.parent  =>  `/a/b/`)
-  **   `a/b/c`.parent    =>  `a/b/`
-  **   `/a`.parent       =>   `/`
-  **   `/`.parent        =>   null
-  **   `a.txt`.parent    =>   null
+  **
+  **     `http://foo/a/b/c?q#f`.parent  =>  `http://foo/a/b/`
+  **     `/a/b/c/`.parent  =>  `/a/b/`)
+  **     `a/b/c`.parent    =>  `a/b/`
+  **     `/a`.parent       =>   `/`
+  **     `/`.parent        =>   null
+  **     `a.txt`.parent    =>   null
   **
   Uri? parent()
 
@@ -513,10 +536,11 @@ const final class Uri
   ** an authority, fragment, or query they are stripped off.
   **
   ** Examples:
-  **   `http://host/a/b/c?query`.pathOnly =>  `/a/b/c`
-  **   `http://host/a/b/c/`.pathOnly      =>  `/a/b/c/`
-  **   `/a/b/c`.pathOnly                  =>  `/a/b/c`
-  **   `file.txt`.pathOnly                =>  `file.txt`
+  **
+  **     `http://host/a/b/c?query`.pathOnly =>  `/a/b/c`
+  **     `http://host/a/b/c/`.pathOnly      =>  `/a/b/c/`
+  **     `/a/b/c`.pathOnly                  =>  `/a/b/c`
+  **     `file.txt`.pathOnly                =>  `file.txt`
   **
   Uri pathOnly()
 
@@ -527,34 +551,36 @@ const final class Uri
   ** range includes the last name in the path, then the query and
   ** fragment are included otherwise they are stripped and the result
   ** includes a trailing slash.  The range can include negative indices
-  ** to access from the end of the path.  Also see `pathOnly` to create
+  ** to access from the end of the path.  Also see [pathOnly] to create
   ** a slice without the authority, query, or fragment.
   **
   ** Examples:
-  **   `http://host/a/b/c?q`[0..-1]  =>  `http://host/a/b/c?q`
-  **   `http://host/a/b/c?q`[0..-2]  =>  `http://host/a/b/`
-  **   `http://host/a/b/c?q`[0..-3]  =>  `http://host/a/`
-  **   `http://host/a/b/c?q`[0..-4]  =>  `http://host/`
-  **   `http://host/a/b/c?q`[1..-1]  =>  `b/c?q`
-  **   `http://host/a/b/c?q`[2..-1]  =>  `c?q`
-  **   `http://host/a/b/c?q`[3..-1]  =>  `?q`
-  **   `/a/b/c/`[0..1]               =>  `/a/b/`
-  **   `/a/b/c/`[0..0]               =>  `/a/`
-  **   `/a/b/c/`[1..2]               =>  `b/c/`
-  **   `/a/b/c/`[1..<2]              =>  `b/`
-  **   `/a`[0..-2]                   =>  `/`
+  **
+  **     `http://host/a/b/c?q`[0..-1]  =>  `http://host/a/b/c?q`
+  **     `http://host/a/b/c?q`[0..-2]  =>  `http://host/a/b/`
+  **     `http://host/a/b/c?q`[0..-3]  =>  `http://host/a/`
+  **     `http://host/a/b/c?q`[0..-4]  =>  `http://host/`
+  **     `http://host/a/b/c?q`[1..-1]  =>  `b/c?q`
+  **     `http://host/a/b/c?q`[2..-1]  =>  `c?q`
+  **     `http://host/a/b/c?q`[3..-1]  =>  `?q`
+  **     `/a/b/c/`[0..1]               =>  `/a/b/`
+  **     `/a/b/c/`[0..0]               =>  `/a/`
+  **     `/a/b/c/`[1..2]               =>  `b/c/`
+  **     `/a/b/c/`[1..<2]              =>  `b/`
+  **     `/a`[0..-2]                   =>  `/`
   **
   @Operator Uri getRange(Range r)
 
   **
   ** Return a slice of this Uri's path using the same semantics
-  ** as `getRange`.  However this method ensures that the result has
-  ** a leading slash in the path such that `isPathAbs` returns true.
+  ** as [getRange].  However this method ensures that the result has
+  ** a leading slash in the path such that [isPathAbs] returns true.
   **
   ** Examples:
-  **   `/a/b/c/`.getRangeToPathAbs(0..1)  =>  `/a/b/`
-  **   `/a/b/c/`.getRangeToPathAbs(1..2)  =>  `/b/c/`
-  **   `/a/b/c/`.getRangeToPathAbs(1..<2) =>  `/b/`
+  **
+  **     `/a/b/c/`.getRangeToPathAbs(0..1)  =>  `/a/b/`
+  **     `/a/b/c/`.getRangeToPathAbs(1..2)  =>  `/b/c/`
+  **     `/a/b/c/`.getRangeToPathAbs(1..<2) =>  `/b/`
   **
   Uri getRangeToPathAbs(Range r)
 
@@ -562,15 +588,16 @@ const final class Uri
   ** Return a new Uri with the specified Uri appended to this Uri.
   **
   ** Examples:
-  **   `http://foo/path` + `http://bar/`  =>  `http://bar/`
-  **   `http://foo/path?q#f` + `newpath`  =>  `http://foo/newpath`
-  **   `http://foo/path/?q#f` + `newpath` =>  `http://foo/path/newpath`
-  **   `a/b/c`  + `d`                     =>  `a/b/d`
-  **   `a/b/c/` + `d`                     =>  `a/b/c/d`
-  **   `a/b/c`  + `../../d`               =>  `d`
-  **   `a/b/c/` + `../../d`               =>  `a/d`
-  **   `a/b/c`  + `../../../d`            =>  `../d`
-  **   `a/b/c/` + `../../../d`            =>  `d`
+  **
+  **     `http://foo/path` + `http://bar/`  =>  `http://bar/`
+  **     `http://foo/path?q#f` + `newpath`  =>  `http://foo/newpath`
+  **     `http://foo/path/?q#f` + `newpath` =>  `http://foo/path/newpath`
+  **     `a/b/c`  + `d`                     =>  `a/b/d`
+  **     `a/b/c/` + `d`                     =>  `a/b/c/d`
+  **     `a/b/c`  + `../../d`               =>  `d`
+  **     `a/b/c/` + `../../d`               =>  `a/d`
+  **     `a/b/c`  + `../../../d`            =>  `../d`
+  **     `a/b/c/` + `../../../d`            =>  `d`
   **
   @Operator Uri plus(Uri toAppend)
 
@@ -578,14 +605,15 @@ const final class Uri
   ** Return a new Uri with a single path name appended to this
   ** Uri.  If asDir is true, then add a trailing slash to the Uri
   ** to make it a directory Uri.  This method is potentially
-  ** much more efficient than using `plus` when appending a
+  ** much more efficient than using [plus] when appending a
   ** single name.
   **
   ** Examples:
-  **   `dir/`.plusName("foo")        =>  `dir/foo`
-  **   `dir/`.plusName("foo", true)  =>  `dir/foo/`
-  **   `/dir/file`.plusName("foo")   =>  `/dir/foo`
-  **   `/dir/#frag`.plusName("foo")  =>  `/dir/foo`
+  **
+  **     `dir/`.plusName("foo")        =>  `dir/foo`
+  **     `dir/`.plusName("foo", true)  =>  `dir/foo/`
+  **     `/dir/file`.plusName("foo")   =>  `/dir/foo`
+  **     `/dir/#frag`.plusName("foo")  =>  `/dir/foo`
   **
   Uri plusName(Str name, Bool asDir := false)
 
@@ -594,11 +622,12 @@ const final class Uri
   ** to make it a directory Uri.
   **
   ** Examples
-  **   `http://h/dir`.plusSlash  => `http://h/dir/`
-  **   `/a`.plusSlash            =>  `/a/`
-  **   `/a/`.plusSlash           =>  `/a/`
-  **   `/a/b`.plusSlash          =>  `/a/b/`
-  **   `/a?q`.plusSlash          =>  `/a/?q`
+  **
+  **     `http://h/dir`.plusSlash  => `http://h/dir/`
+  **     `/a`.plusSlash            =>  `/a/`
+  **     `/a/`.plusSlash           =>  `/a/`
+  **     `/a/b`.plusSlash          =>  `/a/b/`
+  **     `/a?q`.plusSlash          =>  `/a/?q`
   **
   Uri plusSlash()
 
@@ -610,10 +639,11 @@ const final class Uri
   ** param is null or empty, return this instance.
   **
   ** Examples:
-  **   `http://h/`.plusQuery(["k":"v"])         =>  `http://h/?k=v`
-  **   `http://h/?k=old`.plusQuery(["k":"v"])   =>  `http://h/?k=v`
-  **   `/foo?a=b`.plusQuery(["k":"v"])          =>  `/foo?a=b&k=v`
-  **   `?a=b`.plusQuery(["k1":"v1", "k2":"v2"]) =>  `?a=b&k1=v1&k2=v2`
+  **
+  **     `http://h/`.plusQuery(["k":"v"])         =>  `http://h/?k=v`
+  **     `http://h/?k=old`.plusQuery(["k":"v"])   =>  `http://h/?k=v`
+  **     `/foo?a=b`.plusQuery(["k":"v"])          =>  `/foo?a=b&k=v`
+  **     `?a=b`.plusQuery(["k1":"v1", "k2":"v2"]) =>  `?a=b&k1=v1&k2=v2`
   **
   Uri plusQuery([Str:Str]? query)
 
@@ -621,12 +651,13 @@ const final class Uri
   ** Relativize this uri against the specified base.
   **
   ** Examples:
-  **   `http://foo/a/b/c`.relTo(`http://foo/a/b/c`) => ``
-  **   `http://foo/a/b/c`.relTo(`http://foo/a/b`)   => `c`
-  **   `/a/b/c`.relTo(`/a`)                         => `b/c`
-  **   `a/b/c`.relTo(`/a`)                          => `b/c`
-  **   `/a/b/c?q`.relTo(`/`)                        => `a/b/c?q`
-  **   `/a/x`.relTo(`/a/b/c`)                       => `../x`
+  **
+  **     `http://foo/a/b/c`.relTo(`http://foo/a/b/c`) => ``
+  **     `http://foo/a/b/c`.relTo(`http://foo/a/b`)   => `c`
+  **     `/a/b/c`.relTo(`/a`)                         => `b/c`
+  **     `a/b/c`.relTo(`/a`)                          => `b/c`
+  **     `/a/b/c?q`.relTo(`/`)                        => `a/b/c?q`
+  **     `/a/x`.relTo(`/a/b/c`)                       => `../x`
   **
   Uri relTo(Uri base)
 
@@ -636,12 +667,13 @@ const final class Uri
   ** and fragment segments.
   **
   ** Examples:
-  **   `http://host/a/b/c?q#frag`.relToAuth  => `/a/b/c?q#frag`
-  **   `http://host/a/b/c`.relToAuth         => `/a/b/c`
-  **   `http://user@host/index`.relToAuth    => `/index`
-  **   `mailto:bob@bob.net`.relToAuth        => `bob@bob.net`
-  **   `/a/b/c/`.relToAuth                   => `/a/b/c/`
-  **   `logo.png`.relToAuth                  => `logo.png`
+  **
+  **     `http://host/a/b/c?q#frag`.relToAuth  => `/a/b/c?q#frag`
+  **     `http://host/a/b/c`.relToAuth         => `/a/b/c`
+  **     `http://user@host/index`.relToAuth    => `/index`
+  **     `mailto:bob@bob.net`.relToAuth        => `bob@bob.net`
+  **     `/a/b/c/`.relToAuth                   => `/a/b/c/`
+  **     `logo.png`.relToAuth                  => `logo.png`
   **
   Uri relToAuth()
 
@@ -650,7 +682,7 @@ const final class Uri
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** If scheme is non-null, then this is convenience for `get` cast to a
+  ** If scheme is non-null, then this is convenience for [get] cast to a
   ** File.  If scheme is null then is a convenience for File.make(this)
   ** which maps to a file on the local file system.
   **
@@ -658,7 +690,7 @@ const final class Uri
 
   **
   ** Resolve this Uri into a Fantom object.
-  ** See [docLang]`docLang::Naming#resolving` for the resolve process.
+  ** See [docLang](docLang::Naming#resolving-uris) for the resolve process.
   **
   Obj? get(Obj? base := null, Bool checked := true)
 

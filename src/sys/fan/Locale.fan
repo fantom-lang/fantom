@@ -8,9 +8,9 @@
 
 **
 ** Locale models a cultural language and region/country.
-** See `docLang::Localization` for details.
+** See [docLang::Localization] for details.
 **
-** Also see `Env.locale` and `Pod.locale`.
+** Also see [Env.locale] and [Pod.locale].
 **
 @Serializable { simple = true }
 const class Locale
@@ -24,7 +24,7 @@ const class Locale
   static const Locale en 
 
   **
-  ** Parse a locale according to the `toStr` format.
+  ** Parse a locale according to the [toStr] format.
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.
   **
@@ -85,9 +85,10 @@ const class Locale
 
   **
   ** Return string representation:
-  **   <locale>  := <lang> ["-" <country>]
-  **   <lang>    := lowercase ISO 636 two letter code
-  **   <country> := uppercase ISO 3166 two letter code
+  **
+  **     <locale>  := <lang> ["-" <country>]
+  **     <lang>    := lowercase ISO 636 two letter code
+  **     <country> := uppercase ISO 3166 two letter code
   **
   override Str toStr()
 

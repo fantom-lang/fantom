@@ -39,39 +39,39 @@ enum class Weekday
   **
   ** Return the weekday as a localized string according to the
   ** specified pattern.  The pattern rules are a subset of the
-  ** `DateTime.toLocale`:
+  ** [DateTime.toLocale]\:
   **
-  **    WWW    Three letter abbr weekday  Tue
-  **    WWWW   Full weekday name          Tuesday
+  **      WWW    Three letter abbr weekday  Tue
+  **      WWWW   Full weekday name          Tuesday
   **
-  ** If pattern is null it defaults to "WWW".  Also see `localeAbbr`
-  ** and `localeFull`.
+  ** If pattern is null it defaults to "WWW".  Also see [localeAbbr]
+  ** and [localeFull].
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Get the abbreviated name for the current locale.
-  ** Configured by the 'sys::<name>Abbr' localized property.
+  ** Configured by the `sys::<name>Abbr` localized property.
   **
   Str localeAbbr()
 
   **
   ** Get the full name for the current locale.
-  ** Configured by the 'sys::<name>Full' localized property.
+  ** Configured by the `sys::<name>Full` localized property.
   **
   Str localeFull()
 
   **
   ** Get the first day of the week for the current locale.
-  ** For example in the United States, 'sun' is considered
-  ** the start of the week.  Configured by 'sys::weekdayStart'
-  ** localized property.  Also see `localeVals`.
+  ** For example in the United States, `sun` is considered
+  ** the start of the week.  Configured by `sys::weekdayStart`
+  ** localized property.  Also see [localeVals].
   **
   static Weekday localeStartOfWeek()
 
   **
   ** Get the days of the week ordered according to the
-  ** locale's start of the week.  Also see `localeStartOfWeek`.
+  ** locale's start of the week.  Also see [localeStartOfWeek].
   **
   static Weekday[] localeVals()
 

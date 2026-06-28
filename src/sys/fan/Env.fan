@@ -9,7 +9,7 @@
 
 **
 ** Env defines a pluggable class used to boot and manage a Fantom
-** runtime environment.  Use `cur` to access the current Env instance.
+** runtime environment.  Use [cur] to access the current Env instance.
 **
 abstract const class Env
 {
@@ -41,7 +41,7 @@ abstract const class Env
 
   **
   ** Name of the host platform as a string formatted
-  ** as "<os>-<arch>".  See `os` and `arch`.
+  ** as "<os>-<arch>".  See [os] and [arch].
   **
   Str platform()
 
@@ -78,21 +78,21 @@ abstract const class Env
   Str runtime()
 
   **
-  ** Returns true if the runtime is 'js' and execution environment
+  ** Returns true if the runtime is `js` and execution environment
   ** is a web browser.
   **
   Bool isBrowser()
 
   **
   ** Get the Java VM Version as a single integer (8, 9, etc.).
-  ** If the `runtime` is not java, return 0.
+  ** If the [runtime] is not java, return 0.
   **
   Int javaVersion()
 
   **
-  ** Return the default hash code of `Obj.hash` for the
+  ** Return the default hash code of [Obj.hash] for the
   ** specified object regardless of whether the object
-  ** has overridden the 'hash' method.  If null then
+  ** has overridden the `hash` method.  If null then
   ** return 0.
   **
   Int idHash(Obj? obj)
@@ -104,14 +104,14 @@ abstract const class Env
   **
   ** Get the command line arguments used to run the fan process
   ** as an immutable List of strings.  Default implementation
-  ** delegates to `parent`.
+  ** delegates to [parent].
   **
   virtual Str[] args()
 
   **
   ** Get the main method which was used to run this Fantom VM.
   ** Return null if VM was booted outside of a Fantom main method.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual Method? mainMethod()
 
@@ -122,85 +122,85 @@ abstract const class Env
   **   1. shell environment variables
   **   2. Java system properties (Java VM only obviously)
   **
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual Str:Str vars()
 
   **
   ** Poll for a platform dependent map of diagnostics name/value
   ** pairs for the current state of the VM.  Java platforms return
-  ** key values from the 'java.lang.management' interface.
-  ** Default implementation delegates to `parent`.
+  ** key values from the `java.lang.management` interface.
+  ** Default implementation delegates to [parent].
   **
   virtual Str:Obj diagnostics()
 
   **
   ** Run the garbage collector.  No guarantee is made
   ** to what the VM will actually do.  Default implementation
-  ** delegates to `parent`.
+  ** delegates to [parent].
   **
   virtual Void gc()
 
   **
   ** Get the local host name of the machine running the
   ** virtual machine process.  Default implementation
-  ** delegates to `parent`.
+  ** delegates to [parent].
   **
   virtual Str host()
 
   **
   ** Get the user name of the user account used to run the
   ** virtual machine process.  Default implementation
-  ** delegates to `parent`.
+  ** delegates to [parent].
   **
   virtual Str user()
 
   **
   ** Standard input stream.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual InStream in()
 
   **
   ** Standard output stream.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual OutStream out()
 
   **
   ** Standard error output stream.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual OutStream err()
 
   **
   ** Prompt the user to enter a command line from standard input.
-  ** This method routes to `util::Console.prompt`.
+  ** This method routes to [util::Console.prompt].
   **
   virtual Str? prompt(Str msg := "")
 
   **
   ** Prompt the user to enter a password from standard input with echo
-  ** disabled.  This method routes to `util::Console.promptPassword`.
+  ** disabled.  This method routes to [util::Console.promptPassword].
   **
   virtual Str? promptPassword(Str msg := "")
 
   **
   ** Get the home directory of Fantom installation.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual File homeDir()
 
   **
   ** Get the working directory to use for saving compiled
   ** pods and configuration information.  Default implementation
-  ** delegates to `parent`.
+  ** delegates to [parent].
   **
   virtual File workDir()
 
   **
   ** Get the temp directory to use for scratch files.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual File tempDir()
 
@@ -209,7 +209,7 @@ abstract const class Env
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Path used by `findFile` if this is a `util::PathEnv`.
+  ** Path used by [findFile] if this is a [util::PathEnv].
   **
   virtual File[] path()
 
@@ -218,9 +218,9 @@ abstract const class Env
   ** as "etc/foo/config.props".  If the URI is not relative then
   ** throw ArgErr.  If the file is not found in the environment
   ** then throw UnresolvedErr or return null based on checked flag.  If
-  ** `findAllFiles` would return multiple matches, then this method
+  ** [findAllFiles] would return multiple matches, then this method
   ** should always return the file with the highest priority.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual File? findFile(Uri uri, Bool checked := true)
 
@@ -232,24 +232,24 @@ abstract const class Env
   ** has the highest priority and the last item has the lowest
   ** priority.  If the URI is not relative then throw ArgErr.
   ** Return empty list if the file is not found in environment.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual File[] findAllFiles(Uri uri)
 
   **
   ** Resolve the pod file for the given pod name.  If the
   ** name cannot be resolved to a pod, return null.  The
-  ** default implementation routes to `findFile` to look
+  ** default implementation routes to [findFile] to look
   ** in "lib/fan" directory.
   **
   virtual File? findPodFile(Str podName)
 
   **
   ** Return the list of pod names for all the pods currently installed
-  ** in this environemnt.  This method is used by `Pod.list` and for
+  ** in this environemnt.  This method is used by [Pod.list] and for
   ** constructing the type database.  Each of these names must be
-  ** resolvable by `findPodFile`.  The default implementation routes
-  ** to `findFile` to look in the "lib/fan" directory and assumes a
+  ** resolvable by [findPodFile].  The default implementation routes
+  ** to [findFile] to look in the "lib/fan" directory and assumes a
   ** naming convention of "{name}.pod".
   **
   virtual Str[] findAllPodNames()
@@ -265,12 +265,12 @@ abstract const class Env
   ** cached type is returned.  If the script contains errors
   ** then the first CompilerErr found is thrown.  The options
   ** available:
-  **   - logLevel: the default `LogLevel` to use for logging
+  **   - logLevel: the default [LogLevel] to use for logging
   **     the compilation process and errors
-  **   - log: the `compiler::CompilerLog` to use for
+  **   - log: the [compiler::CompilerLog] to use for
   **     logging the compilation process and errors
   **   - logOut: an output stream to capture logging
-  **   - force: pass 'true' to not use caching, always forces
+  **   - force: pass `true` to not use caching, always forces
   **     a recompile
   **
   virtual Type compileScript(File f, [Str:Obj]? options := null)
@@ -281,9 +281,9 @@ abstract const class Env
   ** then the first CompilerErr found is thrown.  The options
   ** available:
   **   - podName: the name of pod created for script
-  **   - logLevel: the default `LogLevel` to use for logging
+  **   - logLevel: the default [LogLevel] to use for logging
   **     the compilation process and errors
-  **   - log: the `compiler::CompilerLog` to use for
+  **   - log: the [compiler::CompilerLog] to use for
   **     logging the compilation process and errors
   **   - logOut: an output stream to capture logging
   **   - output: The output format of the compile javascript.
@@ -296,15 +296,15 @@ abstract const class Env
   ** Lookup all the matching values for a pod indexed key.  If no
   ** matches are found return the empty list.  Indexed props are
   ** declared in your pod's build script, and coalesced into a master
-  ** index by the current environment.  See [docLang]`docLang::Env#index`
+  ** index by the current environment.  See [docLang](docLang::Env#indexed-props)
   ** for details.
   **
   virtual Str[] index(Str key)
 
   **
   ** Get listing of all keys mapped by indexed props.  The
-  ** values of each key may be resolved by the `index` method.
-  ** See [docLang]`docLang::Env#index` for details.
+  ** values of each key may be resolved by the [index] method.
+  ** See [docLang](docLang::Env#indexed-props) for details.
   ** NOTE: Java runtime only
   **
   virtual Str[] indexKeys()
@@ -324,55 +324,55 @@ abstract const class Env
   **
   ** Return a merged key/value map of all the prop files found
   ** using the following resolution rules:
-  **   1. `Env.findAllFiles`: "etc/{pod}/{uri}"
-  **   2.  Pods indexed with 'sys.envProps': "/{pod}/uri"
-  **   3. `Pod.files`: "/{uri}"
+  **   1. [Env.findAllFiles]\: "etc/{pod}/{uri}"
+  **   2. Pods indexed with `sys.envProps`: "/{pod}/uri"
+  **   3. [Pod.files]\: "/{uri}"
   **
   ** The uri must be relative.  Note that props such as locale files
   ** can be bundled into a pod for deployment and searched by adding
   ** an indexed prop with the key "sys.envProps" and the pod name as
   ** the value.  This feature does not support "config.props".
   **
-  ** The files are parsed using `InStream.readProps` and merged according
+  ** The files are parsed using [InStream.readProps] and merged according
   ** to their priority order.  If the file is defined as a resource in
   ** the pod itself, then it is treated as lowest priority.  The first
-  ** file returned by 'findAllFiles' is treated as highest priority and
+  ** file returned by `findAllFiles` is treated as highest priority and
   ** overwrites any key-value pairs defined at a lower priority.
   **
   ** The map is cached so that subsequent calls for the same path
-  ** don't require accessing the file system again.  The 'maxAge'
+  ** don't require accessing the file system again.  The `maxAge`
   ** parameter specifies the tolerance accepted before a cache
   ** refresh is performed to check if any of the files have been
   ** modified.
   **
-  ** Also see `Pod.props` and `docLang::Env`.
+  ** Also see [Pod.props] and [docLang::Env].
   **
   virtual Str:Str props(Pod pod, Uri uri, Duration maxAge)
 
   **
   ** Lookup a configuration property for given pod/key pair.
-  ** If not found then return 'def'.  Default implementation
-  ** routes to `props` using max age of one minute:
+  ** If not found then return `def`.  Default implementation
+  ** routes to [props] using max age of one minute:
   **
-  **   props(pod, `config.props`, 1min).get(key, def)
+  **     props(pod, `config.props`, 1min).get(key, def)
   **
-  ** Also see `Pod.config` and `docLang::Env`.
+  ** Also see [Pod.config] and [docLang::Env].
   **
   virtual Str? config(Pod pod, Str key, Str? def := null)
 
   **
   ** Lookup a localized property for the specified pod/key pair.
   ** The following rules are used for resolution:
-  **   1. 'props(pod, `locale/{locale}.props`)'
-  **   2. 'props(pod, `locale/{lang}.props`)'
-  **   3. 'props(pod, `locale/en.props`)'
-  **   4. Fallback to 'pod::key' unless 'def' specified
+  **   1. `props(pod, `locale/{locale}.props`)`
+  **   2. `props(pod, `locale/{lang}.props`)`
+  **   3. `props(pod, `locale/en.props`)`
+  **   4. Fallback to `pod::key` unless `def` specified
   **
-  ** Where '{locale}' is `Locale.toStr` and '{lang}' is `Locale.lang`.
+  ** Where `{locale}` is [Locale.toStr] and `{lang}` is [Locale.lang].
   ** The maxAge parameter is set to Duration.maxVal (cached for life of
   ** the VM).
   **
-  ** Also see `Pod.locale` and `docLang::Localization`.
+  ** Also see [Pod.locale] and [docLang::Localization].
   **
   virtual Str? locale(Pod pod, Str key, Str? def := "pod::key", Locale locale := Locale.cur)
 
@@ -382,22 +382,22 @@ abstract const class Env
 
   **
   ** Terminate the current virtual machine.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual Void exit(Int status := 0)
 
   **
   ** Add a function to be called on VM shutdown.  Throw
   ** NotImmutableErr if the function is not immutable.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual Void addShutdownHook(|->| hook)
 
   **
   ** Remove a shutdown hook function which was added
-  ** by `addShutdownHook`.  Remove true if hook had been
+  ** by [addShutdownHook].  Remove true if hook had been
   ** previously added and was unregistered, false otherwise.
-  ** Default implementation delegates to `parent`.
+  ** Default implementation delegates to [parent].
   **
   virtual Bool removeShutdownHook(|->| hook)
 

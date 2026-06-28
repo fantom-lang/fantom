@@ -8,7 +8,7 @@
 
 **
 ** This represents a method return type which is
-** always [this type]`docLang::Methods#thisReturns`.
+** always [this type](docLang::Methods#this-returns).
 **
 const final class This
 {

@@ -9,7 +9,7 @@
 **
 ** Duration represents a relative duration of time with nanosecond precision.
 **
-** Also see [docLang]`docLang::DateTime`.
+** Also see [docLang](docLang::DateTime).
 **
 @Serializable { simple = true }
 const final class Duration
@@ -28,7 +28,7 @@ const final class Duration
   static Duration now()
 
   **
-  ** Convenience for 'now.ticks'.
+  ** Convenience for `now.ticks`.
   **
   static Int nowTicks()
 
@@ -39,21 +39,23 @@ const final class Duration
 
   **
   ** Parse a Str into a Duration according to the Fantom
-  ** [literal format]`docLang::Literals#duration`.
+  ** [literal format](docLang::Literals#duration).
   ** If invalid format and checked is false return null,
   ** otherwise throw ParseErr.  The following suffixes
   ** are supported:
-  **   ns:   nanoseconds  (x 1)
-  **   ms:   milliseconds (x 1,000,000)
-  **   sec:  seconds      (x 1,000,000,000)
-  **   min:  minutes      (x 60,000,000,000)
-  **   hr:   hours        (x 3,600,000,000,000)
-  **   day:  days         (x 86,400,000,000,000)
+  **
+  **     ns:   nanoseconds  (x 1)
+  **     ms:   milliseconds (x 1,000,000)
+  **     sec:  seconds      (x 1,000,000,000)
+  **     min:  minutes      (x 60,000,000,000)
+  **     hr:   hours        (x 3,600,000,000,000)
+  **     day:  days         (x 86,400,000,000,000)
   **
   ** Examples:
-  **   Duration.fromStr("4ns")
-  **   Duration.fromStr("100ms")
-  **   Duration.fromStr("-0.5hr")
+  **
+  **     Duration.fromStr("4ns")
+  **     Duration.fromStr("100ms")
+  **     Duration.fromStr("-0.5hr")
   **
   static new fromStr(Str s, Bool checked := true)
 
@@ -64,7 +66,7 @@ const final class Duration
 
   **
   ** Get the duration which has elapsed since the
-  ** Fantom VM was booted which is 'now - boot'.
+  ** Fantom VM was booted which is `now - boot`.
   **
   static Duration uptime()
 
@@ -74,12 +76,12 @@ const final class Duration
   static const Duration defVal
 
   **
-  ** Min value is equivalent to 'make(Int.minVal)'.
+  ** Min value is equivalent to `make(Int.minVal)`.
   **
   static const Duration minVal
 
   **
-  ** Max value is equivalent to 'make(Int.maxVal)'.
+  ** Max value is equivalent to `make(Int.maxVal)`.
   **
   static const Duration maxVal
 
@@ -109,7 +111,7 @@ const final class Duration
 
   **
   ** Return string representation of the duration which is a valid
-  ** duration literal format suitable for decoding via `fromStr`.
+  ** duration literal format suitable for decoding via [fromStr].
   **
   override Str toStr()
 
@@ -187,7 +189,7 @@ const final class Duration
   **
   ** Return a new Duration with this duration's nanosecond
   ** ticks truncated according to the specified accuracy.
-  ** For example 'floor(1min)' will truncate this duration
+  ** For example `floor(1min)` will truncate this duration
   ** such that its seconds are 0.0.
   **
   Duration floor(Duration accuracy)
@@ -242,15 +244,16 @@ const final class Duration
   Str toCode()
 
   **
-  ** Format this duration according to ISO 8601.  Also see `fromIso`.
+  ** Format this duration according to ISO 8601.  Also see [fromIso].
   **
   ** Examples:
-  **   8ns.toIso             =>  PT0.000000008S
-  **   100ms.toIso           =>  PT0.1S
-  **   (-20sec).toIso        =>  -PT20S
-  **   3.5min.toIso          =>  PT3M30S
-  **   1day.toIso            =>  PT24H
-  **   (1day+2hr+3min).toIso =>  P1DT2H3M
+  **
+  **     8ns.toIso             =>  PT0.000000008S
+  **     100ms.toIso           =>  PT0.1S
+  **     (-20sec).toIso        =>  -PT20S
+  **     3.5min.toIso          =>  PT3M30S
+  **     1day.toIso            =>  PT24H
+  **     (1day+2hr+3min).toIso =>  P1DT2H3M
   **
   Str toIso()
 
@@ -258,11 +261,11 @@ const final class Duration
   ** Parse a duration according to ISO 8601.  If invalid format
   ** and checked is false return null, otherwise throw ParseErr.
   ** The following restrictions are enforced:
-  **   - Cannot specify a 'Y' year or 'M' month component
+  **   - Cannot specify a `Y` year or `M` month component
   **     since it is ambiguous
-  **   - Only the 'S' seconds component may include a fraction
+  **   - Only the `S` seconds component may include a fraction
   **   - Only nanosecond resolution is supported
-  ** See `toIso` for example formats.
+  ** See [toIso] for example formats.
   **
   static Duration fromIso(Str s, Bool checked := true)
 

@@ -54,12 +54,13 @@ final class StrBuf
   ** is accessed via the [] operator.  Throw IndexErr if range illegal.
   **
   ** Examples:
-  **   "abcd"[0..2]   => "abc"
-  **   "abcd"[3..3]   => "d"
-  **   "abcd"[-2..-1] => "cd"
-  **   "abcd"[0..<2]  => "ab"
-  **   "abcd"[1..-2]  => "bc"
-  **   "abcd"[4..-1]  => ""
+  **
+  **     "abcd"[0..2]   => "abc"
+  **     "abcd"[3..3]   => "d"
+  **     "abcd"[-2..-1] => "cd"
+  **     "abcd"[0..<2]  => "ab"
+  **     "abcd"[1..-2]  => "bc"
+  **     "abcd"[4..-1]  => ""
   **
   @Operator Str getRange(Range range)
 
@@ -88,7 +89,7 @@ final class StrBuf
   This addRange(Str s, Range r)
 
   **
-  ** Add string with its leading and trailing [whitespace]`Str.trim`
+  ** Add string with its leading and trailing [whitespace](Str.trim)
   ** trimmed.  Return this.
   **
   This addTrim(Str x)
@@ -116,7 +117,7 @@ final class StrBuf
   This join(Obj? x, Str sep := " ")
 
   **
-  ** Call `join` but only if x is non-null.
+  ** Call [join] but only if x is non-null.
   **
   This joinNotNull(Obj? x, Str sep := " ")
 
@@ -130,7 +131,7 @@ final class StrBuf
   This insert(Int index, Obj? x)
 
   **
-  ** Remove any trailing [whitespace]`Str.trim` in the buffer.  Return this.
+  ** Remove any trailing [whitespace](Str.trim) in the buffer.  Return this.
   **
   This trimEnd()
 

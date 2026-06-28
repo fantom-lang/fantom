@@ -46,7 +46,7 @@ const final class Decimal : Num
 
   **
   ** Compare based on decimal value, scale is not
-  ** considered for equality (unlike `equals`).
+  ** considered for equality (unlike [equals]).
   **
   override Int compare(Obj obj)
 
@@ -166,7 +166,7 @@ const final class Decimal : Num
   **
   ** Format this decimal number for the current locale.
   ** If pattern is null, then the locale's default pattern is used.
-  ** See `Float.toLocale` for pattern language and examples.
+  ** See [Float.toLocale] for pattern language and examples.
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 

@@ -54,27 +54,27 @@ enum class Month
   **
   ** Return the month as a localized string according to the
   ** specified pattern.  The pattern rules are a subset of the
-  ** `DateTime.toLocale`:
+  ** [DateTime.toLocale]\:
   **
-  **    M      One/two digit month        6, 11
-  **    MM     Two digit month            06, 11
-  **    MMM    Three letter abbr month    Jun, Nov
-  **    MMMM   Full month name            June, November
+  **      M      One/two digit month        6, 11
+  **      MM     Two digit month            06, 11
+  **      MMM    Three letter abbr month    Jun, Nov
+  **      MMMM   Full month name            June, November
   **
-  ** If pattern is null it defaults to "MMM".  Also see `localeAbbr`
-  ** and `localeFull`.
+  ** If pattern is null it defaults to "MMM".  Also see [localeAbbr]
+  ** and [localeFull].
   **
   Str toLocale(Str? pattern := null, Locale locale := Locale.cur)
 
   **
   ** Get the abbreviated name for the current locale.
-  ** Configured by the 'sys::<name>Abbr' localized property.
+  ** Configured by the `sys::<name>Abbr` localized property.
   **
   Str localeAbbr()
 
   **
   ** Get the full name for the current locale.
-  ** Configured by the 'sys::<name>Full' localized property.
+  ** Configured by the `sys::<name>Full` localized property.
   **
   Str localeFull()
 

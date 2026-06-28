@@ -11,7 +11,7 @@
 ** as "file" or "http".  Scheme handlers are registered using the pod
 ** index key "sys.uriScheme.{scheme}={qname}" where "scheme" is
 ** lowercase scheme name and "qname" is the qualified type name
-** of the subclass.  See [docLang]`docLang::Naming` for the details
+** of the subclass.  See [docLang](docLang::Naming) for the details
 ** of how scheme handling works.
 **
 abstract const class UriScheme
@@ -19,7 +19,7 @@ abstract const class UriScheme
 
   **
   ** Lookup a UriScheme for the specified scheme name.
-  ** Scheme name must be lower case - note that `Uri.scheme`
+  ** Scheme name must be lower case - note that [Uri.scheme]
   ** is always normalized to lower case.  If the scheme is
   ** not mapped and checked is true then throw UnresolvedErr
   ** otherwise return null.

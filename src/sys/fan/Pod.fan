@@ -19,7 +19,7 @@ final const class Pod
 
   **
   ** Get the pod of the given instance which is convenience
-  ** for 'Type.of(obj).pod'.  See `Type.pod`.
+  ** for `Type.of(obj).pod`.  See [Type.pod].
   **
   static Pod? of(Obj obj)
 
@@ -41,7 +41,7 @@ final const class Pod
   ** stream must contain a valid pod zip file with all the definitions.
   ** The pod is completely loaded into memory and the input stream is
   ** closed.  The pod cannot have resources.  The pod name as defined
-  ** by '/pod.def' must be uniquely named or Err is thrown.
+  ** by `/pod.def` must be uniquely named or Err is thrown.
   **
   static Pod load(InStream in)
 
@@ -85,7 +85,7 @@ final const class Pod
 
   **
   ** Get the meta name/value pairs for this pod.
-  ** See [docLang]`docLang::Pods#meta`.
+  ** See [docLang](docLang::Pods#pod-meta).
   **
   Str:Str meta()
 
@@ -111,21 +111,22 @@ final const class Pod
   **
   ** List all the resource files contained by this pod.  Resources
   ** are any files included in the pod's zip file excluding fcode
-  ** files.  The URI of these files is rooted by `uri`.  Use `file`
-  ** or `Uri.get` to lookup a resource file.
+  ** files.  The URI of these files is rooted by [uri].  Use [file]
+  ** or [Uri.get] to lookup a resource file.
   **
   File[] files()
 
   **
   ** Look up a resource file in this pod.  The URI must start
-  ** with the Pod's `uri` or be path absolute.  If the file cannot
+  ** with the Pod's [uri] or be path absolute.  If the file cannot
   ** be found then return null or throw UnresolvedErr based on checked
   ** flag.
   **
   ** Examples:
-  **   Pod.find("icons").file(`/x16/cut.png`)
-  **   Pod.find("icons").file(`fan://icons/x16/cut.png`)
-  **   `fan://icons/x16/cut.png`.get
+  **
+  **     Pod.find("icons").file(`/x16/cut.png`)
+  **     Pod.find("icons").file(`fan://icons/x16/cut.png`)
+  **     `fan://icons/x16/cut.png`.get
   **
   File? file(Uri uri, Bool checked := true)
 
@@ -136,7 +137,8 @@ final const class Pod
   **
   ** Return the fandoc chapter for this pod or null if not available.
   ** To get the summary string for the pod use:
-  **   pod.meta["pod.summary"]
+  **
+  **     pod.meta["pod.summary"]
   **
   Str? doc()
 
@@ -146,34 +148,34 @@ final const class Pod
 
   **
   ** Return the log for this pod's name.  This is a
-  ** convenience for 'Log.get(name)'.
+  ** convenience for `Log.get(name)`.
   **
   Log log()
 
   **
-  ** Convenience for `Env.props`.
+  ** Convenience for [Env.props].
   **
   Str:Str props(Uri uri, Duration maxAge)
 
   **
-  ** Convenience for `Env.config`.
+  ** Convenience for [Env.config].
   **
   Str? config(Str name, Str? def := null)
 
   **
-  ** Convenience for `Env.locale` using `Locale.cur`.
+  ** Convenience for [Env.locale] using [Locale.cur].
   **
   Str? locale(Str name, Str? def := "pod::name")
 
   **
   ** Expand a set of pods to include all their recursive dependencies.
-  ** This method does not order them; see `orderByDepends`.
+  ** This method does not order them; see [orderByDepends].
   **
   static Pod[] flattenDepends(Pod[] pods)
 
   **
   ** Order a list of pods by their dependencies.
-  ** This method does not flatten dependencies - see `flattenDepends`.
+  ** This method does not flatten dependencies - see [flattenDepends].
   **
   static Pod[] orderByDepends(Pod[] pods)
 

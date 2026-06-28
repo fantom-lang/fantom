@@ -12,7 +12,7 @@
 **
 **  - ids: each unit has one or more unique identifiers for the unit
 **    within the VM.  Units are typically defined in the unit database
-**    "etc/sys/units.txt" or can be via by the `define` method.
+**    "etc/sys/units.txt" or can be via by the [define] method.
 **    Every id assigned to a unit must be unique within the VM.
 **
 **  - name: the first identifier in the ids list is called the *name*
@@ -32,21 +32,21 @@
 **
 ** A unit identifier is limited to the following characters:
 **  - any Unicode char over 128
-**  - ASCII letters 'a' - 'z' and 'A' - 'Z'
-**  - underbar '_'
-**  - division sign '/'
-**  - percent sign '%'
-**  - dollar sign '$'
+**  - ASCII letters `a` - `z` and `A` - `Z`
+**  - underbar `_`
+**  - division sign `/`
+**  - percent sign `%`
+**  - dollar sign `$`
 **
 ** Units with equal dimensions are considered to measure the same
 ** physical quantity.  This is not always true, but good enough for
-** practice. Conversions with the 'convertTo' method are expressed with
+** practice. Conversions with the `convertTo` method are expressed with
 ** the following equations:
 **
-**   unit       = dimension * scale + offset
-**   toNormal   = scalar * scale + offset
-**   fromNormal = (scalar - offset) / scale
-**   toUnit     = fromUnit.fromNormal( toUnit.toNormal(sclar) )
+**     unit       = dimension * scale + offset
+**     toNormal   = scalar * scale + offset
+**     fromNormal = (scalar - offset) / scale
+**     toUnit     = fromUnit.fromNormal( toUnit.toNormal(sclar) )
 **
 ** As a simple, pragmatic solution for modeling Units, there are some
 ** units which don't fit this model including logarithm and angular units.
@@ -68,16 +68,16 @@ const class Unit
   ** Define a new Unit definition in the VM's unit database
   ** using the following string format:
   **
-  **   unit   := <ids> [";" <dim> [";" <scale> [";" <offset>]]]
-  **   names  := <ids> ("," <id>)*
-  **   id     := <idChar>*
-  **   idChar := 'a'-'z' | 'A'-'Z' | '_' | '%' | '/' | any char > 128
-  **   dim    := <ratio> ["*" <ratio>]*   // no whitespace allowed
-  **   ratio  := <base> <exp>
-  **   base   := "kg" | "m" | "sec" | "K" | "A" | "mol" | "cd"
-  **   exp    := <int>
-  **   scale  := <float>
-  **   offset := <float>
+  **     unit   := <ids> [";" <dim> [";" <scale> [";" <offset>]]]
+  **     names  := <ids> ("," <id>)*
+  **     id     := <idChar>*
+  **     idChar := 'a'-'z' | 'A'-'Z' | '_' | '%' | '/' | any char > 128
+  **     dim    := <ratio> ["*" <ratio>]*   // no whitespace allowed
+  **     ratio  := <base> <exp>
+  **     base   := "kg" | "m" | "sec" | "K" | "A" | "mol" | "cd"
+  **     exp    := <int>
+  **     scale  := <float>
+  **     offset := <float>
   **
   ** If the format is incorrect or any identifiers are already
   ** defined then throw an exception.
@@ -125,30 +125,30 @@ const class Unit
   override Bool equals(Obj? that)
 
   **
-  ** Return 'toStr.hash'.
+  ** Return `toStr.hash`.
   **
   override Int hash()
 
   **
-  ** Return `symbol`.
+  ** Return [symbol].
   **
   override Str toStr()
 
   **
   ** Return the list of programmatic identifiers for this unit.
-  ** The first item is always `name` and the last is always `symbol`.
+  ** The first item is always [name] and the last is always [symbol].
   **
   Str[] ids()
 
   **
   ** Return the primary name identifier of this unit.
-  ** This is always the first item in `ids`.
+  ** This is always the first item in [ids].
   **
   Str name()
 
   **
   ** Return the abbreviated symbol for this unit.
-  ** This is always the last item in `ids`.
+  ** This is always the last item in [ids].
   **
   Str symbol()
 
@@ -170,7 +170,7 @@ const class Unit
   Float offset()
 
   **
-  ** Return string format as specified by `define`.
+  ** Return string format as specified by [define].
   **
   Str definition()
 
@@ -179,7 +179,7 @@ const class Unit
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the string format of the dimension portion of `definition`
+  ** Return the string format of the dimension portion of [definition]
   **
   Str dim()
 
@@ -242,9 +242,10 @@ const class Unit
   ** Convert a scalar value from this unit to the given unit.  If
   ** the units do not have the same dimension then throw Err.
   ** For example, to convert 3km to meters:
-  **   m  := Unit("meter")
-  **   km := Unit("kilometer")
-  **   km.convertTo(3f, m)  =>  3000f
+  **
+  **     m  := Unit("meter")
+  **     km := Unit("kilometer")
+  **     km.convertTo(3f, m)  =>  3000f
   **
   Float convertTo(Float scalar, Unit unit)
 

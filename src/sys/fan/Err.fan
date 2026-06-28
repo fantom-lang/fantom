@@ -38,7 +38,7 @@ const class Err
 
   **
   ** Dump the stack trace of this exception to the specified
-  ** output stream (or 'Env.cur.err' by default).  Return this.
+  ** output stream (or `Env.cur.err` by default).  Return this.
   **
   ** The options may be used to specify the format of the output:
   **   - "indent": Int for initial number of indentation spaces

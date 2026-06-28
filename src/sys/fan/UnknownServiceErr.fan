@@ -9,7 +9,7 @@
 
 **
 ** UnknownServiceErr indicates an attempt to lookup a service
-** which is not installed.  See `Service.find`.
+** which is not installed.  See [Service.find].
 **
 const class UnknownServiceErr : Err
 {

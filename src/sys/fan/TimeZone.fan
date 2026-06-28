@@ -15,15 +15,15 @@
 ** not be 100% accurate).
 **
 ** The Fantom time zone database and naming model is based on the
-** [ZoneInfo database]`https://www.iana.org/time-zones` used by UNIX and
-** Java.  All time zones have both a simple `name` and a `fullName`.
-** The 'fullName' is the full identifier used in the zoneinfo database such
+** [ZoneInfo database](https://www.iana.org/time-zones) used by UNIX and
+** Java.  All time zones have both a simple [name] and a [fullName].
+** The `fullName` is the full identifier used in the zoneinfo database such
 ** as "America/New_York".  The simple name is the city name only such
 ** as "New_York".
 **
-** Use `cur` to get current default timezone for VM.
+** Use [cur] to get current default timezone for VM.
 **
-** Also see [docLang]`docLang::DateTime`.
+** Also see [docLang](docLang::DateTime).
 **
 @Serializable { simple = true }
 const class TimeZone
@@ -56,8 +56,8 @@ const class TimeZone
   **      return null, otherwise throw ParseErr.
   **
   ** Also see:
-  **   - [TimeZone database]`docLang::DateTime#timeZone`
-  **   - [TimeZone aliases]`docLang::DateTime#timeZoneAliases`
+  **   - [TimeZone database](docLang::DateTime#timezone)
+  **   - [TimeZone aliases](docLang::DateTime#timezone-aliases)
   **
   static new fromStr(Str name, Bool checked := true)
 
@@ -69,8 +69,8 @@ const class TimeZone
   **
   ** Relative time zone instance is "Etc/Rel".  The relative timezone
   ** has a zero offset like UTC, but is used to normalize by time of
-  ** day versus absolute time.  See `DateTime.toRel` and
-  ** [docLang]`docLang::DateTime#relTimeZone`.
+  ** day versus absolute time.  See [DateTime.toRel] and
+  ** [docLang](docLang::DateTime#relative-timezone).
   **
   static TimeZone rel()
 
@@ -78,7 +78,7 @@ const class TimeZone
   ** Get the current default TimeZone of the VM.  The default
   ** timezone is configured by the Java or .NET runtime or it
   ** can be manually configured in "etc/sys/config.props" with the
-  ** key "timezone" and any value accepted by `fromStr`.  Once
+  ** key "timezone" and any value accepted by [fromStr].  Once
   ** Fantom is booted, the default timezone cannot be changed.
   **
   static TimeZone cur()
@@ -96,7 +96,7 @@ const class TimeZone
   **
   ** Get the identifier of this time zone in the time zone
   ** database.  Name is the city name portion of the zoneinfo
-  ** `fullName` identifier such as "New_York" or "London".
+  ** [fullName] identifier such as "New_York" or "London".
   **
   Str name()
 
@@ -112,7 +112,7 @@ const class TimeZone
   ** Get the duration of time added to UTC to compute standard time
   ** in this time zone.  The offset is independent of daylight savings
   ** time - during daylight savings the actual offset is this value
-  ** plus `dstOffset`.
+  ** plus [dstOffset].
   **
   Duration offset(Int year)
 
@@ -135,7 +135,7 @@ const class TimeZone
   Str? dstAbbr(Int year)
 
   **
-  ** Return `name`.
+  ** Return [name].
   **
   override Str toStr()
 

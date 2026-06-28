@@ -20,7 +20,7 @@ const final class Charset
 
   **
   ** Attempt to lookup a Charset by name.  Use one of the predefined
-  ** methods such as `utf8` to get a standard encoding.  If charset not
+  ** methods such as [utf8] to get a standard encoding.  If charset not
   ** found and checked is false return null, otherwise throw ParseErr.
   **
   static new fromStr(Str name, Bool checked := true)
@@ -31,7 +31,7 @@ const final class Charset
   private new privateMake()
 
   **
-  ** Default value is `utf8`.
+  ** Default value is [utf8].
   **
   static Charset defVal()
 

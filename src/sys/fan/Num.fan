@@ -7,7 +7,7 @@
 //
 
 **
-** Num is the base class for number classes: `Int`, `Float`, and `Decimal`.
+** Num is the base class for number classes: [Int], [Float], and [Decimal].
 **
 abstract const class Num
 {

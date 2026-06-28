@@ -10,13 +10,13 @@
 ** Buf is used to model a block of bytes with random access.  Buf is
 ** typically backed by a block of memory, but can also be backed by
 ** a file:
-**   - `Buf.make`: backed by RAM
-**   - `File.open`: backed by random access file
-**   - `File.mmap`: backed by memory mapped file
+**   - [Buf.make]\: backed by RAM
+**   - [File.open]\: backed by random access file
+**   - [File.mmap]\: backed by memory mapped file
 **
-** Buf provides an `InStream` and `OutStream` to read and write into
-** the buffer using a configurable position accessed via `Buf.pos`
-** and `Buf.seek`.
+** Buf provides an [InStream] and [OutStream] to read and write into
+** the buffer using a configurable position accessed via [Buf.pos]
+** and [Buf.seek].
 **
 ** When using an InStream, bytes are read starting at pos where pos
 ** is advanced after each read.  The end of stream is reached when pos
@@ -25,15 +25,15 @@
 ** the existing bytes are rewritten and size is not advanced, otherwise
 ** the buffer is automatically grown and size is advanced as bytes are
 ** appended.  It is common to write bytes into the buffer using the
-** OutStream, then call `Buf.flip` to prepare the buffer to be used for reading.
+** OutStream, then call [Buf.flip] to prepare the buffer to be used for reading.
 **
-** Memory bufs may be made immutable by calling `Obj.toImmutable`.  When a
+** Memory bufs may be made immutable by calling [Obj.toImmutable].  When a
 ** buf is made immutable, the original buffer's data is cleared (to avoid
 ** copying the backing array).  All write operations on an immutable buf will
-** raise a 'ReadonlyErr'.  Reads may be performed by acquiring an InStream via
-** the `in` method.  However, read operations which require a mutable Buf
-** pos will raise ReadonlyErr too, including methods such as `seek` or `read`.
-** Use `dup` to copy an immutable buf back into a mutable buf.
+** raise a `ReadonlyErr`.  Reads may be performed by acquiring an InStream via
+** the [in] method.  However, read operations which require a mutable Buf
+** pos will raise ReadonlyErr too, including methods such as [seek] or [read].
+** Use [dup] to copy an immutable buf back into a mutable buf.
 **
 class Buf
 {
@@ -51,7 +51,8 @@ class Buf
   ** Generate a random series of bytes.
   **
   ** Example:
-  **   Buf.random(8).toHex  => "d548b54989028b90"
+  **
+  **     Buf.random(8).toHex  => "d548b54989028b90"
   **
   static Buf random(Int size)
 
@@ -103,7 +104,7 @@ class Buf
   ** The number of bytes this buffer can hold without allocating more
   ** memory.  Capacity is always greater or equal to size.  If adding a
   ** large number of bytes, it may be more efficient to manually set
-  ** capacity.  See the `trim` method to automatically set capacity to
+  ** capacity.  See the [trim] method to automatically set capacity to
   ** size.  Throw ArgErr if attempting to set capacity less than size.
   ** This method is ignored on a file buffer, and unsupported on mmap.
   **
@@ -111,9 +112,9 @@ class Buf
 
   **
   ** Return the current position for the next read or write.  The
-  ** position is always between 0 and `size`.  If pos is less than
+  ** position is always between 0 and [size].  If pos is less than
   ** size then future writes will rewrite the existing bytes without
-  ** growing size.  Change the position with `seek`.
+  ** growing size.  Change the position with [seek].
   **
   Int pos()
 
@@ -159,13 +160,14 @@ class Buf
   ** Throw IndexErr if range illegal.
   **
   ** Examples:
-  **   buf := Buf.make
-  **   buf.write(0xaa).write(0xbb).write(0xcc).write(0xdd)
-  **   buf[0..2]   => 0x[aabbcc]
-  **   buf[3..3]   => 0x[dd]
-  **   buf[-2..-1] => 0x[ccdd]
-  **   buf[0..<2]  => 0x[aabb]
-  **   buf[1..-2]  => 0x[bbcc]
+  **
+  **     buf := Buf.make
+  **     buf.write(0xaa).write(0xbb).write(0xcc).write(0xdd)
+  **     buf[0..2]   => 0x[aabbcc]
+  **     buf[3..3]   => 0x[dd]
+  **     buf[-2..-1] => 0x[ccdd]
+  **     buf[0..<2]  => 0x[aabb]
+  **     buf[1..-2]  => 0x[bbcc]
   **
   @Operator Buf getRange(Range range)
 
@@ -209,7 +211,7 @@ class Buf
   Bool close()
 
   **
-  ** Obsolete call to `sync`.  In the future this method may be
+  ** Obsolete call to [sync].  In the future this method may be
   ** relaxed to flush only memory buffers, but not force an fsync.
   **
   @Deprecated { msg = "Use sync" }
@@ -223,7 +225,7 @@ class Buf
 
   **
   ** Byte order mode for both OutStream and InStream.
-  ** Default is `Endian.big` (network byte order).
+  ** Default is [Endian.big] (network byte order).
   **
   Endian endian
 
@@ -236,7 +238,8 @@ class Buf
   ** Write the specified byte to the end of the buffer using given count.
   **
   ** Examples:
-  **   Buf().fill(0xff, 4)  =>  0xffffffff
+  **
+  **     Buf().fill(0xff, 4)  =>  0xffffffff
   **
   This fill(Int byte, Int times)
 
@@ -247,109 +250,109 @@ class Buf
   **
   ** Get the OutStream which writes to this buffer.
   ** This method always returns the same instance.
-  ** If this buffer is backed by a file, then 'out.close'
-  ** will not close the file - you must use `Buf.close`.
+  ** If this buffer is backed by a file, then `out.close`
+  ** will not close the file - you must use [Buf.close].
   **
   OutStream out()
 
   **
-  ** Convenience for [out.write]`OutStream.write`
+  ** Convenience for [out.write](OutStream.write)
   ** Return this.
   **
   This write(Int byte)
 
   **
-  ** Convenience for [out.writeBuf]`OutStream.writeBuf`
+  ** Convenience for [out.writeBuf](OutStream.writeBuf)
   ** Return this.
   **
   This writeBuf(Buf buf, Int n := buf.remaining)
 
   **
-  ** Convenience for [out.writeI2]`OutStream.writeI2`
+  ** Convenience for [out.writeI2](OutStream.writeI2)
   ** Return this.
   **
   This writeI2(Int n)
 
   **
-  ** Convenience for [out.writeI4]`OutStream.writeI4`
+  ** Convenience for [out.writeI4](OutStream.writeI4)
   ** Return this.
   **
   This writeI4(Int n)
 
   **
-  ** Convenience for [out.writeI8]`OutStream.writeI8`
+  ** Convenience for [out.writeI8](OutStream.writeI8)
   ** Return this.
   **
   This writeI8(Int n)
 
   **
-  ** Convenience for [out.writeF4]`OutStream.writeF4`
+  ** Convenience for [out.writeF4](OutStream.writeF4)
   ** Return this.
   **
   This writeF4(Float r)
 
   **
-  ** Convenience for [out.writeF8]`OutStream.writeF8`
+  ** Convenience for [out.writeF8](OutStream.writeF8)
   ** Return this.
   **
   This writeF8(Float r)
 
   **
-  ** Convenience for [out.writeDecimal]`OutStream.writeDecimal`
+  ** Convenience for [out.writeDecimal](OutStream.writeDecimal)
   ** Return this.
   **
   This writeDecimal(Decimal d)
 
   **
-  ** Convenience for [out.writeBool]`OutStream.writeBool`
+  ** Convenience for [out.writeBool](OutStream.writeBool)
   ** Return this.
   **
   This writeBool(Bool b)
 
   **
-  ** Convenience for [out.writeUtf]`OutStream.writeUtf`
+  ** Convenience for [out.writeUtf](OutStream.writeUtf)
   ** Return this.
   **
   This writeUtf(Str s)
 
   **
-  ** Convenience for [out.writeChar]`OutStream.writeChar`
+  ** Convenience for [out.writeChar](OutStream.writeChar)
   ** Return this.
   **
   This writeChar(Int char)
 
   **
-  ** Convenience for [out.writeChars]`OutStream.writeChars`
+  ** Convenience for [out.writeChars](OutStream.writeChars)
   ** Return this.
   **
   This writeChars(Str str, Int off := 0, Int len := str.size-off)
 
   **
-  ** Convenience for [out.print]`OutStream.print`
+  ** Convenience for [out.print](OutStream.print)
   ** Return this.
   **
   This print(Obj? s)
 
   **
-  ** Convenience for [out.printLine]`OutStream.printLine`
+  ** Convenience for [out.printLine](OutStream.printLine)
   ** Return this.
   **
   This printLine(Obj? obj := "")
 
   **
-  ** Convenience for [out.writeProps]`OutStream.writeProps`
+  ** Convenience for [out.writeProps](OutStream.writeProps)
   ** Return this.
   **
   This writeProps(Str:Str props)
 
   **
-  ** Convenience for [out.writeObj]`OutStream.writeObj`
+  ** Convenience for [out.writeObj](OutStream.writeObj)
   ** Return this.
   **
   This writeObj(Obj? obj, [Str:Obj]? options := null)
 
   **
-  ** Convenience for [out.writeXml]`OutStream.writeXml`
+  ** Convenience for [out.writeXml](OutStream.writeXml)
   ** Return this.
   **
   This writeXml(Str s, Int flags := 0)
@@ -361,23 +364,23 @@ class Buf
   **
   ** Get the InStream which reads from this buffer.
   ** This method always returns the same instance.
-  ** If this buffer is backed by a file, then 'in.close'
-  ** will not close the file - you must use `Buf.close`.
+  ** If this buffer is backed by a file, then `in.close`
+  ** will not close the file - you must use [Buf.close].
   **
   InStream in()
 
   **
-  ** Convenience for [in.read]`InStream.read`
+  ** Convenience for [in.read](InStream.read)
   **
   Int? read()
 
   **
-  ** Convenience for [in.readBuf]`InStream.readBuf`
+  ** Convenience for [in.readBuf](InStream.readBuf)
   **
   Int? readBuf(Buf buf, Int n)
 
   **
-  ** Convenience for [in.unread]`InStream.unread`
+  ** Convenience for [in.unread](InStream.unread)
   ** Memory backed buffers support a stack based pushback model
   ** like IO streams.  File backed buffers will simply rewrite
   ** the last position in the file.  Return this.
@@ -385,87 +388,87 @@ class Buf
   This unread(Int b)
 
   **
-  ** Convenience for [in.readAllBuf]`InStream.readAllBuf`
+  ** Convenience for [in.readAllBuf](InStream.readAllBuf)
   **
   Buf readAllBuf()
 
   **
-  ** Convenience for [in.readBufFully]`InStream.readBufFully`
+  ** Convenience for [in.readBufFully](InStream.readBufFully)
   **
   Buf readBufFully(Buf? buf, Int n)
 
   **
-  ** Convenience for [in.peek]`InStream.peek`
+  ** Convenience for [in.peek](InStream.peek)
   **
   Int? peek()
 
   **
-  ** Convenience for [in.readU1]`InStream.readU1`
+  ** Convenience for [in.readU1](InStream.readU1)
   **
   Int readU1()
 
   **
-  ** Convenience for [in.readS1]`InStream.readS1`
+  ** Convenience for [in.readS1](InStream.readS1)
   **
   Int readS1()
 
   **
-  ** Convenience for [in.readU2]`InStream.readU2`
+  ** Convenience for [in.readU2](InStream.readU2)
   **
   Int readU2()
 
   **
-  ** Convenience for [in.readS2]`InStream.readS2`
+  ** Convenience for [in.readS2](InStream.readS2)
   **
   Int readS2()
 
   **
-  ** Convenience for [in.readU4]`InStream.readU4`
+  ** Convenience for [in.readU4](InStream.readU4)
   **
   Int readU4()
 
   **
-  ** Convenience for [in.readS4]`InStream.readS4`
+  ** Convenience for [in.readS4](InStream.readS4)
   **
   Int readS4()
 
   **
-  ** Convenience for [in.readS8]`InStream.readS8`
+  ** Convenience for [in.readS8](InStream.readS8)
   **
   Int readS8()
 
   **
-  ** Convenience for [in.readF4]`InStream.readF4`
+  ** Convenience for [in.readF4](InStream.readF4)
   **
   Float readF4()
 
   **
-  ** Convenience for [in.readF8]`InStream.readF8`
+  ** Convenience for [in.readF8](InStream.readF8)
   **
   Float readF8()
 
   **
-  ** Convenience for [in.readDecimal]`InStream.readDecimal`
+  ** Convenience for [in.readDecimal](InStream.readDecimal)
   **
   Decimal readDecimal()
 
   **
-  ** Convenience for [in.readBool]`InStream.readBool`
+  ** Convenience for [in.readBool](InStream.readBool)
   **
   Bool readBool()
 
   **
-  ** Convenience for [in.readUtf]`InStream.readUtf`
+  ** Convenience for [in.readUtf](InStream.readUtf)
   **
   Str readUtf()
 
   **
-  ** Convenience for [in.readChar]`InStream.readChar`
+  ** Convenience for [in.readChar](InStream.readChar)
   **
   Int? readChar()
 
   **
-  ** Convenience for [in.unreadChar]`InStream.unreadChar`
+  ** Convenience for [in.unreadChar](InStream.unreadChar)
   ** Memory backed buffers support a stack based pushback model
   ** like IO streams.  File backed buffers will simply rewrite
   ** the last position in the file.  Return this.
@@ -473,47 +476,47 @@ class Buf
   This unreadChar(Int b)
 
   **
-  ** Convenience for [in.peekChar]`InStream.peekChar`
+  ** Convenience for [in.peekChar](InStream.peekChar)
   **
   Int? peekChar()
 
   **
-  ** Convenience for [in.readChars]`InStream.readChars`
+  ** Convenience for [in.readChars](InStream.readChars)
   **
   Str readChars(Int n)
 
   **
-  ** Convenience for [in.readLine]`InStream.readLine`
+  ** Convenience for [in.readLine](InStream.readLine)
   **
   Str? readLine(Int? max := 4096)
 
   **
-  ** Convenience for [in.readStrToken]`InStream.readStrToken`
+  ** Convenience for [in.readStrToken](InStream.readStrToken)
   **
   Str? readStrToken(Int? max := null, |Int ch->Bool|? c := null)
 
   **
-  ** Convenience for [in.readAllLines]`InStream.readAllLines`
+  ** Convenience for [in.readAllLines](InStream.readAllLines)
   **
   Str[] readAllLines()
 
   **
-  ** Convenience for [in.eachLine]`InStream.eachLine`
+  ** Convenience for [in.eachLine](InStream.eachLine)
   **
   Void eachLine(|Str line| f)
 
   **
-  ** Convenience for [in.readAllStr]`InStream.readAllStr`
+  ** Convenience for [in.readAllStr](InStream.readAllStr)
   **
   Str readAllStr(Bool normalizeNewlines := true)
 
   **
-  ** Convenience for [in.readProps]`InStream.readProps`
+  ** Convenience for [in.readProps](InStream.readProps)
   **
   Str:Str readProps()
 
   **
-  ** Convenience for [in.readObj]`InStream.readObj`
+  ** Convenience for [in.readObj](InStream.readObj)
   **
   Obj? readObj([Str:Obj]? options := null)
 
@@ -524,7 +527,7 @@ class Buf
   **
   ** Create an in-memory File instance for this buffer with the given
   ** file URI.  The buffer must be a RAM based buffer which is converted
-  ** to an immutable buffer via 'Obj.toImmutable' semantics.  The current
+  ** to an immutable buffer via `Obj.toImmutable` semantics.  The current
   ** time is used for the file's modified time.
   **
   File toFile(Uri uri)
@@ -535,8 +538,9 @@ class Buf
   ** mmap buffers.
   **
   ** Example:
-  **   Buf.make.print("\r\n").toHex   => "0d0a"
-  **   Buf.fromHex("0d0a").readAllStr => "\r\n"
+  **
+  **     Buf.make.print("\r\n").toHex   => "0d0a"
+  **     Buf.fromHex("0d0a").readAllStr => "\r\n"
   **
   Str toHex()
 
@@ -547,8 +551,9 @@ class Buf
   ** between bytes (hi and lo nibbles must be contiguous).
   **
   ** Example:
-  **   Buf.make.print("\r\n").toHex   => "0d0a"
-  **   Buf.fromHex("0d0a").readAllStr => "\r\n"
+  **
+  **     Buf.make.print("\r\n").toHex   => "0d0a"
+  **     Buf.fromHex("0d0a").readAllStr => "\r\n"
   **
   static Buf fromHex(Str s)
 
@@ -559,22 +564,24 @@ class Buf
   ** buffers; file-backed buffers will throw UnsupportedErr.
   **
   ** Example:
-  **   Buf.make.print("Fan").toBase64    => "RmFu"
-  **   Buf.fromBase64("RmFu").readAllStr => "Fan"
+  **
+  **     Buf.make.print("Fan").toBase64    => "RmFu"
+  **     Buf.fromBase64("RmFu").readAllStr => "Fan"
   **
   Str toBase64()
 
   **
   ** Encode the buffer contents from 0 to size to a
   ** Uri-safe Base64 string as defined by RFC 4648.
-  ** This means '+' is encoded as '-', and '/' is
-  ** encoded as '_'. Additionally, no padding is applied.
+  ** This means `+` is encoded as `-`, and `/` is
+  ** encoded as `_`. Additionally, no padding is applied.
   ** This method is only supported by memory-backed buffers;
   ** file-backed buffers will throw UnsupportedErr.
   **
   ** Example:
-  **   Buf.make.print("safe base64~~").toBase64    => "c2FmZSBiYXNlNjR+fg=="
-  **   Buf.make.print("safe base64~~").toBase64Uri => "c2FmZSBiYXNlNjR-fg"
+  **
+  **     Buf.make.print("safe base64~~").toBase64    => "c2FmZSBiYXNlNjR+fg=="
+  **     Buf.make.print("safe base64~~").toBase64Uri => "c2FmZSBiYXNlNjR-fg"
   **
   Str toBase64Uri()
 
@@ -585,8 +592,9 @@ class Buf
   ** set are safely ignored.
   **
   ** Example:
-  **   Buf.make.print("Fan").toBase64    => "RmFu"
-  **   Buf.fromBase64("RmFu").readAllStr => "Fan"
+  **
+  **     Buf.make.print("Fan").toBase64    => "RmFu"
+  **     Buf.fromBase64("RmFu").readAllStr => "Fan"
   **
   static Buf fromBase64(Str s)
 
@@ -597,13 +605,14 @@ class Buf
   ** buffer and return a fixed sized buffer.  Common algorithms include:
   ** "MD5", "SHA-1", and "SHA-256"; the full list supported is platform
   ** dependent.  On the Java VM, the algorithm maps to those available
-  ** via the 'java.security.MessageDigest' API.  Throw ArgErr if the
+  ** via the `java.security.MessageDigest` API.  Throw ArgErr if the
   ** algorithm is not available.  This method is unsupported for mmap
   ** buffers.
   **
   ** Example:
-  **   Buf.make.print("password").print("salt").toDigest("MD5").toHex
-  **    =>  "b305cadbb3bce54f3aa59c64fec00dea"
+  **
+  **     Buf.make.print("password").print("salt").toDigest("MD5").toHex
+  **      =>  "b305cadbb3bce54f3aa59c64fec00dea"
   **
   Buf toDigest(Str algorithm)
 
@@ -622,23 +631,25 @@ class Buf
 
   **
   ** Generate an HMAC message authentication as specified by RFC 2104.
-  ** This buffer is the data input, 'algorithm' specifies the hash digest,
-  ** and 'key' represents the secret key:
-  **   - 'H': specified by algorthim parameter - "MD5" or "SHA1"
-  **   - 'K': secret key specified by key parameter
-  **   - 'B': fixed at 64
-  **   - 'text': this instance
+  ** This buffer is the data input, `algorithm` specifies the hash digest,
+  ** and `key` represents the secret key:
+  **   - `H`: specified by algorthim parameter - "MD5" or "SHA1"
+  **   - `K`: secret key specified by key parameter
+  **   - `B`: fixed at 64
+  **   - `text`: this instance
   **
   ** The HMAC is computed using:
-  **   ipad = the byte 0x36 repeated B times
-  **   opad = the byte 0x5C repeated B times
-  **   H(K XOR opad, H(K XOR ipad, text))
+  **
+  **     ipad = the byte 0x36 repeated B times
+  **     opad = the byte 0x5C repeated B times
+  **     H(K XOR opad, H(K XOR ipad, text))
   **
   ** Throw ArgErr if the algorithm is not available.  This method is
   ** only supported for memory buffers.
   **
   ** Examples:
-  **   "hi there".toBuf.hmac("MD5", "secret".toBuf)
+  **
+  **     "hi there".toBuf.hmac("MD5", "secret".toBuf)
   **
   Buf hmac(Str algorithm, Buf key)
 
@@ -650,7 +661,7 @@ class Buf
   ** Parameters:
   **   - password: secret used to generate resulting cryptographic key
   **   - salt: cryptographic salt
-  **   - iterations: number of iterations (the 'c' term)
+  **   - iterations: number of iterations (the `c` term)
   **   - keyLen: desired length of key in bytes (not bits!)
   **
   ** Throw ArgErr if the algorithm is not available.  This method is
