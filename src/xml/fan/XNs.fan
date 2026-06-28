@@ -9,8 +9,8 @@
 **
 ** Models a XML Namespace uri.  It also defines a prefix to
 ** use to qualify element and attribute names.  XNs instances
-** are passed to the constructor of `XElem` and `XAttr`.  You
-** can define the namespace attribute via `XAttr.makeNs`.
+** are passed to the constructor of [XElem] and [XAttr].  You
+** can define the namespace attribute via [XAttr.makeNs].
 **
 @Js const class XNs
 {

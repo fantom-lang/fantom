@@ -21,7 +21,7 @@
   }
 
   **
-  ** Return the `XNodeType.text`.
+  ** Return the [XNodeType.text].
   **
   override XNodeType nodeType() { return XNodeType.text }
 
@@ -35,7 +35,7 @@
   **
   ** If true then this text node was read/will be
   ** written as a CDATA section.  If set to true, then
-  ** `val` must not contain the "]]>" substring.
+  ** [val] must not contain the "]]>" substring.
   **
   Bool cdata
 
@@ -58,7 +58,7 @@
 
   **
   ** Write this node to the output stream.  If this node
-  ** is set to be written as a CDATA section and the `val`
+  ** is set to be written as a CDATA section and the [val]
   ** string contains the "]]>" substring then throw IOErr.
   **
   override Void write(OutStream out)

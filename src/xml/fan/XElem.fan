@@ -19,7 +19,7 @@
   **
   ** Construct an element with unqualified local name and optional
   ** XML namespace.  The XNs instance should be defined as an
-  ** attribute on this or an ancestor element (see `XAttr.makeNs`).
+  ** attribute on this or an ancestor element (see [XAttr.makeNs]).
   **
   new make(Str name, XNs? ns := null)
   {
@@ -32,16 +32,17 @@
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the `XNodeType.elem`.  Note that during pull
-  ** parsing XParser will return 'elemStart' and 'elemEnd'.
+  ** Return the [XNodeType.elem].  Note that during pull
+  ** parsing XParser will return `elemStart` and `elemEnd`.
   **
   override XNodeType nodeType() { return XNodeType.elem }
 
   **
   ** Unqualified local name of the element.  If an XML namespace prefix
   ** was specified, then this is everything after the colon:
-  **   <foo>    =>  foo
-  **   <x:foo>  =>  foo
+  **
+  **     <foo>    =>  foo
+  **     <x:foo>  =>  foo
   **
   Str name
 
@@ -73,8 +74,9 @@
   **
   ** Qualified name of the element.  This is the full name including
   ** the XML namespace prefix:
-  **   <foo>    =>  foo
-  **   <x:foo>  =>  x:foo
+  **
+  **     <foo>    =>  foo
+  **     <x:foo>  =>  x:foo
   **
   Str qname()
   {
@@ -109,7 +111,7 @@
   XAttr[] attrs() { return attrList.ro }
 
   **
-  ** Iterate each attribute in the `attrs` list.
+  ** Iterate each attribute in the [attrs] list.
   **
   Void eachAttr(|XAttr attr, Int index| f)
   {
@@ -141,7 +143,8 @@
   **
   ** Add an attribute to this element.  Return this.
   ** This method is a convenience for:
-  **   add(XAttr(name, val, ns))
+  **
+  **     add(XAttr(name, val, ns))
   **
   This addAttr(Str name, Str val, XNs? ns := null)
   {
@@ -161,7 +164,7 @@
   }
 
   **
-  ** Remove the attribute at the specified index into `attrs`.
+  ** Remove the attribute at the specified index into [attrs].
   ** Return the removed attribute.
   **
   XAttr removeAttrAt(Int index)
@@ -190,7 +193,7 @@
 
   **
   ** Iterate each child element, text, and PI node in
-  ** the `children` list.
+  ** the [children] list.
   **
   Void each(|XNode child, Int index| f)
   {
@@ -236,7 +239,7 @@
 
   **
   ** Remove the child element, text, or PI at the specified
-  ** index into `children`.  Return the removed node.
+  ** index into [children].  Return the removed node.
   **
   XNode removeAt(Int index)
   {

@@ -101,12 +101,12 @@
   **
   ** Advance the parser to the next node and return the node type.
   ** Return the current node type:
-  **   - `XNodeType.elemStart`
-  **   - `XNodeType.elemEnd`
-  **   - `XNodeType.text`
-  **   - `XNodeType.pi`
+  **   - [XNodeType.elemStart]
+  **   - [XNodeType.elemEnd]
+  **   - [XNodeType.text]
+  **   - [XNodeType.pi]
   **   - null indicates end of stream
-  ** Also see `nodeType`.
+  ** Also see [nodeType].
   **
   XNodeType? next()
   {
@@ -195,7 +195,7 @@
   **
   ** Skip parses all the content until reaching the end tag
   ** of the specified depth.  When this method returns, the
-  ** next call to `next` will return the node immediately
+  ** next call to [next] will return the node immediately
   ** following the end tag.
   **
   Void skip(Int toDepth := depth)
@@ -215,11 +215,11 @@
 
   **
   ** Get the current node type constant which is always the
-  ** result of the last call to `next`.  Node type will be:
-  **   - `XNodeType.elemStart`
-  **   - `XNodeType.elemEnd`
-  **   - `XNodeType.text`
-  **   - `XNodeType.pi`
+  ** result of the last call to [next].  Node type will be:
+  **   - [XNodeType.elemStart]
+  **   - [XNodeType.elemEnd]
+  **   - [XNodeType.text]
+  **   - [XNodeType.pi]
   **   - null indicates end of stream
   **
   XNodeType? nodeType { private set }
@@ -232,9 +232,9 @@
   Int depth := -1 { private set }
 
   **
-  ** Get the current element if `nodeType` is 'elemStart' or
-  ** 'elemEnd'.  If `nodeType` is 'text' or 'pi' then this is the
-  ** parent element.  After 'elemEnd' this XElem instance is no
+  ** Get the current element if [nodeType] is `elemStart` or
+  ** `elemEnd`.  If [nodeType] is `text` or `pi` then this is the
+  ** parent element.  After `elemEnd` this XElem instance is no
   ** longer valid and will be reused for further processing.  If
   ** depth is -1 return null.
   **
@@ -246,8 +246,8 @@
 
   **
   ** Get the element at the specified depth.  Depth must be between 0
-  ** and `depth` inclusively.  Calling 'elemAt(0)' will return the
-  ** root element and 'elemAt(depth)' returns the current element.
+  ** and [depth] inclusively.  Calling `elemAt(0)` will return the
+  ** root element and `elemAt(depth)` returns the current element.
   ** If depth is invalid IndexErr is thrown.
   **
   XElem elemAt(Int depth)
@@ -257,10 +257,10 @@
   }
 
   **
-  ** If the current type is 'text' the XText instance used to
-  ** store the character data.  After a call to `next`
+  ** If the current type is `text` the XText instance used to
+  ** store the character data.  After a call to [next]
   ** this XText instance is no longer valid and will be reused for
-  ** further processing.  If the current type is not 'text' then
+  ** further processing.  If the current type is not `text` then
   ** return null.
   **
   XText? text()
@@ -270,7 +270,7 @@
   }
 
   **
-  ** if the current node type is 'pi' return the XPi instance
+  ** if the current node type is `pi` return the XPi instance
   ** otherwise return null.
   **
   XPi? pi()
@@ -359,7 +359,7 @@
   }
 
   **
-  ** Parse '[28]' DocType := <!DOCTYPE ... >
+  ** Parse `[28]` DocType := <!DOCTYPE ... >
   **
   private Void parseDocType()
   {
@@ -419,7 +419,7 @@
   }
 
   **
-  ** Parse a '[40]' element start production.  We are passed
+  ** Parse a `[40]` element start production.  We are passed
   ** the first character after the < (beginning of name).
   **
   private Void parseElemStart(Int c)
@@ -510,7 +510,7 @@
   }
 
   **
-  ** Parse a '[41]' attribute production.  We are passed
+  ** Parse a `[41]` attribute production.  We are passed
   ** the first character of the attribute name.  Return
   ** if the attribute had a unresolved namespace prefix.
   **
@@ -569,7 +569,7 @@
 
   **
   ** Parse an element or attribute name of the
-  ** format '[<prefix>:]name' and store result in
+  ** format `[<prefix>:]name` and store result in
   ** prefix and name fields.
   **
   private Void parseQName(Int c)
@@ -590,7 +590,7 @@
   }
 
   **
-  ** Parse a quoted string token "..." or '...'
+  ** Parse a quoted string token "..." or `...`
   **
   private Str parseQuotedStr(Int quote)
   {
@@ -686,7 +686,7 @@
   }
 
   **
-  ** Parse '[16]' PI := <? ... ?>
+  ** Parse `[16]` PI := <? ... ?>
   **
   private Void parsePi()
   {
@@ -710,7 +710,7 @@
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Skip '[3]' Space = ' ' '\n' '\r' '\t'
+  ** Skip `[3]` Space = ` ` `\n` `\r` `\t`
   ** Return true if one or more space chars found.
   **
   private Bool skipSpace()
@@ -728,7 +728,7 @@
   }
 
   **
-  ** Skip '[15]' Comment := <!-- ... -->
+  ** Skip `[15]` Comment := <!-- ... -->
   **
   private Void skipComment()
   {
@@ -873,7 +873,7 @@
   **
   ** Map the prefix string to a XNs instance declared
   ** in the current element or ancestor element.  If the prefix cannot
-  ** be found and checked if false then return 'unresolvedNs', otherwise
+  ** be found and checked if false then return `unresolvedNs`, otherwise
   ** throw exception.
   **
   private XNs prefixToNs(Str prefix, Int line, Int col, Bool checked)

@@ -7,15 +7,15 @@
 //
 
 **
-** XNode is the base class for `XElem` and `XText`.
+** XNode is the base class for [XElem] and [XText].
 **
 @Js abstract class XNode
 {
 
   **
   ** Return the node type enum.  Note that XElem always
-  ** returns 'elem', but that during pull parsing XParser
-  ** will return 'elemStart' and 'elemEnd'.
+  ** returns `elem`, but that during pull parsing XParser
+  ** will return `elemStart` and `elemEnd`.
   **
   abstract XNodeType nodeType()
 
@@ -36,7 +36,7 @@
   XNode? parent { internal set }
 
   **
-  ** Conveniece to `write` to an in-memory string.
+  ** Conveniece to [write] to an in-memory string.
   **
   Str writeToStr()
   {
@@ -57,20 +57,20 @@
 **************************************************************************
 
 **
-** Enumerates the type of `XNode` and current node of `XParser`.
+** Enumerates the type of [XNode] and current node of [XParser].
 **
 @Js enum class XNodeType
 {
-  ** Document node type by `XDoc.nodeType`
+  ** Document node type by [XDoc.nodeType]
   doc,
 
-  ** Element node type returned by `XElem.nodeType`
+  ** Element node type returned by [XElem.nodeType]
   elem,
 
-  ** Text node type returned by `XText.nodeType`
+  ** Text node type returned by [XText.nodeType]
   text,
 
-  ** Processing instruction node type returned by `XPi.nodeType`
+  ** Processing instruction node type returned by [XPi.nodeType]
   pi,
 
   ** Start of element used by XParser when pull parsing.

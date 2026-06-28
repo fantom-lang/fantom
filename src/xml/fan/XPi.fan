@@ -22,7 +22,7 @@
   }
 
   **
-  ** Return the `XNodeType.pi`.
+  ** Return the [XNodeType.pi].
   **
   override XNodeType nodeType() { return XNodeType.pi }
 

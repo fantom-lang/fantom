@@ -44,13 +44,15 @@
   **
   ** Unqualified local name of the attribute.  If an XML namespace
   ** prefix was specified, then this is everything after the colon:
-  **   foo='val'   =>  foo
-  **   x:foo='val' =>  foo
+  **
+  **     foo='val'   =>  foo
+  **     x:foo='val' =>  foo
   **
   ** Note that attributes which start with "xml:" and "xmlns:"
   ** are not treated as a namespace:
-  **   xml:lang='en' => xml:lang
-  **   XML:lang='en' => xml:lang
+  **
+  **     xml:lang='en' => xml:lang
+  **     XML:lang='en' => xml:lang
   **
   const Str name
 
@@ -83,8 +85,9 @@
   **
   ** Qualified name of the attribute.  This is the full
   ** name including the XML namespace prefix:
-  **   foo='val'   =>  foo
-  **   x:foo='val' =>  x:foo
+  **
+  **     foo='val'   =>  foo
+  **     x:foo='val' =>  x:foo
   **
   Str qname()
   {

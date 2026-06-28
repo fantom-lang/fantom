@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Return the `XNodeType.doc`.
+  ** Return the [XNodeType.doc].
   **
   override XNodeType nodeType() { return XNodeType.doc }
 
@@ -75,8 +75,8 @@
 
   **
   ** Add a node to the document.  If the node is an XElem then it
-  ** is defined as the `root` element, otherwise the child must be
-  ** a `XPi`.  Return this.
+  ** is defined as the [root] element, otherwise the child must be
+  ** a [XPi].  Return this.
   **
   @Operator This add(Obj child)
   {
