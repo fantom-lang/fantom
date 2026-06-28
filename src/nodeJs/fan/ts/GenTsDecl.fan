@@ -9,7 +9,6 @@
 
 using compiler
 using compilerJs
-using fandoc
 
 **
 ** Generate TypeScript declaration file for a pod
@@ -34,13 +33,11 @@ class GenTsDecl
     this.out = out
     this.pod = pod
     this.opts = opts
-    this.docWriter = TsDocWriter(out)
   }
 
   private OutStream out
   private CPod pod
   private [Str:Obj?] opts
-  private TsDocWriter docWriter
   private Str[]? deps := null
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,8 +99,6 @@ class GenTsDecl
   {
     isList := false
     isMap  := false
-
-    setupDoc(pod.name, type.name)
 
     // Parameterization of List & Map
     classParams := ""
@@ -375,12 +370,6 @@ class GenTsDecl
     return "${typePod}.${typeName}"
   }
 
-  private Void setupDoc(Str pod, Str type)
-  {
-    docWriter.pod = pod
-    docWriter.type = type
-  }
-
   private Void printDoc(CNode node, Int indent)
   {
     doc := node.doc
@@ -393,12 +382,15 @@ class GenTsDecl
     }
     if (text == null) return
 
-    parser := FandocParser()
-    parser.silent = true
-    fandoc := parser.parse(node.toStr, text.in)
-
-    docWriter.indent = indent
-    fandoc.write(docWriter)
+    // doc comments are authored in markdown, which is also the format JSDoc/
+    // TSDoc expects, so emit the text directly as a JSDoc comment block
+    ind := Str.spaces(indent)
+    out.print("$ind/**\n")
+    text.splitLines.each |line|
+    {
+      out.print(line.isEmpty ? "$ind *\n" : "$ind * $line\n")
+    }
+    out.print("$ind */\n")
   }
 
   private Void printJsObj()
