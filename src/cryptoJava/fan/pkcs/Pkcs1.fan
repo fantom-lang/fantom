@@ -10,8 +10,8 @@ using crypto
 using asn1
 
 **
-** See [RFC 3447 (PKCS #1: RSA Cryptography Specifications Version 2.1)]`https://tools.ietf.org/html/rfc3447`
-** See [RSA Cryptography Standard v2.2]`http://www.emc.com/emc-plus/rsa-labs/pkcs/files/h11300-wp-pkcs-1v2-2-rsa-cryptography-standard.pdf`
+** See [RFC 3447 (PKCS #1: RSA Cryptography Specifications Version 2.1)](https://tools.ietf.org/html/rfc3447)
+** See [RSA Cryptography Standard v2.2](http://www.emc.com/emc-plus/rsa-labs/pkcs/files/h11300-wp-pkcs-1v2-2-rsa-cryptography-standard.pdf)
 **
 const mixin Pkcs1
 {

@@ -9,7 +9,7 @@
 using asn1
 
 **
-** Parse a DN using the grammar defined by [RFC4514]`https://tools.ietf.org/html/rfc4514`.
+** Parse a DN using the grammar defined by [RFC4514](https://tools.ietf.org/html/rfc4514).
 **
 class DnParser
 {

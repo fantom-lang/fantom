@@ -264,31 +264,38 @@ internal mixin JwPubKey
 **
 ** https://tools.ietf.org/html/rfc7517
 **
-**  {
-**    "kid": "1234example=",
-**    "alg": "RS256",
-**    "kty": "RSA",
-**    "e": "AQAB",
-**    "n": "1234567890",
-**    "use": "sig"
-**  }
+** {
 **
-**  Key ID (kid) - The kid is a hint that indicates which key was used to
-**                 secure the JSON web signature (JWS) of the token.
+**      "kid": "1234example=",
+**      "alg": "RS256",
+**      "kty": "RSA",
+**      "e": "AQAB",
+**      "n": "1234567890",
+**      "use": "sig"
 **
-**  Algorithm (alg) - The alg header parameter represents the cryptographic
-**                    algorithm that is used to secure the ID token.
+** }
 **
-**  Key type (kty) - The kty parameter identifies the cryptographic algorithm
-**                   family that is used with the key.
+** Key ID (kid) - The kid is a hint that indicates which key was used to
 **
-**  RSA exponent (e) - The e parameter contains the exponent value for the RSA
-**                     public key. It is represented as a Base64urlUInt-encoded value.
+**                   secure the JSON web signature (JWS) of the token.
 **
-**  RSA modulus (n) - The n parameter contains the modulus value for the RSA public
-**                    key. It is represented as a Base64urlUInt-encoded value.
+** Algorithm (alg) - The alg header parameter represents the cryptographic
 **
-**  Use (use) - The use parameter describes the intended use of the public key.
+**                      algorithm that is used to secure the ID token.
+**
+** Key type (kty) - The kty parameter identifies the cryptographic algorithm
+**
+**                     family that is used with the key.
+**
+** RSA exponent (e) - The e parameter contains the exponent value for the RSA
+**
+**                       public key. It is represented as a Base64urlUInt-encoded value.
+**
+** RSA modulus (n) - The n parameter contains the modulus value for the RSA public
+**
+**                      key. It is represented as a Base64urlUInt-encoded value.
+**
+** Use (use) - The use parameter describes the intended use of the public key.
 **
 @NoDoc
 internal class JwRsaPubKey : JwPubKey, JwaConst
@@ -327,34 +334,41 @@ internal class JwRsaPubKey : JwPubKey, JwaConst
 **
 ** https://tools.ietf.org/html/rfc7517
 **
-**  {
-**    "kid": "1234example=",
-**    "alg": "ES256",
-**    "kty": "EC",
-**    "crv": "P-256",
-**    "x": "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
-**    "y": "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
-**    "use": "sig"
-**  }
+** {
 **
-**  Key ID (kid) - The kid is a hint that indicates which key was used to
-**                 secure the JSON web signature (JWS) of the token.
+**      "kid": "1234example=",
+**      "alg": "ES256",
+**      "kty": "EC",
+**      "crv": "P-256",
+**      "x": "f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+**      "y": "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
+**      "use": "sig"
 **
-**  Algorithm (alg) - The alg header parameter represents the cryptographic
-**                    algorithm that is used to secure the ID token.
+** }
 **
-**  Key type (kty) - The kty parameter identifies the cryptographic algorithm
-**                   family that is used with the key.
+** Key ID (kid) - The kid is a hint that indicates which key was used to
 **
-**  Curve (crv) - The crv parameter identifies the cryptographic curve used with the key.
+**                   secure the JSON web signature (JWS) of the token.
 **
-**  X coordinate (x) - The x parameter contains the x coordinate of the EC Point.
-**                     It is represented as a Base64urlUInt-encoded value.
+** Algorithm (alg) - The alg header parameter represents the cryptographic
 **
-**  Y coordinate (y) - The y parameter contains the y coordinate of the EC Point.
-**                     It is represented as a Base64urlUInt-encoded value.
+**                      algorithm that is used to secure the ID token.
 **
-**  Use (use) - The use parameter describes the intended use of the public key.
+** Key type (kty) - The kty parameter identifies the cryptographic algorithm
+**
+**                     family that is used with the key.
+**
+** Curve (crv) - The crv parameter identifies the cryptographic curve used with the key.
+**
+** X coordinate (x) - The x parameter contains the x coordinate of the EC Point.
+**
+**                       It is represented as a Base64urlUInt-encoded value.
+**
+** Y coordinate (y) - The y parameter contains the y coordinate of the EC Point.
+**
+**                       It is represented as a Base64urlUInt-encoded value.
+**
+** Use (use) - The use parameter describes the intended use of the public key.
 **
 
 internal class JwEcPubKey : JwPubKey, JwaConst
@@ -394,19 +408,23 @@ internal class JwEcPubKey : JwPubKey, JwaConst
 **
 ** https://tools.ietf.org/html/rfc7517
 **
-**  {
-**    "kty": "oct",
-**    "k": "secret",
-**    "kid": "HMAC Key"
-**  }
+** {
 **
-**  Key ID (kid) - The kid is a hint that indicates which key was used to
-**                 secure the JSON web signature (JWS) of the token.
+**      "kty": "oct",
+**      "k": "secret",
+**      "kid": "HMAC Key"
 **
-**  Key type (kty) - The kty parameter identifies the cryptographic algorithm
-**                   family that is used with the key.
+** }
 **
-**  Shared key (k) - The k parameter contains the shared key.
+** Key ID (kid) - The kid is a hint that indicates which key was used to
+**
+**                   secure the JSON web signature (JWS) of the token.
+**
+** Key type (kty) - The kty parameter identifies the cryptographic algorithm
+**
+**                     family that is used with the key.
+**
+** Shared key (k) - The k parameter contains the shared key.
 **
 
 internal class JwHmacKey : JwaConst

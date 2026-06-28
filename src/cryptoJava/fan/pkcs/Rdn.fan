@@ -52,7 +52,7 @@ const class Rdn
 
   ** Get the attribute value as an ASN.1 string type according
   ** to its specification. If the attribute type is not recognized,
-  ** then encode it as a `Utf8Str`.
+  ** then encode it as a [Utf8Str].
   AsnObj asnVal()
   {
     switch (shortName)

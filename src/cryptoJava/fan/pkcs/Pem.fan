@@ -162,22 +162,26 @@ class PemReader : PemConst
     return BerWriter.toBuf(root).toBase64
   }
 
-  ** Converts EC Private Key ASN.1 encoding format defined in [SEC 1]`https://www.secg.org/sec1-v2.pdf`
-  ** as well as [RFC5915]`https://www.rfc-editor.org/rfc/rfc5915` to PKCS#8
+  ** Converts EC Private Key ASN.1 encoding format defined in [SEC 1](https://www.secg.org/sec1-v2.pdf)
+  ** as well as [RFC5915](https://www.rfc-editor.org/rfc/rfc5915) to PKCS#8
   **
   ** ECPrivateKey ::= SEQUENCE {
-  **   version INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
-  **   privateKey OCTET STRING,
-  **   parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,
-  **   publicKey  [1] BIT STRING OPTIONAL
+  **
+  **     version INTEGER { ecPrivkeyVer1(1) } (ecPrivkeyVer1),
+  **     privateKey OCTET STRING,
+  **     parameters [0] ECParameters {{ NamedCurve }} OPTIONAL,
+  **     publicKey  [1] BIT STRING OPTIONAL
+  **
   ** }
   **
-  ** ECParameters format is defined in [RFC5480]`https://www.rfc-editor.org/rfc/rfc5480`
+  ** ECParameters format is defined in [RFC5480](https://www.rfc-editor.org/rfc/rfc5480)
   **
   ** ECParameters ::= CHOICE {
-  **   namedCurve         OBJECT IDENTIFIER
-  **   -- implicitCurve   NULL
-  **   -- specifiedCurve  SpecifiedECDomain
+  **
+  **     namedCurve         OBJECT IDENTIFIER
+  **     -- implicitCurve   NULL
+  **     -- specifiedCurve  SpecifiedECDomain
+  **
   ** }
   private Str ecSEC1ToP8(Str base64)
   {

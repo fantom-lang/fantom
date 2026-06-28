@@ -381,8 +381,9 @@ class JCsrTest : CryptoTest
   **
   ** Parse otherName from DER-encoded bytes
   ** AnotherName ::= SEQUENCE {
-  **     type-id    OBJECT IDENTIFIER,
-  **     value      [0] EXPLICIT ANY DEFINED BY type-id }
+  **
+  **       type-id    OBJECT IDENTIFIER,
+  **       value      [0] EXPLICIT ANY DEFINED BY type-id }
   **
   private Map parseOtherName(Buf buf)
   {

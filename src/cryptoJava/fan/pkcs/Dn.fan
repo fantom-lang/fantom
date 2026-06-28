@@ -18,7 +18,7 @@ const class Dn
   **
   ** Create a Dn from an a Str representation of a distinguished
   ** name. The distinguised name must be specified using the grammar
-  ** defined in [RFC4514]`https://tools.ietf.org/html/rfc4514`.
+  ** defined in [RFC4514](https://tools.ietf.org/html/rfc4514).
   **
   static new fromStr(Str name)
   {
@@ -56,7 +56,7 @@ const class Dn
 // Dn
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get the `Rdn` at the index.
+  ** Get the [Rdn] at the index.
   @Operator
   Rdn get(Int index) { rdns[index] }
 
