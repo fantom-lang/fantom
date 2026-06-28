@@ -82,8 +82,8 @@ features is the ability to call a method using strong or dynamic
 typing.  If you call a method via the "." operator, the call is type
 checked by the compiler and compiled into an efficient opcode.
 But you can also use the "->" operator to call a method dynamically.
-This operator skips type checking, and can be used to implement [duck
-typing]`http://en.wikipedia.org/wiki/Duck_typing`.  The "->" operator
+This operator skips type checking, and can be used to implement
+[duck typing]`http://en.wikipedia.org/wiki/Duck_typing`.  The "->" operator
 actually routes to the 'Obj.trap' method which can be overridden to
 build all sorts of nifty dynamic designs.
 
@@ -251,3 +251,4 @@ frustrating about Java:
     problems such as file lengths, Unicode characters, or very large lists.
     Although much of the Java and C# implementation is 16-bit chars and 32-bit
     ints under the covers, the Fantom APIs themselves are future proof.
+

@@ -9,9 +9,9 @@
 Overview [#overview]
 ********************
 Functions are first class objects in Fantom modeled via the `sys::Func`
-class.  Functions have a signature formally defined as a set of *parameter
-types* and a *return type*.  Functions which don't return an object have
-a 'Void' return type.  Functions are created one of three ways:
+class.  Functions have a signature formally defined as a set of
+*parameter types* and a *return type*.  Functions which don't return an
+object have a 'Void' return type.  Functions are created one of three ways:
 
   1. **Methods**: all methods are really [wrappers]`#methods`
      for a function

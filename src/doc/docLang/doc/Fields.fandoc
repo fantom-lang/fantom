@@ -108,12 +108,11 @@ this rule).
 Calculated Fields [#calculated]
 *******************************
 In most cases, the compiler automatically declares storage memory for
-your field.  However if the compiler detects that a field's storage
-is never accessed then no memory is allocated.  We call these *calculated
-fields*.  Calculated fields must declare both an explicit getter and
-setter which does not use the '&' operator to access the field.  Note
-that assigning an initial value using ':=' implicitly uses the storage
-operator and will allocate storage.
+your field.  However if the compiler detects that a field's storage is
+never accessed then no memory is allocated.  We call these *calculated fields*.
+Calculated fields must declare both an explicit getter and setter which does
+not use the '&' operator to access the field.  Note that assigning an initial
+value using ':=' implicitly uses the storage operator and will allocate storage.
 
 Const Fields [#const]
 ********************************
@@ -363,3 +362,4 @@ for the Java VM and C# for the .NET CLR.  Native fields use the 'native'
 keyword and follow similiar rules to absract fields - no storage or
 accessors.  The infrastructure for supporting native fields is discussed
 in the `Natives` chapter.
+

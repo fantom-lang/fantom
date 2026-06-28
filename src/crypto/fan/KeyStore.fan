@@ -55,8 +55,8 @@ const mixin KeyStore
   **
   ** Optionally add entry attributes (recommended attribute names are ASN.1 OIDs):
   **
-  **  ["1.3.6.1.4.1.99999.1": "Custom attribute",
-  **   "1.2.840.113549.1.9.20": "friendlyName"]
+  **   ["1.3.6.1.4.1.99999.1": "Custom attribute",
+  **    "1.2.840.113549.1.9.20": "friendlyName"]
   abstract This setPrivKey(Str alias, PrivKey priv, Cert[] chain, [Str:Str] attrs := [:])
 
   ** Adds a `TrustEntry` to the keystore with the given alias and returns it.
@@ -131,3 +131,4 @@ const mixin TrustEntry : KeyStoreEntry
   ** Get the trusted certificate from this entry.
   abstract Cert cert()
 }
+

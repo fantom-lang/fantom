@@ -92,8 +92,8 @@ type as a container of child objects. Collections provide a concise syntax
 for nesting zero or more children items in the same scope as any serialized fields.
 This allows you to nest configuration items and children inside one set of
 curly braces.  Every collection type must support an 'add' and 'each' method
-which are used by 'readObj' and 'writeObj' respectively.  See the [example
-code]`#syntaxCollection`.
+which are used by 'readObj' and 'writeObj' respectively.  See the
+[example code]`#syntaxCollection`.
 
 Streams [#streams]
 ******************
@@ -285,3 +285,4 @@ The formal grammar of the Fantom serialization formats:
 The 'literal', 'using', and 'type' productions use the same [grammar]`Grammar`
 as the Fantom programming language.  However the 'type' production can
 never be a function type.
+

@@ -34,10 +34,10 @@ repo implementations too.    To open a Repo using a given URI:
 
 PodSpec [#podSpec]
 ******************
-We model a given pod version with the `fanr::PodSpec` class.  A pod
-spec maps to a specific pod file with a unique version and its [pod
-metadata]`docLang::Pods#meta` which includes its summary description
-and dependencies.
+We model a given pod version with the `fanr::PodSpec` class.  A
+pod spec maps to a specific pod file with a unique version and
+its [pod metadata]`docLang::Pods#meta` which includes its summary
+description and dependencies.
 
 Env [#env]
 **********
@@ -67,5 +67,4 @@ Here are the basic commands we use for working with fanr:
   - **uninstall**: delete pods from local env
 
 These operations are covered in more detail in the `Tool` chapter.
-
 

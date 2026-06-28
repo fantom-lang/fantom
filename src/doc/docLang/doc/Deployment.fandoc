@@ -23,9 +23,9 @@ also provide a full implementation of the 'sys' pod:
 This translation occurs at runtime.  The sys APIs are implemented in
 normal Java code.
 
-- Likewise the .NET runtime reads pods files and emits the fcode as IL
-at runtime.  The sys APIs are implemented in normal C# code. *Note that
-.NET is unsupported at this time*
+- Likewise the .NET runtime reads pods files and emits the fcode as
+IL at runtime.  The sys APIs are implemented in normal C# code.
+*Note that .NET is unsupported at this time*
 
 The following illustration depicts this architecture:
 
@@ -55,10 +55,9 @@ declared in your [build script]`docTools::Build#buildPod` and are
 available at runtime via [Pod.depends]`sys::Pod.depends`.
 
 Dependencies are modeled via the `sys::Depend` class.  They are declared
-in a string format which includes the pod name and a set of *version
-constraints*.  Version constraints can be a simple version number,
-a version number and anything greater, or a version range.  See Depend's
-[fandoc]`sys::Depend` for the format details.
+in a string format which includes the pod name and a set of *version constraints*.
+Version constraints can be a simple version number, a version number and anything
+greater, or a version range.  See Depend's [fandoc]`sys::Depend` for the format details.
 
 Dependencies are used in two ways.  At compile time dependencies
 determine which pods can be imported via the [using]`CompilationUnits#using`
