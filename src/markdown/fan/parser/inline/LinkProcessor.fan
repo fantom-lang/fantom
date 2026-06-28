@@ -12,31 +12,31 @@
 ** When inline parsing is run, each parsed link/image is passed to the processor.
 ** This includes links like these:
 **
-** pre>
+** ```fantom
 ** [text](destination)
 ** [text]
 ** [text][]
 ** [text][label]
-** <pre
+** ```
 ** And images
-** pre>
+** ```fantom
 ** ![text](destination)
 ** ![text]
 ** ![text][]
 ** ![text][label]
-** <pre
-** See `LinkInfo` for accessing various parts of the parsed link/image
+** ```
+** See [LinkInfo] for accessing various parts of the parsed link/image
 **
 ** The processor can then inspect the link/image and decide what to do with it by
-** returning the appropriate `LinkResult`. If it returns null, the next registered
+** returning the appropriate [LinkResult]. If it returns null, the next registered
 ** processor is tried. If none of them apply, the link is handled as it normally would.
 **
 @Js
 const mixin LinkProcessor
 {
-  ** 'info': information about the parsed link/image
-  ** 'scanner': the scanner at the current position aftger the parsed link/image
-  ** 'cx': context for inline parsing
+  ** `info`: information about the parsed link/image
+  ** `scanner`: the scanner at the current position aftger the parsed link/image
+  ** `cx`: context for inline parsing
   **
   ** Return what to do with the link/image, e.g. do nothing (try next processor),
   ** wrap the text in a node, or replace the link/image with a node.
@@ -91,25 +91,25 @@ class LinkResult
   static new none() { null }
 
   ** Wrap the link text in a node. This is the normal behavior for links, e.g. for this:
-  ** pre>
+  ** ```fantom
   ** [my *text*](destination)
-  ** <pre
-  ** The text is 'my *text*', a text node and emphasis. The text is wrapped in a
+  ** ```
+  ** The text is `my *text*`, a text node and emphasis. The text is wrapped in a
   ** link node, which means the text is added as child nodes to it.
   **
-  ** 'node': the node to which the link text nodes will be added as child nodes
-  ** 'pos': the position to continue parsing from
+  ** `node`: the node to which the link text nodes will be added as child nodes
+  ** `pos`: the position to continue parsing from
   static new wrapTextIn(Node node, Position pos) { LinkResult(true, node, pos) }
 
   ** Replace the link with a node, e.g. for this:
-  ** pre>
+  ** ```fantom
   ** [^foo]
-  ** <pre
+  ** ```
   ** The processor could decide to create a footnote reference node instead which
   ** replaces the link.
   **
-  ** 'node': the node to replace the link with
-  ** 'pos': the position to continue parsing from
+  ** `node`: the node to replace the link with
+  ** `pos`: the position to continue parsing from
   static new replaceWith(Node node, Position pos) { LinkResult(false, node, pos) }
 
   private new priv_make(Bool wrap, Node node, Position pos)
@@ -124,7 +124,7 @@ class LinkResult
   Node node { private set }
   const Position pos
 
-  ** If a `LinkInfo.marker` is present, include it in processing
+  ** If a [LinkInfo.marker] is present, include it in processing
   ** (i.e. treat it the same way as the brackets).
   Bool includeMarker := false
 }

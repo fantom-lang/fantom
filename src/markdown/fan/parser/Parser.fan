@@ -66,18 +66,18 @@ const class Parser
 // Parse
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience to parse a file into a `Document`. If source span parsing
-  ** is enabled the nodes will have access to the file location using `Node.loc`.
+  ** Convenience to parse a file into a [Document]. If source span parsing
+  ** is enabled the nodes will have access to the file location using [Node.loc].
   Document parseFile(File file) { parseStream(file.in).withFileLoc(FileLoc(file.pathStr)) }
 
-  ** Convenience for 'parseStream(text.in)'
+  ** Convenience for `parseStream(text.in)`
   Document parse(Str text) { parseStream(text.in) }
 
   ** Parse the contents of the input stream into a tree of nodes.
   **
-  ** pre>
+  ** ```fantom
   ** doc := Parser().parse("Hello *Markdown*!")
-  ** <pre
+  ** ```
   **
   Document parseStream(InStream in)
   {
@@ -110,7 +110,7 @@ final class ParserBuilder
 {
   internal new make() { }
 
-  ** Get the configured `Parser`
+  ** Get the configured [Parser]
   Parser build() { Parser(this) }
 
   internal IncludeSourceSpans includeSourceSpans := IncludeSourceSpans.none
@@ -126,20 +126,20 @@ final class ParserBuilder
   **
   ** By default, we will recognize and parse the following set of "block" elements:
   **
-  ** - `Heading` ('#')
-  ** - `HtmlBlock` ('<html></html>')
-  ** - `ThematicBreak` (Horizontal Rule) ('---')
-  ** - `FencedCode` ('```')
-  ** - `IndentedCode`
-  ** - `BlockQuote` ('>')
-  ** - `ListBlock` (Ordered/Unordered List) ('1. / *')
+  ** - [Heading] (`#`)
+  ** - [HtmlBlock] (`<html></html>`)
+  ** - [ThematicBreak] (Horizontal Rule) (`---`)
+  ** - [FencedCode] (`````)
+  ** - [IndentedCode]
+  ** - [BlockQuote] (`>`)
+  ** - [ListBlock] (Ordered/Unordered List) (`1. / *`)
   **
   ** To parse only a subset of the features listed above, pass a lsit of each feature's
-  ** associated `Block` type.
+  ** associated [Block] type.
   **
   ** Example: to parse only headings and lists:
   **
-  **   Parser.builder.withEnabledBlockTypes([Heading#, ListBlock#])
+  **     Parser.builder.withEnabledBlockTypes([Heading#, ListBlock#])
   **
   This withEnabledBlockTypes(Type[] enabledBlockTypes)
   {
@@ -163,9 +163,9 @@ final class ParserBuilder
   ** or overriding built-in parsing.
   **
   ** Note that parsers are triggered based on a special character as specified by
-  ** `InlineContentParserFactory.triggerChars`. It is possible to register multiple
+  ** [InlineContentParserFactory.triggerChars]. It is possible to register multiple
   ** parsers for the same character, or even for some built-in special character
-  ** such as '`'. The custom parsers are tried first in the order in which they are
+  ** such as ```. The custom parsers are tried first in the order in which they are
   ** registered, and then the built-in ones.
   This customInlineContentParserFactory(InlineContentParserFactory factory)
   {
@@ -203,12 +203,12 @@ final class ParserBuilder
   }
 
   ** Add a custom link marker for link processing. A link marker is a character like
-  ** '!' which, if it appears before the '[' of a link, changes the meaning of the link.
+  ** `!` which, if it appears before the `[` of a link, changes the meaning of the link.
   **
-  ** If a link marker followed by a valid link is parsed, the `LinkInfo` that is passed
-  ** to the `LinkProcessor` will have its `LinkInfo.marker` set. A link processor
-  ** should check the `Text.literal` and then do any processing, and will probably
-  ** want to use `LinkResult.includeMarker`.
+  ** If a link marker followed by a valid link is parsed, the [LinkInfo] that is passed
+  ** to the [LinkProcessor] will have its [LinkInfo.marker] set. A link processor
+  ** should check the [Text.literal] and then do any processing, and will probably
+  ** want to use [LinkResult.includeMarker].
   This linkMarker(Int marker)
   {
     linkMarkers = linkMarkers.add(marker).unique

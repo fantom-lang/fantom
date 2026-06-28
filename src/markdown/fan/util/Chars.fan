@@ -13,7 +13,7 @@
 @Js
 internal final class Chars
 {
-  ** Find the index of 'c' in 's' starting at 'startIndex' or return -1
+  ** Find the index of `c` in `s` starting at `startIndex` or return -1
   ** if not found.
   static Int find(Int c, Str s, Int startIndex)
   {
@@ -31,13 +31,13 @@ internal final class Chars
     skipSpaceTab(s, 0, s.size) == s.size
   }
 
-  ** Return true if the string has a non-space (' ') in it
+  ** Return true if the string has a non-space (` `) in it
   static Bool hasNonSpace(Str s)
   {
     s.any |ch| { ch != ' ' }
   }
 
-  ** Return true if the code point at index 'i' in text is a letter
+  ** Return true if the code point at index `i` in text is a letter
   **
   ** TODO:OPEN - this does not conform to java reference impl
   ** which uses Character.codePointAt and Character.isLetter and
@@ -45,15 +45,15 @@ internal final class Chars
   static Bool isLetter(Str text, Int i) { text[i].isAlpha }
 
   ** Is the code point an ISO control character. A character is considered
-  ** an ISO control character if its code is in the range '\u0000' through '\u001F' or
-  ** in the range '\u007F' through '\u009F'.
+  ** an ISO control character if its code is in the range `\u0000` through `\u001F` or
+  ** in the range `\u007F` through `\u009F`.
   static Bool isIsoControl(Int ch)
   {
     (0x00 <= ch && ch <= 0x1F) ||
     (0x7F <= ch && ch <= 0x9F)
   }
 
-  ** Skip all 'skip' characters in 's' between startIndex (inclusive) and
+  ** Skip all `skip` characters in `s` between startIndex (inclusive) and
   ** endIndex (exclusive). Return the index of the first non-skip character
   ** or endIndex if reached.
   static Int skip(Int skip, Str s, Int startIndex, Int endIndex)
@@ -65,7 +65,7 @@ internal final class Chars
     return endIndex
   }
 
-  ** Skip spaces and tabs in 's' between startIndex (inclusive) and
+  ** Skip spaces and tabs in `s` between startIndex (inclusive) and
   ** endIndex (exclusive). Return the index of the first non-space-or-tab, or
   ** endIndex if reached.
   static Int skipSpaceTab(Str s, Int startIndex := 0, Int endIndex := s.size)
@@ -115,7 +115,7 @@ internal final class Chars
   **
   ** So for now we only support ASCII punctuation 😢
   **
-  ** See `https://www.compart.com/en/unicode/category`
+  ** See [https://www.compart.com/en/unicode/category]
   static Bool isPunctuation(Int cp)
   {
     switch (cp)
@@ -171,7 +171,7 @@ internal final class Chars
   }
 
   ** Check whether the provided code point is a unicode whitespace character as defined
-  ** in the [spec]`https://spec.commonmark.org/0.31.2/#unicode-whitespace-character`
+  ** in the [spec](https://spec.commonmark.org/0.31.2/#unicode-whitespace-character)
   static Bool isWhitespace(Int cp)
   {
     switch (cp)

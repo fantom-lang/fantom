@@ -19,7 +19,7 @@ internal class HtmlInlineParser : InlineContentParser
 
   private static const |Int->Bool| asciiLetter := |Int c->Bool| { c.isAlpha }
   ** spec: a tag name consists of an ASCII letter followed by zero or more ASCII letters,
-  ** digits, or hyphens ('-').
+  ** digits, or hyphens (`-`).
   private static const |Int->Bool| tagNameStart := |Int c->Bool| { c.isAlpha }
   private static const |Int->Bool| tagNameContinue := |Int c->Bool| { c.isAlphaNum || c == '-' }
 

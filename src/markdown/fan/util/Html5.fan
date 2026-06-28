@@ -11,9 +11,9 @@ internal final class Html5
 {
   ** Convert an html5 entity to its string value, or return the input
   ** If the corresponding codepoint is not valid, or the entity does not
-  ** refer to a named entity, return '\uFFFD'
+  ** refer to a named entity, return `\uFFFD`
   **
-  **   Html5.entityToStr("&lt;") => "<"
+  **     Html5.entityToStr("&lt;") => "<"
   static Str entityToStr(Str input)
   {
     // expect &<name>;

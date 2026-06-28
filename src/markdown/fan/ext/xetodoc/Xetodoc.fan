@@ -13,12 +13,12 @@ using util
 ** The xetodoc class contains several utilities for configuring and rendering
 ** xetodoc markdown.
 **
-** pre>
+** ```fantom
 ** Configure Xetodoc with custom link reseolver and warning handler
 ** xetodoc := Xetodoc
 **   .withLinkResolver(MyLinkResolver())
 **   .onWarn |node, msg| { echo("${node.loc}: ${msg}") }
-** <pre
+** ```
 **
 @Js
 @NoDoc
@@ -50,8 +50,8 @@ class Xetodoc
   |Node node, Str msg|? onWarnCb { protected set }
 
   ** Configure the callback for warnings. The node and a warning message are passed.
-  ** The location of the warning can be obtained from the node by using `Node.loc` or
-  ** inspecting the `Node.sourceSpans`. Currently warnings are only generated when
+  ** The location of the warning can be obtained from the node by using [Node.loc] or
+  ** inspecting the [Node.sourceSpans]. Currently warnings are only generated when
   ** block or inline HTML nodes are found in the xetdoc source.
   This onWarn(|Node node, Str msg| cb) { this.onWarnCb = cb; return this }
 
@@ -59,11 +59,11 @@ class Xetodoc
 // Parsing
 //////////////////////////////////////////////////////////////////////////
 
-  ** Parse Xetodoc source into a `Document`
+  ** Parse Xetodoc source into a [Document]
   Document parse(Str source) { parser.parse(source) }
 
   ** Get a fully-configured Xetodoc parser. Note that if the parser is re-used, and
-  ** you configured a `LinkResolver`, then the link resolver should be idempotent.
+  ** you configured a [LinkResolver], then the link resolver should be idempotent.
   Parser parser()
   {
     builder := parserBuilder
@@ -74,7 +74,7 @@ class Xetodoc
     return builder.build
   }
 
-  ** Get a `ParserBuilder` with all the standard Xetodoc features enabled.
+  ** Get a [ParserBuilder] with all the standard Xetodoc features enabled.
   ParserBuilder parserBuilder()
   {
     Parser.builder
@@ -97,7 +97,7 @@ class Xetodoc
   ** Get a Xetotodc html renderer
   HtmlRenderer htmlRenderer() { htmlBuilder.build }
 
-  ** Get an `HtmlRendererBuilder` with all the standard Xetodoc features enabled.
+  ** Get an [HtmlRendererBuilder] with all the standard Xetodoc features enabled.
   HtmlRendererBuilder htmlBuilder()
   {
     HtmlRenderer.builder
@@ -155,15 +155,15 @@ internal class WarnProcessor : PostProcessor, Visitor
 ** Xetodoc is a curated set of features and extensions to the CommonMark syntax.
 **
 ** - Disables rendering of inline and block HTML nodes
-** - Adds syntactic sugar for [foo] to be parsed as [foo](foo)
-** - Enables the following extensions: `ImgAttrsExt`, and `TablesExt`
+** - Adds syntactic sugar for `[foo]` to be parsed as `[foo](foo)`
+** - Enables the following extensions: [ImgAttrsExt], and [TablesExt]
 ** - Enables embedding videos in HTML using image links using video scheme links
-**   - ![alt text](video://youtu.be/abc?si=123)
-**   - ![alt text](video://loom/def?sid=456)
+**   - `![alt text](video://youtu.be/abc?si=123)`
+**   - `![alt text](video://loom/def?sid=456)`
 **
-** The `Xetodoc` class is the recommended way to configure and render Xetodoc source.
+** The [Xetodoc] class is the recommended way to configure and render Xetodoc source.
 **
-** pre>
+** ```fantom
 ** // Configure xetodoc with a custom link resolver
 ** xetodoc  := Xetodoc().withLinkResolver(MyCustomLinkResolver())
 **
@@ -174,7 +174,7 @@ internal class WarnProcessor : PostProcessor, Visitor
 **
 ** // Generate HTML using convenience method
 ** html = xetodoc.toHtml("Hello, `Xetodoc`!")
-** <pre
+** ```
 **
 @Js
 @NoDoc internal const class XetodocExt : MarkdownExt
@@ -252,10 +252,10 @@ internal const class BracketLinkProcessor : CoreLinkProcessor
 **
 ** A link to an embedded video. Uses markdown image syntax.
 ** Supported uris for the video are:
-** - Loom: ![Alt text](video://loom/<id>?sid=<sid>)
+** - Loom: `![Alt text](video://loom/<id>?sid=<sid>)`
 ** - YouTube:
-**   1. ![Alt text](video://youtu.be/<id>?si=<si>)
-**   1. ![Alt text](video://youtube/<id>?si=<si>)
+**   1. `![Alt text](video://youtu.be/<id>?si=<si>)`
+**   1. `![Alt text](video://youtube/<id>?si=<si>)`
 **
 ** You may specify additional query params and those will be applied as attributes
 ** to the rendered iframe in HTML

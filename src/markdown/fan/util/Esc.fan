@@ -23,7 +23,7 @@ internal final class Esc
   static const Regex entity_or_esc_char :=
     Regex("\\\\${escapable}|${entity}", "i")
 
-  ** From RFC 3986 (see "reserved", "unreserved") except don't escape '[' or ']'
+  ** From RFC 3986 (see "reserved", "unreserved") except don't escape `[` or `]`
   ** to be compatible with JS encodeURI
   static const Regex escape_in_uri :=
     Regex("(%[a-fA-F0-9]{0,2}|[^:/?#@!\$&'()*+,;=a-zA-Z0-9\\-._~])");

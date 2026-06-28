@@ -7,7 +7,7 @@
 //
 
 **
-** Base class for `Link` and `Image` nodes
+** Base class for [Link] and [Image] nodes
 **
 @Js
 abstract class LinkNode : Node
@@ -45,9 +45,9 @@ abstract class LinkNode : Node
 **
 ** Example for an inline link in a CommonMark document
 **
-** pre>
+** ```fantom
 ** [link](/uri "title")
-** <pre
+** ```
 **
 ** Note that the text in the link can contain inline formatting, so it could also
 ** contain an image or emphasis, etc.
@@ -59,7 +59,7 @@ class Link : LinkNode
   {
   }
 
-  ** Flag that indicates this was specified as '[uri]' instead of '(text)[uri]'
+  ** Flag that indicates this was specified as `[uri]` instead of `(text)[uri]`
   @NoDoc Bool shortcut
 }
 
@@ -68,17 +68,17 @@ class Link : LinkNode
 **************************************************************************
 
 ** An image
-** pre>
+** ```fantom
 ** ![foo](/url "title")
-** <pre
+** ```
 **
-** The corresponding `LinkNode` would look like this:
-** - 'destination' => '/uri'
-** - 'title' => "title"
-** - A `Text` child node with 'literal' that returns "link"
+** The corresponding [LinkNode] would look like this:
+** - `destination` => `/uri`
+** - `title` => "title"
+** - A [Text] child node with `literal` that returns "link"
 **
 ** Note that the text in the link can contain inline formatting, so it could
-** also contain an `Image` or `Emphasis`, etc.
+** also contain an [Image] or [Emphasis], etc.
 @Js
 class Image : LinkNode
 {
@@ -94,12 +94,12 @@ class Image : LinkNode
 **
 ** A link reference definition
 **
-** pre>
+** ```fantom
 ** [foo]: /url "title"
-** <pre
+** ```
 **
 ** They can be referenced anywhere else in the document to produce a link using
-** '[foo]'. The definitions themselves are usually not rendered in the final output.
+** `[foo]`. The definitions themselves are usually not rendered in the final output.
 **
 @Js
 class LinkReferenceDefinition : Block

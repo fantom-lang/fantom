@@ -32,7 +32,7 @@ mixin PostProcessor
   override Void visitLink(Link link) { resolve(link) }
   override Void visitImage(Image img) { resolve(img) }
 
-  ** Resolve the given `LinkNode`. This will be called prior to any rendering
+  ** Resolve the given [LinkNode]. This will be called prior to any rendering
   ** for the given node and provides an opportunity to modify the link destination,
   ** mark the link as code, and change the link display text.
   protected abstract Void resolve(LinkNode linkNode)
@@ -71,10 +71,10 @@ mixin PostProcessor
     heading.anchor = toAnchor(words.join)
   }
 
-  ** Generate an id per [GitHub markdown rules]`https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links`
+  ** Generate an id per [GitHub markdown rules](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#section-links)
   **
   ** 1. Letters are converted to lower case
-  ** 2. Spaces are replaced by hypens ('-'). Any other whitespace character
+  ** 2. Spaces are replaced by hypens (`-`). Any other whitespace character
   **    or punctuation characters are removed
   ** 3. Leading and trailing whitespace are removed
   ** 4. Markup formatting is removed leaving only the contents

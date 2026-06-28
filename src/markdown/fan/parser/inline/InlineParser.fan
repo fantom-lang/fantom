@@ -56,7 +56,7 @@ mixin InlineParserState
   ** character that the inline parser was added for).
   **
   ** Note that this always returns the same instance, if you want to backtrack you
-  ** need to use `Scanner.pos` and `Scanner.setPos`.
+  ** need to use [Scanner.pos] and [Scanner.setPos].
   abstract Scanner? scanner()
 }
 
@@ -72,11 +72,11 @@ const mixin InlineContentParserFactory
 {
   ** An inline content parser needs to have a special "trigger" character which
   ** activates it. When this character is encountered during inline parsing,
-  ** `InlineContentParser.tryParse` is called wit hthe current parser state.
+  ** [InlineContentParser.tryParse] is called wit hthe current parser state.
   ** It can also register for more than one trigger character
   abstract Int[] triggerChars()
 
-  ** Create an `InlineContentParser` that will do the parsing. Create is called
+  ** Create an [InlineContentParser] that will do the parsing. Create is called
   ** once per text snippet of inline content inside block structures, and then
   ** called each time a trigger character is encountered.
   abstract InlineContentParser create()
@@ -86,15 +86,15 @@ const mixin InlineContentParserFactory
 ** InlineContentParser
 **************************************************************************
 
-** Parser for a type of inline content. Registered via a `InlineContentParserFactory`
-** and created by its `InlineContentParserFactory.create` method. The lifetime of this is
+** Parser for a type of inline content. Registered via a [InlineContentParserFactory]
+** and created by its [InlineContentParserFactory.create] method. The lifetime of this is
 ** tied to each inline content snippet that is parsed, as a new instance is created for
 ** each.
 @Js
 mixin InlineContentParser
 {
   ** Try to parse inline content starting from the current position. Note that the
-  ** character at the current position is one of `InlineContentParserFactory.triggerChars`
+  ** character at the current position is one of [InlineContentParserFactory.triggerChars]
   ** of the factory that created this parser.
   **
   ** For a given inline content snippet that is being parsed, this method can be called

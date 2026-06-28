@@ -45,7 +45,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
   ** on a separate stack, different from the algorithm described in the spec.)
   private Delimiter? lastDelim
 
-  ** Top opening bracket '[' or '!['
+  ** Top opening bracket `[` or `![`
   private Bracket? lastBracket
 
 //////////////////////////////////////////////////////////////////////////
@@ -298,7 +298,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
     return node
   }
 
-  ** If next character is '[', add a bracket to the stack.
+  ** If next character is `[`, add a bracket to the stack.
   ** Otherwise, return null
   private Node[]? parseLinkMarker()
   {
@@ -640,7 +640,7 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
     return text
   }
 
-  ** Scan a sequence of characters with code 'delimChar' and return information about the
+  ** Scan a sequence of characters with code `delimChar` and return information about the
   ** number of delimiters and wheter they are positioned such that they can open and/or
   ** close emphasis or strong emphasis.
   **
@@ -820,11 +820,11 @@ internal class DefaultInlineParser : InlineParser, InlineParserState
   }
 
   ** Remove the delimiter and the corresponding text node.
-  ** For used delimiters, e.g. '*' in '*foo*'
+  ** For used delimiters, e.g. `*` in `*foo*`
   private Void removeDelimiterAndNodes(Delimiter delim) { removeDelimiter(delim) }
 
   ** Remove the delimiter but keep the corresponding node as text.
-  ** For unused delimiters such as '_' in 'foo_bar'
+  ** For unused delimiters such as `_` in `foo_bar`
   private Void removeDelimiterKeepNode(Delimiter delim) { removeDelimiter(delim) }
 
   private Void removeDelimiter(Delimiter delim)

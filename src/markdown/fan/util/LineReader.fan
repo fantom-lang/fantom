@@ -7,12 +7,12 @@
 //
 
 **
-** Reads lines from an `InStream` but also retursn the line terminators.
+** Reads lines from an [InStream] but also retursn the line terminators.
 **
-** Line terminators can be either a line feed '\n', carriage return '\r', or a
-** carriage return followed by a line feed '\r\n'. Call `lineTerminator` after
-** `readLine` to obtain the corresponding line terminator. If a stream has a line at
-** the end without a terminator, `lineTerminator` returns null.
+** Line terminators can be either a line feed `\n`, carriage return `\r`, or a
+** carriage return followed by a line feed `\r\n`. Call [lineTerminator] after
+** [readLine] to obtain the corresponding line terminator. If a stream has a line at
+** the end without a terminator, [lineTerminator] returns null.
 **
 @Js
 internal class LineReader

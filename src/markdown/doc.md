@@ -1,45 +1,42 @@
-**************************************************************************
-** title:      Markdown
-** author:     Matthew Giannini
-** created:    31 Oct 2024 🎃
-** copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Markdown
+author:     Matthew Giannini
+created:    31 Oct 2024 🎃
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
-Fantom library for parsing and rendering [Markdown]`https://daringfireball.net/projects/markdown/`
-text according to the [CommonMark]`https://commonmark.org/` specification.
+# Overview
+Fantom library for parsing and rendering [Markdown](https://daringfireball.net/projects/markdown/)
+text according to the [CommonMark](https://commonmark.org/) specification.
 
-Usage [#usage]
-**************
-pre>
+# Usage
+```fantom
 using markdown
 
 parser := Parser()
 doc := parser.parse("This is *Markdown*")
 renderer := HtmlRenderer()
 html := renderer.render(doc) // => "<p>This is <em>Markdown</em></p>\n"
-<pre
+```
 
 This uses the parser and renderer with default options. Both have builders for
-configuring their behavior. See `ParserBuilder` and `HtmlRendererBuilder` for more
+configuring their behavior. See [ParserBuilder] and [HtmlRendererBuilder] for more
 details.
 
 **Use a visitor to process parsed nodes**
 
 After the source text has been parsed, the result is a tree of nodes. That tree
-can be modified before rendering, or just inspected without rendering. See `Visitor`
-and the [HTML rendering example]`#html` below.
+can be modified before rendering, or just inspected without rendering. See [Visitor]
+and the [HTML rendering example](#html-rendering) below.
 
-HTML Rendering [#html]
-**********************
+# HTML Rendering
 You can take complete control over how HTML is rendered.
 
 In this example, we're changing the rendering of indented code blocks to only wrap
-them in 'pre' instead of 'pre' and 'code':
+them in `pre` instead of `pre` and `code`:
 
-pre>
+```fantom
 parser := Parser()
 renderer := HtmlRenderer.builder
   .nodeRendererFactory(|HtmlContext cx->NodeRenderer| { IndentedCodeBlockRendere(cx) })
@@ -66,87 +63,85 @@ class IndentedCodeBlockRenderer : NodeRenderer, Visitor
       .line
   }
 }
-<pre
+```
 
 **Add your own node types**
 
 In case you want to store additional data in the document, or have custom elements
-in the resulting HTML, you can create your own subclass of `CustomNode` or `CustomBlock`
+in the resulting HTML, you can create your own subclass of [CustomNode] or [CustomBlock]
 and add instances as child nodes to existing nodes.
 
-To define the HTML rendering for them, you can use a `NodeRenderer` as explained above.
+To define the HTML rendering for them, you can use a [NodeRenderer] as explained above.
 
-Plaintext Rendering [#plaintext]
-********************************
+# Plaintext Rendering
 You can also render markdown to plaintext with most formatting removed. The
-[builder]`TextRendererBuilder` for the `TextRenderer` supports various methods
+[builder](TextRendererBuilder) for the [TextRenderer] supports various methods
 or rendering line breaks depending on your use case.
 
-pre>
+```fantom
 // Generate plaintext using the default "compact" rendering
 doc := Parser().parse("Here, the **emphasis** is ignored")
 str := TextRenderer().render(doc) // => Here the emphasis is ignored
-<pre
+```
 
 **Customize parsing**
 
 There are a few ways to extend parsing or even override built-in parsing, all of them
-via methods on `Parser.builder`. See Section 3 (Blocks and Inlines) of the spec
+via methods on [Parser.builder]. See Section 3 (Blocks and Inlines) of the spec
 for an overview of blocks/inlines.
 
 - Parsing of specific block types (e.g. headings, code blocks, etc.) can be
-  enabled/disabled with 'withEnabledBlockTypes'
-- Parsing of blocks can be extended/overridden with 'customBlockParserFactory'
-- Parsing of inline content can be extended/overridden with 'customInlineContentParserFactory'
-- Processing of links can be customized with 'linkProcessor' and 'linkMarker'
+  enabled/disabled with `withEnabledBlockTypes`
+- Parsing of blocks can be extended/overridden with `customBlockParserFactory`
+- Parsing of inline content can be extended/overridden with `customInlineContentParserFactory`
+- Processing of links can be customized with `linkProcessor` and `linkMarker`
 
 **Thread-safety**
 
-Both the `Parser` and the `HtmlRenderer` are designed so that you can configure them
+Both the [Parser] and the [HtmlRenderer] are designed so that you can configure them
 once and then use them multiple times/from multiple Actors.
 
-Extensions [#exts]
-******************
+# Extensions
 Extensions are used to extend the parser, the HTML renderer, or both. Extensions
-are configured on the various builders using the 'extensions()' method. The default
+are configured on the various builders using the `extensions()` method. The default
 parser and HTML renderer conform to the CommonMark specification. This library includes
 some built-in extensions that you can optionally enable.
 
-For example, the following code enables the `ImgAttrsExt` which allows you to specify
+For example, the following code enables the [ImgAttrsExt] which allows you to specify
 attributes for images.
-pre>
+```fantom
 using markdown
 
 exts := [ImgAttrsExt()]
 parser := Parser.builder.extensions(exts).build
 renderer := HtmlRenderer.builder.extensions(exts).build
-<pre
+```
 
 **Image Attributes**
 
 Adds support for specifying attributes (specifically height and width) for images. Use
-`ImgAttrsExt` to enable this extension.
+[ImgAttrsExt] to enable this extension.
 
-The attribute elements are given as 'key=value' pairs inside curly braces '{ }' after
+The attribute elements are given as `key=value` pairs inside curly braces `{ }` after
 the image node to which they apply. For example:
 
-pre>
+```fantom
 ![text](/url.png){width=640 height=480}
-<pre
+```
 
 will be rendered as
 
-pre>
+```fantom
 <img src="/url.png" alt="text" width="640" height="480" />
-<pre
+```
 
 **Tables**
 
-Enables tables using pipes as in [Github Flavored Markdown]`https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables`.
-See `TablesExt`.
+Enables tables using pipes as in [Github Flavored Markdown](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables).
+See [TablesExt].
 
-pre>
+```fantom
 | Header1 | Header2 |
 | ------- | ------- |
 | foo     | bar     |
-<pre
+```

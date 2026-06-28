@@ -7,8 +7,8 @@
 //
 
 **
-** Configurable inline code parser base class. Parses a 'marker' code span, or
-** a literal sequence of 'marker' characters
+** Configurable inline code parser base class. Parses a `marker` code span, or
+** a literal sequence of `marker` characters
 **
 @Js
 @NoDoc abstract class InlineCodeParser : InlineContentParser

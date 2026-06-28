@@ -276,15 +276,15 @@ internal class LinkReferenceDefinitionParser
 @Js
 internal enum class LinkRefState
 {
-  ** Looking for the start of a definition: i.e. '['
+  ** Looking for the start of a definition: i.e. `[`
   start_definition,
-  ** Parsing the label, i.e. 'foo' within '[foo]'
+  ** Parsing the label, i.e. `foo` within `[foo]`
   label,
-  ** Parsing the destination, i.e. '/url' in '[foo]: /url'
+  ** Parsing the destination, i.e. `/url` in `[foo]: /url`
   destination,
-  ** Looking for the start of a title, i.e. the first '"' in '[foo]: /url "title"'
+  ** Looking for the start of a title, i.e. the first `"` in `[foo]: /url "title"`
   start_title,
-  ** Parsing the content of the title, i.e. 'title' in '[foo]: /url "title"'
+  ** Parsing the content of the title, i.e. `title` in `[foo]: /url "title"`
   title,
   ** End state, no matter what kind of lines we add, they won't be references
   paragraph
@@ -299,7 +299,7 @@ internal class LinkScanner
 {
   ** Attempt to scan the contents of a link label (inside the brackets), stopping
   ** after the content, or returning false. The stopped position can be either
-  ** the closing ']', or the end of the line if the label continues on the next line.
+  ** the closing `]`, or the end of the line if the label continues on the next line.
   static Bool scanLinkLabelContent(Scanner scanner)
   {
     while (scanner.hasNext)
@@ -393,7 +393,7 @@ internal class LinkScanner
     return true
   }
 
-  ** spec: a non-empty sequence of characters that does not start with '<',
+  ** spec: a non-empty sequence of characters that does not start with `<`,
   ** does not include ASCII space or control characters, and includes
   ** parentheses only if (a) they are backslash-escaped or (b) they are part of
   ** a balanced pair of unescaped parentheses.

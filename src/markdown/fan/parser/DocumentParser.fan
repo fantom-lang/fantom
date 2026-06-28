@@ -18,23 +18,23 @@ mixin ParserState
   ** The current index within the line (0-based)
   abstract Int index()
 
-  ** Get the index of the next non-space character starting from `index`
+  ** Get the index of the next non-space character starting from [index]
   ** (may be the same) (0-based)
   abstract Int nextNonSpaceIndex()
 
   ** The colum is the position within the line after tab characters have been
   ** processed as 4-space tab stops. If the line doesn't contain any tabs, it's
-  ** the same as the `index`. If the line starts with a tab, followed by text, then
+  ** the same as the [index]. If the line starts with a tab, followed by text, then
   ** the column for the first character of the text is 4 (the index is 1)
   **
   ** Returns the current column within the line (0-based)
   abstract Int column()
 
   ** Get the indentation in columns (either by spaces or tab stop of 4), starting
-  ** from `column`.
+  ** from [column].
   abstract Int indent()
 
-  ** Return true if the current line is blank starting from the `index`
+  ** Return true if the current line is blank starting from the [index]
   abstract Bool isBlank()
 
   ** Get the deepest open block parser
@@ -42,7 +42,7 @@ mixin ParserState
 }
 
 **
-** Parses text into a `Document` AST
+** Parses text into a [Document] AST
 **
 @Js
 internal class DocumentParser : ParserState
@@ -555,7 +555,7 @@ internal class DocumentParser : ParserState
   }
   */
 
-  ** Prepares the input line by replacing '\0' characters with 'U+FFFD'.
+  ** Prepares the input line by replacing `\0` characters with `U+FFFD`.
   ** See § 2.3 - Insecure Characters.
   private static Str prepareLine(Str line)
   {
@@ -664,7 +664,7 @@ class MatchedBlockParser
 
   ** Returns the current paragraph lines if the matched block is a paragraph. If you
   ** want to use some or all of the lines for starting a new block instead, use
-  ** `BlockStart.replaceParagraphLines`.
+  ** [BlockStart.replaceParagraphLines].
   **
   ** Return the paragraph content or empty list
   SourceLines paragraphLines()

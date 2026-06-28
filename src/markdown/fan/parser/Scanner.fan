@@ -33,15 +33,15 @@ class Scanner
     }
   }
 
-  ** Lines without newlines at the end. The scanner will yield '\n' between lines
+  ** Lines without newlines at the end. The scanner will yield `\n` between lines
   ** becaue they're significant for parsing and the final output. There isno
-  ** '\n' after the last line.
+  ** `\n` after the last line.
   private const SourceLine[] lines
 
   ** Which line we're at
   private Int lineIndex
 
-  ** The index within the line. If index == length() we pretend that there's a '\n'
+  ** The index within the line. If index == length() we pretend that there's a `\n`
   ** and only advance after we yield that.
   private Int index
 
@@ -129,7 +129,7 @@ class Scanner
     }
   }
 
-  ** Consume as many 'ch' in a row as possible and return the number consumed.
+  ** Consume as many `ch` in a row as possible and return the number consumed.
   Int matchMultiple(Int ch)
   {
     count := 0
@@ -141,7 +141,7 @@ class Scanner
     return count
   }
 
-  ** Consume characters while the given function returns 'true' and return
+  ** Consume characters while the given function returns `true` and return
   ** the number of characters consumed.
   Int match(|Int->Bool| f)
   {
@@ -181,7 +181,7 @@ class Scanner
     return count
   }
 
-  ** Scan until we find the given 'ch'.
+  ** Scan until we find the given `ch`.
   ** Return the number of characters skipped, or -1 if we hit
   ** the end of the line.
   Int find(Int ch)
@@ -216,7 +216,7 @@ class Scanner
 
   ** Check if the specified char is next and advance the position.
   **
-  ** 'ch': the char to check (including newline chars)
+  ** `ch`: the char to check (including newline chars)
   **
   ** Return true if matched and position was advanced; false otherwise
   Bool nextCh(Int ch)
@@ -226,9 +226,9 @@ class Scanner
   }
 
   ** Check if we have the specified content on the line and advance the position.
-  ** Note that if you want to match newline characters, use `nextCh`.
+  ** Note that if you want to match newline characters, use [nextCh].
   **
-  ** 'content': the text content to match on a single line (excluding newline)
+  ** `content`: the text content to match on a single line (excluding newline)
   **
   ** Return true if matched and position was advanced; false otherwise
   Bool nextStr(Str content)
@@ -311,7 +311,7 @@ class Scanner
 **************************************************************************
 
 **
-** A position in the `Scanner` consists of its line index (i.e. line number)
+** A position in the [Scanner] consists of its line index (i.e. line number)
 ** and its index within the line
 **
 @Js

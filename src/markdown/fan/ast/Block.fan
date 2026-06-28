@@ -51,12 +51,11 @@ final class Document : Block
 **************************************************************************
 
 ** A heading (ATX or Setext):
-** pre>
-** First heading
-** =============
+** ```fantom
+** ## First heading
 **
 ** ## Another heading
-** <pre
+** ```
 @Js
 class Heading : Block
 {
@@ -76,10 +75,10 @@ class Heading : Block
 **************************************************************************
 
 ** A block quote:
-** pre>
+** ```fantom
 ** > some quoted text
-** <pre
-** Note that child nodes are themselves blocks, e.g. `Paragraph`, `ListBlock`, etc.
+** ```
+** Note that child nodes are themselves blocks, e.g. [Paragraph], [ListBlock], etc.
 @Js
 class BlockQuote : Block { }
 
@@ -88,12 +87,12 @@ class BlockQuote : Block { }
 **************************************************************************
 
 ** Fenced code block
-** pre>
+** ```fantom
 ** ```
 ** foo
 ** bar
 ** ```
-** <pre
+** ```
 @Js
 class FencedCode : Block
 {
@@ -102,12 +101,12 @@ class FencedCode : Block
     this.fenceChar = fenceChar
   }
 
-  ** The fence character that was used, e.g. '`', or '~', if available, or null otherwise
+  ** The fence character that was used, e.g. ```, or `~`, if available, or null otherwise
   Str? fenceChar
 
   Int fenceIndent := 0
 
-  ** The length of the opening fence (how many of the `fenceChar` were used to start
+  ** The length of the opening fence (how many of the [fenceChar] were used to start
   ** the code block) if available, or null otherwise
   Int? openingFenceLen
   {
@@ -118,7 +117,7 @@ class FencedCode : Block
     }
   }
 
-  ** The length of the closing fence (how many of the `fenceChar` were used to end
+  ** The length of the closing fence (how many of the [fenceChar] were used to end
   ** the code block) if available, or null otherwise
   Int? closingFenceLen
   {
@@ -129,7 +128,7 @@ class FencedCode : Block
     }
   }
 
-  ** Optional info string (see spec), e.g. 'fantom' in '```fantom'
+  ** Optional info string (see spec), e.g. `fantom` in ````fantom`
   Str? info
 
   Str? literal
@@ -162,13 +161,13 @@ class HtmlBlock : Block
 **************************************************************************
 
 ** A thematic break, e.g. between text:
-** pre>
+** ```fantom
 ** Some text
 **
 ** ---
 **
 ** Some other text.
-** <pre
+** ```
 @Js
 class ThematicBreak : Block
 {
@@ -183,12 +182,12 @@ class ThematicBreak : Block
 **************************************************************************
 
 ** An indented code block:
-** pre>
+** ```fantom
 ** Code follows:
 **
 **     foo
 **     bar
-** <pre
+** ```
 @Js
 class IndentedCode : Block
 {
@@ -217,18 +216,18 @@ abstract class ListBlock : Block
 **************************************************************************
 
 ** A bullet list:
-** pre>
+** ```fantom
 ** - One
 ** - Two
 ** - Three
-** <pre
-** The children are `ListItem` blocks, which contain other blocks (or nested lists).
+** ```
+** The children are [ListItem] blocks, which contain other blocks (or nested lists).
 @Js
 class BulletList : ListBlock
 {
   new make(Str? marker := null) { this.marker = marker }
 
-  ** The bullet list marker that was used, e.g. '-', '*', or '+', if available,
+  ** The bullet list marker that was used, e.g. `-`, `*`, or `+`, if available,
   ** or null otherwise.
   Str? marker
 }
@@ -238,12 +237,12 @@ class BulletList : ListBlock
 **************************************************************************
 
 ** An ordered list:
-** pre>
+** ```fantom
 ** 1. One
 ** 2. Two
 ** 3. Three
-** <pre
-** The children are `ListItem` blocks, which contain other blocks (or nested lists).
+** ```
+** The children are [ListItem] blocks, which contain other blocks (or nested lists).
 @Js
 class OrderedList : ListBlock
 {
@@ -253,10 +252,10 @@ class OrderedList : ListBlock
     this.markerDelim = markerDelim
   }
 
-  ** The start number used in the marker, e.g. '1', if available, or null otherwise
+  ** The start number used in the marker, e.g. `1`, if available, or null otherwise
   Int? startNumber
 
-  ** The delimiter used in the marker, e.g. '.' or ')', if available, or null otherwise
+  ** The delimiter used in the marker, e.g. `.` or `)`, if available, or null otherwise
   Str? markerDelim
 }
 
@@ -264,12 +263,12 @@ class OrderedList : ListBlock
 ** ListItem
 **************************************************************************
 
-** A child of a `ListBlock`, containing other blocks (e.g. `Paragraph`, other lists, etc.)
+** A child of a [ListBlock], containing other blocks (e.g. [Paragraph], other lists, etc.)
 **
-** Note that a list item can't directly contain `Text`, it needs to be:
-** `ListItem` : `Paragraph` : `Text`.
+** Note that a list item can't directly contain [Text], it needs to be:
+** [ListItem] : [Paragraph] : [Text].
 **
-** If you want a list that is rendered tightly, created a list with `ListBlock.tight`
+** If you want a list that is rendered tightly, created a list with [ListBlock.tight]
 @Js
 class ListItem : Block
 {
@@ -279,21 +278,21 @@ class ListItem : Block
     this.contentIndent = contentIndent
   }
 
-  ** The indent of the marker such as '-' or '1.' in columns (spaces or tab stop of 4)
+  ** The indent of the marker such as `-` or `1.` in columns (spaces or tab stop of 4)
   ** if available, or null otherwise.
   **
-  **  - '- Foo'    (marker indent: 0)
-  **  - ' - Foo'   (marker indent: 1)
-  **  - '  1. Foo' (marker indent: 2)
+  **  - `- Foo`    (marker indent: 0)
+  **  - ` - Foo`   (marker indent: 1)
+  **  - `  1. Foo` (marker indent: 2)
   Int? markerIndent
 
   ** The indent of the content in columns (spaces or tab stop of 4) if available
   ** or null otherwise. The content indent is counted from the beginning of the line
   ** and includes the marker on the first line
   **
-  **  - '- Foo'     (content indent: 2)
-  **  - ' - Foo'    (content indent: 3)
-  **  - '  1. Foo'  (content indent: 5)
+  **  - `- Foo`     (content indent: 2)
+  **  - ` - Foo`    (content indent: 3)
+  **  - `  1. Foo`  (content indent: 5)
   **
   ** Note that subsequent lines in the same list item need to be indented by at least
   ** the content indent to be counted as part of the list item.
@@ -304,7 +303,7 @@ class ListItem : Block
 ** Paragraph
 **************************************************************************
 
-** A paragraph block contains inline nodes such as `Text`.
+** A paragraph block contains inline nodes such as [Text].
 @Js
 class Paragraph : Block { }
 

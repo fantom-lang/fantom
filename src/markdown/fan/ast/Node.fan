@@ -36,7 +36,7 @@ abstract class Node
   ** Private storage for parent
   private Node? p
 
-  ** Get the root `Document` node or null if this node is mounted in a document yet
+  ** Get the root [Document] node or null if this node is mounted in a document yet
   Document? doc()
   {
     Node? n := this
@@ -56,7 +56,7 @@ abstract class Node
 
   ** Get the file location for this node from the original parsed source.
   ** If the location is not known or source spans were not enabled during
-  ** parsing, then return `util::FileLoc.unknown`.
+  ** parsing, then return [util::FileLoc.unknown].
   virtual FileLoc loc()
   {
     if (sourceSpans.isEmpty) return FileLoc.unknown
@@ -67,7 +67,7 @@ abstract class Node
   }
 
   ** Walk the AST using the given visitor. By default, we use reflection
-  ** to call 'visitor.visit${this.typeof.name}'
+  ** to call `visitor.visit${this.typeof.name}`
   virtual Void walk(Visitor visitor)
   {
     // This allows visitor sub-classes to have custom 'visit<CustomBlockorNode>()' methods
@@ -169,14 +169,14 @@ abstract class Node
   ** Get nodes between start (exclusive) and end (exclusive) by iterating
   ** siblings of the start node.
   **
-  ** pre>
+  ** ```fantom
   ** // A -> B -> C-> D-> E
   **         |->B1    |-> D1
   **         |->B2
   **
   ** Node.eachBetween(A, D, f)    => f(B), f(C)
   ** Node.eachBetween(B, null, f) => f(C), f(D), f(E)
-  ** <pre
+  ** ```
   static Void eachBetween(Node start, Node? end, |Node| f)
   {
     Node? node := start.next
@@ -295,10 +295,10 @@ abstract class Node
 **************************************************************************
 
 ** Hard line break
-** pre>
+** ```fantom
 ** line\
 ** break
-** <pre
+** ```
 @Js
 class HardLineBreak : Node { }
 
@@ -306,11 +306,11 @@ class HardLineBreak : Node { }
 ** SoftLineBreak
 **************************************************************************
 
-** A soft line break (as opposed to `HardLineBreak`), e.g. between:
-** pre>
+** A soft line break (as opposed to [HardLineBreak]), e.g. between:
+** ```fantom
 ** foo
 ** bar
-** <pre
+** ```
 @Js
 class SoftLineBreak : Node { }
 
@@ -318,14 +318,14 @@ class SoftLineBreak : Node { }
 ** Delimited
 **************************************************************************
 
-** A node that uses delimiters in the source form, e.g. '*bold*'
+** A node that uses delimiters in the source form, e.g. `*bold*`
 @Js
 mixin Delimited
 {
-  ** Return the opening (beginning) delimiter, e.g. '*'
+  ** Return the opening (beginning) delimiter, e.g. `*`
   abstract Str openingDelim()
 
-  ** Return the closing (ending) delimiter, e.g. '*'
+  ** Return the closing (ending) delimiter, e.g. `*`
   abstract Str closingDelim()
 }
 
@@ -334,9 +334,9 @@ mixin Delimited
 **************************************************************************
 
 ** Strong emphasis
-** pre>
+** ```fantom
 ** Some **strong emphasis** or __strong emphasis__
-** <pre
+** ```
 @Js
 class StrongEmphasis : Node, Delimited
 {
@@ -353,9 +353,9 @@ class StrongEmphasis : Node, Delimited
 **************************************************************************
 
 ** Emphasis
-** pre>
+** ```fantom
 ** Some *emphasis* or _emphasis_
-** <pre
+** ```
 @Js
 class Emphasis : Node, Delimited
 {
@@ -372,10 +372,10 @@ class Emphasis : Node, Delimited
 **************************************************************************
 
 ** A text node:
-** pre>
+** ```fantom
 ** foo *bar*
-** <pre
-** The 'foo ' is a text node, and the 'bar' inside the emphasis is also a text node.
+** ```
+** The `foo ` is a text node, and the `bar` inside the emphasis is also a text node.
 @Js
 class Text : Node
 {
@@ -389,9 +389,9 @@ class Text : Node
 **************************************************************************
 
 ** Inline code span:
-** pre>
+** ```fantom
 ** Some `inline code`
-** <pre
+** ```
 @Js
 class Code : Node
 {

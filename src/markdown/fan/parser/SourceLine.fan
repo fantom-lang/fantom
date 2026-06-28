@@ -58,7 +58,7 @@ const class SourceLine
 **************************************************************************
 
 **
-** A set of lines (`SourceLine`) from the input source.
+** A set of lines ([SourceLine]) from the input source.
 **
 @Js
 class SourceLines

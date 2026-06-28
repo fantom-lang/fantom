@@ -109,7 +109,7 @@ class TextWriter
   ** Tight blocks are used in lists, if there are no blank lines within the list.
   **
   ** Note that changing this does not affect block separators that have already been
-  ** enqueued with `block`; only future ones.
+  ** enqueued with [block]; only future ones.
   Void pushTight(Bool tight) { this.tight.push(tight) }
 
   ** Remove the last "tight" setting from the top of the stack.
@@ -117,7 +117,7 @@ class TextWriter
 
   private Bool isTight() { !tight.isEmpty && tight.last }
 
-  ** If a block separator has been enqueued with `block` but not yet written, write it now
+  ** If a block separator has been enqueued with [block] but not yet written, write it now
   private Void flushBlockSeparator()
   {
     if (this.blockSeparator != null)

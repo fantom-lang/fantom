@@ -32,7 +32,7 @@ mixin Renderer
 @Js
 mixin NodeRenderer
 {
-  ** Get the `Node` types that this renderer handles.
+  ** Get the [Node] types that this renderer handles.
   abstract Type[] nodeTypes()
 
   ** Render the specified node

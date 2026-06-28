@@ -7,7 +7,7 @@
 //
 
 **
-** Custom delimiter processor for additional delimiters besides '_' and '*'.
+** Custom delimiter processor for additional delimiters besides `_` and `*`.
 **
 ** Note that implementations of this need to be thread-safe, the same instance
 ** may be used by multiple parsers.
@@ -20,7 +20,7 @@ const mixin DelimiterProcessor
   abstract Int openingChar()
 
   ** The character that marks the ending of a delimited node, must not clas with any
-  ** built-in special characters. Note that for a symmetric delimiter such as '*',
+  ** built-in special characters. Note that for a symmetric delimiter such as `*`,
   ** this is the same as the opening.
   abstract Int closingChar()
 
@@ -35,7 +35,7 @@ const mixin DelimiterProcessor
   ** If yes, it should do the processing (wrapping nodes, etc.) and then return
   ** how many delimiters were used.
   **
-  ** Note that removal (unlinking) of the used delimiter `Text` nodes is done by
+  ** Note that removal (unlinking) of the used delimiter [Text] nodes is done by
   ** the caller.
   **
   ** Returns how many delimiters were used; must not be greater than the length

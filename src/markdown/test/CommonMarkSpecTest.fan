@@ -9,11 +9,11 @@
 **
 ** Runs all the tests from the common mark specification
 **
-** The spec.json was generated from the [commonmark-spec]`https://github.com/commonmark/commonmark-spec`
+** The spec.json was generated from the [commonmark-spec](https://github.com/commonmark/commonmark-spec)
 ** repo using this command:
-** pre>
+** ```fantom
 ** python test/spec_tests.py --dump-tests > spec.json
-** <pre
+** ```
 **
 ** The commonmark-java implementation actually does a simple parsing of the spec.md
 ** file to extract the examples, but we can't do that because of fantom unicode issues.

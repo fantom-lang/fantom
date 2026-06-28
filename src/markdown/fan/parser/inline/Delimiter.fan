@@ -43,7 +43,7 @@ class Delimiter
   const Int delimChar
 
   ** The number of characters originally in this delimiter run; at the start of processing,
-  ** this is the same as `size`
+  ** this is the same as [size]
   const Int origSize
 
   ** can open emphasis, see spec.
@@ -58,16 +58,16 @@ class Delimiter
   ** The number of characters in this delimiter run (that are left for processing)
   Int size() { chars.size }
 
-  ** Return the innermost opening delimiter, e.g. for '***' this is the last '*'
+  ** Return the innermost opening delimiter, e.g. for `***` this is the last `*`
   Text opener() { chars[chars.size - 1] }
 
-  ** Return the innermost closing delimiter, e.g. for '***' this is the first '*'
+  ** Return the innermost closing delimiter, e.g. for `***` this is the first `*`
   Text closer() { chars.first }
 
   ** Get the opening delimiter nodes for the specified number of delimiters.
   **
-  ** For example, for a delimiter run '***', calling this with 1 would return the
-  ** last '*'.  Calling it with 2 would return the second last '*' and last '*'.
+  ** For example, for a delimiter run `***`, calling this with 1 would return the
+  ** last `*`.  Calling it with 2 would return the second last `*` and last `*`.
   Text[] openers(Int len)
   {
     if (!(len >= 1 && len <= this.size))
@@ -78,8 +78,8 @@ class Delimiter
 
   ** Get the closing delimiter nodes for the specified number of delimiters.
   **
-  ** For example, for a delimiter run '***', calling this with 1 would return the
-  ** first '*', calling it with 2 would return the first '*' and the second '*'.
+  ** For example, for a delimiter run `***`, calling this with 1 would return the
+  ** first `*`, calling it with 2 would return the first `*` and the second `*`.
   Text[] closers(Int len)
   {
     if (!(len >= 1 && len <= this.size))
@@ -102,7 +102,7 @@ class Delimiter
 **************************************************************************
 
 **
-** Opening bracket for links '[', images '![', or links with other markers.
+** Opening bracket for links `[`, images `![`, or links with other markers.
 **
 @Js
 internal class Bracket
@@ -142,16 +142,16 @@ internal class Bracket
     f(this)
   }
 
-  ** The node of a marker such as '!' if present, null otherwise
+  ** The node of a marker such as `!` if present, null otherwise
   Text? markerNode { protected set }
 
   ** The position of the marker if present, null otherwise
   const Position? markerPos
 
-  ** The node of '['
+  ** The node of `[`
   Text bracketNode { protected set }
 
-  ** The position of '['
+  ** The position of `[`
   const Position bracketPos
 
   ** The position of the content (after the opening bracket)

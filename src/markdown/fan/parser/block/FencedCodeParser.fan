@@ -114,7 +114,7 @@ internal const class FencedCodeParserFactory : BlockParserFactory
   }
 
   ** spec: a code fence is a sequence of at least three consecutive
-  ** backtick characters '`' or tildes '~' (they cannot be mixed).
+  ** backtick characters ``` or tildes `~` (they cannot be mixed).
   private static FencedCodeParser? checkOpener(Str line, Int index, Int indent)
   {
     backticks := 0

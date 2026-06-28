@@ -53,7 +53,7 @@ const class MarkdownRenderer : Renderer
 **************************************************************************
 
 **
-** Builder for configuring a `MarkdownRenderer`
+** Builder for configuring a [MarkdownRenderer]
 **
 @Js
 final class MarkdownRendererBuilder
@@ -64,7 +64,7 @@ final class MarkdownRendererBuilder
   internal |MarkdownContext, Node|[] nodePostProcessors := [,]
   internal Int[] specialChars := [,]
 
-  ** Build the configured `MarkdownRenderer`.
+  ** Build the configured [MarkdownRenderer].
   MarkdownRenderer build() { MarkdownRenderer(this) }
 
   ** Add a factory for a node renderer. This allows to override the rendering of

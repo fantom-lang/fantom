@@ -18,10 +18,10 @@ abstract class BlockParser
 
   ** Return true if the block can have lazy continuation lines.
   **
-  ** Lazy continuation lines are lines that were rejected by this `tryContinue` but
+  ** Lazy continuation lines are lines that were rejected by this [tryContinue] but
   ** didn't match any other block parser either.
   **
-  ** If true is returned here, those lines will get added via `addLine`. For false (default),
+  ** If true is returned here, those lines will get added via [addLine]. For false (default),
   ** the block is closed instead.
   virtual Bool canHaveLazyContinuationLines() { false }
 
@@ -71,7 +71,7 @@ abstract const class BlockParserFactory
 **************************************************************************
 
 **
-** Resulting object for starting parsing of a block. See `BlockParserFactory`.
+** Resulting object for starting parsing of a block. See [BlockParserFactory].
 **
 @Js
 final class BlockStart
@@ -107,22 +107,21 @@ final class BlockStart
   This replaceActiveBlockParser() { this.isReplaceActiveBlockParser = true; return this }
 
   ** Replace a number of lines from the current paragraph (as returned by
-  ** `MatchedBlockParser.paragraphLines`) with the new block.
+  ** [MatchedBlockParser.paragraphLines]) with the new block.
   **
   ** This is useful for parsing blocks that start with normal paragrapsh and only have
   ** special marker syntax in later lines, e.g. in this:
   **
-  ** pre>
-  ** Foo
-  ** ===
-  ** <pre
-  ** The 'Foo' line is initially parsed as a normal paragraph, then the '===' is parsed
+  ** ```fantom
+  ** ## Foo
+  ** ```
+  ** The `Foo` line is initially parsed as a normal paragraph, then the `===` is parsed
   ** as a heading marker, replacing the 1 paragraph line before. The end result is a
   ** single Heading block.
   **
   ** Note that source spans from the replaced lines are automatically added to the new block.
   **
-  ** Paramter 'lines' indicates the number of lines to replace (at least 1); use Int.maxVal
+  ** Paramter `lines` indicates the number of lines to replace (at least 1); use Int.maxVal
   ** to replace the paragraph.
   This withReplaceParagraphLines(Int lines)
   {

@@ -51,7 +51,7 @@ const class TextRenderer : Renderer
 **************************************************************************
 
 **
-** Builder for configuring a `TextRenderer`
+** Builder for configuring a [TextRenderer]
 **
 @Js
 final class TextRendererBuilder
@@ -61,11 +61,11 @@ final class TextRendererBuilder
   internal |TextContext->NodeRenderer|[] nodeRendererFactories := [,]
   internal LineBreakRendering lineBreakRendering := LineBreakRendering.compact
 
-  ** Get the configured `TextRenderer`
+  ** Get the configured [TextRenderer]
   TextRenderer build() { TextRenderer(this) }
 
   ** Configure how line breaks (newlines) are rendered. The default is
-  ** `LineBreakRendering.compact`
+  ** [LineBreakRendering.compact]
   This withLineBreakRendering(LineBreakRendering lineBreakRendering)
   {
     this.lineBreakRendering = lineBreakRendering

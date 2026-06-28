@@ -163,7 +163,7 @@ internal const class ListBlockParserFactory : BlockParserFactory
   }
 
   ** spec: An ordered list marker is a sequence of 1-9 arabic digits (0-9),
-  ** followed by either a '.' character or a ')' character.
+  ** followed by either a `.` character or a `)` character.
   private static ListMarkerData? parseOrderedList(Str line, Int index)
   {
     digits := 0

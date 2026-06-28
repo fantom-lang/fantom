@@ -66,7 +66,7 @@ const class HtmlRenderer : Renderer
 **************************************************************************
 
 **
-** Builder for configuring an `HtmlRenderer`.
+** Builder for configuring an [HtmlRenderer].
 **
 @Js
 final class HtmlRendererBuilder
@@ -82,24 +82,24 @@ final class HtmlRendererBuilder
   internal Bool sanitizeUrls := false
   internal Bool disableHtml := false
 
-  ** Get the configured `HtmlRenderer`
+  ** Get the configured [HtmlRenderer]
   HtmlRenderer build() { HtmlRenderer(this) }
 
-  ** The HTML to use for rendering a softbreak, default to '\n' (meaning the
+  ** The HTML to use for rendering a softbreak, default to `\n` (meaning the
   ** rendered result doesn't have a line break).
   **
-  ** Set it to '<br>' or '<br />' to make the hard breaks.
+  ** Set it to `<br>` or `<br />` to make the hard breaks.
   **
-  ** Set it to ' ' (space) to ingore line wrapping in the source.
+  ** Set it to ` ` (space) to ingore line wrapping in the source.
   This withSoftBreak(Str s)
   {
     this.softbreak = s
     return this
   }
 
-  ** Whether `HtmlInline` and `HtmlBlock` should be escaped, defaults to 'false'.
+  ** Whether [HtmlInline] and [HtmlBlock] should be escaped, defaults to `false`.
   **
-  ** Note that `HtmlInline` is only a tag itself, not the text between an opening tag
+  ** Note that [HtmlInline] is only a tag itself, not the text between an opening tag
   ** and closing tag. So markup in the text will be parsed as normal and is not affected
   ** by this option.
   This withEscapeHtml(Bool val := true)
@@ -108,11 +108,11 @@ final class HtmlRendererBuilder
     return this
   }
 
-  ** Whether URLs of link or images should be percent-encoded, defaults to 'false'.
+  ** Whether URLs of link or images should be percent-encoded, defaults to `false`.
   **
   ** If enabled, the following is done:
-  ** - Existing percent-encoded parts are preserved (e.g. "%20" is kept as "%20")
-  ** - Reserved characters such as "/" are preserved, except for "[" and "]"
+  ** - Existing percent-encoded parts are preserved (e.g. `"%20"` is kept as `"%20"`)
+  ** - Reserved characters such as "/" are preserved, except for `"["` and `"]"`
   **   (see encodeURL in JS).
   ** - Other characters such as umlauts are percent-encoded
   This withPercentEncodeUrls(Bool val := true)
@@ -122,7 +122,7 @@ final class HtmlRendererBuilder
   }
 
   ** Whether documents that only contain a single paragraph shoudl be rendered without
-  ** the '<p>' tag. Set to 'true' to render without the tag; the default of 'false'
+  ** the `<p>` tag. Set to `true` to render without the tag; the default of `false`
   ** always renders the tag.
   This withOmitSingleParagraphP(Bool val := true)
   {
@@ -130,14 +130,14 @@ final class HtmlRendererBuilder
     return this
   }
 
-  ** Whether `Image` src and `Link` href should be sanitized, defaults to 'false'.
+  ** Whether [Image] src and [Link] href should be sanitized, defaults to `false`.
   This withSanitizeUrls(Bool val := true)
   {
     this.sanitizeUrls = val
     return this
   }
 
-  ** Whether `HtmlInline` and `HtmlBlock` nodes should be rendered, defaults to 'false'.
+  ** Whether [HtmlInline] and [HtmlBlock] nodes should be rendered, defaults to `false`.
   This withDisableHtml(Bool val := true)
   {
     this.disableHtml = val
@@ -172,3 +172,4 @@ final class HtmlRendererBuilder
   }
 
 }
+

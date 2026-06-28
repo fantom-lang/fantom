@@ -9,7 +9,7 @@
 **
 ** Extension for GFM tables using "|" pipes. (GitHub Flavored Markdown).
 **
-** See [Tables (extension) in GitHub Flavored Markdown Spec]`https://github.github.com/gfm/#tables-extension`
+** See [Tables (extension) in GitHub Flavored Markdown Spec](https://github.github.com/gfm/#tables-extension)
 **
 @Js
 const class TablesExt : MarkdownExt
@@ -42,23 +42,23 @@ const class TablesExt : MarkdownExt
 ** Nodes
 **************************************************************************
 
-** Table block containing a `TableHead` and optionally a `TableBody`
+** Table block containing a [TableHead] and optionally a [TableBody]
 @Js
 class Table : CustomBlock { }
 
-** Head part of a `Table` containing `TableRow`s
+** Head part of a [Table] containing [TableRow]s
 @Js
 class TableHead : CustomNode { }
 
-** Body part of a `Table` containing `TableRow`s
+** Body part of a [Table] containing [TableRow]s
 @Js
 class TableBody : CustomNode { }
 
-** Table row of a `TableHead` or `TableBody` containing `TableCell`s
+** Table row of a [TableHead] or [TableBody] containing [TableCell]s
 @Js
 class TableRow : CustomNode { }
 
-** Table cell of a `TableRow` containing inline nodes
+** Table cell of a [TableRow] containing inline nodes
 @Js
 class TableCell : CustomNode
 {
@@ -294,8 +294,7 @@ internal const class TableParserFactory : BlockParserFactory
   ** -|
   ** |-|
   ** -|-
-  ** |-|-|
-  ** --- | ---
+  ** ### |-|-|
   private static TableCell[]? parseSeparator(Str s)
   {
     // we only care about alignment and width, but re-use this type and ignore header field

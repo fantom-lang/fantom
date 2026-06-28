@@ -24,7 +24,7 @@ class MarkdownWriter
   Int lastChar := 0 { private set }
 
   ** Wheter we're at the line start (not counting any prefixes),
-  ** i.e. after a `line` or `block`.
+  ** i.e. after a [line] or [block].
   Bool atLineStart := true { private set }
 
   // stackso of settings that affect various rendering behaviors. The common pattern
@@ -34,7 +34,7 @@ class MarkdownWriter
   private Bool[] tight := [,]
   private |Int->Bool|[] rawEscapes := [,]
 
-  ** Write the supplied string or character (raw/unescaped except if `pushRawEscape`
+  ** Write the supplied string or character (raw/unescaped except if [pushRawEscape]
   ** was used).
   Void raw(Obj obj)
   {
@@ -104,7 +104,7 @@ class MarkdownWriter
   ** Tight blocks are used in lists, if there are no blank lines within the list.
   **
   ** Note that changing this does not affect block separators that have already been
-  ** enqueued with `block`, only future ones.
+  ** enqueued with [block], only future ones.
   Void pushTight(Bool tight) { this.tight.add(tight) }
 
   ** Remove the last "tight" setting from the top of the stack
@@ -112,7 +112,7 @@ class MarkdownWriter
 
   ** Escape the characters matching the supplied matcher, in all text (text and raw).
   ** This might be usefult to extensions that add another layer of syntax, e.g. the
-  ** tables extension that uses '|' to separate cells and needs all '|' characters to be
+  ** tables extension that uses `|` to separate cells and needs all `|` characters to be
   ** escaped (even in code spans)
   Void pushRawEscape(|Int->Bool| rawEscape) { rawEscapes.add(rawEscape) }
 
@@ -147,7 +147,7 @@ class MarkdownWriter
     prefixes.each |prefix| { writeStr(prefix) }
   }
 
-  ** If a block separator has been enqueued with `block` but not yet written, write it now
+  ** If a block separator has been enqueued with [block] but not yet written, write it now
   private Void flushBlockSeparator()
   {
     if (blockSep != 0)
