@@ -37,57 +37,57 @@ const class AsnObj
 // Value
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get the value as a `sys::Bool`
+  ** Get the value as a [sys::Bool]
   Bool bool() { val }
 
-  ** Is this object's universal tag a 'Boolean'
+  ** Is this object's universal tag a `Boolean`
   Bool isBool() { univTag == AsnTag.univBool }
 
-  ** Get the value as an `sys::Int`. If the value is a `math::BigInt` you may lose
-  ** both precision and sign. Use `bigInt` to get the value explicitly
-  ** as a `math::BigInt`.
+  ** Get the value as an [sys::Int]. If the value is a [math::BigInt] you may lose
+  ** both precision and sign. Use [bigInt] to get the value explicitly
+  ** as a [math::BigInt].
   Int int()
   {
     if (val is BigInt) return ((BigInt)val).toInt
     return val
   }
 
-  ** Is this object's universal tag an 'Integer'
+  ** Is this object's universal tag an `Integer`
   Bool isInt() { univTag == AsnTag.univInt }
 
-  ** Get the value as a `math::BigInt`.
+  ** Get the value as a [math::BigInt].
   BigInt bigInt()
   {
     if (val is Int) return BigInt.makeInt(val)
     return val
   }
 
-  ** Get any of the  binary values as a `sys::Buf`. The Buf will be a safe copy
-  ** that can be modified. Throws `AsnErr` if the value is not a binary value.
+  ** Get any of the  binary values as a [sys::Buf]. The Buf will be a safe copy
+  ** that can be modified. Throws [AsnErr] if the value is not a binary value.
   virtual Buf buf() { throw AsnErr("Not a binary type: ${typeof}") }
 
-  ** Is this object's universal tag an 'Octet String'
+  ** Is this object's universal tag an `Octet String`
   Bool isOcts() { univTag == AsnTag.univOcts }
 
-  ** Is this an ASN.1 'Null' value
+  ** Is this an ASN.1 `Null` value
   Bool isNull() { val == null && univTag == AsnTag.univNull }
 
-  ** Get this object as an `AsnOid`
+  ** Get this object as an [AsnOid]
   AsnOid oid() { this }
 
-  ** Is this object's universal tag an 'Object Identifier'
+  ** Is this object's universal tag an `Object Identifier`
   Bool isOid() { univTag == AsnTag.univOid }
 
-  ** Get the value as a `sys::Str`
+  ** Get the value as a [sys::Str]
   Str str() { val }
 
-  ** Get the value as a `sys::DateTime` timestamp
+  ** Get the value as a [sys::DateTime] timestamp
   DateTime ts() { val }
 
-  ** Get this object as an `AsnColl`
+  ** Get this object as an [AsnColl]
   AsnColl coll() { this }
 
-  ** Get this object as an `AsnSeq`
+  ** Get this object as an [AsnSeq]
   AsnSeq seq() { this }
 
   @NoDoc virtual Bool isAny() { false }
@@ -99,16 +99,16 @@ const class AsnObj
   ** Push a tag to the front of the tag chain for this value. Returns
   ** a new instance of this object with the current value.
   **
-  **   AsnObj.int(123).tag(AsnTag.implicit(TagClass.context, 0))
-  **     => [0] IMPLICIT [UNIVERSAL 2]
-  **   AsnObj.int(123).tag(AsnTag.explicit(TagClass.app, 1))
-  **     => [APPLICATION 1] EXPLICIT [UNIVERSAL 2]
+  **     AsnObj.int(123).tag(AsnTag.implicit(TagClass.context, 0))
+  **       => [0] IMPLICIT [UNIVERSAL 2]
+  **     AsnObj.int(123).tag(AsnTag.explicit(TagClass.app, 1))
+  **       => [APPLICATION 1] EXPLICIT [UNIVERSAL 2]
   virtual AsnObj push(AsnTag tag)
   {
     typeof.method("make").call([tag].addAll(this.tags), this.val)
   }
 
-  ** Apply rules for 'EXPLICIT' and 'IMPLICIT' tags to obtain
+  ** Apply rules for `EXPLICIT` and `IMPLICIT` tags to obtain
   ** the set of effective tags for encoding this object.
   AsnTag[] effectiveTags()
   {

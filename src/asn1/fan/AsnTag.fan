@@ -16,16 +16,16 @@ final const class AsnTag
 // Constructor
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get a [builder]`AsnTagBuilder` for a universal tag with the given id.
+  ** Get a [builder](AsnTagBuilder) for a universal tag with the given id.
   static AsnTagBuilder univ(Int id) { AsnTagBuilder().univ.id(id) }
 
-  ** Get a [builder]`AsnTagBuilder` for a context tag with the given id
+  ** Get a [builder](AsnTagBuilder) for a context tag with the given id
   static AsnTagBuilder context(Int id) { AsnTagBuilder().context.id(id) }
 
-  ** Get a [builder]`AsnTagBuilder` for an application tag with the given id
+  ** Get a [builder](AsnTagBuilder) for an application tag with the given id
   static AsnTagBuilder app(Int id) { AsnTagBuilder().app.id(id) }
 
-  ** Get a [builder]`AsnTagBuilder` for a private tag with the given id
+  ** Get a [builder](AsnTagBuilder) for a private tag with the given id
   static AsnTagBuilder priv(Int id) { AsnTagBuilder().priv.id(id) }
 
   new make(AsnTagClass cls, Int id, AsnTagMode mode)
@@ -39,13 +39,13 @@ final const class AsnTag
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  ** The [tag class]`AsnTagClass`
+  ** The [tag class](AsnTagClass)
   const AsnTagClass cls
 
   ** The tag id
   const Int id
 
-  ** The [tag mode]`AsnTagMode`
+  ** The [tag mode](AsnTagMode)
   const AsnTagMode mode
 
   @NoDoc AsnTag toCls(AsnTagClass newCls)
@@ -102,8 +102,8 @@ final const class AsnTag
     return res
   }
 
-  ** Tag equality is based only the [class]`AsnTagClass` and 'id'. The
-  ** [mode]`AsnTagMode` is ignored for eqality purposes.
+  ** Tag equality is based only the [class](AsnTagClass) and `id`. The
+  ** [mode](AsnTagMode) is ignored for eqality purposes.
   override Bool equals(Obj? obj)
   {
     if (this === obj) return true
@@ -137,7 +137,7 @@ final const class AsnTag
 **************************************************************************
 
 **
-** The tag class for an `AsnTag`
+** The tag class for an [AsnTag]
 **
 enum class AsnTagClass
 {
@@ -150,16 +150,16 @@ enum class AsnTagClass
 
   const Int mask;
 
-  ** Is this the 'UNIVERSAL' class
+  ** Is this the `UNIVERSAL` class
   Bool isUniv() { this === AsnTagClass.univ }
 
-  ** Is this the 'APPLICATION' class
+  ** Is this the `APPLICATION` class
   Bool isApp() { this === AsnTagClass.app }
 
-  ** Is this the 'CONTEXT' class
+  ** Is this the `CONTEXT` class
   Bool isContext() { this === AsnTagClass.context }
 
-  ** Is this  the 'PRIVATE' class
+  ** Is this  the `PRIVATE` class
   Bool isPriv() { this === AsnTagClass.priv }
 }
 
@@ -168,7 +168,7 @@ enum class AsnTagClass
 **************************************************************************
 
 **
-** The tag mode for a `AsnTag`
+** The tag mode for a [AsnTag]
 **
 enum class AsnTagMode { explicit, implicit }
 
@@ -177,13 +177,13 @@ enum class AsnTagMode { explicit, implicit }
 **************************************************************************
 
 **
-** Utility to build an `AsnTag`.
+** Utility to build an [AsnTag].
 **
 ** See:
-**  - `AsnTag.univ`
-**  - `AsnTag.context`
-**  - `AsnTag.app`
-**  - `AsnTag.priv`
+**  - [AsnTag.univ]
+**  - [AsnTag.context]
+**  - [AsnTag.app]
+**  - [AsnTag.priv]
 **
 class AsnTagBuilder
 {

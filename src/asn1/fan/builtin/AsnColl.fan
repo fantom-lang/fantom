@@ -37,20 +37,20 @@ abstract const class AsnColl : AsnObj
     return items
   }
 
-  ** Get a [collection builder]`AsnCollBuilder`
+  ** Get a [collection builder](AsnCollBuilder)
   static AsnCollBuilder builder() { AsnCollBuilder() }
 
 //////////////////////////////////////////////////////////////////////////
 // AsnColl
 //////////////////////////////////////////////////////////////////////////
 
-  ** Is this a 'SEQUENCE'
+  ** Is this a `SEQUENCE`
   Bool isSeq() { univTag == AsnTag.univSeq }
 
-  ** Is this a 'SET'
+  ** Is this a `SET`
   Bool isSet() { univTag == AsnTag.univSet }
 
-  ** Get the raw `AsnObj` values in the collection
+  ** Get the raw [AsnObj] values in the collection
   AsnObj[] vals() { items.map { it.val } }
 
   @NoDoc AsnItem[] items() { val }
@@ -62,8 +62,8 @@ abstract const class AsnColl : AsnObj
   Bool isEmpty() { items.isEmpty }
 
   ** Get an item value from the collection.
-  **  - If key is a `sys::Str` then get the named item.
-  **  - If key is an `sys::Int`, then get the item at that zero-based index.
+  **  - If key is a [sys::Str] then get the named item.
+  **  - If key is an [sys::Int], then get the item at that zero-based index.
   AsnObj? get(Obj key)
   {
     if (key is Int) return items.getSafe(key)?.val
@@ -134,7 +134,7 @@ final const class AsnItem
 **************************************************************************
 
 **
-** Models an ASN.1 'SEQUENCE'
+** Models an ASN.1 `SEQUENCE`
 **
 const class AsnSeq : AsnColl
 {
@@ -152,7 +152,7 @@ const class AsnSeq : AsnColl
 **************************************************************************
 
 **
-** Models an ASN.1 'SET'
+** Models an ASN.1 `SET`
 **
 const class AsnSet : AsnColl
 {
@@ -170,7 +170,7 @@ const class AsnSet : AsnColl
 **************************************************************************
 
 **
-** `AsnColl` builder.
+** [AsnColl] builder.
 **
 class AsnCollBuilder
 {
@@ -178,10 +178,10 @@ class AsnCollBuilder
 
   private AsnItem[] items := [,]
 
-  ** Convenience to add an `AsnItem` with the given value and name
+  ** Convenience to add an [AsnItem] with the given value and name
   This add(AsnObj val, Str? name := null) { item(AsnItem(val, name)) }
 
-  ** Add an `AsnItem` to the collection
+  ** Add an [AsnItem] to the collection
   This item(AsnItem item)
   {
     items.add(item)

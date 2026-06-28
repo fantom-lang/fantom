@@ -24,7 +24,7 @@
 // AsnBin
 //////////////////////////////////////////////////////////////////////////
 
-  ** Does this represent the ASN.1 'ANY' type
+  ** Does this represent the ASN.1 `ANY` type
   override Bool isAny() { this.univTag == AsnTag.univAny }
 
   ** Get the number of octets in this binary type

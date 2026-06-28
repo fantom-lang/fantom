@@ -25,6 +25,7 @@ class Build : BuildPod
                "license.name": "Academic Free License 3.0",
                "vcs.name":     "Git",
                "vcs.uri":      "https://github.com/fantom-lang/fantom",
+               "doc.format":   "markdown",
               ]
     docSrc = true
     depends = ["sys 1.0",

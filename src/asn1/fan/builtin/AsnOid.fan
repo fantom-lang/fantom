@@ -7,7 +7,7 @@
 //
 
 **
-** Models an ASN.1 'OBJECT IDENTIFIER' type.
+** Models an ASN.1 `OBJECT IDENTIFIER` type.
 **
 final const class AsnOid : AsnObj
 {
@@ -25,7 +25,7 @@ final const class AsnOid : AsnObj
 // Identity
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience to get the value as a list of its 'Int' identifiers.
+  ** Convenience to get the value as a list of its `Int` identifiers.
   Int[] ids()
   {
     this.val
@@ -35,9 +35,9 @@ final const class AsnOid : AsnObj
 // Oid
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience to get a Str where the sub-identifiers are joined with a '.'
+  ** Convenience to get a Str where the sub-identifiers are joined with a `.`
   **
-  **   Asn.oid("1.2.3").oidStr == "1.2.3"
+  **     Asn.oid("1.2.3").oidStr == "1.2.3"
   Str oidStr()
   {
     ids.join(".")
