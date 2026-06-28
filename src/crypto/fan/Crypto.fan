@@ -49,11 +49,11 @@ const mixin Crypto
   ** [RFC4514](https://tools.ietf.org/html/rfc4514).
   **
   ** The following options are supported:
-  **  - `algorithm`: (Str) - The implementation should choose a "strong" signing
-  **                         algorithm for signing the CSR. Supported values:
-  **                           - `sha256WithRSAEncryption` (Default)
-  **                           - `sha512WithRSAEncryption`
-  **  - `subjectAltNames`: (Obj[]) - List of subject alternative names
+  **  - `algorithm (Str)`: - The implementation should choose a "strong" signing
+  **    algorithm for signing the CSR. Supported values:
+  **      - `sha256WithRSAEncryption` (Default)
+  **      - `sha512WithRSAEncryption`
+  **  - `subjectAltNames (Obj[])`: - List of subject alternative names
   **
   ** The subject alternative names may be one of the following types:
   **  - `Str`: Created as [SanType.dnsName]
@@ -69,14 +69,16 @@ const mixin Crypto
   **  - [SanType.rfc822Name]
   **  - [SanType.registeredId]
   **
-  **     // Generate a csr signed with the default algorithm
-  **     csr := Crypto.cur.genCsr(pair, "cn=test")
+  ** ```fantom
+  ** // Generate a csr signed with the default algorithm
+  ** csr := Crypto.cur.genCsr(pair, "cn=test")
   **
-  **     // Generate a csr signed with SHA-512
-  **     csr := Crypto.cur.genCsr(pair, "cn=test", ["algorithm": "sha512WithRSAEncryption"])
+  ** // Generate a csr signed with SHA-512
+  ** csr := Crypto.cur.genCsr(pair, "cn=test", ["algorithm": "sha512WithRSAEncryption"])
   **
-  **     // Generate a csr with subject alternative names
-  **     csr := Crypto.cur.genCsr(pair, "cn=test", ["subjectAltNames": ["fantom.org", "www.fantom.org"]])
+  ** // Generate a csr with subject alternative names
+  ** csr := Crypto.cur.genCsr(pair, "cn=test", ["subjectAltNames": ["fantom.org", "www.fantom.org"]])
+  ** ```
   abstract Csr genCsr(KeyPair keys, Str subjectDn, Str:Obj opts := [:])
 
   ** Obtain a [builder](CertSigner) that can be used to configure signing
@@ -125,10 +127,12 @@ const mixin Crypto
   ** an Err if the format is not supported or there is a problem loading the keystore.
   **
   ** The following options may be supported by the implementation:
-  **  - `password`: (Str) - the password used to unlock the keystore
+  **  - `password (Str)`: - the password used to unlock the keystore
   **  or perform integrity checks.
   **
-  **     ks := Crypto.cur.loadKeyStore(`keystore.p12`, ["password":"changeit"])
+  **  ```fantom
+  **  ks := Crypto.cur.loadKeyStore(`keystore.p12`, ["password":"changeit"])
+  **  ```
   **
   abstract KeyStore loadKeyStore(File? file := null, Str:Obj opts := [:])
 
@@ -166,3 +170,4 @@ const mixin Crypto
   **
   abstract Jwk[] loadJwksForUri(Uri uri, Int maxKeys := 10)
 }
+

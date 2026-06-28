@@ -300,7 +300,7 @@ const class Jwt
     }
   }
 
-  ** Provide a [Key] ([PrivKey] or [SymKey]) to sign and return the base64 encoded [Jwt]
+  ** Provide a `[Key] ([PrivKey] or [SymKey])` to sign and return the base64 encoded [Jwt]
   **
   ** Null key will return an unsigned base64 encoded JWT
   **
@@ -319,15 +319,17 @@ const class Jwt
   **   - ES512 - ECDSA using P-256 and SHA-512
   **   - none  - No digital signature or MAC performed
   **
-  **     pair   := Crypto.cur.genKeyPair("RSA", 2048)
-  **     priv   := pair.priv
+  ** ```fantom
+  ** pair   := Crypto.cur.genKeyPair("RSA", 2048)
+  ** priv   := pair.priv
   **
-  **     jwtStr := Jwt {
-  **                  it.alg    = "RS256"
-  **                  it.claims = ["myClaim": "ClaimValue"]
-  **                  it.exp    = DateTime.nowUtc + 10min
-  **                  it.iss    = "https://fantom.accounts.dev"
-  **               }.encode(priv)
+  ** jwtStr := Jwt {
+  **             it.alg    = "RS256"
+  **             it.claims = ["myClaim": "ClaimValue"]
+  **             it.exp    = DateTime.nowUtc + 10min
+  **             it.iss    = "https://fantom.accounts.dev"
+  **           }.encode(priv)
+  ** ```
   **
   Str encode(Key? key)
   {

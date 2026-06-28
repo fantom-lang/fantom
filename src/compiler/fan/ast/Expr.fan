@@ -1022,10 +1022,10 @@ class ShortcutExpr : CallExpr
 
 **
 ** IndexedAssignExpr is a subclass of ShortcutExpr used
-** in situations like x[y] += z where we need keep of two
+** in situations like `x[y] += z` where we need keep of two
 ** extra scratch variables and the get's matching set method.
-** Note this class models the top x[y] += z, NOT the get target
-** which is x[y].
+** Note this class models the top `x[y] += z`, NOT the get target
+** which is `x[y]`.
 **
 ** In this example, IndexedAssignExpr shortcuts Int.plus and
 ** its target shortcuts List.get:

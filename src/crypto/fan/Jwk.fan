@@ -9,7 +9,7 @@
 **
 ** Models a JSON Web Key (JWK) as specified by [RFC7517](https://datatracker.ietf.org/doc/html/rfc7517)
 **
-** JWKs wrap a Key[`Key`] object with additional metadata
+** JWKs wrap a key object with additional metadata
 **
 const mixin Jwk
 {

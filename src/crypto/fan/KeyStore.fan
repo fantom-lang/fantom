@@ -7,8 +7,8 @@
 //
 
 **
-** KeyStore stores keys[`Key`] and certificates[`Cert`] in an aliased
-** [keystore entry](KeyStoreEntry). Aliases are case-insensitive.
+** KeyStore stores `keys[Key]` and `certificates[Cert]` in an aliased
+** `[keystore entry](KeyStoreEntry)`. Aliases are case-insensitive.
 **
 ** See [Crypto.loadKeyStore]
 **

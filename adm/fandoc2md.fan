@@ -510,8 +510,9 @@ internal class FandocConverter
     }
     else if (docPart.contains("::"))
     {
-      // fully qualified: pod::doc#frag
-      qname = docPart
+      // fully qualified: pod::doc#frag; "pod-doc" is the alias for the
+      // pod's pod.fandoc/doc.md chapter, keyed as "pod::pod" in the map
+      qname = docPart.endsWith("::pod-doc") ? docPart[0..<-4] : docPart
     }
     else
     {

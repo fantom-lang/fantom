@@ -170,10 +170,12 @@ class AsnObjBuilder
 
   ** Build an ASN.1 `Object Identifier` value (OID). The `val` may be:
   **  1. an `Int[]` where each element of the list is a part of the oid.
-  **  1. a `Str` where each part of the oid is separated by `.`.
+  **  2. a `Str` where each part of the oid is separated by `.`.
   **
-  **     Asn.oid([1,2,3])
-  **     Asn.oid("1.2.3")
+  ** ```fantom
+  ** Asn.oid([1,2,3])
+  ** Asn.oid("1.2.3")
+  ** ```
   AsnOid oid(Obj val)
   {
     if (val is Str)
@@ -268,3 +270,4 @@ class AsnObjBuilder
 
   private AsnTag[] etags(AsnTag univ) { tags.dup.add(univ) }
 }
+
