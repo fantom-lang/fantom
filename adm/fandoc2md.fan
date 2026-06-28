@@ -57,7 +57,7 @@ class Main : AbstractMain
       f.list.each |kid| { fix(kid, anchors) }
       return
     }
-    if (f.ext == "fan")    return fixFan(f)
+    if (f.ext == "fan")    return fixFan(f, anchors)
     if (f.ext == "fandoc") return fixFandoc(f, anchors)
   }
 
@@ -65,13 +65,29 @@ class Main : AbstractMain
 // .fan files - ** doc comments
 //////////////////////////////////////////////////////////////////////////
 
-  private Void fixFan(File f)
+  private Void fixFan(File f, FandocAnchorMap? anchors)
   {
     logMsg("Fix [$f.osPath]")
+    curAnchors = anchors
+    curBase    = fanBase(f)
     oldLines := f.readAllLines
     newLines := Str[,] { it.capacity = oldLines.size }
     processLines(f, oldLines, newLines)
     rewrite(f, newLines)
+  }
+
+  ** Derive the pod name for a .fan file so the anchor map can remap
+  ** fully-qualified cross-pod and relative same-pod doc fragment links.
+  ** The pod root is the directory containing build.fan.
+  private Str? fanBase(File f)
+  {
+    p := f.parent
+    while (p != null)
+    {
+      if ((p + `build.fan`).exists) return p.name
+      p = p.parent
+    }
+    return null
   }
 
   private Void processLines(File f, Str[] oldLines, Str[] newLines)
@@ -136,7 +152,7 @@ class Main : AbstractMain
 
   private Str[] fixStarStarDoc(Str[] lines)
   {
-    FandocConverter(curLoc, lines).fix
+    FandocConverter(curLoc, lines, curAnchors, curBase).fix
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,6 +232,8 @@ class Main : AbstractMain
 //////////////////////////////////////////////////////////////////////////
 
   private FileLoc curLoc := FileLoc.unknown
+  private FandocAnchorMap? curAnchors   // anchor map for current .fan file
+  private Str? curBase                  // pod name for current .fan file
 }
 
 **************************************************************************
@@ -302,6 +320,10 @@ internal class FandocConverter
 
     if (mode === FandocConverterMode.list && type === LineType.normal)
     {
+      // a continuation line aligned with the item's text column is prose:
+      // strip its indent, convert inline markup, then restore the indent.
+      // a more deeply indented line is an embedded code block: leave as-is.
+      if (curIndent == listTextCol) return Str.spaces(curIndent) + fixInline(line.trimStart)
       if (curIndent >= modeIndent) return line
     }
 
@@ -342,8 +364,10 @@ internal class FandocConverter
     modeIndent = curIndent
 
     i    := line.index(sep) ?: throw Err("Missing sep $sep - $line")
-    rest := line[i+1..-1].trimStart
-    rest  = fixInline(rest)
+    rest := line[i+1..-1]
+    // text column is where prose starts after the "- " or "1. " marker
+    listTextCol = i + 1 + (rest.size - rest.trimStart.size)
+    rest = fixInline(rest.trimStart)
     return line[0..i] + " " + rest
   }
 
@@ -510,6 +534,7 @@ internal class FandocConverter
   private Int linei
   private FandocConverterMode mode := FandocConverterMode.norm
   private Int modeIndent
+  private Int listTextCol      // column where current list item's text starts
   private FandocAnchorMap? anchors
   private Str? base
 }
