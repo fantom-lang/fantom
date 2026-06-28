@@ -49,7 +49,7 @@ const class SqlConnPool
   **
   ** If auto-commit is true then each statement is executed and committed
   ** as an individual transaction.  Otherwise statements are grouped into
-  ** transaction which must be closed via `SqlConn.commit` or `SqlConn.rollback`.
+  ** transaction which must be closed via [SqlConn.commit] or [SqlConn.rollback].
   Bool autoCommit
   {
     get { return isAutoCommit.val }
@@ -58,14 +58,14 @@ const class SqlConnPool
   private const AtomicBool isAutoCommit := AtomicBool(false)
 
   ** Allocate a SQL connection inside the given callback.  If a connection
-  ** cannot be acquired before `timeout` elapses then a TimeoutErr is raised.
+  ** cannot be acquired before [timeout] elapses then a TimeoutErr is raised.
   ** Do not close the connection inside the callback.
   native Void execute(|SqlConn| f)
 
   ** Close idle connections that have lingered past the linger timeout.
   native Void checkLinger()
 
-  ** Return if `close` has been called.
+  ** Return if [close] has been called.
   native Bool isClosed()
 
   ** Close all connections and raise exception on any new executes

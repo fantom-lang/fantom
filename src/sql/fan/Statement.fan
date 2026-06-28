@@ -10,7 +10,7 @@
 ** Statement is an executable statement for a specific database.
 ** A statement may be executed immediately or prepared and
 ** executed later with parameters.
-** See [pod-doc]`pod-doc#statements`.
+** See [pod-doc](pod-doc#statements).
 **
 class Statement
 {
@@ -33,21 +33,21 @@ class Statement
   native This prepare()
 
   **
-  ** Execute the statement and return the resulting 'List'
-  ** of 'Rows'.  The 'Cols' are available from 'List.of.fields' or
-  ** on 'type.fields' of each row instance.
+  ** Execute the statement and return the resulting `List`
+  ** of `Rows`.  The `Cols` are available from `List.of.fields` or
+  ** on `type.fields` of each row instance.
   **
   native Row[] query([Str:Obj]? params := null)
 
   **
   ** Execute the statement.  For each row in the result, invoke
-  ** the specified function 'eachFunc'.
+  ** the specified function `eachFunc`.
   **
   native Void queryEach([Str:Obj]? params, |Row row| eachFunc)
 
   **
   ** Execute the statement.  For each row in the result, invoke the specified
-  ** function 'eachFunc'. If the function returns non-null, then break the
+  ** function `eachFunc`. If the function returns non-null, then break the
   ** iteration and return the resulting object.  Return null if the function
   ** returns null for every item.
   **
@@ -56,11 +56,11 @@ class Statement
   **
   ** Execute a SQL statement and if applicable return a result:
   **   - If the statement is a query or procedure which produces
-  **     a result set, then return 'Row[]'
+  **     a result set, then return `Row[]`
   **   - If the statement is an insert and auto-generated keys
-  **     are supported by the connector then return 'Int[]' or 'Str[]'
+  **     are supported by the connector then return `Int[]` or `Str[]`
   **     of keys generated
-  **   - Return an 'Int' with the update count
+  **   - Return an `Int` with the update count
   **
   native Obj execute([Str:Obj]? params := null)
 

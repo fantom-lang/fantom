@@ -8,7 +8,7 @@
 
 **
 ** Col models a column of a relational table.  Columns
-** are accessed from rows with `Row.col` and `Row.cols`
+** are accessed from rows with [Row.col] and [Row.cols]
 **
 const class Col
 {
@@ -24,7 +24,7 @@ const class Col
     this.sqlType = sqlType
   }
 
-  ** Return 'name'.
+  ** Return `name`.
   override Str toStr() { name }
 
   ** Zero based index of the column in the query result.
@@ -34,11 +34,11 @@ const class Col
   const Str name
 
   ** Type of the column.
-  ** See [type mapping]`pod-doc#typeMapping`.
+  ** See [type mapping](pod-doc#sqlfantom-type-mapping).
   const Type type
 
   ** The type of the column as defined by the SQL database.
-  ** See [type mapping]`pod-doc#typeMapping`.
+  ** See [type mapping](pod-doc#sqlfantom-type-mapping).
   const Str sqlType
 
 }

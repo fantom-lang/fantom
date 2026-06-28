@@ -24,7 +24,8 @@ class Build : BuildPod
                 "proj.uri":     "https://fantom.org/",
                 "license.name": "Academic Free License 3.0",
                 "vcs.name":     "Git",
-                "vcs.uri":      "https://github.com/fantom-lang/fantom"]
+                "vcs.uri":      "https://github.com/fantom-lang/fantom",
+                "doc.format":   "markdown"]
     depends  = ["sys 1.0", "concurrent 1.0", "util 1.0"]
     srcDirs  = [`fan/`, `test/`]
     javaDirs = [`java/`]

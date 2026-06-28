@@ -10,7 +10,7 @@ using concurrent
 
 **
 ** SqlConn manages a connection to a relational database.
-** See [pod-doc]`pod-doc#connections`.
+** See [pod-doc](pod-doc#connections).
 **
 @NoDoc
 class SqlConnImpl : SqlConn
@@ -36,12 +36,12 @@ class SqlConnImpl : SqlConn
   ** Close the database connection.  Closing a connection already
   ** closed is a no-op.  This method is guaranteed to never throw
   ** an exception.  Return true if the connection was closed
-  ** successfully or 'false' if closed abnormally.
+  ** successfully or `false` if closed abnormally.
   **
   override native Bool close()
 
   **
-  ** Return if `close` has been called.
+  ** Return if [close] has been called.
   **
   override native Bool isClosed()
 
@@ -66,7 +66,7 @@ class SqlConnImpl : SqlConn
   **
   ** If auto-commit is true then each statement is executed and committed
   ** as an individual transaction.  Otherwise statements are grouped into
-  ** transaction which must be closed via `commit` or `rollback`.
+  ** transaction which must be closed via [commit] or [rollback].
   **
   override native Bool autoCommit
 

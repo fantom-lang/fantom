@@ -8,7 +8,7 @@
 
 **
 ** Row models a row of a relational table.
-** See [pod-doc]`pod-doc#row`.
+** See [pod-doc](pod-doc#sqlrow).
 **
 class Row
 {
@@ -26,13 +26,13 @@ class Row
 
   **
   ** Get column value.
-  ** See [type mapping]`pod-doc#typeMapping`.
+  ** See [type mapping](pod-doc#sqlfantom-type-mapping).
   **
   @Operator native Obj? get(Col col)
 
   **
   ** Set a column value.
-  ** See [type mapping]`pod-doc#typeMapping`.
+  ** See [type mapping](pod-doc#sqlfantom-type-mapping).
   **
   @Operator native Void set(Col col, Obj? val)
 
