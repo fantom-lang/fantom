@@ -216,7 +216,7 @@ class JavaType : CType
 
   **
   ** Return if this is an interop array like
-  ** 'fanx.interop.IntArray' which models 'int[]'.
+  ** `fanx.interop.IntArray` which models `int[]`.
   **
   Bool isInteropArray()
   {
@@ -224,7 +224,7 @@ class JavaType : CType
   }
 
   **
-  ** Is this a array type such as '[java]foo.bar::[Baz'
+  ** Is this a array type such as `[java]foo.bar::[Baz`
   **
   Bool isArray() {  arrayRank > 0 }
 
@@ -243,7 +243,7 @@ class JavaType : CType
   ** The arrayOf field always stores a JavaType so that we
   ** can correctly resolve the FFI qname.  This means that
   ** that an array of java.lang.Object will have an arrayOf
-  ** value of '[java]java.lang::Object'.  This method correctly
+  ** value of `[java]java.lang::Object`.  This method correctly
   ** maps the arrayOf map to its canonical Fantom type.
   **
   CType? inferredArrayOf()
@@ -264,8 +264,9 @@ class JavaType : CType
 
   **
   ** Get this type's Java class name:
-  **   [java]java.lang::Class  => java.lang.Class
-  **   [java]java.lang::[Class => [Ljava.lang.Class;
+  **
+  **     [java]java.lang::Class  => java.lang.Class
+  **     [java]java.lang::[Class => [Ljava.lang.Class;
   **
   once Str toJavaClassName()
   {
@@ -289,10 +290,11 @@ class JavaType : CType
   **
   ** We use an implicit constructor called "<new>" on
   ** each type as the protocol for telling the Java runtime
-  ** to perform a 'new' opcode for object allocation:
-  **   CallNew Type.<new>  // allocate object
-  **   args...             // arguments are pushed onto stack
-  **   CallCtor <init>     // call to java constructor
+  ** to perform a `new` opcode for object allocation:
+  **
+  **     CallNew Type.<new>  // allocate object
+  **     args...             // arguments are pushed onto stack
+  **     CallCtor <init>     // call to java constructor
   **
   once CMethod newMethod()
   {

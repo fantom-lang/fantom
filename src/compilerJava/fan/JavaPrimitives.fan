@@ -10,11 +10,12 @@ using compiler
 
 **
 ** JavaPrimitives is the pod namespace used to represent primitives:
-**   [java]::byte
-**   [java]::short
-**   [java]::char
-**   [java]::int
-**   [java]::float
+**
+**     [java]::byte
+**     [java]::short
+**     [java]::char
+**     [java]::int
+**     [java]::float
 **
 class JavaPrimitives : JavaPod
 {

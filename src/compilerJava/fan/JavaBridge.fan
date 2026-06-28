@@ -143,8 +143,9 @@ class JavaBridge : CBridge
   ** Given a dot operator slot access on the given foreign
   ** base type, determine the appopriate slot to use based on
   ** whether parens were used
-  **   base.name    =>  noParens = true
-  **   base.name()  =>  noParens = false
+  **
+  **     base.name    =>  noParens = true
+  **     base.name()  =>  noParens = false
   **
   ** In Java a given name could be bound to both a field and
   ** a method.  In this case we only resolve the field if
@@ -260,8 +261,8 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Is 'a' more specific than 'b' such that 'a' could be used
-  ** passed to 'b' without a compile time error.
+  ** Is `a` more specific than `b` such that `a` could be used
+  ** passed to `b` without a compile time error.
   **
   internal static Bool isMoreSpecific(CallMatch a, CallMatch b)
   {
@@ -731,7 +732,7 @@ class JavaBridge : CBridge
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get a CMethod representation for 'List.make(Type, Object[])'
+  ** Get a CMethod representation for `List.make(Type, Object[])`
   **
   once CMethod listMakeFromArray()
   {
@@ -747,7 +748,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Get a CMethod representation for 'Object[] List.asArray()'
+  ** Get a CMethod representation for `Object[] List.asArray()`
   **
   once CMethod listAsArray()
   {
@@ -760,7 +761,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Get a CType representation for 'java.lang.Class'
+  ** Get a CType representation for `java.lang.Class`
   **
   once JavaType classType()
   {
@@ -768,7 +769,7 @@ class JavaBridge : CBridge
   }
 
   **
-  ** Get a CType representation for 'java.lang.Object[]'
+  ** Get a CType representation for `java.lang.Object[]`
   **
   once JavaType objectArrayType()
   {

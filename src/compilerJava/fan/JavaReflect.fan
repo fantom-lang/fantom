@@ -357,8 +357,8 @@ internal class JavaReflect
 
   **
   ** If the specified Java classname maps directly to a Fantom type
-  ** then return it, otherwise null.  Direct mappings are 'sys::Obj',
-  ** 'sys::Str', and 'sys::Decimal' - this method only handles
+  ** then return it, otherwise null.  Direct mappings are `sys::Obj`,
+  ** `sys::Str`, and `sys::Decimal` - this method only handles
   ** object classes, not primitives like boolean, long, and double.
   **
   internal static CType? objectClassToDirectFanType(CNamespace ns, Str clsname)

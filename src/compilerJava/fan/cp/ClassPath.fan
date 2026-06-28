@@ -23,9 +23,9 @@ class ClassPath
   ** The following are also searched when constructing the class path:
   **  - {fan}lib/java/ext
   **  - {fan}lib/java/ext/{plat}
-  **  - Locations specified in the '-classpath' (as made available in
+  **  - Locations specified in the `-classpath` (as made available in
   **   the 'java.class.path' system property)
-  **  - Any additional locations specified via the 'addCp' parameter
+  **  - Any additional locations specified via the `addCp` parameter
   **
   static ClassPath forRuntime(File[] addCp := File#.emptyList)
   {

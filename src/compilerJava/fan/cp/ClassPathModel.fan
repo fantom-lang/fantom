@@ -37,7 +37,7 @@ abstract class ClassLib
 // Util
 //////////////////////////////////////////////////////////////////////////
 
-  ** Common utility to determine if a given '.class' file should be accepted or not.
+  ** Common utility to determine if a given `.class` file should be accepted or not.
   ** If it is accepted it will be added to the given accumulator.
   protected Void accept(Str:ClassPathPackage acc, Uri uri, File f, Bool isBoot := false)
   {

@@ -11,10 +11,10 @@
 **
 class DasmClass
 {
-  ** It-block constructor, use `Dasm`
+  ** It-block constructor, use [Dasm]
   internal new make(|This| f) { f(this) }
 
-  ** Classfile 'major.minor' version
+  ** Classfile `major.minor` version
   const Version version
 
   ** Class access flags
@@ -35,7 +35,7 @@ class DasmClass
   ** Member methods
   const DasmMethod[] methods
 
-  ** Return 'thisClass.toStr'
+  ** Return `thisClass.toStr`
   override Str toStr() { thisClass.toStr }
 
   ** Dump debug to output stream
