@@ -91,7 +91,7 @@ class Shell
   }
 
   **
-  ** Run the 'quit' command.
+  ** Run the `quit` command.
   **
   Void quit()
   {
@@ -99,7 +99,7 @@ class Shell
   }
 
   **
-  ** Run the 'help' command.
+  ** Run the `help` command.
   **
   Void help()
   {
@@ -124,7 +124,7 @@ class Shell
   }
 
   **
-  ** Run the 'scope' command.
+  ** Run the `scope` command.
   **
   Void dumpScope()
   {
