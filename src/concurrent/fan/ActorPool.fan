@@ -10,7 +10,7 @@
 ** Controller for a group of actors which manages their
 ** execution using pooled thread resources.
 **
-** See [docLang::Actors]`docLang::Actors`
+** See [docLang::Actors]
 **
 @Js
 native const class ActorPool
@@ -24,7 +24,7 @@ native const class ActorPool
   ** Return true if this pool has been stopped or killed.  Once a
   ** a pool is stopped, new messages may not be delivered to any of its
   ** actors.  A stopped pool is not necessarily done until all its
-  ** actors have finished processing.  Also see `isDone` and `join`.
+  ** actors have finished processing.  Also see [isDone] and [join].
   **
   Bool isStopped()
 
@@ -34,7 +34,7 @@ native const class ActorPool
   ** then true indicates that all pending messages in the queues before
   ** the stop have been fully processed.  If this pool was killed,
   ** then this method returns true once all actors have exited their
-  ** thread.  See `join` to block until done.
+  ** thread.  See [join] to block until done.
   **
   Bool isDone()
 
@@ -42,10 +42,10 @@ native const class ActorPool
   ** Perform an orderly shutdown.  Once stopped, no new messages may
   ** be sent to this pool's actors.  However, any pending messages
   ** will be processed.  Note that scheduled messages are *not*
-  ** guaranteed to be processed, only those delivered with 'Actor.send'.
+  ** guaranteed to be processed, only those delivered with `Actor.send`.
   **
-  ** Use `join` to wait for all actors to complete their message queue.
-  ** To perform an immediate shutdown use `kill`.  If the pool has
+  ** Use [join] to wait for all actors to complete their message queue.
+  ** To perform an immediate shutdown use [kill].  If the pool has
   ** already been stopped, then do nothing.  Return this.
   **
   This stop()
@@ -53,7 +53,7 @@ native const class ActorPool
   **
   ** Perform an unorderly shutdown.  Any pending messages which have
   ** not started processing are cancelled.  Actors which are currently
-  ** processing a message will be interrupted.  See `stop` to perform
+  ** processing a message will be interrupted.  See [stop] to perform
   ** an orderly shutdown.  If the pool has already been killed,
   ** then do nothing.
   **
@@ -91,9 +91,9 @@ native const class ActorPool
   **
   ** Max number of messages that may be queued by actors in this pool.
   ** Once this limit is reached, any messages sent are immediately rejected
-  ** and their future will raise `QueueOverflowErr`.  This limit only applies
-  ** to messages sent via 'send' and 'sendWhenDone'.  No limit checking
-  ** is applied to 'sendLater'.
+  ** and their future will raise [QueueOverflowErr].  This limit only applies
+  ** to messages sent via `send` and `sendWhenDone`.  No limit checking
+  ** is applied to `sendLater`.
   **
   const Int maxQueue := 100_000_000
 

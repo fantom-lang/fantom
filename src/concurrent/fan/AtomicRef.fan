@@ -29,20 +29,20 @@ final const class AtomicRef
 
   **
   ** Atomically set the value and return the previous value.
-  ** Throw NotImmutableErr if 'val' is mutable.
+  ** Throw NotImmutableErr if `val` is mutable.
   **
   native Obj? getAndSet(Obj? val)
 
   **
-  ** Atomically set the value to 'update' if current value is
-  ** equivalent to the 'expect' value compared using '===' operator.
+  ** Atomically set the value to `update` if current value is
+  ** equivalent to the `expect` value compared using `===` operator.
   ** Return true if updated, or false if current value was not equal
-  ** to the expected value. Throw NotImmutableErr if 'update' is mutable.
+  ** to the expected value. Throw NotImmutableErr if `update` is mutable.
   **
   native Bool compareAndSet(Obj? expect, Obj? update)
 
   **
-  ** Return 'val.toStr'
+  ** Return `val.toStr`
   **
   override Str toStr() { val?.toStr ?: "null" }
 

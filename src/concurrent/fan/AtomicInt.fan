@@ -30,8 +30,8 @@ final const class AtomicInt
   native Int getAndSet(Int val)
 
   **
-  ** Atomically set the value to 'update' if current value is
-  ** equivalent to the 'expect' value.  Return true if updated, or
+  ** Atomically set the value to `update` if current value is
+  ** equivalent to the `expect` value.  Return true if updated, or
   ** false if current value was not equal to the expected value.
   **
   native Bool compareAndSet(Int expect, Int update)
@@ -88,7 +88,7 @@ final const class AtomicInt
   native Void add(Int delta)
 
   **
-  ** Return 'val.toStr'
+  ** Return `val.toStr`
   **
   override Str toStr() { val.toStr }
 

@@ -9,7 +9,7 @@
 **
 ** Future represents the result of an asynchronous computation.
 **
-** See [docLang::Actors]`docLang::Actors`
+** See [docLang::Actors]
 **
 @Js
 native abstract const class Future
@@ -87,8 +87,8 @@ native abstract const class Future
   ** given callback.
   **
   ** In the Java VM this operation is a blocking operation that has the
-  ** same effect as calling `waitFor` and then invoking the given callback
-  ** with the result of `get` or `err`.
+  ** same effect as calling [waitFor] and then invoking the given callback
+  ** with the result of [get] or [err].
   **
   ** In JavaScript this operation wraps Promise.then with the same semantics.
   **

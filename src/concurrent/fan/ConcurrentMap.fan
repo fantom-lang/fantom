@@ -42,7 +42,7 @@ native const final class ConcurrentMap
   Obj getOrAdd(Obj key, Obj defVal)
 
   ** Append the specified map to this map be setting every key/value from
-  ** 'm' in this map. Keys in m not yet mapped are added and keys already
+  ** `m` in this map. Keys in m not yet mapped are added and keys already
   ** mapped are overwritten. Return this.
   This setAll(Map m)
 

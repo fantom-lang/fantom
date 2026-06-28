@@ -30,14 +30,14 @@ final const class AtomicBool
   native Bool getAndSet(Bool val)
 
   **
-  ** Atomically set the value to 'update' if current value is
-  ** equivalent to the 'expect' value.  Return true if updated, or
+  ** Atomically set the value to `update` if current value is
+  ** equivalent to the `expect` value.  Return true if updated, or
   ** false if current value was not equal to the expected value.
   **
   native Bool compareAndSet(Bool expect, Bool update)
 
   **
-  ** Return 'val.toStr'
+  ** Return `val.toStr`
   **
   override Str toStr() { val.toStr }
 
