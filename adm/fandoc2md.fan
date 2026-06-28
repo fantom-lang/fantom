@@ -111,8 +111,10 @@ class Main : AbstractMain
       trimmed := line.trimStart
       if (isStarSep(trimmed)) { newLines.add(line); continue }
 
-      // look for ** doc comment block
-      if (!trimmed.startsWith("**")) { newLines.add(line); continue }
+      // look for ** doc comment block; a real comment is "**" followed by a
+      // space or end-of-line, never another '*' (which would be a line of
+      // asterisks inside a string literal or section divider, not a comment)
+      if (!isStarStarComment(trimmed)) { newLines.add(line); continue }
 
       // find the leading prefix (whitespace before the **)
       ss     := line.index("**") ?: 0
@@ -214,7 +216,11 @@ class Main : AbstractMain
     }
     else
     {
-      f.out.printLine(lines.join("\n")).close
+      // skip rewrite if the only difference is a trailing newline, so we
+      // don't churn files that are otherwise unchanged
+      newText := lines.join("\n")
+      if (f.exists && f.readAllStr.trimEnd == newText.trimEnd) return
+      f.out.printLine(newText).close
     }
   }
 
@@ -225,6 +231,15 @@ class Main : AbstractMain
   private static Bool isStarSep(Str trimmed)
   {
     return trimmed.size > 2 && trimmed.all |ch| { ch == '*' }
+  }
+
+  ** Return true if the trimmed line is a real "**" doc comment: it starts
+  ** with "**" followed by a space or end-of-line.  A third '*' means it is a
+  ** line of asterisks (string literal content or divider), not a comment.
+  private static Bool isStarStarComment(Str trimmed)
+  {
+    if (!trimmed.startsWith("**")) return false
+    return trimmed.size == 2 || trimmed[2] == ' '
   }
 
 //////////////////////////////////////////////////////////////////////////
