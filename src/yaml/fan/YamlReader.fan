@@ -10,10 +10,10 @@
 using util
 
 **
-** Converts YAML text into a hierarchy of [YamlObjs]`yaml::YamlObj`,
+** Converts YAML text into a hierarchy of [YamlObjs](yaml::YamlObj),
 ** which can in turn be converted into native Fantom objects.
 **
-** See the [pod documentation]`yaml::pod-doc` for more information.
+** See the [pod documentation](yaml::pod-doc) for more information.
 **
 class YamlReader
 {

@@ -20,7 +20,7 @@
 ** ignores all the rest (thus only generating Strs, Lists, and Maps),
 ** while the JSON schema also recognizes integers, booleans, etc.
 **
-** See the [pod documentation]`yaml::pod-doc#schemas` for more information,
+** See the [pod documentation](yaml::pod-doc#schemas) for more information,
 ** especially about the specifics of each built-in schema.
 **
 abstract const class YamlSchema
@@ -57,8 +57,8 @@ abstract const class YamlSchema
 
   ** Transforms the native Fantom object into a YamlObj hierarchy
   ** that preserves as much information as possible. The object
-  ** must be [serializable]`docLang::Serialization#serializable` or
-  ** [simple]`docLang::Serialization#simple`. YamlObjs are encoded
+  ** must be [serializable](docLang::Serialization#serializable) or
+  ** [simple](docLang::Serialization#simple). YamlObjs are encoded
   ** as themselves; no further processing is done.
   abstract YamlObj encode(Obj? obj)
 
@@ -81,7 +81,7 @@ abstract const class YamlSchema
   @NoDoc
   protected virtual Bool isRecognized(Str tag) { false }
 
-  ** Recursive helper for 'encode' implementations.
+  ** Recursive helper for `encode` implementations.
   @NoDoc
   protected YamlObj recEncode(Obj? obj, |Obj?->YamlObj| f)
   {
@@ -158,12 +158,12 @@ abstract const class YamlSchema
 const class YamlTagErr : Err
 {
   ** Used when the given tag cannot be assigned to the given node type,
-  ** e.g. attempting to assign a map tag to a [YamlList]`yaml::YamlList`.
+  ** e.g. attempting to assign a map tag to a [YamlList](yaml::YamlList).
   new makeType(Str tag, Type type)
   : super.make("The tag \"$tag\" cannot be assigned to the node type ${type.name}.") {}
 
   ** Used when the YamlObj's tag and content do not match, e.g. combining the tag
-  ** 'tag:yaml.org,2002:int' with the content '"true"'.
+  ** `tag:yaml.org,2002:int` with the content `"true"`.
   new makeContent(YamlObj obj)
   : super.make("The tag \"$obj.tag\" does not fit the content \"$obj.val\".") {}
 

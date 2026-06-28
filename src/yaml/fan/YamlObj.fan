@@ -17,7 +17,7 @@ using util
 ** The base class for objects that represent nodes in a YAML hierarchy.
 ** The key information for each node is its tag and content.
 **
-** See the [pod documentation]`yaml::pod-doc` for more information.
+** See the [pod documentation](yaml::pod-doc) for more information.
 **
 @Serializable
 abstract const class YamlObj
@@ -27,14 +27,14 @@ abstract const class YamlObj
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  ** The node's tag. Either a specific tag (e.g. 'tag:yaml.org,2002:str')
-  ** or the non-specific tag '?'.
+  ** The node's tag. Either a specific tag (e.g. `tag:yaml.org,2002:str`)
+  ** or the non-specific tag `?`.
   Str tag() { tagRef }
   internal const Str tagRef
 
-  ** The node's content value. [YamlScalars]`yaml::YamlScalar` always have
-  ** content of type 'Str', [YamlLists]`yaml::YamlList` with content
-  ** type 'YamlObj[]', and [YamlMaps]`yaml::YamlMap` with 'YamlObj:YamlObj'.
+  ** The node's content value. [YamlScalars](yaml::YamlScalar) always have
+  ** content of type `Str`, [YamlLists](yaml::YamlList) with content
+  ** type `YamlObj[]`, and [YamlMaps](yaml::YamlMap) with `YamlObj:YamlObj`.
   virtual Obj val() { valRef }
   internal const Obj valRef
 
@@ -57,11 +57,11 @@ abstract const class YamlObj
 // Public methods
 //////////////////////////////////////////////////////////////////////////
 
-  ** Convenience for [schema.decode]`yaml::YamlSchema.decode`.
+  ** Convenience for [schema.decode](yaml::YamlSchema.decode).
   Obj? decode(YamlSchema schema := YamlSchema.core) { schema.decode(this) }
 
   ** Transforms the YAML object back into a string, using block style where
-  ** applicable. The result ends with '\n' and may span multiple lines.
+  ** applicable. The result ends with `\n` and may span multiple lines.
   Void write(OutStream out := Env.cur.out) { writeInd(out, 0) }
 
   // Helper method for write
@@ -84,7 +84,7 @@ abstract const class YamlObj
   ** Hash is based on tag and content
   override Int hash() { 31 * tag.hash + val.hash }
 
-  ** Returns 'write' written into a string.
+  ** Returns `write` written into a string.
   override Str toStr()
   {
     buf := StrBuf()
@@ -98,21 +98,21 @@ abstract const class YamlObj
 **************************************************************************
 
 **
-** A YamlObj whose content always has the type 'Str'.
+** A YamlObj whose content always has the type `Str`.
 ** For example, each item on the list below is a scalar:
 **
-** pre>
+** ```fantom
 **  - This is a plain scalar
 **  - "This is a string"
 **  - !!int 5
-** <pre
+** ```
 **
 const class YamlScalar : YamlObj
 {
   // content : Str
 
-  ** Creates a YamlScalar with the string 'val' as content,
-  ** found at location 'loc', with 'tag' as its tag.
+  ** Creates a YamlScalar with the string `val` as content,
+  ** found at location `loc`, with `tag` as its tag.
   new make(Str val, Str tag := "?", FileLoc loc := FileLoc.unknown)
    : super(val, normTag(tag), loc)
   {
@@ -187,22 +187,22 @@ const class YamlScalar : YamlObj
 **************************************************************************
 
 **
-** A YamlObj whose content always has the type 'YamlObj[]'.
+** A YamlObj whose content always has the type `YamlObj[]`.
 ** For example, each item on the list below is itself a list:
 **
-** pre>
+** ```fantom
 **  - - a
 **    - b
 **    - c
 **  - [a, b, c]
-** <pre
+** ```
 **
 const class YamlList : YamlObj
 {
   // content : YamlObj[]
 
-  ** Creates a YamlList with the list 'val' as content,
-  ** found at location 'loc', with 'tag' as its tag.
+  ** Creates a YamlList with the list `val` as content,
+  ** found at location `loc`, with `tag` as its tag.
   new make(YamlObj[] val, Str tag := "!", FileLoc loc := FileLoc.unknown)
     : super(val, normTag(tag), loc)
   {
@@ -281,21 +281,21 @@ const class YamlList : YamlObj
 **************************************************************************
 
 **
-** A YamlObj whose content always has the type 'YamlObj:YamlObj'.
+** A YamlObj whose content always has the type `YamlObj:YamlObj`.
 ** For example, each item on the list below is a map:
 **
-** pre>
+** ```fantom
 **  - foo: bar
 **    a: b
 **  - {foo: bar, a: b}
-** <pre
+** ```
 **
 const class YamlMap : YamlObj
 {
   // content : [YamlObj:YamlObj]
 
-  ** Creates a YamlMap with the map 'val' as content,
-  ** found at location 'loc', with 'tag' as its tag.
+  ** Creates a YamlMap with the map `val` as content,
+  ** found at location `loc`, with `tag` as its tag.
   new make([YamlObj:YamlObj] val, Str tag := "!", FileLoc loc := FileLoc.unknown)
     : super(val, normTag(tag), loc)
   {

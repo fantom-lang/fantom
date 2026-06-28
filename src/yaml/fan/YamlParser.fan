@@ -27,7 +27,7 @@ internal class YamlParser
 
   ** Parse a whole YAML input stream.
   **
-  ** [211] l-yaml-stream
+  ** (211) l-yaml-stream
   YamlObj[] parse()
   {
     docs = [,]
@@ -37,8 +37,8 @@ internal class YamlParser
 
   ** Parse an individual document.
   **
-  ** [211] l-yaml-stream
-  ** [210] l-any-document
+  ** (211) l-yaml-stream
+  ** (210) l-any-document
   private Void parseDocument()
   {
     //document setup
@@ -91,10 +91,10 @@ internal class YamlParser
 
   ** Parse the directive section (containing 0 or more directive lines),
   ** adding its information to the current document.
-  ** Includes the '---' directive end marker.
+  ** Includes the `---` directive end marker.
   **
-  ** [82] l-directive
-  ** [203] c-directives-end
+  ** (82) l-directive
+  ** (203) c-directives-end
   private Void parseDirectives()
   {
     // you can only use the YAML directive once
@@ -191,10 +191,10 @@ internal class YamlParser
     r.eatToken("---")
   }
 
-  ** Parse a (potentially) block node, where the parent has 'n' indent
-  ** level and provides 'ctx' context.
+  ** Parse a (potentially) block node, where the parent has `n` indent
+  ** level and provides `ctx` context.
   **
-  ** [196] s-l+block-node(n,c)
+  ** (196) s-l+block-node(n,c)
   private YamlObj parseBlockNode(Int n, Context ctx)
   {
     c := r.peekIndentedNs(n+1, r.docPrefix)
@@ -291,7 +291,7 @@ internal class YamlParser
     return node
   }
 
-  ** [161] ns-flow-node(n,c)
+  ** (161) ns-flow-node(n,c)
   private YamlObj parseFlowNode(Int n, Context ctx)
   {
     // [104] c-ns-alias-node
@@ -346,7 +346,7 @@ internal class YamlParser
     return node
   }
 
-  ** [104] c-ns-alias-node
+  ** (104) c-ns-alias-node
   private YamlObj parseAlias(Context ctx)
   {
     startLoc := r.loc
@@ -367,7 +367,7 @@ internal class YamlParser
   ** and return the results in a map of "tag" to the tag and "anchor"
   ** to the anchor (one of which may not be present).
   **
-  ** [96] c-ns-properties(n,c)
+  ** (96) c-ns-properties(n,c)
   private [Str:Str] parseProperties(Int n, Context ctx)
   {
     Int? c
@@ -447,7 +447,7 @@ internal class YamlParser
     return res
   }
 
-  ** [170] c-l+literal(n)
+  ** (170) c-l+literal(n)
   private YamlScalar parseLiteral(Int n, Str tag, FileLoc? loc)
   {
     startLoc := loc ?: r.loc
@@ -516,7 +516,7 @@ internal class YamlParser
     return YamlScalar(s.toStr, tag == "" ? "!" : tag, startLoc)
   }
 
-  ** [174] c-l+folded(n)
+  ** (174) c-l+folded(n)
   private YamlScalar parseFolded(Int n, Str tag, FileLoc? loc)
   {
     startLoc := loc ?: r.loc
@@ -594,7 +594,7 @@ internal class YamlParser
     return YamlScalar(s.toStr, tag == "" ? "!" : tag, startLoc)
   }
 
-  ** [162] c-b-block-header(t)
+  ** (162) c-b-block-header(t)
   private [Str:Obj] parseBlockHeader(Int n)
   {
     res := [:]
@@ -622,7 +622,7 @@ internal class YamlParser
     return res
   }
 
-  ** [120] c-single-quoted(n,c)
+  ** (120) c-single-quoted(n,c)
   private YamlScalar parseSingleQuote(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     Int? c
@@ -686,7 +686,7 @@ internal class YamlParser
     return YamlScalar(s.toStr, tag == "" ? "!" : tag, loc ?: initLoc)
   }
 
-  ** [109] c-double-quoted(n,c)
+  ** (109) c-double-quoted(n,c)
   private YamlScalar parseDoubleQuote(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     Int? c
@@ -794,7 +794,7 @@ internal class YamlParser
     return YamlScalar(s.toStr, tag == "" ? "!" : tag, loc ?: initLoc)
   }
 
-  ** [137] c-flow-sequence(n,c)
+  ** (137) c-flow-sequence(n,c)
   private YamlList parseFlowSeq(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     YamlObj[] res := [,]
@@ -828,7 +828,7 @@ internal class YamlParser
     return YamlList(res, tag, startLoc)
   }
 
-  ** [139] ns-flow-seq-entry(n,c)
+  ** (139) ns-flow-seq-entry(n,c)
   private YamlObj parseFlowSeqEntry(Int n, Context ctx)
   {
     // [143] ns-flow-map-explicit-entry(n,c)
@@ -864,7 +864,7 @@ internal class YamlParser
     return parseFlowNode(n,ctx)
   }
 
-  ** [140] c-flow-mapping(n,c)
+  ** (140) c-flow-mapping(n,c)
   private YamlMap parseFlowMap(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     res := YamlObj:YamlObj[:]
@@ -899,7 +899,7 @@ internal class YamlParser
     return YamlMap(res, tag, startLoc)
   }
 
-  ** [142] ns-flow-map-entry(n,c)
+  ** (142) ns-flow-map-entry(n,c)
   private [Str:YamlObj] parseFlowMapEntry(Int n, Context ctx)
   {
     YamlObj key := YamlScalar("", r.loc)
@@ -949,7 +949,7 @@ internal class YamlParser
     return ["key": key, "val": val]
   }
 
-  ** [183] l+block-sequence(n)
+  ** (183) l+block-sequence(n)
   private YamlList parseBlockSeq(Int n, Str tag, FileLoc? loc)
   {
     startLoc := loc
@@ -971,7 +971,7 @@ internal class YamlParser
     return YamlList(res, tag, startLoc)
   }
 
-  ** [184] c-l-block-seq-entry(n)
+  ** (184) c-l-block-seq-entry(n)
   private YamlObj parseBlockSeqEntry(Int n)
   {
     r.eatChar('-')
@@ -980,7 +980,7 @@ internal class YamlParser
     return parseBlockIndented(n, Context.blockIn)
   }
 
-  ** [187] l+block-mapping(n)
+  ** (187) l+block-mapping(n)
   private YamlMap parseBlockMap(Int n, Str tag, FileLoc? loc)
   {
     startLoc := loc
@@ -1006,7 +1006,7 @@ internal class YamlParser
     return YamlMap(res, tag, startLoc)
   }
 
-  ** [188] ns-l-block-map-entry(n)
+  ** (188) ns-l-block-map-entry(n)
   private [Str:YamlObj] parseBlockMapEntry(Int n)
   {
     res := [:]
@@ -1063,7 +1063,7 @@ internal class YamlParser
     return res
   }
 
-  ** [185] s-l+block-indented(n,c)
+  ** (185) s-l+block-indented(n,c)
   private YamlObj parseBlockIndented(Int n, Context ctx)
   {
     // [186] ns-l-compact-sequence(n)
@@ -1120,7 +1120,7 @@ internal class YamlParser
     else return parseBlockNode(n,ctx)
   }
 
-  ** [131] ns-plain(n,c)
+  ** (131) ns-plain(n,c)
   private YamlScalar parsePlain(Int n, Context ctx, Str tag, FileLoc? loc)
   {
     s := StrBuf()
@@ -1159,8 +1159,8 @@ internal class YamlParser
   ** Eats the plain scalar from the current position to some other
   ** point within the line (dependent on context).
   **
-  ** [130] ns-plain-char(c)
-  ** [132] nb-ns-plain-in-line(c)
+  ** (130) ns-plain-char(c)
+  ** (132) nb-ns-plain-in-line(c)
   private Str plainInLine(Context ctx)
   {
     if (r.peek == '#') return ""
@@ -1185,7 +1185,7 @@ internal class YamlParser
   ** current position and the upcoming node, ensuring that the
   ** indentation is respected.
   **
-  ** [80] s-separate(n,c)
+  ** (80) s-separate(n,c)
   private Void separate(Int n, Context ctx)
   {
     if (ctx == Context.blockKey || ctx == Context.flowKey || !(['#', '\n'] as Int?[]).contains(r.peekNextNs)) r.eatWs
@@ -1197,18 +1197,18 @@ internal class YamlParser
     }
   }
 
-  ** [79] s-l-comments
+  ** (79) s-l-comments
   private Void sLComments(|->Int?| readRule := r.printable)
   {
     if (r.loc.col != 1) r.eatCommentLine
     while ((['#','\n'] as Int?[]).contains(r.peekNextNs(readRule))) r.eatLine(readRule)
   }
 
-  ** Parse the end of a document, consisting of the document suffix '...'
+  ** Parse the end of a document, consisting of the document suffix `...`
   ** and optionally a line-ending comment. Then, start parsing the next
   ** document, if it exists in the stream.
   **
-  ** [204] c-document-end
+  ** (204) c-document-end
   private Void parseDocEnd()
   {
     assertLineStart
@@ -1236,9 +1236,9 @@ internal class YamlParser
       throw err("Internal parser error: The parser should have been at the beginning of the line here.")
   }
 
-  ** Assert that the stream is not followed by ": " ('keyIsJson' false) or
-  ** ":" ('keyIsJson' true), erroring appropriately if not.
-  ** Then, eats a sLComment block and returns 'ret'.
+  ** Assert that the stream is not followed by ": " (`keyIsJson` false) or
+  ** ":" (`keyIsJson` true), erroring appropriately if not.
+  ** Then, eats a sLComment block and returns `ret`.
   private YamlObj objSLComments(Int startLine, Bool keyIsJson, YamlObj ret)
   {
     // Error if followed by :
@@ -1301,7 +1301,7 @@ internal class YamlParser
     }
   }
 
-  ** Returns a copy of the given YamlObj with the location set to 'loc'.
+  ** Returns a copy of the given YamlObj with the location set to `loc`.
   private YamlObj setLoc(YamlObj obj, FileLoc loc)
   {
     return Type.of(obj).make(

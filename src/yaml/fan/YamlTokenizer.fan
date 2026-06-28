@@ -186,7 +186,7 @@ internal class YamlTokenizer
     eatLine
   }
 
-  ** Eats 'n' spaces of indentation, erroring appropriately if not found.
+  ** Eats `n` spaces of indentation, erroring appropriately if not found.
   Void eatInd(Int n)
   {
     for(i := 0; i < n; i++)
@@ -290,7 +290,7 @@ internal class YamlTokenizer
 
   ** Returns the next non-space character, ignoring comments and newlines,
   ** without reading any characters. If a non-NL, non-comment character is
-  ** reached on a new line that is not at least indented by 'n' spaces,
+  ** reached on a new line that is not at least indented by `n` spaces,
   ** null is returned.
   Int? peekIndentedNs(Int n, |->Int?| readRule := printable)
   {
@@ -447,7 +447,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [38] ns-word-char
+  ** (38) ns-word-char
   once |->Int?| tagHandle()
   {
     |->Int?|
@@ -459,7 +459,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [40] ns-tag-char
+  ** (40) ns-tag-char
   once |->Int?| tagSuffix()
   {
     |->Int?|
@@ -477,7 +477,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [39] ns-uri-char
+  ** (39) ns-uri-char
   once |->Int?| uri()
   {
     |->Int?|
@@ -496,7 +496,7 @@ internal class YamlTokenizer
   }
 
   ** Matches the first character of a plain scalar
-  ** [126] ns-plain-first(c)
+  ** (126) ns-plain-first(c)
   |->Int?| firstChar(Context ctx)
   {
     |->Int?|
@@ -519,8 +519,8 @@ internal class YamlTokenizer
     }
   }
 
-  ** [163] c-indentation-indicator
-  ** [164] c-chomping-indicator(t)
+  ** (163) c-indentation-indicator
+  ** (164) c-chomping-indicator(t)
   once |->Int?| blockStyle()
   {
     |->Int?|
@@ -535,7 +535,7 @@ internal class YamlTokenizer
   }
 
   ** Matches characters that are allowed in quoted strings
-  ** [2] nb-json
+  ** (2) nb-json
   once |->Int?| str()
   {
     |->Int?|
@@ -547,7 +547,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [36] ns-hex-digit
+  ** (36) ns-hex-digit
   once |->Int?| hex()
   {
     |->Int?|
@@ -559,7 +559,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [33] s-white
+  ** (33) s-white
   once |->Int?| ws()
   {
     |->Int?|
@@ -571,7 +571,7 @@ internal class YamlTokenizer
     }
   }
 
-  ** [1] c-printable
+  ** (1) c-printable
   once |->Int?| printable()
   {
     |->Int?|
