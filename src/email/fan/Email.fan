@@ -11,7 +11,7 @@ using inet
 **
 ** Email models a top level MIME message.
 **
-** See [pod doc]`pod-doc` and [examples]`examples::email-sending`.
+** See [pod doc](pod-doc) and [examples](examples::email-sending).
 **
 @Serializable
 class Email
@@ -24,25 +24,25 @@ class Email
 
   **
   ** From email address.
-  ** See `MimeUtil.toAddrSpec` for address formatting.
+  ** See [MimeUtil.toAddrSpec] for address formatting.
   **
   Str? from
 
   **
   ** List of "to" email addresses.
-  ** See `MimeUtil.toAddrSpec` for address formatting.
+  ** See [MimeUtil.toAddrSpec] for address formatting.
   **
   Str[]? to
 
   **
   ** List of "cc" email addresses.
-  ** See `MimeUtil.toAddrSpec` for address formatting.
+  ** See [MimeUtil.toAddrSpec] for address formatting.
   **
   Str[]? cc
 
   **
   ** List of "bcc" email addresses.
-  ** See `MimeUtil.toAddrSpec` for address formatting.
+  ** See [MimeUtil.toAddrSpec] for address formatting.
   **
   Str[]? bcc
 
@@ -58,13 +58,13 @@ class Email
   Str subject := ""
 
   **
-  ** Body of the email - typically an instance of `TextPart`
-  ** or `MultiPart`.
+  ** Body of the email - typically an instance of [TextPart]
+  ** or [MultiPart].
   **
   EmailPart? body
 
   **
-  ** Return the aggregation of `to`, `cc`, and `bcc`.
+  ** Return the aggregation of [to], [cc], and [bcc].
   **
   Str[] recipients()
   {
@@ -110,7 +110,7 @@ class Email
   ** Encode a list of to/cc email addresses as a MIME header field.
   ** We fold the header so each email address is on its own line
   ** to avoid 1000 char line limit.  We also run each address thru
-  ** `MimeUtil.toAddrSpec` for normalization.
+  ** [MimeUtil.toAddrSpec] for normalization.
   **
   private Void encodeAddrSpecsField(OutStream out, Str name, Str[]? vals)
   {

@@ -75,7 +75,7 @@ class FilePart : EmailPart
       in.close
   }
 
-  ** Encode 'size' bytes from 'in' to 'out' as base64 with maximum line length of 50.
+  ** Encode `size` bytes from `in` to `out` as base64 with maximum line length of 50.
   **
   ** Neither stream is closed after calling this function.
   @NoDoc static Void encodeBase64(InStream in, Int size, OutStream out)

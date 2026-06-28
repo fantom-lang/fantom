@@ -30,9 +30,9 @@ class MimeUtil
   ** address string.  The result is always returned as "<addr>".
   ** The addresses may be formatted with or without a display name:
   **
-  **   bob@acme.com                =>  <bob@acme.com>
-  **   Bob Smith <bob@acme.com>    =>  <bob@acme.com>
-  **   "Bob Smith" <bob@acme.com>  =>  <bob@acme.com>
+  **     bob@acme.com                =>  <bob@acme.com>
+  **     Bob Smith <bob@acme.com>    =>  <bob@acme.com>
+  **     "Bob Smith" <bob@acme.com>  =>  <bob@acme.com>
   **
   static Str toAddrSpec(Str addr)
   {

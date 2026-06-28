@@ -12,7 +12,7 @@ using inet
 ** SmtpClient implements the client side of SMTP (Simple
 ** Mail Transport Protocol) as specified by RFC 2821.
 **
-** See [pod doc]`pod-doc` and [examples]`examples::email-sending`.
+** See [pod doc](pod-doc) and [examples](examples::email-sending).
 **
 class SmtpClient
 {
@@ -50,7 +50,7 @@ class SmtpClient
   **
   Bool ssl
 
-  ** The `inet::SocketConfig` to use for creating sockets.
+  ** The [inet::SocketConfig] to use for creating sockets.
   SocketConfig socketConfig := SocketConfig.cur
 
 //////////////////////////////////////////////////////////////////////////
