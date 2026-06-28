@@ -1,50 +1,46 @@
-**************************************************************************
-** title:      WebRepos
-** author:     Brian Frank
-** created:    24 Jun 11
-** copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      WebRepos
+author:     Brian Frank
+created:    24 Jun 11
+copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
-The 'fanr' includes client and server implementations of repositories
+# Overview
+The `fanr` includes client and server implementations of repositories
 which may be used over a simple HTTP REST protocol.
 
-WebRepoMod [#webRepoMod]
-************************
-The `fanr::WebRepoMod` class is a standard [web module]`web::WebMod`
+# WebRepoMod
+The [fanr::WebRepoMod] class is a standard [web module](web::WebMod)
 which allows you to publish a repository in your own web sites.  This
-class wraps a backing store repository which is often a [file repo]`FileRepos`
+class wraps a backing store repository which is often a [file repo](FileRepos)
 and implements the server side REST protocol.
 
-The `fanr::WebRepoAuth` class provides hooks for to integrate the repository
+The [fanr::WebRepoAuth] class provides hooks for to integrate the repository
 into your web site's authentication and security model.
 
-WebRepoMain [#webRepoMain]
-**************************
-There is a super, simple implementation in the 'fanr' pod which allows
+# WebRepoMain
+There is a super, simple implementation in the `fanr` pod which allows
 you to publish a file repo to the web using the following command line:
 
-  fan fanr::WebRepoMain /path/to/fileRepo -port 80
+    fan fanr::WebRepoMain /path/to/fileRepo -port 80
 
 By default the server is public, or you can use the -username and
 -password options to protect it with a simple username/password
 combination.
 
-REST Protocol [#protocol]
-*************************
+# REST Protocol
 The following table specifies the URI namespace of the fanr REST protocol:
 
-  Method   Uri                       Operation
-  ------   --------------------      ---------
-  GET      {base}/ping               ping meta-data
-  GET      {base}/find/{name}/{ver}  find pod
-  GET      {base}/query?{query}      pod query
-  POST     {base}/query              pod query
-  GET      {base}/pod/{name}/{ver}   pod download
-  POST     {base}/publish            publish pod
-  GET      {base}/auth?{username}    authentication info
+    Method   Uri                       Operation
+    ------   --------------------      ---------
+    GET      {base}/ping               ping meta-data
+    GET      {base}/find/{name}/{ver}  find pod
+    GET      {base}/query?{query}      pod query
+    POST     {base}/query              pod query
+    GET      {base}/pod/{name}/{ver}   pod download
+    POST     {base}/publish            publish pod
+    GET      {base}/auth?{username}    authentication info
 
 The protocol defines a set of "Fanr-" headers for authentication
 and specifying options to operations.  The payload of all operations
@@ -52,26 +48,25 @@ is either a pod file or a JSON data structure.  Errors are
 indicated with an HTTP status code and JSON error message.
 
 The following sections details the various features of the protocol:
-  - [Authentication]`#authentication`: authentication and digital
+  - [Authentication](#rest-authentication): authentication and digital
     signatures
-  - [Ping]`#ping`: ping a server's meta-data
-  - [Find]`#find`: find exact match for pod name/version
-  - [Query]`#query`: query the repository for set of pods
-  - [Read]`#read`: download a pod for installation
-  - [Publish]`#publish`: upload a pod to add to the repository
-  - [Errors]`#errors`: error handling
+  - [Ping](#rest-ping): ping a server's meta-data
+  - [Find](#rest-find): find exact match for pod name/version
+  - [Query](#rest-query): query the repository for set of pods
+  - [Read](#rest-read): download a pod for installation
+  - [Publish](#rest-publish): upload a pod to add to the repository
+  - [Errors](#rest-errors): error handling
 
-REST Authentication [#authentication]
-=====================================
+## REST Authentication
 The following set of HTTP headers are defined to support authentication:
 
-  - 'Fanr-Username': username string to identify authentication account
-  - 'Fanr-SignatureAlgorithm': algorithm used to perform the digital
+  - `Fanr-Username`: username string to identify authentication account
+  - `Fanr-SignatureAlgorithm`: algorithm used to perform the digital
     signature of the headers
-  - 'Fanr-SecretAlgorithm': algorithm used to determine the secret key
+  - `Fanr-SecretAlgorithm`: algorithm used to determine the secret key
     used for the digital signature
-  - 'Fanr-Signature': base64 encoded digital signature of headers
-  - 'Fanr-Ts': timestamp formatted as `sys::DateTime` string which
+  - `Fanr-Signature`: base64 encoded digital signature of headers
+  - `Fanr-Ts`: timestamp formatted as [sys::DateTime] string which
     is used a time based nonce for signatures
 
 A digital signature of the request method, request URI (relative to
@@ -90,38 +85,38 @@ The first step to the authentication process is to make a GET request
 to the "auth" URI with the username as a query string.  The response
 will be a JSON data structure with a map of name/value pairs:
 
-  {
-   "username":"someone",
-   "salt":"3d98fe2bc7cd13e02344a76400e1c212",
-   "secretAlgorithms":"PASSWORD,SALTED-HMAC-SHA1",
-   "signatureAlgorithms":"HMAC-SHA1",
-   "ts":"2011-07-13T14:50:01.865Z UTC"
-  }
+    {
+     "username":"someone",
+     "salt":"3d98fe2bc7cd13e02344a76400e1c212",
+     "secretAlgorithms":"PASSWORD,SALTED-HMAC-SHA1",
+     "signatureAlgorithms":"HMAC-SHA1",
+     "ts":"2011-07-13T14:50:01.865Z UTC"
+    }
 
 The following keys are specified in the response:
-  - 'username': username passed in URI query
-  - 'salt': if salted hashes are used for secret, this is the
+  - `username`: username passed in URI query
+  - `salt`: if salted hashes are used for secret, this is the
     salt to use for given user
-  - 'secretAlgorithms': comma separated list of algorithms which
+  - `secretAlgorithms`: comma separated list of algorithms which
     server supports for computing the secret key used in signatures
-  - 'signatureAlgorithms' comma separated list of algorithms which
+  - `signatureAlgorithms` comma separated list of algorithms which
     server supports for computing the digital signature
-  - 'ts' current server time in `sys::DateTime` format
+  - `ts` current server time in [sys::DateTime] format
 
 The *secret* is either the user's password or some digest of the password.
 Two algorithms are supported
 
-  - 'PASSWORD': the user's plain text password encoded as UTF-8 is
+  - `PASSWORD`: the user's plain text password encoded as UTF-8 is
     used to create the digital signature (this option requires server to
     store the user's actual password)
-  - 'SALTED-HMAC-SHA1': salted digest of password, computed as follows:
+  - `SALTED-HMAC-SHA1`: salted digest of password, computed as follows:
        Buf().print("$username:$salt").hmac("SHA-1", password.toBuf)
 
 The *signature algorithm* is how we use the secret to create a digital
 signature of the request.  Only one algorithm is currently
 supported:
 
-  - 'HMAC-SHA1': computed as follows:
+  - `HMAC-SHA1`: computed as follows:
       normReq.hmac("SHA-1", secret).toBase64
 
 The normalized request is a UTF-8 encoded string calculated as follows:
@@ -135,37 +130,36 @@ The normalized request is a UTF-8 encoded string calculated as follows:
 
 Here is a full example:
 
-  // credentials
-  username: "bob"
-  password: "xyz"
-  salt: "7fff2a65234b8cb5a97d8e69e5dc3ef4"
+    // credentials
+    username: "bob"
+    password: "xyz"
+    salt: "7fff2a65234b8cb5a97d8e69e5dc3ef4"
 
-  // secret computation using SALTED-HMAC-SHA1
-  Buf().print("bob:7fff2a65234b8cb5a97d8e69e5dc3ef4").hmac("SHA-1", "xyz".toBuf)
+    // secret computation using SALTED-HMAC-SHA1
+    Buf().print("bob:7fff2a65234b8cb5a97d8e69e5dc3ef4").hmac("SHA-1", "xyz".toBuf)
 
-  // secret base64 encoded
-  "zAEESAZCtn/f1ahhAmXpoC1sZi4="
+    // secret base64 encoded
+    "zAEESAZCtn/f1ahhAmXpoC1sZi4="
 
-  // normalized request string
-  GET
-  http://localhost/ping
-  fanr-secretalgorithm:SALTED-HMAC-SHA1
-  fanr-signaturealgorithm:HMAC-SHA1
-  fanr-ts:2011-07-13T15:14:42.671Z UTC
-  fanr-username:bob
+    // normalized request string
+    GET
+    http://localhost/ping
+    fanr-secretalgorithm:SALTED-HMAC-SHA1
+    fanr-signaturealgorithm:HMAC-SHA1
+    fanr-ts:2011-07-13T15:14:42.671Z UTC
+    fanr-username:bob
 
-  // signature computation
-  normReq.hmac("SHA-1", secret)
+    // signature computation
+    normReq.hmac("SHA-1", secret)
 
-  // request headers with base64 digital signature
-  Fanr-Username: bob
-  Fanr-SecretAlgorithm: SALTED-HMAC-SHA1
-  Fanr-SignatureAlgorithm: HMAC-SHA1
-  Fanr-Ts: 2011-07-13T15:14:42.671Z UTC
-  Fanr-Signature: 0/dpJysIs8ajx8032WgmPIPrFD0=
+    // request headers with base64 digital signature
+    Fanr-Username: bob
+    Fanr-SecretAlgorithm: SALTED-HMAC-SHA1
+    Fanr-SignatureAlgorithm: HMAC-SHA1
+    Fanr-Ts: 2011-07-13T15:14:42.671Z UTC
+    Fanr-Signature: 0/dpJysIs8ajx8032WgmPIPrFD0=
 
-REST Ping [#ping]
-=================
+## REST Ping
 The "ping" URI is used to query the server to check that is alive, test
 credentials, and query server metadata.  The "ping" URI is always publicly
 accessible, although if "Fanr-Username" is specified then authentication
@@ -173,91 +167,87 @@ will be checked and an error returned if credentials are invalid.
 
 The ping response is a JSON map of string name/value pairs:
 
-  {"fanr.version":"1.0.59",
-   "fanr.type":"fanr::WebRepo",
-   "ts":"2011-07-13T11:39:03.256-04:00 New_York"}
+    {"fanr.version":"1.0.59",
+     "fanr.type":"fanr::WebRepo",
+     "ts":"2011-07-13T11:39:03.256-04:00 New_York"}
 
-Also see `fanr::Repo.ping` and `fanr::WebRepoMod.pingMeta`.
+Also see [fanr::Repo.ping] and [fanr::WebRepoMod.pingMeta].
 
-REST Find [#find]
-===================
+## REST Find
 The "find" URI is used to perform a an exact find.
 
 Server side permission for the "find" URI is controlled by
-the `fanr::WebRepoAuth.allowQuery` method.
+the [fanr::WebRepoAuth.allowQuery] method.
 
 The find response is a JSON map containing the the pod
 metadata as string name/value pairs.  If the pod is not
 found, then 404 is returned.
 
-  // request
-  GET http://localhost/find/xml/1.0.59
+    // request
+    GET http://localhost/find/xml/1.0.59
 
-  // response
-  {
-    "pod.name":"xml",
-    "pod.version":"1.0.59",
-    "pod.depends":"sys 1.0",
-    "pod.summary":"XML Parser and Document Modeling",
-  }
-
-REST Query [#query]
-===================
-The "query" URI is used to perform a repo query.  The query string may
-be passed in the URI query parameter using a GET request or may be passed
-as the request body of a POST request.
-
-Server side permission for the "query" URI is controlled by
-the `fanr::WebRepoAuth.allowQuery` method.
-
-The query response is a JSON map containing the "pods" key which
-is a list of pod metadata as string name/value pairs.
-
-  // request
-  GET http://localhost/query?xml
-
-  // response
-  {"pods":[
+    // response
     {
       "pod.name":"xml",
       "pod.version":"1.0.59",
       "pod.depends":"sys 1.0",
       "pod.summary":"XML Parser and Document Modeling",
-    },
-    {
-      "pod.name":"xml",
-      "pod.version":"1.0.58",
-      "pod.depends":"sys 1.0",
-      "pod.summary":"XML Parser and Document Modeling",
     }
-  ]}
+
+## REST Query
+The "query" URI is used to perform a repo query.  The query string may
+be passed in the URI query parameter using a GET request or may be passed
+as the request body of a POST request.
+
+Server side permission for the "query" URI is controlled by
+the [fanr::WebRepoAuth.allowQuery] method.
+
+The query response is a JSON map containing the "pods" key which
+is a list of pod metadata as string name/value pairs.
+
+    // request
+    GET http://localhost/query?xml
+
+    // response
+    {"pods":[
+      {
+        "pod.name":"xml",
+        "pod.version":"1.0.59",
+        "pod.depends":"sys 1.0",
+        "pod.summary":"XML Parser and Document Modeling",
+      },
+      {
+        "pod.name":"xml",
+        "pod.version":"1.0.58",
+        "pod.depends":"sys 1.0",
+        "pod.summary":"XML Parser and Document Modeling",
+      }
+    ]}
 
 You can specify the "Fanr-NumVersions" header to limit the number of versions
 returned for each pod.  The default version limit is three.
 
-REST Read [#read]
-=================
+## REST Read
 The "pod" URI is used to download a specific version of a pod.  The URI
 is formatted as following to identify the pod and its version:
 
-  // format
-  {base}/pod/{name}/{version}
+    // format
+    {base}/pod/{name}/{version}
 
-  // example
-  fanr/pod/acmeWidgets/1.3.67
+    // example
+    fanr/pod/acmeWidgets/1.3.67
 
 Server side permission for the "pod" URI is controlled by
-the `fanr::WebRepoAuth.allowRead` method.
+the [fanr::WebRepoAuth.allowRead] method.
 
 If the request is successful, then the request body will contain
 the pod file itself.
 
-REST Publish [#publish]
-=======================
+## REST Publish
 The "publish" URI is used to upload a new pod to the repository.
 
 Server side permission for the "publish" URI is controlled by
-the `fanr::WebRepoAuth.allowPublish` method.
+the [fanr::WebRepoAuth.allowPublish] method.
 
 Publication is performed by POSTing a pod file to the "publish"
 URI.  It is recommended to use the "Expect: 100-continue" header
@@ -265,20 +255,19 @@ to verify permissions before actually posting the file.  If the
 publication is successful, then a JSON data structure is
 returned with the pod metadata:
 
-  {"published": {
-     "pod.name":"acmeWidgets",
-     "pod.version":"1.3.68",
-     "pod.depends":"sys 1.0, util 1.0",
+    {"published": {
+       "pod.name":"acmeWidgets",
+       "pod.version":"1.3.68",
+       "pod.depends":"sys 1.0, util 1.0",
+      }
     }
-  }
 
-REST Errors [#errors]
-=====================
+## REST Errors
 If an error is encountered during a HTTP request, then a 4xx or 5xx
 status code is returned with a JSON payload indicating the error
 message.  The JSON message is formatted as follows:
 
-  {"err":"error message here"}
+    {"err":"error message here"}
 
 The following are common error status codes:
 

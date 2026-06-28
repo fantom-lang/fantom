@@ -1,20 +1,18 @@
-**************************************************************************
-** title:      FileRepos
-** author:     Brian Frank
-** created:    24 Jun 11
-** copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      FileRepos
+author:     Brian Frank
+created:    24 Jun 11
+copyright:  Copyright (c) 2011, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
+# Overview
 File repos are used to store a database of pods with a simple file
 directory structure.  File repos also provide a simple base repository
 which may be wrapped by more advanced repo implementations such as
-[web repos]`WebRepos`.
+[web repos](WebRepos).
 
-Design [#design]
-****************
+# Design
 A file repo is implemented using a simple design:
   1. one directory for each pod
   2. each pod version is named "{name}-{version}.pod"
@@ -22,14 +20,14 @@ A file repo is implemented using a simple design:
 
 So a simple file repo might look something like this:
 
-  fileRepo/
-    acmeAlpha/
-      acmeAlpha-1.0.24.pod
-      acmeAlpha-1.0.25.pod
-      acmeAlpha-1.0.26.pod
-    acmeBeta/
-      acmeBeta-1.0.25.pod
-      acmeBeta-1.0.26.pod
+    fileRepo/
+      acmeAlpha/
+        acmeAlpha-1.0.24.pod
+        acmeAlpha-1.0.25.pod
+        acmeAlpha-1.0.26.pod
+      acmeBeta/
+        acmeBeta-1.0.25.pod
+        acmeBeta-1.0.26.pod
 
 This design allows you to easily manage your repository using
 standard file management tools.  It also provides an easy way
