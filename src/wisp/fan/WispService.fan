@@ -16,7 +16,8 @@ using inet
 ** start/stop lifecycle.
 **
 ** Example:
-**   WispService { httpPort = 8080; root = MyWebMod() }.start
+**
+**     WispService { httpPort = 8080; root = MyWebMod() }.start
 **
 const class WispService : Service
 {
@@ -57,10 +58,10 @@ const class WispService : Service
 
   **
   ** WebMod which is called on internal server error to return an 500
-  ** error response.  The exception raised is available in 'req.stash["err"]'.
-  ** The 'onService' method is called after clearing all headers and setting
+  ** error response.  The exception raised is available in `req.stash["err"]`.
+  ** The `onService` method is called after clearing all headers and setting
   ** the response code to 500.  The default error mod may be configured
-  ** via 'errMod' property in etc/web/config.props.
+  ** via `errMod` property in etc/web/config.props.
   **
   const WebMod errMod := initErrMod
 
@@ -69,10 +70,10 @@ const class WispService : Service
   **
   @NoDoc const Log log := Log.get("web")
 
-  ** The `inet::SocketConfig` to use for creating sockets
+  ** The [inet::SocketConfig] to use for creating sockets
   const SocketConfig socketConfig := SocketConfig.cur
 
-  ** Return 'true' if service is successfully listening on registered port.
+  ** Return `true` if service is successfully listening on registered port.
   @NoDoc Bool isListening() { isListeningRef.val }
   private const AtomicBool isListeningRef := AtomicBool(false)
 

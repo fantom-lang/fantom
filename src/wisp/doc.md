@@ -1,0 +1,95 @@
+<!--
+title:      Wisp
+author:     Brian Frank
+created:    01 Jul 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Fantom comes bundled with the [wisp::WispService] which implements
+a web server purely in Fantom code - so you can use it without
+the fuss of setting up additional software.
+
+# Test Setup
+You can run a test wisp server straight from fansh using
+a configurable port:
+
+    fansh> wisp::WispService { httpPort = 8080 }.start
+    fan.wisp.WispService@5a9de6
+    [16:22:49 30-Nov-09] [info] [web] http started on port 8080
+
+If it is running correctly you should be able to
+hit [http://localhost:8080/] and see the test page.
+
+# Configuration
+Wisp is easily configured by installing a root WebMod which is
+responsible for serving all requests to the server.  Typically
+you will install a composition [WebMod](webmod::pod-doc) to setup your
+pipeline and routing configuration.
+
+See the following examples for how to setup a daemon script
+with various WebMod configurations:
+  - [web-hello](examples::web-hello): single, simple custom root webmod
+  - [web-demo](examples::web-demo): illustrates use of many different webmods
+  - [js-demo](examples::js-demo): configuration used to serve up FWT in browser examples
+
+# HTTPS Configuration
+
+Wisp can be configured to serve HTTPS connection by setting the https port with the
+`-httpsPort` option. Wisp requires a **keystore** to serve https connections. A keystore
+is a repository of security certificates (either authorization or public key certificates)
+that can be used for TLS encryption. The keystore should contain the public and private
+key for your web server.
+
+Wisp uses the following conventions for loading the keystore:
+
+1. The keystore must be PKCS12 formatted
+2. The keystore must have password "changeit"
+3. The keystore must have name `keystore.p12`
+4. The keystore must reside in `etc/inet/keystore.p12` of your Fantom installation
+
+Java provides a utility called `keytool` that can be used for generating and managing
+keystore files. For testing purposes, you can create a self-signed certificate and add
+it to a new pkcs12 keystore using the following command (make sure to use "changeit"
+as the password when prompted):
+
+    $ keytool -genkey \
+              -alias my.domain.com \
+              -keyalg RSA \
+              -storetype pkcs12 \
+              -keystore /path/to/etc/inet/keystore.p12
+
+The following [article](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores)
+contains many useful examples of working with keystores. The examples all use the JKS
+keystore format, so make sure to add the `-storetype pkcs12` option if you attempt to
+duplicate any of the commands.
+
+If you have a JKS formatted keystore, you can convert it to PKCS12 using the following
+command:
+
+    $ keytool -importkeystore \
+              -srckeystore keystore.jks \
+              -srcalias my.domain.com \
+              -destkeystore keystore.p12 \
+              -deststoretype PKCS12
+
+# wisp::Main
+For the common case where a single WebMod is used, wisp can be run directly from
+the command line:
+
+    $ fan wisp
+    Usage:
+      wisp [options] <mod>
+    Arguments:
+      mod    qualified type name for WebMod to run
+    Options:
+      -help, -?           Print usage help
+      -addr <Str>         IP address to bind to
+      -httpPort <Int>     IP port to bind for HTTP (default 8080)
+      -httpsPort <Int>    IP port to bind for HTTPS (disabled unless set)
+
+For example:
+
+     $ fan wisp myPod::MyWebMod
+     [16:43:16 17-Jul-15] [info] [web] http started on port 8080

@@ -53,7 +53,7 @@ internal class WispRes : WebRes
 
   **
   ** Reason phrase to include in HTTP response line.  If null, then
-  ** a status phrase is used based on the `statusCode`.
+  ** a status phrase is used based on the [statusCode].
   **
   override Str? statusPhrase
   {
@@ -85,7 +85,7 @@ internal class WispRes : WebRes
   ** Return true if this response has been commmited.  A committed
   ** response has written its response headers, and can no longer
   ** modify its status code or headers.  A response is committed the
-  ** first time that `out` is called.
+  ** first time that [out] is called.
   **
   override Bool isCommitted := false { private set }
 
@@ -172,7 +172,7 @@ internal class WispRes : WebRes
   }
 
   **
-  ** Return if this response is complete - see `done`.
+  ** Return if this response is complete - see [done].
   **
   override Bool isDone := false { private set }
 
