@@ -1,0 +1,402 @@
+<!--
+title:      JavaFFI
+author:     Brian Frank
+created:    13 Dec 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The Java Foreign Function Interface (or Java FFI) is a feature which
+allows Fantom code to easily utilize normal Java libraries.  The Java FFI
+is basically a mapping of the Java type system into the Fantom type system:
+  - Java packages => Fantom pods
+  - Java classes => Fantom classes
+  - Java interfaces => Fantom mixins
+  - Java fields => Fantom fields
+  - Java methods => Fantom methods
+
+Fantom was designed to run on the JVM, so mapping between the two worlds is
+fairly straightfoward with a high level of interoperability.  However,
+there is a level of impedance mismatch between the two type systems.
+Features supported by the Java FFI:
+  - Interop with any Java API except those which use multi-dimensional arrays
+  - Static type checking
+  - Call overloaded Java methods from Fantom
+  - Construct Java classes using the Fantom [constructor syntax](Methods#construction-calls)
+  - Extend Java classes (only one level of inheritance allowed right now)
+  - Implement Java interfaces
+  - Implicit coercion between Java primitives and `sys::Int`, `sys::Float`
+  - Implicit coercion between one-dimensional Object arrays and `sys::List`
+  - Direct mappings for Java one-dimensional primitive arrays
+  - Fantom reflection support for Java members
+  - Dynamic invoke support against Java classes
+
+Features which are not yet available in Java FFI:
+  - Multi-dimensional arrays
+  - Subclassing a Java class more than one level deep
+  - Attempting to override a Java overloaded method; this means you
+    cannot subclass or extend from a type with abstract overloaded methods
+
+Features which are not supported result in a compile time error.
+
+# Interop Summary
+The following table summarizes the mapping of Java types to Fantom types:
+
+    Java Type            Fantom Type
+    -----------          -----------
+    foo.bar.Baz          [java]foo.bar::Baz
+    boolean              sys::Bool
+    byte                 sys::Int
+    short                sys::Int
+    char                 sys::Int
+    int                  sys::Int
+    long                 sys::Int
+    float                sys::Float
+    double               sys::Float
+    java.lang.Object     sys::Obj
+    java.lang.String     sys::Str
+    java.lang.Boolean    sys::Bool?
+    java.lang.Long       sys::Int?
+    java.lang.Double     sys::Float?
+    java.math.BigDecimal sys::Decimal
+    Foo[]                Foo[]  // sys::List parameterized with Foo
+    boolean[]            [java]fanx.interop::BooleanArray
+    byte[]               [java]fanx.interop::ByteArray
+    short[]              [java]fanx.interop::ShortArray
+    char[]               [java]fanx.interop::CharArray
+    int[]                [java]fanx.interop::IntArray
+    long[]               [java]fanx.interop::LongArray
+    float[]              [java]fanx.interop::FloatArray
+    double[]             [java]fanx.interop::DoubleArray
+    Foo[][]              // unsupported for both primitivies and Objects
+
+Quick reference for mapping Java code to Fantom code:
+
+    Java                         Fantom
+    --------------------------   --------------------------
+    import javax.swing           using [java] javax.swing
+    import java.util.Map.Entry   using [java] java.util::Map$Entry as Entry
+    JFrame f = new JFrame(...)   f := JFrame(...)
+    array.length                 array.size
+    array[i]                     array[i]
+    array[i] = val               array[i] = val
+    int[] x = new int[5]         x := IntArray(5)
+
+# How it Works
+The Java FFI does not use any special Fantom syntax.  Java APIs are
+imported into the Fantom type system via the normal `using` statement
+with a special syntax for pod names.  Java packages are mapped to Fantom
+pods by prefixing the string `"[java]"`.  For example the Java package
+`javax.swing` has the Fantom pod name of `[java]javax.swing`.
+
+The Fantom compiler itself has no knowledge of Java libraries, rather it supports
+FFI plugins based on pods being prefixed with `"[ffi]"`.  In the case of the Java
+FFI, the [compilerJava](compilerJava::index) pod is the compiler plugin for
+importing the Java type system into Fantom.
+
+Fantom code using the Java FFI results in a normal pod file compiled down into
+fcode.  The only difference is that the fcode contains type and member references
+which are Java specific.  This means that Fantom pods with Java FFI calls are not
+necessarily portable; attempting to use a Java FFI call in a JavaScript or .NET
+environment will fail.
+
+# Class Path - Compiler
+At compile time, the Java FFI compiler attempts to resolve
+Java packages and classes using the following classpath:
+
+  1. jars found in "sun.boot.class.path"
+  2. {java}lib/rt.jar (only if step above fails to find anything)
+  3. {java}lib/ext/*.jar
+  4. {fan}lib/java/ext/*.jar
+  5. {fan}lib/java/ext/{Env.platform}/*.jar
+  6. jars found in "java.class.path" system property
+  7. any pod in your dependency chain
+
+You can test your system classpath to see what files and packages
+are discovered using this command:
+
+    fan compilerJava::ClassPath
+
+# Class Path - Runtime
+The Fantom JVM runtime uses a classloader per pod.  The same classpath
+used during compile time as described above is applied during runtime.
+The only difference is that the Fantom runtime delegates to the standard
+system classloader to resolve the classes from steps 1-3.  Steps 4-7 are
+explicitly handled by `FanClassLoader`.
+
+Detailed steps for Fantom classloading on JVM:
+  1. Classfile is contained in the pod zip:
+     a. Fantom type `foo::Bar` maps to precompiled classfile fan/foo/Bar.class"
+     b. Java type `acme.foo.Bar` maps to "acme/foo/Bar.class"
+  2. Fantom type `foo::Bar` is loaded as follows:
+     a. first resolve pod file "foo.pod" via [Env]
+     b. emit classfile from "fcode/Bar.fcode"
+  4. Search for pre-compiled classfile in dependent pods
+  5. Search extension jars in "{fan.home}/lib/java/ext"
+  6. Search extension jars in "{fan.home}/lib/java/ext/{platform}" (see [Env](sys::Env.platform))
+  7. System classloader which typically includes "{java.home}/lib/ext"
+
+You can bundle Java code in a pod zip file and it will be visible to classes
+within your pod as well as to any pod that has a dependency on your pod.
+You can easily convert to a JAR file into a Fantom pod using a build
+script that includes the JAR as a [resource file](build::BuildPod.resDirs).
+
+# Primitives
+The special Java primitives `boolean`, `long`, and `double` are implicitly
+mapped to the Fantom types `sys::Bool`, `sys::Int`, and `sys::Float` respectively.
+The other Java primitives are mapped as follows:
+
+    byte    sys::Int
+    short   sys::Int
+    char    sys::Int
+    int     sys::Int
+    long    sys::Int
+    float   sys::Float
+
+The special primitives above are not directly supported by the Fantom type system.
+Therefore you cannot use them as local variables or in field or method signatures.
+They are *always* coerced to/from their Fantom representation.
+
+# Reflection
+All Java objects maintain a [sys::Type] represtation to provide Fantom
+style reflection.  You can use a dynamic call to `toClass` to get the
+`java.lang.Class` of a `sys::Type`:
+
+    ArrayList#            // evaluates to sys::Type
+    ArrayList#->toClass   // evaluates to java.lang.Class
+
+You can also use the `fanx.interop.Interop` class to convert between
+`java.lang.Class` of a `sys::Type`:
+
+    Interop.toFan(cls)     // evaluates to sys::Type
+    Interop.toJava(type)   // evaluates to java.lang.Class
+
+# Arrays
+Arrays of Objects are implicitly boxed/unboxed as Fantom `sys::List`.
+If you call a method which returns an array of Objects it is boxed into
+a Fantom list of the appropriate type.  Likewise you pass a Fantom list of
+the appropriate type whenever a Java array is expected.
+
+Primitive arrays are handled specially without any boxing/unboxing.  They
+are represented in the Fantom type system via the special types:
+
+    boolean[]  [java]fanx.interop::BooleanArray
+    byte[]     [java]fanx.interop::ByteArray
+    short[]    [java]fanx.interop::ShortArray
+    char[]     [java]fanx.interop::CharArray
+    int[]      [java]fanx.interop::IntArray
+    long[]     [java]fanx.interop::LongArray
+    float[]    [java]fanx.interop::FloatArray
+    double[]   [java]fanx.interop::DoubleArray
+
+The `make`, `get`, `set`, and `size` methods provide symbolic representations
+for working with primitive arrays.  They are mapped directly to a single opcode
+in the Java bytecode:
+
+    int[] x = new int[4]  =>  x := IntArray(4)
+    x[2]                  =>  x[3]
+    x[3] = 5              =>  x[3] = 5
+    x.length              =>  x.size
+
+# Nullable
+Any Java API which uses reference types are mapped into the Fantom type system
+as nullable:
+
+    // Java methods
+    String foo(Object x, int y, Foo z)
+    void bar(String[] x) {}
+
+    // Fantom representation
+    Str? foo(Obj? x, Int y, Foo? z)
+    Void bar(Str?[]? x) {}
+
+Note the case of `String[]` we assume that the entire array could be null
+or that any of the array items may be null, so the Fantom mapping is `Str?[]?`.
+
+# Overloaded Methods
+One impedance mismatch between Java and Fantom is that Java permits a field
+and method to have the same name.  Java also allows method *overloading* where
+multiple methods with the same name may be declared with different parameter
+types.
+
+Fantom only allows a single definition of a slot for a given name.  However
+when calling out to Java types the compiler will correctly resolve overloaded
+fields and methods.  Let's consider this Java class:
+
+    class Foo
+    {
+      String a;
+      String a() { return a; }
+      void a(String x) { a = x; }
+      String b() { return a; }
+    }
+
+In the class above `a` is overloaded by a field and two methods.  Let's
+look at how Fantom code is resolved against the Java members:
+
+    foo.a        // lack of parens indicates field get
+    foo.a = "x"  // field set
+    foo.a()      // call Foo.a() method
+    foo.a("x")   // call Foo.a(String) method
+    foo.b()      // call Foo.b() method
+    foo.b        // call Foo.b() method - no ambiguity so we can omit parens
+
+Resolving a call to an overloaded version of the method follows the
+same rules as the Java Language Specification. It is a compile time error
+if the arguments do not match any methods or if they match multiple
+methods ambiguously.
+
+# Constructors
+Under the covers Fantom treats Java constructors just like the Java VM
+treats them - as special methods with the name of `<init>`.  The standard
+[constructor syntax](Methods#construction-calls) is used to invoke a Java
+constructor:
+
+    a := Date()
+    b := Date(millis)
+    c := Date(2008-1900, 11, 13) // crazy API to create 13-Dec-2008
+
+The constructor call is resolved against the Java constructors using the
+same rules for resolving [overloaded methods](#overloaded-methods).
+
+# Subclassing
+The Java FFI enables you to both extend from a Java class and implement Java
+interfaces.  For example to create a subclass of `java.util.Date`:
+
+    using [java] java.util::Date as JDate
+    class FanDate : JDate
+    {
+      new now() : super() {}
+      new make(Int millis) : super(millis) {}
+    }
+
+The standard [inheritance syntax](Inheritance#syntax) is used to extend
+and implement Java types.
+
+The Fantom subclass must define how the Fantom constructors call the Java superclass
+constructors.  This is done by calling `super` as an overloaded constructor (if
+the base class has multiple constructors).  You may not use a `this` constructor
+chain.
+
+Constructors for a Fantom class which subclasses from a Java class are emitted
+as true Java constructors.  Therefore you may not declare two Fantom constructors
+with the same parameter types as it would result in duplicate Java constructors.
+For example the following code would result in a compile time error:
+
+    class FanDate : Date
+    {
+      new now() : super() {}
+      new epoch() : super(0) {}
+    }
+
+Because of this difference between Fantom constructors versus Java constructors
+there is currently a restriction that you may only subclass from a Java
+class one level deep.  You may not subclass from a Fantom class which itself
+subclasses from a Java class.
+
+Another restriction:  because a Fantom class may not override overloaded
+methods, you may not create a concrete Fantom class which inherits abstract
+overloaded methods.
+
+# Overrides
+When a Fantom type subclasses a Java type, you can override the Java methods
+using the normal Fantom syntax with the following restrictions:
+  - cannot override static or final methods
+  - cannot override a method overloaded by field of same name
+  - cannot override a method overloaded by parameter types
+  - cannot override a method which uses multi-dimensional arrays in its signature
+
+Consider this example:
+
+    // Java class
+    class Java
+    {
+      void alpha() {}
+      void alpha(Java x) {}
+      void beta(Java x) {}
+      int gamma(String[] x) {}
+    }
+
+In the example above, the method `alpha` is overloaded by parameter types,
+therefore it is not permissible for a Fantom class to override it.  However
+we can override `beta` and `gamma`:
+
+    class Fantom : Java
+    {
+      override Void beta(Java? x) {}
+      override Int gamma(Str?[]? x) {}
+    }
+
+When we override a Java method we use the Fantom type representation of the signature.
+In the `gamma` method we map the return type `int` to `sys::Int` and the argument
+type from `String[]` to the Fantom list `Str[]`.
+
+# Inner Classes
+Inner classes in Java source are formatted using a dot, but in the Java VM
+they are represented using the "$" dollar sign.  We import inner classes into
+the Fantom type system using the Java VM name:
+
+    using [java] java.util::Map$Entry as Entry
+
+Note that since the "$" is not a legal identifier char in Fantom, you must
+[rename](CompilationUnits#using) the Java inner class to a valid Fantom
+identifier with the `as` keyword.
+
+# Dynamic Calls
+Normal Fantom reflection and dynamic invoke is available with Java classes.
+The Fantom runtime will correctly map reflective calls and dynamic invokes against
+overloaded methods.  Because it is possible for a Java class to have both a field
+and method of the same name, `Type.field` and `Type.method` might return different
+results for the same name.  If an attempt is made to use dynamic invoke on slot
+which has both a field and method of that name, then the method always hides
+the field.
+
+# Functions as Interfaces
+Inner classes are often used in Java as a substitute for closures.  The Java FFI
+allows you to use a function where an interface with one method is expected.
+For example the interface `Runnable` defines one method called `run`, so we can
+use a Fantom function whenever a `Runnable` is expected:
+
+    // Java API
+    void execute(Runnable r)
+
+    // Fantom code
+    execute |->| { echo("run!") }
+
+The standard rules for coercion between Java and Fantom types apply for how
+the function implements the interface's method.
+
+# Annotations
+Java annotations are imported into the Fantom type system as a special case
+of [facets](Facets).  Fantom classes and slots may be annotated with a Java
+annotation using the standard facet syntax:
+
+    // Java annotations
+    public @interface AnnoA {}
+    public @interface AnnoB { String value(); }
+    public @interface AnnoC { int i();  String s(); }
+
+    // Fantom syntax
+    @AnnoA
+    @AnnoB { value = "foo" }
+    @AnnoC { i = 34; s = "bar" }
+    class Fantom {}
+
+Assuming the annotation has a runtime retention policy, annotations added
+to a Fantom type or slot are available for Java reflection.  However, the
+annotation will **not** be reflected in the Fantom type system as a facet.
+
+The following annotation element types are currently supported:
+
+    Java                     Fantom
+    ----                     -------
+    boolean                  sys::Bool literal
+    byte, short, int, long   sys::Int literal
+    float, double            sys::Float literal
+    String                   sys::Str literal
+    Class                    sys::Type literal
+    enum                     Java FFI enum field access
+    arrays of above          sys::List literal of above
+
+

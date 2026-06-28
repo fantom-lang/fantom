@@ -1,0 +1,236 @@
+<!--
+title:      Functions
+author:     Brian Frank
+created:    11 Dec 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Functions are first class objects in Fantom modeled via the [sys::Func]
+class.  Functions have a signature formally defined as a set of
+*parameter types* and a *return type*.  Functions which don't return an
+object have a `Void` return type.  Functions are created one of three ways:
+
+  1. **Methods**: all methods are really [wrappers](#methods)
+     for a function
+  2. **Closures**: [closures](Closures) are expressions which result
+     in a function
+  3. **Bind**:  the [Func.bind](sys::Func.bind) method is used to create
+     a new function by binding arguments to an existing function
+
+# Function Signatures
+The `Func` class is a built-in generic type, with a custom
+[parameterization syntax](TypeSystem#func-type-signature):
+
+    // format
+    |A a, B b ... H h -> R|
+
+    // examples
+    |Int a, Int b->Str|  // function which takes two Int args and returns a Str
+    |Int, Int->Str|      // same as above omitting parameter names
+    |->Bool|             // function which takes zero args and returns Bool
+    |Str s->Void|        // function which takes one Str arg and returns void
+    |Str s|              // same as above, omitting optional void return
+    |->Void|             // function which takes no arguments and returns void
+    |->|                 // shortcut for above
+
+The examples above are type signatures much like you'd use `Str` or `Str[]`.
+
+# Calling Functions
+Functions are just objects like everything else in Fantom.  All functions
+subclass the [Func](sys::Func) class which provides methods for invoking
+the function.  The most basic method is [Func.callList](sys::Func.callList)
+which takes a list of arguments and returns the result (or null if
+the return if void):
+
+    // func is a function which takes two Int args and returns an Int
+    |Int a, Int b->Int| func
+    func.callList([7, 8])
+
+The `Func` class also supports the `call` method for calling with
+different arity (zero through eight).  For example to call the
+function above with two arguments:
+
+    func.call(7, 8)
+
+Using the `call` arity versions provides better performance in
+most cases because it skips packaging up the arguments in a list.
+
+Fantom also supports a bit of syntax sugar to call a function like
+a normal method call using the `()` operator.  For example we could
+call the function above using this syntax:
+
+    func(7, 8)    // syntax sugar for func.call(7, 8)
+
+# Type Compatibility
+Functions have some special rules when it comes to type compatibility.
+The axiom for type compatibility is that type `A` is compatible for
+type `B` if `A` can be used whenever `B` is expected.  Most of the time
+this means `A` extends from `B` through inheritance. For example `Int` is
+type compatible with `Num` because anyplace `Num` is expected, we can
+pass an `Int`.
+
+A type declaration for a function means "these are the are the
+arguments I'm going to pass to this function and the result I expect
+back".  So function type `A` is compatible with function type `B`
+if `A` can accept the arguments which `B` declares it is going to
+pass and returns an expected type.  Specifically, function type
+`A` is compatible with function type `B` if these rules apply:
+
+  1. `A` declares the same number or less parameters than `B`
+  2. Each parameter type in `A` is compatible with its respective
+     parameter type in `B`
+  3. `A` returns a type compatible with `B` (or if `B` returns
+     void, then `A` can return anything)
+
+The following table illustrates some examples which shows
+what [Type.fits](sys::Type.fits) would report:
+
+    Num  fits  Int  =>  false
+    Int  fits  Num  =>  true
+
+    |Int a|  fits  |Int a|  =>  true
+    |Num a|  fits  |Int a|  =>  true
+    |Int a|  fits  |Num a|  =>  false
+
+    |Int a|  fits  |Int a, Int b|  =>  true
+    |Int a, Int b|  fits  |Int a|  =>  false
+
+    |->Void|  fits  |->Int|    =>  false
+    |->Int|   fits  |->Void|   =>  true
+    |->Int|   fits  |->Num|    =>  true
+    |->Num|   fits  |->Int|    =>  false
+
+The first two items in the table above are for reference - `Int` fits
+a `Num`, but not vise versa.  Next let's look closely at this example:
+
+    |Num a|  fits  |Int a| =>  true
+
+What this shows is that if a function type is declared to take an
+`Int`, we can pass a function that accepts a `Num`.  That may seem
+counterintuitive at first, but remember that functions are the flip
+side of normal type checking.  Here is a concrete example of that
+concept in terms a typical Java or C# programmer might find more
+natural:
+
+    class WidgetEvent {}
+    class ButtonEvent : WidgetEvent {}
+    addButtonListener(|ButtonEvent event| callback)
+
+In the code above `ButtonEvent` is a subclass of `WidgetEvent`.
+We've got a method which registers a callback to invoke when a button
+is pressed - the argument passed to the callback will be a `ButtonEvent`.
+However, if we happen to have a function that accepts any `WidgetEvent`,
+then it will quite happily accept `ButtonEvent` arguments:
+
+    anyWidgetCallback := |WidgetEvent event| {...}
+
+    button.addButtonListener(anyWidgetCallback)
+
+This is what is meant by functions being the "flip side" of normal
+type checking.  Where normal type checking accepts any *specialization*
+of a type, function type checking accepts any *generalization* of a
+function.
+
+## Arity Compatibility
+Next let's look at how arity (number of parameters) figures
+into functional type compatibility by dissecting these examples:
+
+    |Int a|  fits  |Int a, Int b|  =>  true
+    |Int a, Int b|  fits  |Int a|  =>  false
+
+Here we see that a function that accepts one `Int` is compatible
+with a function type that generates two `Ints`.  This is an ability
+of all functions in Fantom - to accept more arguments than they will
+use.  It is kind of like [default parameters](Methods#default-parameters)
+in reverse.  We use this technique all the time in the core
+classes.  For example the [Map.each](sys::Map.each) method is
+used to iterate the key/value pairs:
+
+    // actual signature of Map.each
+    Void each(|V value, K key| c)
+
+    // iterate with function that only accepts value
+    map.each |Obj value| { echo(value) }
+
+    // or iterate with function that accepts both value and key
+    map.each |Obj value, Obj key| { echo("$key = $value") }
+
+Many of the APIs which accept a function will pass multiple parameters,
+but you don't actually have to use all of those parameters.
+
+# Methods
+In Fantom, all methods wrap a function accessed via the
+[Method.func](sys::Method.func) method.  The `Func` for a method
+serves as its reflective handle.  This relationship between
+functions and methods is a key aspect of how Fantom bridges object
+oriented and functional programming (the flip side is that all
+functions are an object).
+
+Mapping static methods to functions is straight forward:
+
+    static Int add(Int a, Int b) { return a + b }
+
+    func := type.method("add").func
+    nine := func(7, 2)
+
+One gotcha to be aware of - you can't access the `Method.func`
+method without parenthesis, and then use the parenthesis to invoke
+the function because the parenthesis will bind to the `Method.func`
+call:
+
+    type.method("add").func               // returns Func
+    type.method("add").func()             // same as above
+
+    type.method("add").func().call(7,2)   // invoke function
+    type.method("add").func()(7,2)        // same as above
+
+Instance methods map to a function where the first argument is
+the implicit `this` parameter.  If you've ever used Python this
+concept is pretty much in your face with the explicit `self` argument.
+Fantom lets you use instance methods like Java or C#, but we still need
+to map those OO methods to functions.  Let's consider this example:
+
+      m := Str#replace
+      f := m.func
+
+      // note method params does not include the
+      // implicit this, but the function params does
+      m.params  => [sys::Str from, sys::Str to]
+      f.params  => [sys::Str this, sys::Str from, sys::Str to]
+
+      // both of these result in "hello!"
+      s1 := "hi!".replace("hi", "hello")
+      s2 := f("hi!", "hi", "hello")
+
+The code above gets the `Str.replace` instance method as a
+function.  The `replace` method takes two string arguments, but
+when flattened into a function it takes three string arguments because
+we have to account for the implicit `this` argument.
+
+# Immutable Functions
+An immutable function is one proven to be thread safe.  You can check
+immutability at runtime via [sys::Obj.isImmutable] and attempt to
+convert a function via [sys::Obj.toImmutable].  Immutable functions are
+often required when working with [actors](Actors).
+
+Immutability works as follows:
+  - Method functions are always immutable - see [sys::Method.func]
+  - Closures which only capture final, const variables are always
+    immutable; toImmutable always returns this
+  - Closures which capture non-final or non-const variables are
+    always mutable; toImmutable always throws NotImmutableErr
+  - Closure which capture non-final variables which aren't known
+    to be immutable until runtime (such as Obj or List) will return
+    false for isImmutable, but will provide a toImmutable method which
+    attempts to bind to the current variables by calling toImmutable
+    on each one
+  - Functions created by [Func.bind](sys::Func.bind) are immutable if
+    the original function is immutable *and* every bound argument is
+    immutable
+
+The definition of a *final variable* is a variable which is never reassigned
+after it is initialized.  Any variable which is reassigned is considered
+a non-final variable.
+

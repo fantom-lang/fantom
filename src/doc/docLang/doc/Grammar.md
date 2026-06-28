@@ -1,0 +1,247 @@
+<!--
+title:      Grammar
+author:     Brian Frank
+created:    23 Aug 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Legend
+Legend for Fantom BNF Grammar:
+
+    :=      is defined as
+    <x>     non-terminal
+    "x"     literal
+    [x]     optional
+    (x)     grouping
+    x*      zero or more times
+    x|x     or
+
+# Compilation Unit
+
+    <compilationUnit> :=  <using*> <typeDef>* [<doc>]
+    <using>           :=  <usingPod> | <usingType> | <usingAs>
+    <usingPod>        :=  "using" <podSpec> <eos>
+    <usingType>       :=  "using" <podSpec> "::" <id> <eos>
+    <usingAs>         :=  "using" <podSpec> "::" <id> "as" <id> <eos>
+    <podSpec>         :=  <id> | <str> | <ffiPodSpec>
+    <ffiPodSpec>      := "[" <id> "]" <id> ("." <id>)*
+
+# Type Def
+
+    <typeDef>        :=  <classDef> | <mixinDef> | <facetDef> | <enumDef>
+
+    <classDef>       :=  <typeHeader> "class" <id> [<inheritance>] "{" <slotDefs> "}"
+    <mixinDef>       :=  <typeHeader> "mixin" <id> [<inheritance>] "{" <slotDefs> "}"
+    <facetDef>       :=  <typeHeader> "facet" "class" <id> [<inheritance>] "{" <slotDefs> "}"
+    <enumDef>        :=  <typeHeader> "enum" "class" <id> [<inheritance>] "{" <enumValDefs> <slotDefs> "}"
+
+    <typeHeader>     :=  [<doc>] <facets> <typeFlags>
+    <typeFlags>      :=  <typeFlag>*
+    <typeFlag>       :=  <protection> | "abstract" | "final" | "const" | "native"
+    <protection>     :=  "public" | "protected" | "private" | "internal"
+    <inheritance>    :=  ":" <typeList>
+
+# Slot Def
+
+    <enumValDefs>    :=  <enumValDef> ("," <enumValDef>)* <eos>
+    <enumValDef>     :=  <facets> <id> ["(" <args> ")"]
+
+    <slotDefs>       :=  <slotDef>*
+    <slotDef>        :=  <fieldDef> | <methodDef> | <ctorDef> | <staticInit>
+
+    <fieldDef>       :=  <facets> <fieldFlags> <type> <id> [":=" <expr>]
+                         [ "{" [<fieldGetter>] [<fieldSetter>] "}" ] <eos>
+    <fieldFlags>     :=  <fieldFlag>*
+    <fieldFlag>      :=  <protection> | "abstract" | "const" | "final" | "native" |
+                         "override" | "readonly" | "static" | "virtual"
+    <fieldGetter>    :=  "get" (<eos> | <block>)
+    <fieldSetter>    :=  <protection> "set" (<eos> | <block>)
+
+    <methodDef>      :=  <facets> <methodFlags> <type> <id> "(" <params> ")" <methodBody>
+    <methodFlags>    :=  <methodFlag>*
+    <methodFlag>     :=  <protection> | "abstract" | "native" | "once" |
+                         "override" | "static" | "virtual" | "final"
+    <params>         :=  [<param> ("," <param>)*]
+    <param>          :=  <type> <id> [":=" <expr>]
+    <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
+
+    <ctorDef>        :=  <facets> <ctorFlags> "new" <id> "(" <params> ")" [ctorChain] <methodBody>
+    <ctorFlags>      :=  [<protection>]
+    <ctorChain>      :=  ":" <ctorChainThis> | <ctorChainSuper>
+    <ctorChainThis>  :=  "this" "." <id> "(" <args> ")"
+    <ctorChainSuper> :=  "super" ["." <id>] "(" <args> ")"
+
+    <staticInit>     :=  "static" "{" <stmts> "}"
+
+# Facets
+
+    <facets>        := <facet>*
+    <facet>         := "@" <simpleType> [<facetVals>]
+    <facetVals>     := "{" <facetVal> (<eos> <facetVal>)* "}"
+    <facetVal>      := <id> "=" <expr>
+
+# Stmt
+
+    <block>          :=  <stmt> | ( "{" <stmts> "}" )
+    <stmts>          :=  <stmt>*
+    <stmt>           :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
+                         <throw> | <while> | <try> | <exprStmt> | <localDef> | <itAdd>
+    <break>          :=  "break" <eos>
+    <continue>       :=  "continue" <eos>
+    <for>            :=  "for" "(" [<forInit>] ";" [<expr>] ";" [<expr>] ")" <block>
+    <forInit>        :=  <expr> | <localDef>
+    <if>             :=  "if" "(" <expr> ")" <block> [ "else" <block> ]
+    <return>         :=  "return" [<expr>] <eos>
+    <throw>          :=  "throw" <expr> <eos>
+    <while>          :=  "while" "(" <expr> ")" <block>
+    <exprStmt>       :=  <expr> <eos>
+    <localDef>       :=  [<type>] <id> [":=" <expr>] <eos>
+    <itAdd>          :=  <expr> ("," <expr>)* [","] <eos>
+
+    <try>            :=  "try" <block> <catch>* [<finally>]
+    <catch>          :=  "catch" [<catchDef>] <block>
+    <catchDef>       :=  "(" <type> <id> ")"
+    <finally>        :=  "finally" <block>
+
+    <switch>         :=  "switch" "(" <expr> ")" "{" <case>* [<default>] "}"
+    <case>           :=  "case" <expr> ":" <stmts>
+    <default>        :=  "default" ":" <stmts>
+
+# Expr
+
+    <expr>           :=  <assignExpr>
+    <assignExpr>     :=  <ifExpr> [<assignOp> <assignExpr>]
+    <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
+
+    <ifExpr>         :=  <ternaryExpr> | <elvisExpr>
+    <ternaryExpr>    :=  <condOrExpr> ["?" <ifExprBody> ":" <ifExprBody>]
+    <elvisExpr>      :=  <condOrExpr> "?:" <ifExprBody>
+    <ifExprBody>     :=  <condOrExpr> | <ifExprThrow>
+    <ifExprThrow>    :=  "throw" <expr>
+
+    <condOrExpr>     :=  <condAndExpr>  ("||" <condAndExpr>)*
+    <condAndExpr>    :=  <equalityExpr> ("&&" <equalityExpr>)*
+    <equalityExpr>   :=  <relationalExpr> [("==" | "!=" | "===" | "!==") <relationalExpr>]
+    <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
+    <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
+    <compareExpr>    :=  <rangeExpr> [("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>]
+    <rangeExpr>      :=  <addExpr> ((".." | "..<") <addExpr>)*
+    <addExpr>        :=  <multExpr> (("+" | "-") <multExpr>)*
+    <multExpr>       :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
+    <parenExpr>      :=  <unaryExpr> | <castExpr> | <groupedExpr>
+    <castExpr>       :=  "(" <type> ")" <parenExpr>
+    <groupedExpr>    :=  "(" <expr> ")" <termChain>*
+    <unaryExpr>      :=  <prefixExpr> | <termExpr> | <postfixExpr>
+    <prefixExpr>     :=  ("!" | "+" | "-" | "++" | "--") <parenExpr>
+    <postfixExpr>    :=  <termExpr> ("++" | "--")
+
+    <termExpr>       :=  <termBase> <termChain>*
+    <termBase>       :=  <literal> | <idExpr> | <typeBase>
+    <typeBase>       :=  <typeLiteral> | <slotLiteral> | <namedSuper> | <staticCall> |
+                         <dsl> | <closure> | <simple> | <ctorBlock>
+    <typeLiteral>    :=  <type> "#"
+    <slotLiteral>    :=  [<type>] "#" <id>
+    <namedSuper>     :=  <type> "." "super"
+    <staticCall>     :=  <type> "." <slotExpr>
+    <dsl>            :=  <type> "<|" <anyChar>* "|>"
+    <simple>         :=  <type> "(" <expr> ")"
+    <ctorBlock>      :=  <type> <itBlock>
+    <termChain>      :=  <dotCall> | <dynCall> | <safeDotCall> | <safeDynCall> |
+                         <indexExpr> | <callOp> | <itBlock>
+    <itBlock>        :=  "{" <stmts> "}"
+    <dotCall>        :=  "." <slotExpr>
+    <dynCall>        :=  "->" <slotExpr>
+    <safeDotCall>    :=  "?." <slotExpr>
+    <safeDynCall>    :=  "?->" <slotExpr>
+    <idExpr>         :=  <local> | <slotExpr>
+    <slotExpr>       :=  <field> | <call>
+    <local>          :=  <id>
+    <field>          :=  ["&"] <id>
+    <call>           :=  <id> ["(" <args> ")"] [<closure>]
+    <args>           :=  [<expr> ("," <expr>)*]
+    <indexExpr>      :=  "[" <expr> "]"
+    <callOp>         :=  "(" <args> ")" [<closure>]
+
+    <literal>        :=  "null" | "this" | "super" | "it" |
+                         <bool> | <int> | <float> | <decimal> | <str> |
+                         <duration> | <uri> | <list> | <map> | <uri>
+    <list>           :=  [<type>] "[" <listItems> "]"
+    <listItems>      :=  "," | (<expr> ("," <expr>)*) [","]
+    <map>            :=  [<mapType>] "[" <mapItems> [","] "]"
+    <mapItems>       :=  ":" | (<mapPair> ("," <mapPair>)*)
+    <mapPair>        :=  <expr> ":" <expr>
+
+    <closure>        :=  <closureSig> "{" <stmts> "}"
+    <closureSig>     :=  "|" <closureParams> ["->" <type>] "|"
+    <closureParams>  :=  [<closureParam> ("," <closureParam>)*]
+    <closureParam>   :=  <formal> | <id>
+
+See [Literals] for grammar of the literal tokens.
+
+# Type
+
+    <type>           :=  <nullType> | <nonNullType>
+    <nullType>       :=  <nonNullType> "?"
+    <nonNullType>    :=  <simpleType> | <listType> | <mapType> | <funcType>
+    <typeList>       :=  <type> ("," <type>)*
+    <simpleType>     :=  <id> ["::" <id>]
+    <listType>       :=  <type> "[]"
+    <mapType>        :=  ["["] <type> ":" <type> ["]"]
+    <funcType>       :=  "|" [formals] ["->" <type>] "|"
+    <formals>        :=  [<formal> ("," <formal>)*]
+    <formal>         :=  <formalFull> | <formalInferred> | <formalTypeOnly>
+    <formalFull>     :=  <type> <id>
+    <formalInferred> :=  <id>
+    <formalTypeOnly> :=  <type>
+
+# Misc
+
+    <id>             := <idStart> (idChar)*
+    <idStart>        := A-Z | a-z | _
+    <idChar>         := A-Z | a-z | _ | 0-9
+    <eos>            := ; | \n | }
+
+# Keywords
+
+    abstract       foreach        return
+    as             if             static
+    assert         internal       super
+    break          is             switch
+    case           isnot          this
+    catch          it             throw
+    class          mixin          true
+    const          native         try
+    continue       new            using
+    default        null           virtual
+    do             once           volatile
+    else           override       void
+    false          private        while
+    final          protected
+    finally        public
+    for            readonly
+
+# Position Keyword
+
+    enum
+    facet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

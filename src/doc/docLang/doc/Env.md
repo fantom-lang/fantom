@@ -1,0 +1,196 @@
+<!--
+title:      Env
+author:     Brian Frank
+created:    24 Jul 09
+copyright:  Copyright (c) 2009, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The [sys::Env] class is used to access and customize the Fantom
+environment.  Key aspects of the runtime delegate to the currently
+installed environment including:
+  - standard I/O
+  - home, working, and temporary directories
+  - [pod](sys::Env.findPodFile) resolution
+  - [config](sys::Env.config) property resolution
+  - [locale](sys::Env.locale) property resolution
+  - Java classloading resolution (when using JVM)
+
+# Directory Structure
+The standard directory structure for Fantom installations is:
+
+    lib/
+      fan/
+        podA.pod
+        podB.pod
+        .. other pods
+      java/
+        .. jar files
+      dotnet/
+        .. .NET DLLs
+    etc/
+      sys/
+        config.props
+        ... other sys config/runtime files
+      build/
+        config.props
+        ... other build config/runtime files
+      podA/
+        config.props
+        ... other config/runtime files
+      podB/
+        config.props
+        ... other config/runtime files
+
+The top level "lib" directory is used to store library files which
+contain code.  The directories under "lib" are organized by
+platform: fan, java, dotnet.  The ".pod" files themselves are stored
+under "lib/fan/".
+
+The top level "etc" directory is used to store system wide configuration
+files and other files that a pod might need at runtime.  The directories
+under "etc" are organized by pod - each subdirectory under "etc" should
+match a pod name.
+
+# BootEnv
+The default environment used to boots up a Fantom environment is called
+the *BootEnv*.  The `homeDir` of the BootEnv is always relative to the
+location used to launch Fantom (fan.bat or fan bash script).
+
+Core libraries like `sys` must be loaded out of the BootEnv.
+
+# Setting Env
+You can override the default environment using the `FAN_ENV` environmental
+variable.  This variable should map to a qualified type name of the `Env`
+subclass to use.  The class must have a default no-argument constructor.
+
+The BootEnv is used to load the environment class specified.  This requires
+that the pod defining your environment is located under "{homeDir}/lib/fan/".
+
+# PathEnv
+The [util::PathEnv] is a simple env implementation that uses a search path
+instead of requiring all your files be located under the "fan.home".
+The search path is specified with the `FAN_ENV_PATH` envirnomenal
+variable.  For example:
+
+    C:\dev\fan>set FAN_ENV=util::PathEnv
+    C:\dev\fan>set FAN_ENV_PATH=/dev/work/
+
+The directory specified should be structured using the standard [conventions](#directory-structure).
+In the example above we would look for pods in "/dev/work/lib/fan/".
+You can specify more than one directory using your operating system's
+[path separator](sys::File.pathSep).  Note that the path always implicitly
+includes "fan.home" as the last directory in search path.
+
+You can also setup a directory specific PathEnv with a file called "fan.props".
+If "fan.props" is found in any directory above your current working directory,
+then it used to specify your path.  The location of "fan.props" defines
+the working directory.  Or it can specify additional directories in the
+path with the property `path` key:
+
+    // location of fan.props is always implicitly first in path (working dir)
+    path=/dir-a/;/dir-b/
+
+The "fan.props" file can also be used to override specific environment
+variables when working under that specific directory using keys prefixed
+with "key.":
+
+    env.ENV_VAR_KEY=var-value
+
+The list of paths is specified in *priority order*.  The first directory
+in the path is used for [workDir](sys::Env.workDir). Priority order is
+used to resolve pods and configuration files.  Typically you will use this
+mechanism to keep a pristine boot directory, and do pod development and
+configuration overrides in a separate working directory.
+
+For example let's consider this directory structure:
+
+    boot/
+      lib/
+        fan/
+          podA.pod
+          podB.pod
+    work/
+      lib/
+        fan/
+          podB.pod
+          podC.pod
+
+In this configuration, things would be resolved as follows:
+
+    podA  =>  boot/lib/fan/podA.pod
+    podB  =>  work/lib/fan/podB.pod
+    podC  =>  work/lib/fan/podC.pod
+
+Note how work directory trumps boot for resolution of podB even
+though it exists in both directories.
+
+# JarDistEnv
+The JarDistEnv is a JVM only environment which is used to deploy a set of
+Fantom pods as a single Java JAR file.  A JarDistEnv differs from other
+environments in that it has no access to the standard directory structure
+on the file system.  Rather everything the environment might need is self
+contained as resources inside the JAR file.
+
+The following features are not supported in the JarDistEnv:
+  - [indexed props](#indexed-props)
+  - file system overrides for [config](sys::Env.config) and [locale](sys::Env.locale)
+  - `homeDir`, `workDir`, `tempDir` all default to current working directory
+
+See the [build::JarDist] task and [example script](examples::java-buildjardist)
+for how to build a JAR for deployment.
+
+In order for the Fantom to boot itself from a JarDist, the following system
+properties must be configured:
+  - "fan.home": set to some directory for [sys::Env.homeDir]
+  - "fan.jardist": set to "true" to ensure runtime loads itself from the
+    JAR instead of the file system
+
+# Indexed Props
+One issue which plagues many software platforms is the ability to efficiently
+discovery what is currently installed.  For example what type should I use to
+handle the URI scheme "foobar"?  What plugins are registered to work with
+the "image/png" MIME type?
+
+In Fantom building these types of discovery functions is done with *indexed props*.
+Indexed props are a simple mechanism where pods can define name/value pairs which
+are coalesced into a master index by the current environment.  You define
+indexed props in your pod's build script:
+
+    index =
+    [
+      // creating plugins for existing APIs like UriScheme
+      "sys.uriScheme.foobar": "acme::FoobarScheme",
+
+      // creating plugins for specific target types
+      "acme.editor.sys::Bool": "acme::BoolEditor",
+      "acme.editor.sys::Int": "acme::IntEditor",
+
+      // registering types for specific functions
+      "acme.theme": ["acme::JungleTheme", "acme::WaterTheme"],
+    ]
+
+Indexed props are globally scoped, so convention is to scope your key names
+with a pod name.  Note in the above example "acme.theme" that you can
+define multiple values for a single key.
+
+During runtime the current environment will build master index of indexed
+props for all the installed pods.  This means adding new functionality requires
+only to drop a pod file into your lib directory.
+
+You lookup index props with the [Env.index](sys::Env.index) method.  It
+returns a list of values bound to a given key:
+
+    // lookup the UriScheme bound to foobar
+    qname := Env.cur.index("sys.uriScheme.foobar").first
+
+    // find editor types responsible for editing target
+    qnames := Env.cur.index("acme.editor.${target.typeof}")
+
+    // find all the theme types installed
+    qnames := Env.cur.index("acme.theme")
+
+Using the basic mechanisms of name/value pairs, you can construct fairly
+sophisticated solutions for discovering the types and resources bundled
+in the installed pods.

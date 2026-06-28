@@ -1,0 +1,129 @@
+<!--
+title:      Structure
+author:     Brian Frank
+created:    7 May 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Fantom software is structured using three primary abstractions:
+
+  - [Pods](#pods): modules of deployment and versioning
+  - [Types](#types): basic units of object oriented type system
+  - [Slots](#slots): fields and methods
+
+These abstractions are organized into a three level namespace which
+uses the following syntax for qualified names:
+  - `pod`
+  - `pod::Type`
+  - `pod::Type.slot`
+
+# Pods
+Pods are the top of Fantom's namespace as well as the unit of deployment.  A pod's
+name is globally unique and is used to organize the top level of Fantom's namespace.
+Pod names are similar to Java packages or C# namespaces.  To guarantee uniqueness,
+try use a naming convention which won't produce conflicts (see
+[conventions](Conventions#naming)).
+
+Pods are also the fundamental unit of deployment, versioning, and dependency
+management.  In this role pods are like Java JAR files or .NET DLLs.  A pod
+is a standard zip file which bundles the Fantom code for the pod's types,
+metadata, plus any associated file resources.
+
+The [sys::Pod] type is the reflection API for working with pods installed in a
+given Fantom installation.  Code examples for common pod operations:
+
+    Pod.list                       // list the pods installed
+    Pod.find("acmeFoo")            // find a pod (throws exception if not found)
+    Pod.find("acmeFoo", false)     // find a pod (returns null if not found)
+    myPod.file(`/img/icon.png`)    // lookup a resource file in myPod
+    `fan://myPod/img/icon.png`.get // lookup a resource file in myPod
+    someObj.typeof.pod             // get the pod of an object/type
+    Pod.of(someObj)                // get the pod of an object
+
+See [Pods] chapter for more details.
+
+# Types
+A Type is an object oriented class which encapsulates state and behavior.  Types
+are contained within pods and identified by a name unique within that pod.  The
+`::` double colon is used to combine the pod name with the type name to create
+the *qualified name* or *qname*.  Because pod names are globally unique, a type's
+qname is also globally unique.  For example `sys::Str` is the qname of the `Str`
+type which is contained by the `sys` pod.
+
+There are two variations of Types in Fantom: [classes](TypeSystem#classes)
+and [mixins](TypeSystem#mixins).
+
+The [sys::Type] type is the reflection API for working with types at runtime.
+Code snippets for common type operations:
+
+    someObj.typeof            // get the type of the an object
+    myPod.types               // list the types in myPod
+    myPod.findType("Foo")     // find a type within myPod by its simple name
+    Type.find("myPod::Foo")   // lookup a type by its qualified name
+    Int#                      // type literal for sys::Int
+    someType.fits(Num#)       // reflective version of is/instanceof operator
+
+# Slots
+Types encapsulate state and behavior as a collection of slots.  Slots are
+named uniquely within a given type.  The `.` dot is used to combine the parent
+type's qname to create the slot's qname.  For example `sys::DateTime.now` is the
+globally unique qualified name which identifies the `now` method within the
+`DateTime` type within the `sys` pod.
+
+There are two types of slots:
+  - [Methods](#methods): model behavior
+  - [Fields](#fields): model state
+
+The [sys::Slot] type is the reflection API for working with slots at runtime.
+Code examples for commonly used slot operations:
+
+    someType.slot("xyz")         // lookup the slot called xyz on someType
+    Slot.find("myPod::Foo.xyz")  // looukp a slot by its qualified name
+    method.call([arg0, arg1])    // invoke method using reflection
+    method.func                  // the function which implements the method
+    field.get(instance)          // get a field using reflection
+    SomeType#xyx                 // slot literal for slot on SomeType
+    #xyx                         // slot literal current type
+
+All slots are keyed by a unique name.  This means Fantom does not support
+methods overloaded by parameter type like Java or C#.  Although you may
+find this to be a drag on occasion, there are a couple features in Fantom
+that make this restriction quite palatable.  First method parameters may
+have defaults - this eliminates the convenience methods commonly used in
+Java APIs.  Second all types subclass from Obj - this eliminates
+the API bloat required to support all the primitives in an API like
+`java.io.PrintWriter`.  Lastly, constructors in Fantom are named which eliminates
+another common requirement for parameter based overloading.  The benefit of
+this restriction is the really cool ability to lookup methods simply by name
+or qname making reflective programming and dynamic invocation a zillion
+times simpler.
+
+## Methods
+Methods are the basic unit for encapsulating behavior in Fantom.  Methods are
+really just slot wrappers for a [function](Functions).  Every method
+has a return type and zero or more typed parameters.  Methods which
+don't return an object have a return type of [sys::Void].
+
+The [sys::Method] API is used to work with methods reflectively at runtime.
+
+Methods are discussed in depth in the [Methods] chapter.
+
+## Fields
+Fields are used to model state in a given type.  Fields in Fantom are composed
+of three concepts:
+
+  - Getter: a method used to access the current value of the field;
+  - Setter: a method used to change the current value of the field;
+  - Storage: a storage location in memory for the current value;
+
+Most fields have all three components, but typically the getter and setter
+is auto-generated by the compiler.  Const fields have only storage and
+no getter or setter.  Fantom also allows abstract and calculated fields
+which have a getter and setter, but no storage.
+
+The [sys::Field] API is used to work with fields reflectively at runtime.
+
+We'll take a deep dive into fields later in the [Fields] chapter.
+

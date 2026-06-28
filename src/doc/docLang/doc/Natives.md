@@ -1,0 +1,197 @@
+<!--
+title:      Natives
+author:     Brian Frank
+created:    22 Jun 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Native classes, methods, and fields are used to implement Fantom in the
+native language of the runtime platform.  For example a native method
+would be implemented in Java for the JVM, in C# for the CLR, and JavaScript
+for browsers.  Natives are the glue code for portable libraries such
+as `inet` and `dom`.
+
+Here is a quick check-list for when and when not to write native code:
+  1. If possible then the best solution is to write your code in 100% Fantom;
+     then it is portable across any platform
+  2. If you don't care about portability, then use a FFI to call out to
+     a native library - see [JavaFFI]
+  3. If you need to call out native APIs, but still wish your Fantom
+     pod to be portable across multiple platforms then use natives
+
+When writing native code, refer to the FFI documentation for how to
+map Fantom types to their native platform types.  For example see
+[Java FFI](JavaFFI#interop-summary) to map between Fantom and Java types.
+
+# Native Classes
+A native class is one where the entire implementation is coded up
+in the native language.  In general the native code must look exactly
+like what the compiler/runtime would emit.  The `sys` pod is implemented
+entirely as native classes which makes it a great place to look for
+examples in Java, C#, and JavaScript.
+
+A native class is indicated with the `native` keyword in the class
+header:
+
+    native class Foo
+    {
+      new make(Str arg)
+      Int add(Int a, Int b)
+      Str? a
+      const Str b := "const"
+    }
+
+All methods are assumed to be native and must not have a body.  There
+must be an implementation class for each platform.  Here is what the
+Java implementation would look like:
+
+    class Foo extends FanObj
+    {
+      // constructor factory called by Foo.make
+      public static Foo make(String arg)
+      {
+        Foo self = new Foo();
+        make$(self, arg);
+        return self;
+      }
+
+      // constructor implementation called by subclasses
+      public static void make$(Foo self, String arg) {}
+
+      // boiler plate for reflection
+      public Type typeof()
+      {
+        if (type == null) type = Type.find("mypod::Foo");
+        return type;
+      }
+      private static Type type;
+
+      // methods
+      public long add(long a, long b) { return a + b; }
+
+      // mutable field
+      public String a() { return a; }
+      public void a(String it) { a = it; }
+      private String a;
+
+      // const field
+      public String b = "const";
+    }
+
+# Native Peers
+The general design for classes with native methods and fields is to
+create a peer class for each Fantom type.  These peers may be a singleton
+shared by all Fantom instances or you may use a peer instance per
+Fantom instance.  Note that peers are not used with native classes.
+
+Any class which defines a native slot must declare a peer class:
+
+    // Fantom code
+    class Foo
+    {
+      native Int add(Int a, Int b)
+    }
+
+    // Java peer
+    package fan.mypod;
+    public class FooPeer
+    {
+      public static FooPeer make(Foo self) { return new FooPeer(); }
+      public long add(Foo self, long a, long b) { return a + b; }
+    }
+
+    // C# peer
+    namespace Fan.Mypod
+    {
+      public class FooPeer
+      {
+        public static FooPeer make(Foo self) { return new FooPeer(); }
+        public long add(Foo self, long a, long b) { return a + b; }
+      }
+    }
+
+    // JavaScript peer
+    fan.mypod.FooPeer = fan.sys.Obj.$extend(fan.sys.Obj);
+    fan.mypod.FooPeer.prototype.$ctor = function(self) {}
+    fan.mypod.FooPeer.prototype.add = function(self, a, b) { return a + b; }
+
+The peer is always accessible from the Fantom instance via a built-in
+field called `peer`.  When creating class hieararchies with natives, it
+is up your peer factory to override the peer fields of super classes:
+
+    public static FooPeer make(Foo t)
+    {
+      FooPeer peer = new FooPeer();
+      ((FooBaseClass)t).peer = peer; // override base class's peer field
+      return peer;
+    }
+
+# Native Methods
+Native methods are always routed to the peer:
+
+    // Fantom
+    class Foo
+    {
+      native Str a(Bool x)
+      static native Void b(Int x)
+    }
+
+    // Java or C#
+    class FooPeer
+    {
+      public static FooPeer make(Foo self) { return new FooPeer(); }
+
+      // instance methods always take implicit self
+      public String a(Foo self, boolean x) { return "a"; }
+
+      // static methods are just normal statics with matching signatures
+      public static void b(long x) {}
+    }
+
+    // JavaScript
+    fan.mypod.FooPeer.prototype.a = function(self, x) { return "a"; }
+    fan.mypod.FooPeer.b = function(x) {}
+
+All non-static methods and fields will pass the Fantom instance as an
+implicit first argument.  This lets you use a singleton peer for all
+instances.  Typically you will only allocate a peer instance if you
+wish to manage state on the peer.
+
+# Native Fields
+Native fields are similar to abstract fields in that they generate a
+getter and setter, but no actual storage.  The emit process will route
+the Fantom getter/setter to the peer class:
+
+    // Fantom
+    class Foo
+    {
+      native Str? f
+    }
+
+    // Java
+    class FooPeer
+    {
+      public static FooPeer make(Foo self) { return new FooPeer(); }
+      public String f(Foo t) { return f; }
+      public void f(Foo t, String v) { f = v; }
+      String f;
+    }
+
+    // C#
+    class FooPeer
+    {
+      public static FooPeer make(Foo self) { return new FooPeer(); }
+      public string f(Foo t) { return m_f; }
+      public void f(Foo t, String v) { m_f = v; }
+      string m_f;
+    }
+
+    // JavaScript
+    fan.mypod.FooPeer.prototype.m_f = "";
+    fan.mypod.FooPeer.prototype.f   = function(t) { return this.m_f; }
+    fan.mypod.FooPeer.prototype.f$  = function(t, v) { this.m_f = v; }
+
+Native fields can be virtual or override a superclass, but
+cannot be const, static, or abstract.

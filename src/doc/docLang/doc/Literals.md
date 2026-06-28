@@ -1,0 +1,419 @@
+<!--
+title:      Literals
+author:     Brian Frank
+created:    4 May 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The following types have a literal syntax:
+
+  - [sys::Bool](#bool)
+  - [sys::Int](#int)
+  - [sys::Float](#float)
+  - [sys::Decimal](#decimal)
+  - [sys::Str](#str)
+  - [sys::Duration](#duration)
+  - [sys::Uri](#uri)
+  - [sys::Type](#type)
+  - [sys::Slot](#slot)
+  - [sys::Range](#range)
+  - [sys::List](#list)
+  - [sys::Map](#map)
+
+The three types `Bool`, `Int`, and `Float` are [value-types](TypeSystem#valuetypes).
+These types are not necessarily passed as object references, but rather
+passed by value on the call stack.  When value types are coerced
+to/from reference types like `Obj` and `Num`, the compiler will
+generate boxing/unboxing operations.
+
+# Bool
+There are exactly two values of [sys::Bool] which are represented
+using the `true` and `false` keywords.
+
+As a value-type `Bool` fields default to `false` instead of `null`.
+However `Bool?` does default to null.
+
+# Int
+[sys::Int] is used to represent a 64-bit signed integer.  Fantom does not have any integer
+types for smaller precisions.  Fantom also uses Int to represent a single character
+of a string as a Unicode code point (which happens to be handy because there are
+actually more than 2^16 Unicode characters).  Int is `const` which means that all
+instances are immutable.
+
+Int literals are expressed as a string of decimal digits.  An Int can also be
+represented in hexadecimal if prefixed with `0x` or binary if prefixed with `0b`.
+Octal notation is not supported.  You can use the `_` underbar anywhere within
+an `Int` literal as a separator to make your code more readable.
+
+Fantom also permits C style character literals to represent a Unicode code point
+as an `Int` literal.  Character literals are surrounded with the tick and support
+the following escapes:
+
+    \b  \f  \n  \r  \t  \"  \'  \` \$  \\  \uXXXX \u{XX}
+
+The escape `\uXXXX` specifies a Unicode code point using a a four
+digit hexadecimal number; or use `\u{xxxxx}` to escape a code point with
+less than or more than four digits.
+
+`Int` literal examples:
+
+    45
+    -89_039
+    0xcafebabe
+    0xCAFE_BABE
+    0b1011
+    '?'
+    '\n'
+    '\u03ab'
+    '\u00F2'
+    '\u{1F60A}'
+
+As a value-type `Int` fields default to `0` instead of `null`.
+However `Int?` does default to null.
+
+# Float
+[sys::Float] is used to represent a 64-bit floating point number.  Fantom does
+not have a type for 32-bit floats.  Float is `const` which means that
+instances are immutable.
+
+Float literals are expressed like C, Java, etc using a string of decimal
+digits, optional dot and fraction, and optional exponent.  A "f"
+or "F" suffix is required on Floats to distinguish from Decimals.  You
+can use the `_` underbar as a separator.  Examples of `Float` literals:
+
+    3.0f
+    3f
+    3.0F
+    123_456.0f
+    3e6f
+    0.2e+6f
+    1_2.3_7e-5_6f
+
+As a value-type `Float` fields default to `0.0f` instead of `null`.
+However `Float?` does default to null.
+
+# Decimal
+[sys::Decimal] is used to immutably represent a decimal floating point
+which provides better precision than a Float.  Decimals are ideal for
+financial applications where Floats may incur rounding errors.
+Decimals are backed by `BigDecimal` in Java and `System.Decimal`
+in .NET.  They are not supported in JavaScript.
+
+Decimal literals are expressed just like Float literals except
+they use the "d" or "D" suffix.  Examples of `Decimal` literals:
+
+    4d
+    4.0D
+    123_456d
+    3e6d
+    0.2e+6D
+    1_2.3_7e-5_6d
+
+NOTE: decimals don't operate exactly the same between the Java
+and .NET platform.  Java uses BigDecimal which has an infinite
+range, while .NET uses System.Decimal with a range of of 28 significant
+digits and a range of 1E-28 to 7.9E+28.  There is also a difference
+in equality between the two platforms:
+
+     3.00d == 3.0d   =>  false on Java
+     3.00d == 3.0d   =>  true on .NET
+     3.00d <=> 3.0d  =>  zero on both platforms
+
+Java treats trailing zeros as significant for equality, but they are
+insignificant on .NET.  However both platforms produce consistent
+results for the `Obj.compare` method.
+
+# Str
+[sys::Str] is used to represent a sequence of Unicode characters.  Str
+is `const` which means all instances of Str are immutable.  Use
+[sys::StrBuf] when you need a mutable sequence of characters.
+
+Str literals are surrounded by the `"` double quote character.  Special
+characters may be escaped using the list of escape sequences specified
+above for [Int](#int) character literals. A couple `Str` literal examples:
+
+    "hello"
+    "line 1\nline 2"
+    "It is 73\u00B0 Fahrenheit outside!"
+    "\u{1F60A} is happy face emoji"
+
+## Multi-line Strs
+Str literals may span multiple lines in which case the newlines are
+always normalized to `\n` regardless of how newlines were encoded
+in the source code text.  The first non-whitespace char of each line
+must be aligned to the right of the opening quote or else it is
+a compile time error:
+
+    x :=
+      "line 1
+        line 2
+       line3"
+
+The example above compiles into `"line1\n line2\nline3"`.  Note that
+spacing to the right of the quote is maintained, but spacing to the
+left is stripped off in the string literal.  If you use tabs then you
+must use a matching number of leading tabs followed by space characters:
+
+    \t\tx := "line 1
+    \t\t      line 2"
+
+
+## Str Interpolation
+Str literals support string interpolation which allow arbitrary Fantom
+expressions to be embedded inside the string literals.  Embedded expressions
+are prefixed using the `$` dollar sign and surrounded with `{` and `}` braces.
+If the expression is a simple identifier or sequence of dotted identifiers then
+the braces may be omitted.  Use the `\$` escape sequence if you wish to express
+the dollar sign itself.
+
+Interpolated strings are expressions which compute a new Str at runtime - they
+are merely syntax sugar for string concatenation.  For example:
+
+    "x is $x, in hex $x.toHex, and x+8 is ${x+8}"
+
+is syntax sugar for:
+
+    "x is " + x + ", in hex " + x.toHex + ", and x+8 is " + (x+8)
+
+String interpolation makes string formatting easier to read and write.
+Fantom coding convention is to always use string interpolation rather than
+concatenation.
+
+## Locale Literals
+Str interpolation supports a special syntax to easily work with localized
+strings:
+
+    // qualified pod::key
+    "$<pod::key>"  =>  Pod.find("pod").locale("key")
+
+    // lookup key within current pod
+    "$<key>" =>  EnclosingType#.pod.locale("key")
+
+    // lookup key and automatically add key to `locale/en.props`
+    "$<key=Text>"  =>  EnclosingType#.pod.locale("key", "Text")
+
+Refer to [Localization](Localization#locale-literals) for in in-depth discussion.
+
+## Triple Quotes
+Fantom also supports `"""` triple quoted string literals.  These work exactly
+like normal string literals except that you don't need to escape the
+double quote `"` character.  Interpolation and multi-line work exactly
+the same:
+
+    echo("""Do you know "What lies beneath the shadow of the statue"?""")
+
+## Str DSL
+You can also write a Str literal using the [DSL syntax](DSLs).  A Str DSL can
+contain any character except the sequence "|>".  Neither the "\"
+or "$" character are treated specially:
+
+    echo(Str <|no \ or $ escapes need, and
+               multi-line works too|>)
+
+Str DSL literals may be multi-line following the leading whitespace rules
+for standard strings.
+
+# Duration
+In Java, an API which requires a measurement of time typically uses a long with
+the number of milliseconds.  This tends to be a bit ambiguous and becomes problematic
+when you need finer precision.  Fantom APIs always use a typed value for time.  Absolute
+time measurement is represented using [sys::DateTime] and relative time measurement is
+represented by [sys::Duration] - both are normalized using nanosecond precision.
+For example to represent 5 seconds you could use the `Duration.make` constructor:
+
+    Duration.make(5_000_000_000)  // longhand
+    Duration(5_000_000_000)       // shorthand
+
+But all those zeros make it unwieldy.  Plus it is a little inefficient because
+it requires creating a new instance of `Duration` every time the expression is executed.
+In Fantom, `Durations` are expressed using a literal syntax formatted as a decimal number
+with an optional dotted fraction and one of the following suffixes:
+
+    ns:  nanoseconds  (x 1)
+    ms:  milliseconds (x 1,000,000)
+    sec: seconds      (x 1,000,000,000)
+    min: minutes      (x 60,000,000,000)
+    hr:  hours        (x 3,600,000,000,000)
+    day: days         (x 86,400,000,000,000)
+
+Examples of `Duration` literals:
+
+    4ns
+    100ms
+    -0.5hr
+
+# Uri
+The [sys::Uri] class is used to represent a Uniform Resource Identifier which
+is the foundation of Fantom's subsystem for naming and resolution.  `Uris` have
+their own literal syntax using the back tick:
+
+    `index.html`
+    `/some/path/file.txt`
+    `https://fantom.org/`
+    `TPS Report.doc`
+
+Note that when working with URIs in Fantom and representing them as literals we
+always use *standard form*.  For example a space is represented using
+a normal space, not encoded as "%20":
+
+    `TPS Report.doc`.toStr      // yields "TPS Report.doc"
+    `TPS Report.doc`.encode     // yields "TPS%20Report.doc"
+    `TPS%20Report.doc`.toStr    // yields "TPS%20Report.doc" (probably not what you want)
+    `TPS%20Report.doc`.encode   // yields "TPS%2520Report.doc" (probably not what you want)
+
+Like strings, you can embed the standard [escape sequences](#int) into a Uri literal
+including Unicode code points.  Unicode chars are UTF-8 encoded into octects
+before the URI is percent encoded according to RFC 3986 (see [sys::Uri.encode]).
+
+Uris support interpolation following the same rules as [Str interpolation](#str-interpolation):
+
+    file := "file.txt"
+    `/dir/$file`  =>  ("/dir/" + file).toUri
+
+# Type
+The [sys::Type] class is the foundation of the Fantom reflection APIs.  Typically `Type`
+instances are queried using the [sys::Type.of] method.  But you can also represent
+a `Type` instance using the type literal syntax which is simply a type name followed
+by the `#` symbol:
+
+    Str#
+    acme::SomeType#
+
+If a fully qualified type name is not specified, then the typename is resolved
+according to the source file's `using` statements.
+
+# Slot
+You can create a slot literal using the syntax:
+
+    Int#plus
+    #echo
+
+If the type name is omitted, then the slot literal is resolved against the
+enclosing class.  A slot literal resolves to a [sys::Field] or [sys::Method].
+Slot literals have the same semantics as reflection via `Type.slot` except
+they can be statically checked by the compiler.
+
+# Range
+A [sys::Range] represents a contiguous range of integers from start to end.  Ranges
+may be represented as literals in Fantom source code as `start..end` for an inclusive
+end or `start..<end` for an exclusive range.  Inclusive and exclusive determines if
+the end index is included in the range (start is always inclusive).  Example
+of `Range` literals:
+
+    0..5    // 0 to 5 (end is inclusive)
+    0..<5   // 0 to 4 (end is exclusive)
+    x..<y   // x to y-1 (end is exclusive)
+
+Note that the `..` and `..<` operators may be used with any arbitrary expression
+according to [operator precedence](Expressions#operator-precedence).  These operators are
+just syntax sugar for constructing a range via [sys::Range.make].
+
+# List
+The [sys::List] class stores an ordered list of objects.  Lists may be
+instantiated using the following literal syntax:
+
+    // syntax format where V is the optional item type, and
+    // the items are arbitrary expressions:
+    V[item0, item1, ... itemN]
+
+    // examples
+    Int[10, 20, 30]     // list of the three Ints 10, 20, and 30
+    [10, 20, 30]        // same as above using type inference
+    Int[,]              // empty list of Ints
+    [,]                 // empty list of Obj?
+
+In most simple cases a `List` literal is just a list of comma separated
+expressions inside square brackets.  If the type prefix is omitted, then
+*type inference* is used to determine the type of the items.  The type of
+the items is determined by computing the most specific class all the items
+share (mixins types are not taken into account).  For example:
+
+    [1, 2, 3]        // evaluates to Int[]
+    [1, null, 3]     // evaluates to Int?[]
+    [1f, 2f, 3f]     // evaluates to Float[]
+    [1, 2f, 3]       // evaluates to Num[]
+    [1, "2", 3]      // evaluates to Obj[]
+    Num[1, 2, 3]     // evaluates to Num[]
+    [[10,20], [30]]  // evaluates to Int[][]
+
+In the case of `[1,2f,3]` the list contains both `Ints` and `Floats`
+which share `Num` as their most specific common base class.  However
+the list `[1,"2",3]` contains `Ints` and `Strs` which don't share
+a common base class other than `Obj`.  The list `Num[1,2,3]` would
+evaluate to `Int[]` if type inference was used, but if we might put
+`Floats` into the list, then we need to explicitly specify the type.
+
+Often the compiler will infer a list to have a non-nullable type.
+If the list might store null values, then you will need to explicitly
+type it:
+
+     [1,2,3]       // cannot store null
+     Int?[1,2,3]   // can store null
+
+The empty list is denoted using the special syntax `[,]`.  Often
+you will specify a type - for example `Str[,]` is an empty list
+of strings.  If a type is not specified, then the empty list
+evaluates to a `Obj?[,]`.
+
+If a list literal without an explicit type is used as a field initializer,
+then it infers its type from the field's declared type:
+
+     Str[] names := [,]     // initial value inferred to be Str[,]
+     Num[] nums  := Int[,]  // initial value is Int[,]
+
+See [Appendix](Appendix#type-inference) for the formal rules used for type
+inference of lists.
+
+# Map
+The [sys::Map] class stores a set of key/value pairs using a hash
+table.  Maps may be instantiated using the following literal syntax:
+
+    // syntax format where K:V is the optional map type,
+    // and the keys and values are arbitrary expressions:
+    [V:K][key0:value0, key1:value1, ... keyN:valueN]
+
+    // examples
+    [Int:Str][1:"one", 2:"two"]  // map of Strs keyed by Int
+    Int:Str[1:"one", 2:"two"]    // same as above with shorthand type syntax
+    [1:"one", 2:"two"]           // same as above using type inference
+    Int:Str[:]                   // empty Int:Str map
+    [:]                          // empty map of Obj:Obj?
+
+The `Map` literal syntax is like `List` except we specify the key
+value pairs using a colon.  The type prefix of a map literal is any
+valid [map signature](TypeSystem#map-type-signatures).  If the type prefix
+is omitted, then type inference is used to determine the type of
+the keys and values using the same rules as list literals.  For
+example:
+
+    [1:"one", 2:"two"]    // evaluates to Int:Str
+    [1:"one", 2:null]     // evaluates to Int:Str?
+    [1:"one", 2f:"two"]   // evaluates to Num:Str
+    [1:"one", 2f:null]    // evaluates to Num:Str?
+    [1:"one", 2f:0xabcd]  // evaluates to Num:Obj
+    [0:["one"]]           // evaluates to Int:Str[]
+
+The empty map is denoted using the special syntax `[:]` with or
+without a type prefix.
+
+Note that maps may not be typed with a nullable key.  If you
+are using type inference, you might need to explicitly type a
+map which will store null:
+
+    [1:"one", 2:"two"]           // cannot store null values
+    Int:Str?[1:"one", 2:"two"]   // can store null values
+
+The type `Int:Str?` is a map with `Int` keys and `Str?` values.  However
+the type `[Int:Str]?` is map of `Int:Str` where the map variable itself
+might be null.
+
+If a map literal without an explicit type is used as a field initializer,
+then it infers its type from the field's declared type:
+
+     Str:File[] files := [:]   // initial value inferred as Str:File[:]
+
+See [Appendix](Appendix#type-inference) for the formal rules used for type
+inference of maps.
+

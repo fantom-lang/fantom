@@ -1,0 +1,75 @@
+<!--
+title:      Naming
+author:     Brian Frank
+created:    27 Aug 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+A "name" is a set of conventions and rules for using strings as identifiers.
+Good names are typically human readable, although that isn't necessarily
+required.  Fantom provides a unified naming design based on the [sys::Uri] class.
+Uris are a good choice for naming because they provide:
+  - Ability to transcribe the name into an ASCII string (with appropriate escaping)
+  - Well defined model for plugging in "protocol" (scheme) handlers
+  - Well defined model for path hierarchies
+  - Well defined model for name/value pairs via queries
+  - Well defined rules for relativization and normalization
+  - Uris map cleanly to web based applications
+  - Uris are widely supported in alternate languages and platforms
+
+# Resolving Uris
+In Fantom anything of interest we might wish to identify with a name
+is assigned a Uri.  We resolve Uris to `sys::Obj` instances.  The
+actual object type is dependent on the Uri.  For example all "file:"
+Uris will resolve to a `sys::File`.  Resolving a Uri is done via
+the [Uri.get](sys::Uri.get) method:
+
+    File f := `file:/dir/file.txt`.get
+
+If the file cannot be resolved, then UnresolvedErr is thrown.  You
+can pass false for the `checked` parameter to return null if the Uri
+cannot be resolved.
+
+The default behavior of `Uri.get` on a relative Uri (null scheme)
+is to throw UnresolvedErr.  But you can pass in optional base
+object.  If the Uri is relative, then we attempt to resolve the
+base object's uri via the dynamic call `base->uri`.  If the base's
+uri is absolute, then resolve we `base->uri + uri`:
+
+    base := `file:/dir/`.get
+    `file.txt`.get(base)  =>  resolves to `file:/dir/file.txt`
+
+# Uri Schemes
+The [sys::UriScheme] class is used to plug in handling for new
+Uri schemes.  The standard fan runtime provides support for the
+following schemes:
+  - **fan**: resolves to the objects in the Fantom namespace (discussed below)
+  - **file**: resolves to `File` instances on the local file system
+  - **http**: not done yet, but coming soon...
+
+You can plug in your own scheme handling by subclassing `UriScheme`:
+
+    const class CustomScheme : UriScheme
+    {
+      override Obj? get(Uri uri, Obj? base) { ... }
+    }
+
+You override the `get` method to implement uri to object resolution.  To
+register your scheme, define an [indexed prop](Env#indexed-props) formatted as:
+
+    sys.uriScheme.{scheme}={qname}
+
+Where scheme is the lower case scheme name and qname is the qualified
+name of your scheme type.  Indexed props are defined your build script,
+for example:
+
+    index = ["sys.uriScheme.fan": "sys::FanScheme"]
+
+# Fan Scheme
+The Fantom runtime includes support for the "fan:" scheme which is
+used to identify objects related to the Fantom namespace:
+
+    fan://pod/dir/file.txt   =>  sys:Pod.file (resource file)
+

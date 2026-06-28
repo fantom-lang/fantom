@@ -1,0 +1,78 @@
+<!--
+title:      Deployment
+author:     Brian Frank
+created:    27 Aug 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+The Fantom compiler generates pod files which contain a bytecode
+representation of the code which we call *fcode*.  Pod files are just
+normal zip files you can open in your favorite zip tool.  Pod files
+also contain files for the constant pools and any resource files you might
+have bundled with your pod (available via the [Pod.files](sys::Pod.files)
+method).
+
+Pod files are portable between Java and .NET.  The runtimes are
+responsible for reading in pod files to execute them.  The runtimes
+also provide a full implementation of the `sys` pod:
+
+- The Java runtime reads pods files and emits the fcode as Java bytecode.
+This translation occurs at runtime.  The sys APIs are implemented in
+normal Java code.
+
+- Likewise the .NET runtime reads pods files and emits the fcode as
+IL at runtime.  The sys APIs are implemented in normal C# code.
+*Note that .NET is unsupported at this time*
+
+The following illustration depicts this architecture:
+
+![](deployment.png)
+
+# Natives
+If a pod is written 100% in Fantom code, then it is completely portable between
+the runtimes.  However some pods like `inet` or `fwt` need to bind the
+underlying platform with native methods.
+
+When you build a pod with native methods, it generates a normal pod file
+which is necessary for all the reflective metadata.  But it also generates
+additional native targets:
+  - Java: classfiles are compiled and added to the pod zip (see [JavaFFI](JavaFFI#class-path--runtime))
+  - JavaScript: JavaScript source file is added to pod (see [JavaScript](JavaScript#deployment))
+  - DotNet: DLL is added to lib/dotnet for the pod
+
+Also see [docTools](docTools::Build#buildpod) for how to build pods with native
+code.
+
+# Dependencies
+All pods have an explicit set of dependencies on other pods.  All
+pods must have a dependency on the `sys` pod.  Dependencies are
+declared in your [build script](docTools::Build#buildpod) and are
+available at runtime via [Pod.depends](sys::Pod.depends).
+
+Dependencies are modeled via the [sys::Depend] class.  They are declared
+in a string format which includes the pod name and a set of *version constraints*.
+Version constraints can be a simple version number, a version number and anything
+greater, or a version range.  See Depend's [fandoc](sys::Depend) for the format details.
+
+Dependencies are used in two ways.  At compile time dependencies
+determine which pods can be imported via the [using](CompilationUnits#using)
+statement.  It is a compile time error to import a pod which isn't
+declared in the dependency list.
+
+Dependencies are also checked at runtime.  If a pod's dependencies
+are not met, then the pod cannot be loaded.
+
+# Application Deployment
+Deploying a Fantom application involves three components:
+  1. Platform runtime: either the Java VM or the .NET VM (usually pre-installed)
+  2. Fantom runtime: a distribution of the core files
+  3. Pods: the library of pods necessary for your application
+
+The Fantom distribution downloaded from the web is really a developer
+distro.  Most of those files are not needed for runtime.  In general
+the only directories needed for runtime are `bin`, `lib`, and `etc`.  Within
+the `lib` directory you can remove all the pod, jar, and dll files not
+needed by your application.
+

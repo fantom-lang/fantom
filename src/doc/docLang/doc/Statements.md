@@ -1,0 +1,312 @@
+<!--
+title:      Statements
+author:     Brian Frank
+created:    27 May 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Fantom code is written as a series of statements just like Java or C#.
+However unlike Java/C#, Fantom statements are not required to be terminated
+with a semicolon.  A Fantom statement may be terminated one of three ways:
+  1. newline
+  2. semicolon
+  3. end of block `}` curly brace
+
+By convention a simple newline is the preferred mechanism for separating
+statements.  A semicolon is only used when placing multiple statements
+on the same line.  For example these are all valid Fantom statements:
+
+    if (authenticated)
+    {
+      sendToHomePage
+      return true
+    }
+
+    if (authenticated)
+    {
+      sendToHomePage();
+      return true;
+    }
+
+    if (authenticated) { sendToHomePage; return true }
+
+The first version is the preferred syntax.  The third version
+also exhibits good mojo if it is compact enough to keep the code
+readable.
+
+The Fantom grammar is not perfectly unambiguous when you omit semicolons.
+So on occasion you will run into a situation when the compiler
+complains and you might need to stick in a semicolon - but in
+practice this rarely happens.  Another side effect of this is
+that Fantom requires the opening parenthesis of a method call to
+be on the same line as the method identifier:
+
+    // ok
+    call(...)
+
+    // not ok
+    call
+      (...)
+
+This rule also applies to the opening square bracket of an index
+operation:
+
+    // ok
+    list[...]
+
+    // not ok
+    list
+      [...]
+
+
+# Expression Statements
+The most common type of statement is a stand alone expression.
+The following expressions are considered valid statements:
+  - Any assignment expression including the increment/decrement operators
+  - Method calls (or chains of method calls)
+
+# Return Statement
+The `return` statement is used to exit a method:
+
+    // if Void method:
+    return
+    return <expr>
+
+    // if non-Void method:
+    return <expr>
+
+If the enclosing method is `Void`, then `return` simply returns control
+back to the code which called the method.  A `return` statement in a Void
+method may optionally include a expression which is run before return.
+The expression returned by a Void method may evaluate to any type including
+Void.
+
+If the enclosing method is non-void, then the `return` statement includes
+the expression used to return a result object to the caller.
+
+If returning an expression, then the expression must start on the same
+line as the `return` keyword:
+
+    // this is ok
+    return call(x,
+      y, z)
+
+    // this is illegal
+    return
+      call(x, y, z)
+
+Fantom allows you omit the `return` keyword if your method or closure
+contains exactly one statement:
+
+    Str name() { return "Bob" } // long version
+    Str name() { "Bob" }        // short version
+
+Convention is to omit the `return` keyword for single statement returns.
+
+# Local Variables
+Local variables may be declared using the following syntax:
+
+    // syntax
+    <type> <identifier> := <init>
+
+    // example
+    Str name := "Jack Shephard"
+
+Fantom supports [type inference](http://en.wikipedia.org/wiki/Type_inference)
+for local variables, which allows you to omit the type signature.
+If the type signature is omitted, then the variable is typed according
+to the initializer expression.  In the example above the right hand
+side resolves to a `Str`, so we could rewrite the statement above as:
+
+    name := "Jack Shephard"
+
+Fantom convention encourages use of type inference when possible.  However
+if the right hand side expression resolves to an ambiguous type, then
+you will need to specify the variable's type signature.  The most common
+case when type inference doesn't work is when you need to initialize a
+local variable to `null`.
+
+Fantom uses the `:=` operator for local variable initialization rather than
+the standard `=` assignment operator.  The primary purpose of the `:=`
+syntax is to distinguish normal assignments from local declarations.
+This syntax captures programmer intent better and enables the compiler
+to catch typos like a misspelled local.
+
+Fantom does not support the comma operator to declare multiple local
+variables like Java or C#.  In practice though most locals will be
+declared using type inference.
+
+If a local variable is not explicitly assigned an initial value, then
+it implicitly defaults to `null`, `false`, `0`, or `0.0f` following
+same rules for field defaults.  This is a little different than Java
+or C# which require definite assignment.
+
+# If Statements
+Fantom supports `if` and `else` using the Java/C# syntax:
+
+    if (<cond>)
+      <block>
+
+    if (<cond>)
+      <block>
+    else
+      <block>
+
+    if (<cond>)
+      <block>
+    else if (<cond>)
+      <block>
+    else
+      <block>
+
+The `if` condition must evaluate to a `sys::Bool` expression.
+The block can be a single statement or a block of multiple statements
+delineated by `{` `}` curly braces.
+
+# Loop Statement
+Fantom supports  `while` and `for` loops using familiar Java and C#
+syntax.  Although you'll find when writing Fantom that most looping
+is actually done using [closures](Closures).
+
+## While Statement
+Fantom supports `while` loops using Java/C# syntax:
+
+    // syntax
+    while (<cond>)
+      <block>
+
+    // example
+    while (p != null)
+      p = p.next
+
+The `while` loop executes its block until its condition
+evaluations to `false`.  The `while` condition must evaluate to
+a `sys::Bool` expression.  The block can be a single statement or
+a block of multiple statements delineated by `{` `}` curly braces.
+
+Fantom doesn't currently support `do` `while` loops.
+
+## For Statement
+Fantom supports `for` loops using Java/C# syntax:
+
+    // syntax
+    for (<init>; <cond>; <update>)
+      <block>
+
+    // example
+    for (i:=0; i<10; ++i)
+      echo(i)
+
+The `for` condition must evaluate to a `sys::Bool` expression.  The
+block can be a single statement or a block of multiple statements
+delineated by `{` `}` curly braces.  All three expressions of the
+`for` loop are optional.  If the cond expression is omitted, it defaults
+to `true`.  The init expression is executed once on loop entry and the
+update expression after each run of the loop.  The `for` loop runs
+until the condition evaluates to `false`.
+
+Like Java/C# the init expression of the `for` loop can be a local
+variable declaration which defines a local scoped only within
+the `for` loop.  Unlike Java/C# the comma operator is not supported
+in the init and update expressions.
+
+## Break Statement
+The `break` statement is used with both the `for` and `while` loops
+to break out of the loop.  For example:
+
+    for (i:=0; i<10; ++i)
+    {
+      if (i == 3) break
+      echo(i)
+    }
+    echo("done")
+
+    // prints
+    0
+    1
+    2
+    done
+
+The `break` statement always applies to the inner-most loop.
+Fantom does not support labeled `breaks`.
+
+## Continue Statement
+The `continue` statement is used with both the `for` and `while`
+loops to jump back to the top of the loop.  For example:
+
+    for (i:=0; i<4; ++i)
+    {
+      if (i == 2) continue
+      echo(i)
+    }
+    echo("done")
+
+    // prints
+    0
+    1
+    3
+    done
+
+The `continue` statement always applies to the inner-most loop.
+Fantom does not support labeled `continues`.
+
+# Switch Statement
+Fantom supports a `switch` statement used to execute a block of
+code by matching the value of a expression against a list
+of *case labels*. The syntax is very similar to Java/C#:
+
+    switch (<cond>)
+    {
+      case <label1>:
+        <block1>
+      case <label2>:
+        <block2>
+      ...
+      default:
+        <defaultBlock>
+    }
+
+The condition expression is matched against all the case labels.
+If a match is found, then it executes the statements in that case's
+block.  If no matches are found then the optional `default` block
+is executed.  Unlike the `if`, `for`, and `while` statements, the
+case blocks are not wrapped with `{` `}` curly braces.
+
+Fantom's `switch` statement allows the condition and case expressions
+to be any valid expressions.  So you can switch on strings or types
+too.  When the condition evaluates to an [sys::Int] or [sys::Enum]
+and the `case` labels evaluate to constants, then the `switch` is
+compiled into the `tableswitch` opcode.  Otherwise the `switch` statement
+matches the `case` labels using an equality check via the [sys::Obj.equals]
+method.  For example:
+
+    // tableswitch
+    switch (weekday)
+    {
+      case Weekday.sat:
+      case Weekday.sun:
+        return "it's the weekend baby!"
+      default:
+        return "back to work!"
+    }
+
+    // equality switch
+    switch (method.upper)
+    {
+      case "GET":  serviceGet
+      case "POST": servicePost
+      default:     methodNotSupported
+    }
+
+In Fantom the `switch` statement doesn't require a `break` to end a block
+of code for a given case like Java or C#.  You cannot fall-through
+from one case block to the next case block.  However you can group
+multiple case labels together like we did with `Weekday.sat` and `Weekday.sun`
+in the example above.
+
+# Exception Handling
+Fantom supports `throw` and `try` statements with a syntax very similar
+to Java and C#.  These statements are discussed separately in
+the [exception handling](Exceptions) chapter.

@@ -1,0 +1,122 @@
+<!--
+title:      Conventions
+author:     Brian Frank
+created:    27 Aug 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+These are the coding conventions we've used in the Fantom code base.
+By no means are you required to follow our conventions - they are
+documented just in case you care.  However these conventions are
+enforced if contributing code for the core distribution.
+
+# Source Files
+  - Use 7-bit safe ASCII as clean subset of UTF-8
+  - Use Unix "\n" line endings
+  - Prefer putting class `FooBar` in a source file called "FooBar.fan"
+  - If you have a bunch of little classes, coalesce into a single source
+  - Separate test classes into separate "test/" directory
+
+# Naming
+  - Type names are upper camel case such as "FooBar"
+  - Slot names are lower camel case such as "fooBar" (this includes all
+    fields and methods, even const fields)
+  - Never use screaming caps such as "FOO_BAR"
+  - Symbol names are lower camel case
+  - Pod names are lower camel case and globally unique.  You should prefix
+    your pod names with something to avoid naming conflicts.  For example
+    a SourceForge or Google Code project name is a safe naming convention.
+    Or prefix pods with an organization or domain name. If you own a ".com"
+    domain, don't include the "com" in your pod names.
+  - Don't use words which are fully capitalized in your identifiers:
+      - Use "someId" instead of "someID"
+      - Use "readXml" instead of "readXML"
+
+# Common Names
+  - Prefer add to append
+  - Prefer addr to address
+  - Prefer arg to argument
+  - Prefer cur to current
+  - Prefer dotnet/Dotnet
+  - Prefer err to error
+  - Prefer html/Html to HTML
+  - Prefer http/Http to HTTP
+  - Prefer id/Id to ID or Identifier
+  - Prefer io/IO to Io
+  - Prefer loc to location
+  - Prefer msg to message
+  - Prefer param to parameter
+  - Prefer rec to record
+  - Prefer req to request
+  - Prefer res to response
+  - Prefer res to resource
+  - Prefer ro/RO to Ro
+  - Prefer rw/RW to Rw
+  - Prefer size to length or count
+  - Prefer src to source
+  - Prefer username to userName
+  - Prefer val to value
+  - Prefer warn to warning
+  - Prefer xml/Xml to XML
+
+# Indention
+  - Do not use tab characters, use spaces only
+  - Use two space indention
+  - Use Allman styling braces:
+      if (cond)
+      {
+        doTrue
+      }
+      else
+      {
+        doFalse
+      }
+
+  - Prefer a single statement on each line with no semicolon
+  - Collapse statements onto a single line if they are short and
+    it aids readability
+  - Leave one space between keyword and opening paren in `if`, `for`,
+    `while`, `switch`, and `catch` statements
+
+# Statements
+  - Always omit `()` for method calls with no arguments
+  - Prefer `Foo(...)` style constructor with arguments
+  - Prefer `Foo {...}` style constructor when using it-block
+  - Prefer type inference for local variables
+  - Prefer implicit casting to explicit casting
+  - Prefer `Obj[]` to `List` and `Obj:Obj` to `Map`
+  - Prefer to omit `return` keyword in single statement methods and closures
+
+# Comments
+  - Use `/* */` comments only for commenting out sections of code
+  - Prefer to use a leading and trailing `**` line in a fandoc
+    comment unless the comment is short:
+      class Foo
+      {
+        **
+        ** This is a very well written comment
+        **
+        Void doSomethingCool() {}
+      }
+
+  - Break logical sections up using line of 74 `/` chars:
+      //////////////////////////////////////////////////////////////////////////
+      // Section
+      //////////////////////////////////////////////////////////////////////////
+
+  - Use line of 74 `*` chars to separate classes in a single source file:
+      **************************************************************************
+      ** NewClass
+      **************************************************************************
+  - We use the following comment at the top of each source file (obviously
+    the names will be different for you):
+
+        //
+        // Copyright (c) 2008, Brian Frank and Andy Frank
+        // Licensed under the Academic Free License version 3.0
+        //
+        // History:
+        //   28 Aug 08  Brian Frank  Creation
+        //

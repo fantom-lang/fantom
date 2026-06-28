@@ -1,0 +1,276 @@
+<!--
+title:      Serialization
+author:     Brian Frank
+created:    23 Aug 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Overview
+Serialization is the process of writing objects to an output stream,
+and reading them back from an input stream.  Serialization provides
+a simple mechanism to persist objects to a file or to pass objects over a
+network.  Serialization is also used with [actors](Actors) as a
+safe way to pass messages between actors.  Fantom serialization uses a human
+friendly text format which looks a lot just like Fantom source code (in fact it
+is a subset of the source grammar).
+
+# Data Model
+Serialization in Java is *graph* based - it will handle an arbitrary number
+of references to a particular object.  Fantom serialization is strictly *tree*
+based, it will not attempt to keep track of object references - it is up
+to you design your data models as a tree. If you need to cross reference
+objects in your tree, then you should use a Uri or some other identifier.
+
+Each object in the tree is classified as a *literal*, *simple*, or *complex*.
+Most of the standard Fantom literals such as `Bool`, `Int`, `Str` are supported
+as well as the collections types `List` and `Map`.  Simples are leaf nodes
+serialized via a string representation.  Complexes are an aggregate node
+defined by their fields which store nested objects (either literals, simples,
+or other complexes).  You can also mark any complex type as a
+[collection](#collection).
+
+# Serializable
+The [sys::Serializable] facet is used to mark types which are serializable.
+By default a serializable object will serialize all of its non-static fields.
+You can use the [sys::Transient] facet to annotate a field which should not
+be serialized.  A contrived example:
+
+    @Serializable
+    class Rectangle
+    {
+      Int x; Int y
+      Int w; Int h
+      @Transient Int area
+    }
+
+A serializable object must support a `make` constructor which either takes no
+parameters or takes an it-block.  If the constructor takes an it-block then
+the field values are passed in using [Field.makeSetFunc](sys::Field.makeSetFunc)
+and the object is given a chance to perform validation.  For example:
+
+    @Serializable
+    const class Rec
+    {
+      new make(|This| f)
+      {
+        f(this)
+        if (id <= 0) throw ArgErr("id <= 0")
+      }
+      const Int id
+    }
+
+    "Rec { id = 3 }".in.readObj  // ok
+    "Rec {}".in.readObj          // throws ArgErr
+
+# Simple
+Set the [Serializable.simple](sys::Serializable.simple) field to mark a
+type which is serialized atomically to and from a string representation.
+The [sys::Obj.toStr] method must return a suitable string representation of
+the object.  Each simple type must also declare a constructor called `fromStr`
+which takes one or more parameters where the first parameter is a `Str`
+and returns an instance of the object.  An example:
+
+    @Serializable { simple = true }
+    class Point
+    {
+      static new fromStr(Str s) { t := s.split(','); return make(t[0].toInt, t[1].toInt) }
+      new make(Int x, Int y) { this.x = x; this.y = y }
+      override Str toStr() { return "$x,$y" }
+      Int x := 0
+      Int y := 0
+    }
+
+# Collection
+Set the [Serializable.collection](sys::Serializable.collection) field to mark a
+type as a container of child objects. Collections provide a concise syntax
+for nesting zero or more children items in the same scope as any serialized fields.
+This allows you to nest configuration items and children inside one set of
+curly braces.  Every collection type must support an `add` and `each` method
+which are used by `readObj` and `writeObj` respectively.  See the
+[example code](#collection-1).
+
+# Streams
+The following methods are available for serialization:
+  - [InStream.readObj](sys::InStream.readObj): read single object
+  - [OutStream.writeObj](sys::OutStream.writeObj): write single object
+
+Serializing objects to and from streams is a piece of cake:
+
+    // write an object to an output stream
+    out.writeObj(obj)
+
+    // read an object from an input stream
+    obj := in.readObj
+
+Both `Buf` and `File` have convenience methods.  For example to serialize to and from a file:
+
+    obj := [true, 5, "hi", `file.txt`]
+    f := File(`test.txt`)
+    f.writeObj(obj)
+    obj2 := f.readObj
+
+By default `writeObj` will optimize for performance.  But if you are generating
+a file which should look pretty for humans to read and edit, you can control the
+output using options.  For example to indent each level of the output tree by 2
+spaces and skip fields at their default values:
+
+    out.writeObj(obj, ["indent":2, "skipDefaults":true])
+
+# Syntax
+The Fantom serialization syntax is designed to be easy to read and write by a human,
+but also efficient for machine processing.  The syntax is based on the Fantom programming
+language itself, although it is purely declarative (no expressions or behavior).
+An object is defined as one of:
+
+  - Literal: one of the standard Fantom literals using the exact same
+    representation as you would use in your source code (this
+    includes `List` and `Map`)
+  - Simple: the string representation of a simple type
+  - Complex: a type and its list of field name/values pairs
+
+The Fantom programming language is a complete superset of the serialization
+syntax - you can paste any serialized object into a source file as an expression.
+
+## Using
+You can include zero or more `using` statements at the top of a serialized
+object document.  Using statements allow unqualified type names to be used:
+
+    // qualified names
+    ["red":fwt::Color("#f00"), "blue":fwt::Color("#0f0")]
+
+    // unqualified names
+    using fwt
+    ["red":Color("#f00"), "blue":Color("#0f0")]
+
+You can use any of the [standard using](CompilationUnits#using) statements
+in your serialization documents:
+
+    using pod                  =>  import all types in pod
+    using pod::name            =>  import single type
+    using pod::name as rename  =>  import type with new name
+
+Note that unlike normal source code, the `sys` pod is **not** imported
+automatically.  If you wish to use unqualified type names for the sys pod,
+then you need to explicitly import via `using sys`.
+
+## Literals
+Most of the standard Fantom literals are serialized using the same representation
+as defined by the Fantom programming language:
+
+  - [sys::Bool](Literals#bool)
+  - [sys::Int](Literals#int)
+  - [sys::Float](Literals#float)
+  - [sys::Decimal](Literals#decimal)
+  - [sys::Str](Literals#str)
+  - [sys::Duration](Literals#duration)
+  - [sys::Uri](Literals#uri)
+  - [sys::Type](Literals#type)
+  - [sys::Slot](Literals#slot)
+  - [sys::List](Literals#list)
+  - [sys::Map](Literals#map)
+
+NOTE: the special `Float` values `NaN`, `INF`, and `-INF` must be represented
+using the simple syntax:
+
+    sys::Float("NaN")
+    sys::Float("INF")
+    sys::Float("-INF")
+
+## Simples
+A simple is serialized as: `<type>("<toStr>")`.  When writing the object, the
+`Obj.toStr` method is called to obtain the string representation.  When reading
+the object the `fromStr` method is used to decode the string back into an
+object.  Examples:
+
+    sys::Version("1.2")
+    sys::Depend("foo 1.2-3.4")
+
+You may use this syntax directly in source code via the [simple expression](Expressions#simples).
+
+## Complex
+A complex is serialized as a list of field name/value pairs separated by a newline
+or a semicolon (just like Fantom statements).  Any field can be omitted, in which
+case the field's default is used.  The syntax for a complex is:
+
+    <type>
+    {
+      <field1> = <value1>
+      <field2> = <value2>
+      ...
+    }
+
+An example of a serializable class and an serialized instance:
+
+    @Serializable
+    class Person
+    {
+      Str name
+      Int age
+      Str[] children
+      Str address
+    }
+
+    acme::Person
+    {
+      name = "Homer Simson"
+      age = 39
+      children = ["Bart", "Lisa", "Maggie"]
+    }
+
+You may use this syntax directly in source code via [it-blocks](Expressions#itblocks).
+
+## Collection
+Collections are serialized just like a complex - all the fields are serialized
+as name/value pairs.  After the fields are serialized, all the child items
+iterated by the `each` method are serialized with a comma separator. During
+deserialization, the children are added back via the `add` method.
+
+We can rewrite the `Person` example above as a collection:
+
+    @Serializable { collection = true }
+    class Person
+    {
+      Void add(Person kid) { kids.add(kid) }
+      Void each(|Person kid| f) { kids.each(f) }
+      Str name
+      @transient private Person[] kids := Person[,]
+    }
+
+    acme::Person
+    {
+      name = "Homer Simson"
+      acme::Person { name = "Bart" },
+      acme::Person { name = "Lisa" },
+      acme::Person { name = "Maggie" },
+    }
+
+This syntax is also supported directly in source code via
+[with-blocks](Closures#withblocks).
+
+## Grammar
+The formal grammar of the Fantom serialization formats:
+
+    // .fog file format for single object
+    objDoc    := header obj
+
+    header    := [using]*
+    using     := usingPod | usingType | usingAs
+    usingPod  := "using" id eos
+    usingType := "using" id "::" id eos
+    usingAs   := "using" id "::" id "as" id eos
+    obj       := literal | simple | complex
+    literal   := bool | int | float | decimal | str | duration | uri |
+                 typeLiteral | slotLiteral | list | map
+    simple    := type "(" str ")"
+    complex   := type ["{" [children] "}"]
+    children  := child [(eos|",") child]*
+    child     := field | item
+    eos       := ";" | newline
+    field     := id "=" obj
+    item      := obj
+
+The `literal`, `using`, and `type` productions use the same [grammar](Grammar)
+as the Fantom programming language.  However the `type` production can
+never be a function type.
+
