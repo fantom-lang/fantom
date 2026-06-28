@@ -11,41 +11,38 @@ using web
 **
 ** Renders DocType documents
 **
-** Overview
-** ========
+** ## Overview
 **
-**   <h1>
-**    <span>{type.flags}</span> {type.qname}
-**   </h1>
-**   <pre>...</pre>                 // inhertiance
-**   <p class='facets'>...</p>      // facet list (if available)
-**   <p class='src'><a>...</a></p>  // source link (if available)
-**   ...                            // type fandoc
-**   <ul>...</ul>                   // emum list (if available)
+**     <h1>
+**      <span>{type.flags}</span> {type.qname}
+**     </h1>
+**     <pre>...</pre>                 // inhertiance
+**     <p class='facets'>...</p>      // facet list (if available)
+**     <p class='src'><a>...</a></p>  // source link (if available)
+**     ...                            // type fandoc
+**     <ul>...</ul>                   // emum list (if available)
 **
-** Slots
-** =====
+** ## Slots
 **
-**   <dl>
-**    <dt id='{slot.name}'>{slot.name}</dt>
-**    <dd>
-**     <p class='sig'><code>...</code></p>  // slot signature
-**     <p class='src'><a>...</a></p>        // source link (if available)
-**     ...                                  // slot fandoc
-**    </dd>
-**   </dl>
+**     <dl>
+**      <dt id='{slot.name}'>{slot.name}</dt>
+**      <dd>
+**       <p class='sig'><code>...</code></p>  // slot signature
+**       <p class='src'><a>...</a></p>        // source link (if available)
+**       ...                                  // slot fandoc
+**      </dd>
+**     </dl>
 **
-** Table of Contents
-** ==================
+** ## Table of Contents
 **
-**   <h3>Source</h3>
-**   <ul><li><a>...</a></li></ul>     // if source link
-**   <ul><li>Not available</li></ul>  // if no source link
+**     <h3>Source</h3>
+**     <ul><li><a>...</a></li></ul>     // if source link
+**     <ul><li>Not available</li></ul>  // if no source link
 **
-**   <h3>Slots</h3>
-**   <ul>
-**    <li><a href='#{slot.name}'>{slot.name}</a></li>
-**   </ul>
+**     <h3>Slots</h3>
+**     <ul>
+**      <li><a href='#{slot.name}'>{slot.name}</a></li>
+**     </ul>
 **
 class DocTypeRenderer : DocRenderer
 {
@@ -259,7 +256,7 @@ class DocTypeRenderer : DocRenderer
   }
 
   ** Static utility to write a DocTypeRef as HTML with anchor links.
-  ** The 'toHref' maps a basic (non-parameterized) type ref to its href URI.
+  ** The `toHref` maps a basic (non-parameterized) type ref to its href URI.
   static Void writeTypeRefHtml(WebOutStream out, DocTypeRef ref, Bool full, |DocTypeRef->Uri| toHref)
   {
     if (ref.isParameterized)

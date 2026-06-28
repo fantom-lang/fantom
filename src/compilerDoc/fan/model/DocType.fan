@@ -9,7 +9,7 @@
 using concurrent
 
 **
-** DocType models the documentation of a `sys::Type`.
+** DocType models the documentation of a [sys::Type].
 **
 const class DocType : Doc
 {
@@ -55,16 +55,16 @@ const class DocType : Doc
   ** Qualified name formatted as "pod::name".
   Str qname() { ref.qname }
 
-  ** The space for this doc is `pod`
+  ** The space for this doc is [pod]
   override DocSpace space() { pod }
 
-  ** The document name under space is `name`
+  ** The document name under space is [name]
   override Str docName() { name }
 
   ** Title of the document is the qualified name
   override Str title() { qname }
 
-  ** Default renderer is `DocTypeRenderer`
+  ** Default renderer is [DocTypeRenderer]
   override Type renderer() { DocTypeRenderer# }
 
   ** Return true
@@ -76,7 +76,7 @@ const class DocType : Doc
   ** Source code location of this type definition
   const DocLoc loc
 
-  ** Flags mask - see `DocFlags`
+  ** Flags mask - see [DocFlags]
   const Int flags
 
   ** Facets defined on this type
@@ -98,14 +98,14 @@ const class DocType : Doc
   const DocFandoc doc
 
   ** Base class inheritance chain where direct subclass is first
-  ** and 'sys::Obj' is last.  If this type is a mixin or this is
-  ** 'sys::Obj' itself then this is an empty list.
+  ** and `sys::Obj` is last.  If this type is a mixin or this is
+  ** `sys::Obj` itself then this is an empty list.
   const DocTypeRef[] base
 
   ** Mixins directly implemented by this type
   const DocTypeRef[] mixins
 
-  ** Is this a subclass of 'sys::Err'
+  ** Is this a subclass of `sys::Err`
   const Bool isErr
 
   ** List of the public, documented slots in this type (sorted).

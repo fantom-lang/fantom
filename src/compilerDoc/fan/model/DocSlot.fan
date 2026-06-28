@@ -7,7 +7,7 @@
 //
 
 **
-** DocSlot models the documentation of a `sys::Slot`.
+** DocSlot models the documentation of a [sys::Slot].
 **
 abstract const class DocSlot
 {
@@ -36,7 +36,7 @@ abstract const class DocSlot
   ** Qualified name formatted as "sys::Str.replace".
   const Str qname
 
-  ** Flags mask - see `DocFlags`
+  ** Flags mask - see [DocFlags]
   const Int flags
 
   ** Is this a DocField
@@ -75,7 +75,7 @@ abstract const class DocSlot
 **************************************************************************
 
 **
-** DocField models the documentation of a `sys::Field`.
+** DocField models the documentation of a [sys::Field].
 **
 const class DocField : DocSlot
 {
@@ -111,7 +111,7 @@ const class DocField : DocSlot
 **************************************************************************
 
 **
-** DocMethod models the documentation of a `sys::Method`.
+** DocMethod models the documentation of a [sys::Method].
 **
 const class DocMethod : DocSlot
 {
@@ -142,7 +142,7 @@ const class DocMethod : DocSlot
 **************************************************************************
 
 **
-** DocParam models the documentation of a `sys::Param`
+** DocParam models the documentation of a [sys::Param]
 **
 const class DocParam
 {

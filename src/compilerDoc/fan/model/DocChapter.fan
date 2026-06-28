@@ -148,19 +148,19 @@ const class DocChapter : Doc
   ** Simple name of the chapter such as "Overview" or "pod-doc"
   const Str name
 
-  ** Document name under space is same as `name`
+  ** Document name under space is same as [name]
   override Str docName() { name }
 
-  ** The space for this doc is `pod`
+  ** The space for this doc is [pod]
   override DocSpace space() { pod }
 
-  ** Title is 'meta.title', or qualified name if not specified.
+  ** Title is `meta.title`, or qualified name if not specified.
   override Str title() { meta["title"] ?: qname }
 
   ** Use title for breadcrumb
   override Str breadcrumb() { title }
 
-  ** Default renderer is `DocChapterRenderer`
+  ** Default renderer is [DocChapterRenderer]
   override Type renderer() { DocChapterRenderer# }
 
   ** Return if this chapter is the special "pod-doc" file

@@ -11,29 +11,27 @@ using web
 **
 ** Renders the index of a pod's documents.
 **
-** Index
-** =====
+** ## Index
 **
-**   <h1><span>pod</span>{pod.qname}</h1>
-**   <p>{pod.summary}</p>
+**     <h1><span>pod</span>{pod.qname}</h1>
+**     <p>{pod.summary}</p>
 **
-**   <h2>{section.name}</h2>
-**   <table>
-**    <tr>
-**     <td>{type.name}</td>
-**     <td>{type.summary}</td>
-**    </tr>
-**   </table>
+**     <h2>{section.name}</h2>
+**     <table>
+**      <tr>
+**       <td>{type.name}</td>
+**       <td>{type.summary}</td>
+**      </tr>
+**     </table>
 **
-** Table of Contents
-** =================
+** ## Table of Contents
 **
-**   <ul>
-**    <li><a>...</a></li>
-**    <li><a>...</a>
-**     <ul>...</ul>
-**    </li>
-**   </ul>
+**     <ul>
+**      <li><a>...</a></li>
+**      <li><a>...</a>
+**       <ul>...</ul>
+**      </li>
+**     </ul>
 **
 class DocPodIndexRenderer : DocRenderer
 {
@@ -47,7 +45,7 @@ class DocPodIndexRenderer : DocRenderer
   const DocPodIndex index
 
   ** Write the content for a pod index.  This delegates
-  ** to `writeContentApi` or `writeContentManual`
+  ** to [writeContentApi] or [writeContentManual]
   override Void writeContent()
   {
     if (index.pod.isManual)

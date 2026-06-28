@@ -66,7 +66,7 @@ final const class DocFlags
     return flags
   }
 
-  ** Type flags to display including final 'class' or 'mixin'
+  ** Type flags to display including final `class` or `mixin`
   static Str toTypeDis(Int f)
   {
     s := StrBuf()

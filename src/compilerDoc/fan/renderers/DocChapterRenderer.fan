@@ -11,35 +11,32 @@ using web
 **
 ** Renders DocChapter documents
 **
-** Chapter
-** =======
+** ## Chapter
 **
-**   <h1>
-**    <span>{chapter.num}<span> {chapter.title}
-**   </h1>
-**   ... // chapter fandoc
+**     <h1>
+**      <span>{chapter.num}<span> {chapter.title}
+**     </h1>
+**     ... // chapter fandoc
 **
-** Chapter Nav
-** ===========
+** ## Chapter Nav
 **
-**   <ul class='chapter-nav'>
-**    <li class='prev'><a>{prev.title}</a></li>  // if available
-**    <li class='next'><a>{next.title}</a></li>  // if available
-**   </ul>
+**     <ul class='chapter-nav'>
+**      <li class='prev'><a>{prev.title}</a></li>  // if available
+**      <li class='next'><a>{next.title}</a></li>  // if available
+**     </ul>
 **
-** Table of Contents
-** =================
+** ## Table of Contents
 **
-**   <h3><a>{pod.name}</a></h3>
-**   <h4><a>{part.name}</a></h4>  // if available
-**   <ol>
-**    <li><a>{chapter.title}</a></li>
-**    <li><a>{chapter.title}</a>
+**     <h3><a>{pod.name}</a></h3>
+**     <h4><a>{part.name}</a></h4>  // if available
 **     <ol>
-**      <li><a>{heading.name}</a></li>
+**      <li><a>{chapter.title}</a></li>
+**      <li><a>{chapter.title}</a>
+**       <ol>
+**        <li><a>{heading.name}</a></li>
+**       </ol>
+**      </li>
 **     </ol>
-**    </li>
-**   </ol>
 **
 class DocChapterRenderer : DocRenderer
 {

@@ -7,7 +7,7 @@
 //
 
 **
-** DocFacet models the documentation of a `sys::Facet` on a type or slot.
+** DocFacet models the documentation of a [sys::Facet] on a type or slot.
 **
 const class DocFacet
 {

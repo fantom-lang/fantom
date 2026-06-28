@@ -11,7 +11,7 @@ using web
 **
 ** DocTheme is responsible for providing the common chrome, styling,
 ** and breadcrumb across different DocRenderers.  The theme used by
-** renderers is defined by `DocEnv.theme`.
+** renderers is defined by [DocEnv.theme].
 **
 const class DocTheme
 {

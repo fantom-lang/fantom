@@ -14,7 +14,7 @@ using web
 
 **
 ** DocRenderer is base class for rendering a Doc.
-** See `writeDoc` for rendering pipeline.
+** See [writeDoc] for rendering pipeline.
 **
 abstract class DocRenderer
 {
@@ -48,7 +48,7 @@ abstract class DocRenderer
   private Doc docRef
 
   ** Theme to use for rendering chrome and navigation.
-  ** This field is initialized from `DocEnv.theme`.
+  ** This field is initialized from [DocEnv.theme].
   virtual DocTheme theme() { env.theme }
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,11 +56,11 @@ abstract class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Render the `doc`.  This method delegates to:
-  **  1. `DocTheme.writeStart`
-  **  2. `DocTheme.writeBreadcrumb`
-  **  3. `writeContent`
-  **  3. `DocTheme.writeEnd`
+  ** Render the [doc].  This method delegates to:
+  **  1. [DocTheme.writeStart]
+  **  2. [DocTheme.writeBreadcrumb]
+  **  3. [writeContent]
+  **  3. [DocTheme.writeEnd]
   **
   virtual Void writeDoc()
   {
@@ -72,7 +72,7 @@ abstract class DocRenderer
 
   **
   ** Subclass hook to render document specific content.
-  ** See `writeDoc` for rendering pipeline.
+  ** See [writeDoc] for rendering pipeline.
   **
   abstract Void writeContent()
 
@@ -81,8 +81,8 @@ abstract class DocRenderer
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Write an '<a>' element for the given link from this renderer
-  ** document to another document.  See `DocEnv.linkUri`.
+  ** Write an `<a>` element for the given link from this renderer
+  ** document to another document.  See [DocEnv.linkUri].
   **
   virtual Void writeLink(DocLink link)
   {
@@ -90,7 +90,7 @@ abstract class DocRenderer
   }
 
   **
-  ** Convenience for 'writeLink(linkTo(target, dis, frag))'
+  ** Convenience for `writeLink(linkTo(target, dis, frag))`
   **
   virtual Void writeLinkTo(Doc target, Str? dis := null, Str? frag := null)
   {
@@ -109,7 +109,7 @@ abstract class DocRenderer
 
   **
   ** Write the given markdown/fandoc string as HTML.  This method
-  ** delegates to `DocEnv.link` and `DocEnv.linkUri` to
+  ** delegates to [DocEnv.link] and [DocEnv.linkUri] to
   ** resolve links from the current document.
   **
   virtual Void writeFandoc(DocFandoc doc, DocFormat format)

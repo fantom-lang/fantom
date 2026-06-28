@@ -40,7 +40,7 @@ abstract const class DocEnv
   **
   ** Lookup a document by is spaceName and docName within that
   ** space.  If not found then return null or raise UnknownDocErr.
-  ** Default implementation delegates to `space` and `DocSpace.doc`.
+  ** Default implementation delegates to [space] and [DocSpace.doc].
   **
   virtual Doc? doc(Str spaceName, Str docName, Bool checked := true)
   {
@@ -52,7 +52,7 @@ abstract const class DocEnv
 
   **
   ** Render the given document to the specified output stream.
-  ** Default implementation uses `Doc.renderer`.
+  ** Default implementation uses [Doc.renderer].
   **
   virtual Void render(WebOutStream out, Doc doc)
   {
@@ -62,7 +62,7 @@ abstract const class DocEnv
 
   **
   ** Return URI used to link the from doc to the target doc.
-  ** Also see `linkUriExt`.
+  ** Also see [linkUriExt].
   **
   virtual Uri linkUri(DocLink link)
   {
@@ -98,7 +98,7 @@ abstract const class DocEnv
 
   **
   ** Resolve the link relative to the given from document.
-  ** See `DocLink` for the built-in formats.
+  ** See [DocLink] for the built-in formats.
   **
   virtual DocLink? link(Doc from, Str link, Bool checked := true)
   {

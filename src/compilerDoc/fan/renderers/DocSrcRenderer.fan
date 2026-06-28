@@ -12,9 +12,9 @@ using syntax
 **
 ** Renders DocSrc documents.
 **
-**   <div class='src'>
-**    {SyntaxHtmlWriter.writeLines}
-**   </div>
+**     <div class='src'>
+**      {SyntaxHtmlWriter.writeLines}
+**     </div>
 **
 class DocSrcRenderer : DocRenderer
 {

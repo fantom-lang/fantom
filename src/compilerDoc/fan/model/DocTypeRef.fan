@@ -47,13 +47,13 @@ abstract const class DocTypeRef
   ** even in parameterized types.
   abstract Str dis()
 
-  ** Is this a nullable type such as 'Str?'
+  ** Is this a nullable type such as `Str?`
   abstract Bool isNullable()
 
-  ** Is this one of the generic variable types such as 'sys::V'
+  ** Is this one of the generic variable types such as `sys::V`
   abstract Bool isGenericVar()
 
-  ** Is this a parameterized generic type such as 'Str[]'
+  ** Is this a parameterized generic type such as `Str[]`
   abstract Bool isParameterized()
 
   ** Return if this type is just bare type (not parameterized, nor generic var)
@@ -71,7 +71,7 @@ abstract const class DocTypeRef
   ** If this a parameterized func type get return type else null
   @NoDoc abstract DocTypeRef? funcReturn()
 
-  ** Return `signature`
+  ** Return [signature]
   override final Str toStr() { signature }
 }
 

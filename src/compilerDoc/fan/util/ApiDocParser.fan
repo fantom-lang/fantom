@@ -14,24 +14,25 @@
 ** simple human readable format.
 **
 ** The syntax is defined as:
-**   <file>      :=  <class> <slot>*
-**   <class>     :=  "== " <name> <nl> <attrs>
-**   <slot>      :=  (<fieldSig> | <methodSig>) <attrs>
-**   <fieldSig>  :=  "-- " <name> <sp> <type> [":=" <expr>] <nl>
-**   <methodSig> :=  "-- " <name> "(" <nl> [<param> <nl>]* ")" <sp> <return> <nl>
-**   <param>     :=  <name> <type> [":=" <expr>]
-**   <return>    :=  <type>
 **
-**   <attrs>     :=  <meta>* <facet>* <nl> <doc>.
-**   <meta>      :=  <name> "=" <expr> <nl>
-**   <facet>     :=  "@" <type> ["{" <nl> [<name> "=" <expr> <nl>]* "}"] <nl>
-**   <doc>       :=  lines of text until "-- "
+**     <file>      :=  <class> <slot>*
+**     <class>     :=  "== " <name> <nl> <attrs>
+**     <slot>      :=  (<fieldSig> | <methodSig>) <attrs>
+**     <fieldSig>  :=  "-- " <name> <sp> <type> [":=" <expr>] <nl>
+**     <methodSig> :=  "-- " <name> "(" <nl> [<param> <nl>]* ")" <sp> <return> <nl>
+**     <param>     :=  <name> <type> [":=" <expr>]
+**     <return>    :=  <type>
 **
-**   <name>      :=  Fantom identifier
-**   <type>      :=  Fantom type signature (no spaces allowed)
-**   <expr>      :=  text until end of line
-**   <nl>        :=  "\n"
-**   <sp>        :=  " "
+**     <attrs>     :=  <meta>* <facet>* <nl> <doc>.
+**     <meta>      :=  <name> "=" <expr> <nl>
+**     <facet>     :=  "@" <type> ["{" <nl> [<name> "=" <expr> <nl>]* "}"] <nl>
+**     <doc>       :=  lines of text until "-- "
+**
+**     <name>      :=  Fantom identifier
+**     <type>      :=  Fantom type signature (no spaces allowed)
+**     <expr>      :=  text until end of line
+**     <nl>        :=  "\n"
+**     <sp>        :=  " "
 **
 ** Standard attributes:
 **   - base: list of space separated base class type signatures

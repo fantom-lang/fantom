@@ -8,7 +8,7 @@
 
 **
 ** DocCrawler provides an interface to implement by search engine
-** crawlers when crawling a specific document via `Doc.onCrawl`.
+** crawlers when crawling a specific document via [Doc.onCrawl].
 **
 mixin DocCrawler
 {

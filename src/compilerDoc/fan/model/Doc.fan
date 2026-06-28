@@ -8,14 +8,14 @@
 
 **
 ** Doc is the base class for document types.  All Docs are organized
-** under a `DocSpace` for  a two level namespace of "spaceName/docName".
+** under a [DocSpace] for  a two level namespace of "spaceName/docName".
 **
 ** Subclasses include:
-**  - `DocPodIndex`: pod index
-**  - `DocType`: type API
-**  - `DocChapter`: chapter in manual
-**  - `DocRes`: resource file
-**  - `DocSrc`: source file
+**  - [DocPodIndex]\: pod index
+**  - [DocType]\: type API
+**  - [DocChapter]\: chapter in manual
+**  - [DocRes]\: resource file
+**  - [DocSrc]\: source file
 **
 const abstract class Doc
 {
@@ -36,12 +36,12 @@ const abstract class Doc
 
   **
   ** String to use for this document in the breadcrumb.
-  ** By default this is the `docName`.
+  ** By default this is the [docName].
   **
   virtual Str breadcrumb() { docName }
 
   **
-  ** Get the default `DocRenderer` type to use for renderering this document.
+  ** Get the default [DocRenderer] type to use for renderering this document.
   **
   abstract Type renderer()
 
@@ -64,7 +64,7 @@ const abstract class Doc
 
   **
   ** Callback to handle a search engine crawl over this document.
-  ** Call one of the 'addX' methods on the crawler for each chunk
+  ** Call one of the `addX` methods on the crawler for each chunk
   ** of text in the document to be indexed.
   **
   virtual Void onCrawl(DocCrawler crawler) {}

@@ -33,7 +33,7 @@ const class DocTopIndex : Doc
   ** Default is "Doc Index"
   override const Str title := "Doc Index"
 
-  ** Default renderer `DocTopIndexRenderer`
+  ** Default renderer [DocTopIndexRenderer]
   override const Type renderer := DocTopIndexRenderer#
 
   ** Return true
@@ -65,7 +65,7 @@ const class DocRes : Doc
   ** Uri of the resource file inside the pod
   const Uri uri
 
-  ** The space for this doc is `pod`
+  ** The space for this doc is [pod]
   override DocSpace space() { pod }
 
   ** Document name under space is filename
@@ -100,7 +100,7 @@ const class DocSrc : Doc
   ** Uri of the source file inside the pod
   const Uri uri
 
-  ** The space for this doc is `pod`
+  ** The space for this doc is [pod]
   override DocSpace space() { pod }
 
   ** Document name under space is "src-{filename}"
@@ -112,7 +112,7 @@ const class DocSrc : Doc
   ** Breadcrumb name is the filename
   override Str breadcrumb() { uri.name }
 
-  ** Default renderer is `DocSrcRenderer`
+  ** Default renderer is [DocSrcRenderer]
   override Type renderer() { DocSrcRenderer# }
 }
 
@@ -157,7 +157,7 @@ const class DocLoc
 **
 const class DocFandoc
 {
-  ** Construct from `loc` and `text`
+  ** Construct from [loc] and [text]
   new make(DocLoc loc, Str text)
   {
     this.loc = loc

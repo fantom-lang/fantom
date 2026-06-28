@@ -45,7 +45,7 @@ class DocErrHandler
   DocErr[] errs := [,]
 
   ** Handle a documentation error.  Default implementation
-  ** logs it to stdout and stores it in `errs`.
+  ** logs it to stdout and stores it in [errs].
   virtual Void onErr(DocErr err)
   {
     errs.add(err)

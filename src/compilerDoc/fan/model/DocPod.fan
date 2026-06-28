@@ -8,7 +8,7 @@
 //
 
 **
-** DocPod models the documentation of a `sys::Pod`.
+** DocPod models the documentation of a [sys::Pod].
 **
 const class DocPod : DocSpace
 {
@@ -78,11 +78,11 @@ const class DocPod : DocSpace
   ** Markdown or legacy fandoc
   const DocFormat format
 
-  ** Always return `name`.
+  ** Always return [name].
   override Str toStr() { name }
 
   ** Get the meta name/value pairs for this pod.
-  ** See [docLang]`docLang::Pods#meta`.
+  ** See [docLang](docLang::Pods#pod-meta).
   const Str:Str meta
 
   ** Document which models the index page for this pod
@@ -159,7 +159,7 @@ const class DocPod : DocSpace
   }
   private const Str:DocSrc srcMap
 
-  ** Space name is same as `name`
+  ** Space name is same as [name]
   override Str spaceName() { name }
 
   **
@@ -235,7 +235,7 @@ const class DocPodIndex : Doc
   ** the list of Str/DocChapter where Str indicates index grouping headers.
   const Obj[] toc
 
-  ** The space for this doc is `pod`
+  ** The space for this doc is [pod]
   override DocSpace space() { pod }
 
   ** The document name under space is "index"
@@ -247,7 +247,7 @@ const class DocPodIndex : Doc
   ** Return true
   override Bool isSpaceIndex() { true }
 
-  ** Default renderer is `DocPodIndexRenderer`
+  ** Default renderer is [DocPodIndexRenderer]
   override Type renderer() { DocPodIndexRenderer# }
 
   ** Index the type summary and all slot docs
