@@ -25,12 +25,13 @@ final const class IpAddr
   ** be resolved then UnknownHostErr is thrown.
   **
   ** Examples:
-  **   IpAddr("169.200.3.103")
-  **   IpAddr("1080:0:0:0:8:800:200C:417A")
-  **   IpAddr("1080::8:800:200C:417A")
-  **   IpAddr("::ffff:129.144.52.38")
-  **   IpAddr("somehost")
-  **   IpAddr("www.acme.com")
+  **
+  **     IpAddr("169.200.3.103")
+  **     IpAddr("1080:0:0:0:8:800:200C:417A")
+  **     IpAddr("1080::8:800:200C:417A")
+  **     IpAddr("::ffff:129.144.52.38")
+  **     IpAddr("somehost")
+  **     IpAddr("www.acme.com")
   **
   static new make(Str s) { makeNative(s) }
   private native static IpAddr makeNative(Str s)
@@ -129,8 +130,8 @@ final const class IpAddr
 
   **
   ** To the native platform representation:
-  **   - Java: returns 'java.net.InetAddress'
-  **   - .NET: returns 'System.Net.IPAddress'
+  **   - Java: returns `java.net.InetAddress`
+  **   - .NET: returns `System.Net.IPAddress`
   **
   native Obj toNative()
 

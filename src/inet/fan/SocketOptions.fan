@@ -140,7 +140,7 @@ final class SocketOptions
   }
 
   **
-  ** Controls default timeout used by `TcpSocket.connect`.
+  ** Controls default timeout used by [TcpSocket.connect].
   ** A null value indicates a system default timeout.
   **
   @Deprecated { msg = "Use SocketConfig.connectTimeout" }

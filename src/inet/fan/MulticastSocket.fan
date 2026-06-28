@@ -42,13 +42,13 @@ class MulticastSocket : UdpSocket
 
   **
   ** Join a multicast group.  If interface parameter is null,
-  ** then `interface` field is used.  Return this.
+  ** then [interface] field is used.  Return this.
   **
   native This joinGroup(IpAddr addr, Int? port := null, IpInterface? interface := null)
 
   **
   ** Leave a multicast group.  If interface parameter is null,
-  ** then `interface` field is used.  Return this.
+  ** then [interface] field is used.  Return this.
   **
   native This leaveGroup(IpAddr addr, Int? port := null, IpInterface? interface := null)
 

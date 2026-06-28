@@ -19,11 +19,11 @@ class TcpListener
 
   **
   ** Create a new, unbound TCP server socket. The socket will be configured
-  ** using the given [socket configuration]`SocketConfig`. The following
+  ** using the given [socket configuration](SocketConfig). The following
   ** configuration applies to listeners:
-  **   - `SocketConfig.receiveBufferSize`
-  **   - `SocketConfig.reuseAddr`
-  **   - `SocketConfig.acceptTimeout`
+  **   - [SocketConfig.receiveBufferSize]
+  **   - [SocketConfig.reuseAddr]
+  **   - [SocketConfig.acceptTimeout]
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -37,7 +37,7 @@ class TcpListener
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** The `SocketConfig` being used to configure the server sockets.
+  ** The [SocketConfig] being used to configure the server sockets.
   **
   native SocketConfig config()
 
@@ -80,7 +80,7 @@ class TcpListener
   **
   ** Accept the next incoming connection.  This method blocks the
   ** calling thread until a new connection is established.  If this
-  ** listener's `SocketConfig.acceptTimeout` is configured, then accept
+  ** listener's [SocketConfig.acceptTimeout] is configured, then accept
   ** will timeout with an IOErr.
   **
   TcpSocket accept() { return doAccept }
@@ -102,7 +102,7 @@ class TcpListener
   ** The following options apply to TcpListeners:
   **   - receiveBufferSize
   **   - reuseAddr
-  **  Accessing other option fields will throw UnsupportedErr.
+  ** Accessing other option fields will throw UnsupportedErr.
   **
   @Deprecated { msg = "Use SocketConfig" }
   SocketOptions options()

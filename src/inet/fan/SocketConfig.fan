@@ -15,10 +15,10 @@ using crypto
 ** it is created.
 **
 ** A system-wide default socket configuration can be obtained with
-** `SocketConfig.cur`. You can change the system default by using
-** `SocketConfig.setCur`.
+** [SocketConfig.cur]. You can change the system default by using
+** [SocketConfig.setCur].
 **
-** See `TcpSocket.make`, `TcpListener.make`, `UdpSocket.make`, `MulticastSocket.make`
+** See [TcpSocket.make], [TcpListener.make], [UdpSocket.make], [MulticastSocket.make]
 **
 const class SocketConfig
 {
@@ -82,7 +82,7 @@ const class SocketConfig
   virtual This copy(|This| f) { makeCopy(this, f) }
 
   ** Convenience to create a copy of this socket configuration and set the connect
-  ** and receive timeouts to the given duration. Setting to 'null' indicates
+  ** and receive timeouts to the given duration. Setting to `null` indicates
   ** infinite timeouts.
   This setTimeouts(Duration? connectTimeout, Duration? receiveTimeout := connectTimeout)
   {
@@ -95,24 +95,24 @@ const class SocketConfig
 // Tls Config
 //////////////////////////////////////////////////////////////////////////
 
-  ** The `crypto::KeyStore` to use when creating secure sockets. If null, the runtime
+  ** The [crypto::KeyStore] to use when creating secure sockets. If null, the runtime
   ** default will be used.
   const KeyStore? keystore := null
 
-  ** The `crypto::KeyStore` to use for obtaining trusted certificates when creating
+  ** The [crypto::KeyStore] to use for obtaining trusted certificates when creating
   ** secure sockets. If null, the runtime default will be used.
   const KeyStore? truststore := null
 
   ** TCP sockets that are upgraded to TLS will be configured with these parameters.
   ** The following parameters are supported:
-  ** - 'appProtocols': ('Str[]') prioritized array of application-layer protocol
+  ** - `appProtocols`: (`Str[]`) prioritized array of application-layer protocol
   ** names that can be negotiated over the TLS protocol
-  ** - 'clientAuth': ('Str') determine client certificate authentication configuration
+  ** - `clientAuth`: (`Str`) determine client certificate authentication configuration
   ** of socket.  Supported values:
-  **   - 'want': Configure socket to request client authentication
-  **   - 'need': Configure socket to require client authentication
-  **   - 'none': (Default) socket does not request or require client authentication
-  ** - 'sslProtocol': ('Str') specify the SSL protocol to use (e.g. TLSv1.2, TLSv1.3)
+  **   - `want`: Configure socket to request client authentication
+  **   - `need`: Configure socket to require client authentication
+  **   - `none`: (Default) socket does not request or require client authentication
+  ** - `sslProtocol`: (`Str`) specify the SSL protocol to use (e.g. TLSv1.2, TLSv1.3)
   **
   ** **Experimental - this functionality is subject to change**
   @NoDoc const Str:Obj? tlsParams := [:]
@@ -130,35 +130,35 @@ const class SocketConfig
   ** null disables output stream buffing.
   const Int? outBufferSize := 4096
 
-  ** 'SO_KEEPALIVE' option
+  ** `SO_KEEPALIVE` option
   const Bool keepAlive := false
 
-  ** 'SO_RCVBUF' option for the size in bytes of the IP stack buffers.
+  ** `SO_RCVBUF` option for the size in bytes of the IP stack buffers.
   const Int receiveBufferSize := 65_536
 
-  ** 'SO_SNDBUF' option for the size in bytes of the IP stack buffers.
+  ** `SO_SNDBUF` option for the size in bytes of the IP stack buffers.
   const Int sendBufferSize := 65_536
 
-  ** 'SO_REUSEADDR' is used to control the time wait state of a closed socket.
+  ** `SO_REUSEADDR` is used to control the time wait state of a closed socket.
   const Bool reuseAddr := false
 
-  ** 'SO_LINGER' controls the linger time or set to null to disable linger.
+  ** `SO_LINGER` controls the linger time or set to null to disable linger.
   const Duration? linger := null
 
-  ** Controls the default timeout used by `TcpSocket.connect`.
+  ** Controls the default timeout used by [TcpSocket.connect].
   ** A null value indicates a system default timeout (usually wait forever).
   const Duration? connectTimeout  := 60sec
 
-  ** 'SO_TIMEOUT' controls the amount of time a socket
+  ** `SO_TIMEOUT` controls the amount of time a socket
   ** will block on a read call before throwing an IOErr timeout exception.
-  ** 'null' is used to indicate an infinite timeout.
+  ** `null` is used to indicate an infinite timeout.
   const Duration? receiveTimeout := 60sec
 
-  ** Controls how long a `TcpListener.accept` will block before throwing an
-  ** IOErr timeout exception. 'null' is used to indicate infinite timeout.
+  ** Controls how long a [TcpListener.accept] will block before throwing an
+  ** IOErr timeout exception. `null` is used to indicate infinite timeout.
   const Duration? acceptTimeout := null
 
-  ** 'TCP_NODELAY' socket option specifies that send not be delayed
+  ** `TCP_NODELAY` socket option specifies that send not be delayed
   ** to merge packets (Nagle's algorthm).
   const Bool noDelay := true
 
@@ -173,7 +173,7 @@ const class SocketConfig
   ** For IPv6 this is the value placed into the sin6_flowinfo header field.
   const Int trafficClass := 0
 
-  ** 'SO_BROADCAST' socket option
+  ** `SO_BROADCAST` socket option
   const Bool broadcast := false
 
 }

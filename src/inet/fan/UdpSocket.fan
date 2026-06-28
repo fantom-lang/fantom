@@ -18,14 +18,14 @@ class UdpSocket
 
   **
   ** Make a new unbound UDP socket. The socket will be configured using the
-  ** given [socket configuration]`SocketConfig`. The following configuration
+  ** given [socket configuration](SocketConfig). The following configuration
   ** applies to UDP sockets:
-  **   - `SocketConfig.broadcast`
-  **   - `SocketConfig.receiveBufferSize`
-  **   - `SocketConfig.sendBufferSize`
-  **   - `SocketConfig.reuseAddr`
-  **   - `SocketConfig.receiveBufferSize`
-  **   - `SocketConfig.trafficClass`
+  **   - [SocketConfig.broadcast]
+  **   - [SocketConfig.receiveBufferSize]
+  **   - [SocketConfig.sendBufferSize]
+  **   - [SocketConfig.reuseAddr]
+  **   - [SocketConfig.receiveBufferSize]
+  **   - [SocketConfig.trafficClass]
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -39,7 +39,7 @@ class UdpSocket
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the [socket configuration]`SocketConfig` for this socket.
+  ** Get the [socket configuration](SocketConfig) for this socket.
   **
   native SocketConfig config()
 
@@ -125,7 +125,7 @@ class UdpSocket
   ** If the received message is longer than the packet's capacity then the
   ** message is silently truncated (weird Java behavior).  Upon return the
   ** Buf size and position are updated to reflect the bytes read. Use
-  ** `sys::Buf.flip` to ready the buffer to read from start. If packet
+  ** [sys::Buf.flip] to ready the buffer to read from start. If packet
   ** is null, then a new packet is created with a capacity of 1kb.  The
   ** packet data must always be a memory backed buffer.
   **
@@ -157,7 +157,7 @@ class UdpSocket
   **   - reuseAddr
   **   - receiveBufferSize
   **   - trafficClass
-  **  Accessing other option fields will throw UnsupportedErr.
+  ** Accessing other option fields will throw UnsupportedErr.
   **
   @Deprecated { msg = "Use SocketConfig" }
   native SocketOptions options()

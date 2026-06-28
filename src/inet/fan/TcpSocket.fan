@@ -20,18 +20,18 @@ class TcpSocket
 
   **
   ** Make a new unbound, unconnected TCP socket. The socket will be configured
-  ** using the given [socket configuration]`SocketConfig`. The following configuration
+  ** using the given [socket configuration](SocketConfig). The following configuration
   ** applies to a TCP socket:
-  **   - `SocketConfig.inBufferSize`
-  **   - `SocketConfig.outBufferSize`
-  **   - `SocketConfig.keepAlive`
-  **   - `SocketConfig.receiveBufferSize`
-  **   - `SocketConfig.sendBufferSize`
-  **   - `SocketConfig.reuseAddr`
-  **   - `SocketConfig.linger`
-  **   - `SocketConfig.receiveTimeout`
-  **   - `SocketConfig.noDelay`
-  **   - `SocketConfig.trafficClass`
+  **   - [SocketConfig.inBufferSize]
+  **   - [SocketConfig.outBufferSize]
+  **   - [SocketConfig.keepAlive]
+  **   - [SocketConfig.receiveBufferSize]
+  **   - [SocketConfig.sendBufferSize]
+  **   - [SocketConfig.reuseAddr]
+  **   - [SocketConfig.linger]
+  **   - [SocketConfig.receiveTimeout]
+  **   - [SocketConfig.noDelay]
+  **   - [SocketConfig.trafficClass]
   **
   new make(SocketConfig config := SocketConfig.cur)
   {
@@ -45,7 +45,7 @@ class TcpSocket
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Get the [socket configuration]`SocketConfig` for this socket.
+  ** Get the [socket configuration](SocketConfig) for this socket.
   **
   native SocketConfig config()
 
@@ -106,7 +106,7 @@ class TcpSocket
   ** connection error.  If a non-null timeout is specified, then block no
   ** longer then the specified timeout before raising an IOErr.  If
   ** timeout is null, then a system default is used.  The default timeout
-  ** is configured via `SocketConfig.connectTimeout`.
+  ** is configured via [SocketConfig.connectTimeout].
   **
   native This connect(IpAddr addr, Int port, Duration? timeout := config.connectTimeout)
 
@@ -192,7 +192,7 @@ class TcpSocket
   **   - receiveTimeout
   **   - noDelay
   **   - trafficClass
-  **  Accessing other option fields will throw UnsupportedErr.
+  ** Accessing other option fields will throw UnsupportedErr.
   **
   @Deprecated { msg = "Use SocketConfig" }
   native SocketOptions options()
