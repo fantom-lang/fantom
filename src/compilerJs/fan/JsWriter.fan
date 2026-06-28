@@ -56,7 +56,7 @@ class JsWriter
     return this
   }
 
-  ** Convenience for 'w(o,loc,name).nl'.
+  ** Convenience for `w(o,loc,name).nl`.
   JsWriter wl(Obj o, Loc? loc := null, Str? name := null)
   {
     this.w(o, loc, name).nl

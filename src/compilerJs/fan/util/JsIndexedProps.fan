@@ -9,7 +9,7 @@
 
 **
 ** JsIndexedProps is used to support JavaScript implementation
-** of `sys::Env.index`
+** of [sys::Env.index]
 **
 class JsIndexedProps
 {
@@ -22,7 +22,7 @@ class JsIndexedProps
 
   **
   ** Write out a stream of indexed props to be added to the
-  ** JavaScript implementation of `sys::Env`.  If pods is null
+  ** JavaScript implementation of [sys::Env].  If pods is null
   ** index every pod installed, otherwise just the pods specified.
   **
   Void write(OutStream out, Pod[]? pods := null)

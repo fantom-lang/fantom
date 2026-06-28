@@ -146,7 +146,7 @@ class SourceMap
   ** Otherwise if the file is another JavaScript file (such as units.js) then
   ** we just add the appropiate offset.
   **
-  ** The 'sourceRoot' option may be passed in to replace "/dev/{podName}"
+  ** The `sourceRoot` option may be passed in to replace "/dev/{podName}"
   ** as the root URI used to fetch source files from the server.
   static Void pack(File[] files, OutStream out, [Str:Obj]? options := null)
   {

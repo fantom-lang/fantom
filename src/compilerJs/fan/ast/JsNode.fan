@@ -87,7 +87,7 @@ abstract class JsNode
 // Method Utils
 //////////////////////////////////////////////////////////////////////////
 
-  ** generates '(p1, p2, ...pn)'
+  ** generates `(p1, p2, ...pn)`
   Str methodParams(CParam[] params)
   {
     buf := StrBuf().addChar('(')
