@@ -227,7 +227,8 @@ internal class JavaNativeGen
   }
 
   ** Return if a line of code maps to a slot name:
-  **   "public final boolean bytesEqual(Buf that)" => "bytesEqual"
+  **
+  **     "public final boolean bytesEqual(Buf that)" => "bytesEqual"
   static Str? isNativeSlot(Str line)
   {
     // only care about lines that start "sp sp non-sp"

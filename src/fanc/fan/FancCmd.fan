@@ -13,7 +13,7 @@ using util
 **
 **  1. Define subclass of FancCmd
 **  2. Register type qname via indexed prop as "fanc.cmd" (if not in this pod)
-**  3. Annotate options and args using `util::AbstractMain` design
+**  3. Annotate options and args using [util::AbstractMain] design
 **
 abstract class FancCmd : AbstractMain
 {
