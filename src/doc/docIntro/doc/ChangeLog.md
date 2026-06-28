@@ -1,12 +1,13 @@
-**************************************************************************
-** title:      Change Log
-** author:     Brian Frank
-** created:    1 Sep 05
-** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      Change Log
+author:     Brian Frank
+created:    1 Sep 05
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
 *Build 1.0.84 (working)*
+- Fandoc fully converted to markdown
 - Replace legacy JS compiler with new ES compiler
 - Directory mime type x-directory/normal -> application/x-directory
 - Str.truncate
@@ -215,7 +216,7 @@
 *Build 1.0.72 (14 Mar 2019)*
 - fanr: Eggbox is now the default fanr repo
 - Rework Java Buf APIs
-- dom: fix DomCoord to be 'const'
+- dom: fix DomCoord to be `const`
 - dom: add Win.log
 - domkit: fix Tree.onAction to not fire on expanders
 - domkit: fix SashBox bug where nested resizable SashBoxs could throw NPE
@@ -224,7 +225,7 @@
 - List.containsSame
 - ext2mime: Add otf,ttf,woff,woff2
 - web: default SameSite attribute to "strict" on all cookies
-- #2711: FEP 1: 'fan build' command line tool
+- #2711: FEP 1: `fan build` command line tool
 - #2724: Float.toLocale()
 - #2726: Serialising Nested Maps
 - #2730: BugFixes for domkit::ListButton
@@ -254,7 +255,7 @@
 
 *Build 1.0.70 (8 Nov 2017)*
 - Require Java 1.7
-- js: Node.js-based NodeRunner now default js runtime for 'fant -js'
+- js: Node.js-based NodeRunner now default js runtime for `fant -js`
 - graphics: new graphics API
 - dom: remove dom::Size; convert to float-based graphics::Size
 - dom: remove dom::Pos;  convert to float-based graphics::Point; Move Pos.rel -> Elem.relPos
@@ -446,7 +447,7 @@
 - #2121: Runtime error when using Map as a type
 - #2133: Errs on Service.start()
 - #2134: NullErr with Safe Invoke
-- #2139: Can not override method that returns 'This'
+- #2139: Can not override method that returns `This`
 
 *Build 1.0.64 (21 Dec 2012)*
 - Move webfwt into Fantom core
@@ -495,7 +496,7 @@
 - #1479: Cannot use strings inside string interpolation
 - #1788: Range Serialization from Fantom1.0.60 -> Fantom1.0.61
 - #1790: Fix Java dasm overloaded inheritance
-- #1792: Lenient compilation for 'once' methods
+- #1792: Lenient compilation for `once` methods
 - #1844: sys::Field.get
 - #1862: WebReq.locales
 - #1862: Wisp set Locale.cur via WebReq.locales for request
@@ -568,7 +569,7 @@
 - #1639: Confusing error report when variable error in a string.
 - #1654: Fix example doc hyperlinks
 - #1667: protected modifier provides internal access
-- #1676: compiler: Non-nullable field 'mytext' must be assigned in ctor
+- #1676: compiler: Non-nullable field `mytext` must be assigned in ctor
 
 *Build 1.0.60 (1 Sept 2011)*
 - WebClient.proxy support
@@ -593,14 +594,14 @@
 - Fandoc: shift heading levels
 - Rework fluxText to depend on new syntax pod
 - Nuke old docCompiler
-- Remove 'doc' target from build scripts
+- Remove `doc` target from build scripts
 - #1091: KeyDown not working in FWT/JS
 - #1558: js: DateTime.toHttpStr lacks JS implementation
 - #1576: Fix Java sys method reflection
 - #1617: Map.get returns default value for existing key if value is null
 
 *Build 1.0.59 (2 Jun 2011)*
-- Remove support for deprecated 'readonly' keyword
+- Remove support for deprecated `readonly` keyword
 - fwt::Cursor API
 - Graphics drawRoundRect, fillRoundRect
 - Allow null comparisons to fields inside an it-block constructor
@@ -640,7 +641,7 @@
 - #1427: js: fwt.window.root possible error
 - #1448: Mmaped Buf end of stream issue
 - #1471: js: List.binarySearch and List.shuffle are missing
-- #1474: Ensure 'super' only used with slot call
+- #1474: Ensure `super` only used with slot call
 - #1477: Report error if mixin has native methods
 - #1480: Map#map doesn't preserve ordered/caseInsensitive
 - #1482: Overriden non-nullable fields can be left uninitialized
@@ -648,7 +649,7 @@
 - #1497: override with static field
 - #1501: ensure override has matching param default state
 - #1509: Horizontal mouse wheel support
-- #1512: ffi 'override once' with array
+- #1512: ffi `override once` with array
 - #1526: Virtual methods in OutStream
 - #1534: Build problem when using java native code and PathEnv
 - #1543: Key.fromMask doesn't work for complex modifier
@@ -741,7 +742,7 @@
 *Build 1.0.55 (13 Sep 2010)*
 - Enhance DateTime/Time pattern for AM/PM
 - dom: Win.sessionStore, Win.localStore, Doc.title
-- Remove obsolete support for '*' field storage operator
+- Remove obsolete support for `*` field storage operator
 - Add EnumOrdinalAttr to fcode format for enum fields
 - Java annotations support
 - Add DateTime chapter to docLang
@@ -853,10 +854,10 @@
 - Pod.loc => locale
 - Locale.get => Env.locale
 - Remove UriSpace
-- Change syntax of 'fan:' URI scheme
+- Change syntax of `fan:` URI scheme
 - Change flux options design
 - Change build symbols to be config props
-- Pod.files: now returns list, added Pod.file, now used 'fan:' URI
+- Pod.files: now returns list, added Pod.file, now used `fan:` URI
 - Repo replaced with util::PathEnv
 - Remove readSymbols, writeSymbols APIs
 - sql::SqlService.autoCommit change to field
@@ -883,8 +884,8 @@
 - js: Remove Long support; use native Numbers for integers
 - compiler::Location => Loc
 - Remove methods deprecated in 1.0.48
-- Remove deprecated support for '|,|' closure syntax
-- Remove deprecated support for 'val' in field setters
+- Remove deprecated support for `|,|` closure syntax
+- Remove deprecated support for `val` in field setters
 - #749: compilerJs bug in list initializer
 - #750: JS: (Int?)null == (Int)0
 - #789: File upload support for web pod
@@ -924,7 +925,7 @@
 - #861: compiler: fix Obj to Void coercion bug
 - #865: Make fwt::TreeModel.children non-nullable
 - #869: deprecate Obj.type, Type.loc, Type.log
-- #870: depreate bitwise operators '~ | ^ &'
+- #870: depreate bitwise operators `~ | ^ &`
 - #873: InStream / OutStream endianness
 - #874: Field setters: val => it
 - #875: Add 1-step bootstrap script
@@ -953,7 +954,7 @@
 - Upgrade SWT from 3.4 to 3.5.1
 - Redesign Java extension mechanism to use lib/java/ext/{Sys.platform}
 - #685: File naming bug?
-- #697: Remove '&' curry/partial apply operator
+- #697: Remove `&` curry/partial apply operator
 - #731: Method calls should always require parens
 - #740: Cannot load 32-bit SWT libraries on 64-bit JVM
 - #743: Issues building from hg on Snow Leopard
@@ -974,7 +975,7 @@
 - Func.curry => bind
 - WebClient.postStr
 - Fix fwt::ScrollPane to actually work
-- Compiler warning for curry '&' operator
+- Compiler warning for curry `&` operator
 - #676: Compiler bug? walkback in closure type inference
 - #679: JVM - emit LocalVariable attr for debuggers
 - #710: Actor programming example?
@@ -989,7 +990,7 @@
 - DateTime,TimeZone support for JavaScript
 - Fix Int.fromStr to work for signed 64-bit integers with radix 16
 - Split webappClient into sys and dom
-- Change all uses of 'javascript' => 'js'
+- Change all uses of `javascript` => `js`
 - Fix Str indexIgnoreCase/indexrIgnoreCase bug
 - Switch to new, more compressed timezone database format
 - #425: Separate pod install location
@@ -1040,8 +1041,8 @@
 - Tweaks to flux
 - Loosen restrictions on it/this ambiguity errors
 - webappClient::Effect
-- Disallow nullable types in 'as' expression
-- Fix 'as' with generics to work like cast
+- Disallow nullable types in `as` expression
+- Fix `as` with generics to work like cast
 - Rename ActorGroup to ActorPool
 - Move Point, Size, Rect, Hints, Pen, Color, Brush to gfx
 - Color/Font system color/font methods moved to Desktop
@@ -1072,7 +1073,7 @@
 - #546: Packaging of Fan
 - #547: WebOutStream - FavIcon tag
 - #548: Flux bug - tabstops not quite right
-- #551: 'it' and Str interpolation
+- #551: `it` and Str interpolation
 - #554: docCompiler bug with |,| signatures
 - #559: API request: sys::StrBuf.remove(Range)
 - #561: Compiler: Internal error - auto-cast of Func
@@ -1186,7 +1187,7 @@
 
 *Build 1.0.36 (13 Dec 2008)*
 - Java FFI
-- Use 'dotnet' to denote .NET instead of 'net'
+- Use `dotnet` to denote .NET instead of `net`
 - Initial json API
 - Remove compiler support for for(...); and while(...);
 - DateTime toJava, fromJava
@@ -1464,7 +1465,7 @@
 - Add maxStack to fcode format
 
 *Build 1.0.13 (4 Aug 2007)*
-- Indexed assignment expressions: x[y] += z
+- Indexed assignment expressions: `x[y] += z`
 - Buf no longer mixins InStream and OutStream
 - InStream and OutStream changed from mixins to classes
 - Fix case insensitive Map equality/hash
@@ -1548,7 +1549,7 @@
 *Build 1.0.3 (8 Jan 2007)*
 - Fan launcher options (--v and --D)
 - Refactor Sys methods into respective classes
-- Field storage '@' operator
+- Field storage `@` operator
 - Storage fcode flag
 
 *Build 1.0.2 (1 Jan 2007)*
@@ -1600,7 +1601,7 @@
 - Stub Time API
 
 *Jun 2006*
-- Dynamic '->' call operator
+- Dynamic `->` call operator
 - Try/catch blocks
 - Initial web API
 - String interpolation
@@ -1633,7 +1634,7 @@
 
 *Jan 2006*
 - Generic types
-- Support for 'is' and 'as' operators
+- Support for `is` and `as` operators
 - Type literals
 - Method parameter defaults
 - Unit test harness

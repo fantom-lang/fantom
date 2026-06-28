@@ -1,21 +1,19 @@
-**************************************************************************
-** title:      WhyFantom
-** author:     Brian Frank
-** created:    6 Dec 07
-** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      WhyFantom
+author:     Brian Frank
+created:    6 Dec 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Overview [#overview]
-********************
+# Overview
 Fantom's raison d'être is to write portable software that runs on the Java
 VM server side and transpiles to JavaScript for web based front ends.
 Fantom was initially developed back in 2005 during a period of stagnation in
 the Java programming language.  It was also well before any statically
 typed options were available to transpile to JavaScript.
 
-Portability [#portability]
-**************************
+# Portability
 The original mission for Fantom was to write software to seamlessly run on
 both the Java VM and the .NET CLR.  But over time, we shifted our focus
 to also target JavaScript to run Fantom in web browsers.  The .NET runtime
@@ -32,15 +30,14 @@ and easy to use compared some of their lower level counter parts.
 
 Because Fantom is designed from the ground up to be portable, targeting
 new platforms should be reasonably easy.  Future targets might include
-Objective-C or Swift for the iPhone, the [LLVM]`http://llvm.org/`, or
-[WASM]`https://webassembly.org/`.
+Objective-C or Swift for the iPhone, the [LLVM](http://llvm.org/), or
+[WASM](https://webassembly.org/).
 
-Elegant APIs [#elegantApis]
-***************************
+# Elegant APIs
 Beauty is in the eye of the beholder - but we are obsessed with making the
 Fantom APIs beautiful.  The Java and .NET APIs have developed over the years
 into a somewhat tangled mess.  Some APIs are just plain bad - Java's
-'Calendar' class is the poster child for APIs which are just miserable to
+`Calendar` class is the poster child for APIs which are just miserable to
 use.  You have to use all of their weird C like constants for access,
 months are freaking zero based, but weekdays are one based!
 
@@ -48,18 +45,17 @@ Some of this is normal cruft setting in, but much of it is a general philosophy
 in both Java and .NET API design.  Both platforms tend toward APIs using a
 proliferation of small classes that are over abstracted and under powered.
 Fantom follows a very different philosophy - we believe in a very few, but powerful
-classes.  A good example is the 'java.io' package which contains over 60 classes
+classes.  A good example is the `java.io` package which contains over 60 classes
 and interfaces.  To do anything useful requires three of four classes, and if
-you forget to use [buffered streams]`http://www.tbray.org/ongoing/When/200x/2005/09/13/Buffering`,
+you forget to use [buffered streams](http://www.tbray.org/ongoing/When/200x/2005/09/13/Buffering),
 then performance goes to hell.  And even with all of these classes, it is still
 a lot of work to do basic things like parse a file into lines of text.
-Fantom collapses most of the 'java.io' functionality into four classes:
-`sys::File`, `sys::Buf`, `sys::InStream`, and `sys::OutStream`.  The IO
+Fantom collapses most of the `java.io` functionality into four classes:
+[sys::File], [sys::Buf], [sys::InStream], and [sys::OutStream].  The IO
 streams classes are buffered by default, support both binary and text,
 and have lots of conveniences built right in.
 
-Strong versus Dynamic Typing [#typing]
-**************************************
+# Strong versus Dynamic Typing
 The industry has developed a schism between proponents of strong typing
 and those of dynamic typing.  Frankly we find both sides too extreme
 for our taste, so Fantom takes a middle of the road, moderate approach to
@@ -83,30 +79,28 @@ typing.  If you call a method via the "." operator, the call is type
 checked by the compiler and compiled into an efficient opcode.
 But you can also use the "->" operator to call a method dynamically.
 This operator skips type checking, and can be used to implement
-[duck typing]`http://en.wikipedia.org/wiki/Duck_typing`.  The "->" operator
-actually routes to the 'Obj.trap' method which can be overridden to
+[duck typing](http://en.wikipedia.org/wiki/Duck_typing).  The "->" operator
+actually routes to the `Obj.trap` method which can be overridden to
 build all sorts of nifty dynamic designs.
 
-Generics [#generic]
-*******************
+# Generics
 Interestingly enough while Fantom is trying to make programs less
 strongly typed, the Java and C# languages are moving to be more strongly
 typed.  Generic types illustrate this trend - a feature added to
 both Java and C# in the not so distant past.  A fully parameterized
 type system introduces a great deal of complexity - we are
-trying hard to find the [right balance]`https://fantom.org/forum/topic/1433`
+trying hard to find the [right balance](https://fantom.org/forum/topic/1433)
 between value and complexity.
 
 Currently Fantom takes a limited approach to generics.  There is no
 support for user defined generics yet.  However, three built-in classes
-'List', 'Map', and 'Func' can be parameterized using a special syntax.  For
-example a list of 'Ints' in Fantom is declared as 'Int[]' using the familiar
+`List`, `Map`, and `Func` can be parameterized using a special syntax.  For
+example a list of `Ints` in Fantom is declared as `Int[]` using the familiar
 array type syntax of Java and C#.  This trade-off seems to hit the
 sweet spot where generics make sense without complicating the overall
 type system.
 
-Modularity [#modularity]
-************************
+# Modularity
 Designing software to be modular is one of those things you learn
 in CS 101 - it is fundamental to good design.  Modular software
 should let you easily divide your programs up into reusable chunks
@@ -139,8 +133,7 @@ Pods are the unit of versioning and deployment.  They are combined
 together using clear dependencies.  Like Java they are just ZIP
 files which can be easily examined.
 
-Namespace versus Deployment [#namespace]
-****************************************
+# Namespace versus Deployment
 Java and .NET to a lesser degree separate the concepts of namespace
 and deployment.  For example in Java packages are used to organize
 code into a namespace, but JAR files are used to organize code for
@@ -159,8 +152,7 @@ when building large systems through the assembly of pods and
 their types.  For example, given a serialized type "acme::Foo", it
 is easy to figure out what pod you need.
 
-Object Oriented [#oo]
-*********************
+# Object Oriented
 One of the most important trade-offs made in the design of Java was
 primitive types.  Since primitives aren't really Objects, they become
 an anomaly which results in all sorts of ugly special cases.  On
@@ -171,18 +163,17 @@ remains fractured.
 
 .NET tackles the problem quite elegantly with value types.  These
 are special types which have the performance of primitives, but
-they still cleanly subclass from 'System.Object'.
+they still cleanly subclass from `System.Object`.
 
 Fantom follows the .NET model of value types.  The three special
-types 'Bool', 'Int', and 'Float' are value types which are implemented
+types `Bool`, `Int`, and `Float` are value types which are implemented
 as primitives in Java and value types in .NET.  These types have
-all the same performance characteristics of using 'boolean',
-'long', and 'double' in Java or C#.  Unlike Java these types cleanly
-subclass from 'Obj' to create a unified class hierarchy.  The compiler
+all the same performance characteristics of using `boolean`,
+`long`, and `double` in Java or C#.  Unlike Java these types cleanly
+subclass from `Obj` to create a unified class hierarchy.  The compiler
 automatically implements boxing and unboxing when necessary.
 
-Functional Programming [#functional]
-************************************
+# Functional Programming
 When Fantom was originally developed, Java did not provide much in the
 way for functional programming.  Java 8 did add many features to support
 functional programming, but functions are still are not truly first class
@@ -193,8 +184,7 @@ class objects.  Closures are a key feature of the language, and
 all the APIs are written to use functions and closures where
 appropriate.
 
-Declarative Programming [#declarative]
-**************************************
+# Declarative Programming
 Quite often we need to declare data structures in our code.  Common
 examples include declaring a list or map.  In Java and C# these simple
 tasks include mostly noise which makes for very ugly, verbose declarative
@@ -208,8 +198,7 @@ writable.  The serialization syntax is a clean subset of the programming
 language - so you can paste a serialization file right into your source
 code as an expression.
 
-Concurrency [#concurrency]
-**************************
+# Concurrency
 Most main stream languages today use a shared state model - all threads
 share the same memory space, and programmers must be diligent about
 locking memory in order to prevent race conditions.  If locks are used
@@ -222,8 +211,7 @@ Fantom tackles concurrency using a couple techniques:
   - Static fields must be immutable (no shared mutable state)
   - Actors model for message passing (Erlang style concurrency)
 
-Little Things [#littleThings]
-*****************************
+# Little Things
 The beauty of a new language is that it gives you a clean slate to fix
 all the little things that aggravate you (we built Fantom to scratch our
 own itches).  Other little things we included in Fantom which we found
@@ -242,7 +230,7 @@ frustrating about Java:
 
   - **Checked Exceptions**: checked exceptions are evil syntax salt.
     Checked exceptions don't scale, don't version, and don't allow composable
-    systems - all the reasons why [Anders Hejlsberg]`http://www.artima.com/intv/handcuffs.html`
+    systems - all the reasons why [Anders Hejlsberg](http://www.artima.com/intv/handcuffs.html)
     didn't include checked exceptions in C#.
 
   - **Numeric Precision**:  Fantom doesn't include support for 32-bit, 16-bit,

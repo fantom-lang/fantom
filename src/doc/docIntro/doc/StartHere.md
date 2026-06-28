@@ -1,0 +1,68 @@
+<!--
+title:      StartHere
+author:     Brian Frank
+created:    9 Jan 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Learn More
+Try these links to learn more about Fantom:
+  - [Tour]\: quick introduction to Fantom's features by code example
+  - [WhyFantom]\: why we built Fantom
+  - Hello world five different ways:
+      - [Fantom shell](HelloWorld#fantom-shell): interactive shell
+      - [Fantom script](HelloWorld#fantom-script): executable scripts
+      - [Fantom pod](HelloWorld#fantom-pod): precompiled modules
+      - [Fantom web app](HelloWorld#fantom-webapp): web application libraries
+
+# Quick Start
+If you want to jump right in and start coding:
+
+  - [Download](https://fantom.org) the latest build
+  - [Setup](docTools::Setup): your environment
+  - [HelloWorld]\: try your hand at hello world
+  - [Examples](examples::index): snippets of example
+    code for common tasks
+
+# Community Resources
+  - [Rosetta Code](http://rosettacode.org/wiki/Category:Fantom): code
+    samples in Fantom with comparisons to other languages
+
+  - [Java to Fantom in 10 Steps](http://www.fantomfactory.org/articles/from-java-to-fantom-in-10-steps)
+
+Also see [IDE page](docTools::IDEs) for an overview of the various
+community projects providing Fantom tooling.
+
+# Documentation Organization
+All documentation and APIs are organized into modules called *pods*.
+The doc index is organized by *manuals* and *APIs*.  APIs are the
+reference documentation for each public type generated from source (like
+Javadoc).  Manuals group a set of chapters on a subject:
+
+  - [docIntro](docIntro::index): general purpose introductory material
+  - [docLang](docLang::index): covers the language in depth
+  - [docTools](docTools::index): command line tools, unit testing, build toolkit
+
+In addition [examples](examples::index) can be accessed as HTML.
+All examples are designed as complete stand alone programs which
+can be run as a script.
+
+# Learning Fantom
+If you want to dig deep, then you'll probably want to look over
+[docIntro](docIntro::index) to get a background.  At some point you
+should consider reading [docLang](docLang::index) front to back - it is
+designed to be read as book.  Once you start writing code, you'll
+find [examples](examples::index) and the reference APIs handy as
+you learn the standard libraries.  When you start to develop real applications
+make sure to review how to write [unit tests](docTools::Fant) and
+[build scripts](docTools::Build).
+
+# Getting Involved
+The place to ask questions and submit feedback is the
+[discussion group](https://fantom.org/forum/topic/).
+Or you can [contact us](Faq#contact-us) directly.  Let us know
+what you think!
+
+
+

@@ -1,13 +1,12 @@
-**************************************************************************
-** title:      License
-** author:     Brian Frank
-** created:    9 Dec 07
-** copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
-** license:    Licensed under the Academic Free License version 3.0
-**************************************************************************
+<!--
+title:      License
+author:     Brian Frank
+created:    9 Dec 07
+copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
 
-Academic Free License 3.0 [#afl30]
-**********************************
+# Academic Free License 3.0
 
 1. **Grant of Copyright License.** Licensor grants You a worldwide,
    royalty-free, non-exclusive, sublicensable license, for the duration

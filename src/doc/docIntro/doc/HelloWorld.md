@@ -1,0 +1,197 @@
+<!--
+title:      HelloWorld
+author:     Brian Frank
+created:    4 Jan 08
+copyright:  Copyright (c) 2008, Brian Frank and Andy Frank
+license:    Licensed under the Academic Free License version 3.0
+-->
+
+# Setup
+Fantom is distributed as a simple zip file you will need to unzip to
+your local machine.  Make sure the correct binary directory is included
+in your path:
+
+    {fan.home}/bin
+
+When you first install Fantom it will automatically try to run using
+your currently configured Java VM (requires Java 8 or greater).
+If things are working correctly you should be able to run "fan -version":
+
+    C:\dev\fan\bin>fan -version
+    Fantom Launcher
+    Copyright (c) 2006-2020, Brian Frank and Andy Frank
+    Licensed under the Academic Free License version 3.0
+
+    Java Runtime:
+      java.version:    1.8.0_91
+      java.vm.name:    Java HotSpot(TM) 64-Bit Server VM
+      java.vm.vendor:  Oracle Corporation
+      java.vm.version: 25.91-b14
+      java.home:       /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre
+      fan.platform:    macosx-x86_64
+      fan.version:     1.0.74
+      fan.env:         sys::BootEnv
+      fan.home:        /work/fan
+
+If that doesn't work then try these options:
+  1. Review [setup](docTools::Setup) instructions
+  2. Install Java 8 or greater and retry
+  3. Explicitly [configure](docTools::Setup#java-runtime) where
+     your JVM is installed
+
+# Fantom Shell
+The Fantom shell is a command line tool for evaluating expressions and
+statements.  It is a great way to test things out.  To launch the
+shell run the `fansh` executable and call the [Obj.echo](sys::Obj.echo)
+method:
+
+    C:\dev\fan\bin>fansh
+    Fantom Shell v1.0.74 ('?' for help)
+    fansh> echo("hello world #1")
+    hello world #1
+    fansh> quit
+
+Checkout [docTools::Fansh] for more details on the Fantom shell.
+
+# Fantom Script
+You can also execute any file with the ".fan" extension as a script
+file.  The script must contain a full class definition with a
+method called "main".  Create a file called "hello.fan":
+
+    class Hello
+    {
+      static Void main() { echo("hello world #2") }
+    }
+
+Pass the script file name to the `fan` executable:
+
+    C:\dev\fan\bin>fan hello.fan
+    hello world #2
+
+Note that unlike Java or C# the arguments aren't required to be
+passed as a parameter to main.  You can declare a `Str[]` parameter
+if you want or you can access them via [Env.args](sys::Env.args).
+
+Checkout [docTools::Fan] for more details running Fantom scripts.
+Also see [unix setup](docTools::Setup#executable-scripts) and
+[windows setup](docTools::Setup#executable-scripts-1) to make fan
+scripts executable without calling the launcher explicitly.
+
+# Fantom Pod
+For production systems, you typically organize your code into precompiled
+modules called [pods](docLang::Structure#pods).  Pods are built using
+Fantom's [build toolkit](docTools::Build).  To build a new pod called "hello"
+use the `init` tool to create a new project:
+
+    C:\projects> fan build init hello
+
+Which will generate a directory that looks like:
+
+    hello
+    ├── etc
+    ├── fan.props
+    ├── lib
+    └── src
+        ├── build.fan
+        └── hello
+            ├── build.fan
+            ├── fan
+            └── test
+
+Add a file called "Main.fan" under `src/hello/fan/`:
+
+    hello
+    └── src
+        └── hello
+            └── fan
+                └── Main.fan
+
+Which declares a single class called "Main":
+
+    class Main
+    {
+      static Void main() { echo("hello world #3") }
+    }
+
+The build file itself is just a normal Fantom script file which will
+compile the pod:
+
+    C:\projects> cd hello\src
+    C:\projects\hello\src> fan build.fan
+    compile [hello]
+      Compile [hello]
+        FindSourceFiles [1 files]
+        WritePod [C:\projects\hello\lib\fan\hello.pod]
+    BUILD SUCCESS [70ms]!
+
+If you look in your "lib/fan" directory you should now see a file
+called "hello.pod".  Assuming you called your method "main" in a
+class called "Main" you can run the main method using the `fan`
+executable:
+
+    C:\projects\hello> fan hello
+    hello world #3
+
+    C:\projects\hello> fan hello::Main
+    hello world #3
+
+    C:\projects\hello> fan hello::Main.main
+    hello world #3
+
+Checkout [docTools::Fan] for more details running methods in a
+pod, and [docTools::Build] for details on the build toolkit.
+
+# Fantom WebApp
+To create a very simple hello world web application we can
+create a daemon boot script which launches Fantom's built-in
+web server with a simple hello WebMod.
+
+Let's look at some example code (this script is available under
+"examples/web/hello.fan"):
+
+    using util
+    using web
+    using wisp
+
+    class WebHello : AbstractMain
+    {
+      @Opt { help = "http port" }
+      Int port := 8080
+
+      override Int run()
+      {
+        wisp := WispService
+        {
+          it.port = this.port
+          it.root = HelloMod()
+        }
+        return runServices([wisp])
+      }
+    }
+
+    const class HelloMod : WebMod
+    {
+      override Void onGet()
+      {
+        res.headers["Content-Type"] = "text/plain; charset=utf-8"
+        res.out.print("hello world #4")
+      }
+    }
+
+The boot script contains two classes.  The first class `WebHello` subclasses
+[AbstractMain](util::AbstractMain) which provides the standard plumbing for
+writing main routines.  It's primary purpose is to configure the web server
+to run on port 8080 and to use a simple webmod which defines how to
+process HTTP requests.
+
+The `HelloMod` class subclasses [WebMod](web::pod-doc#webmod) which is Fantom's
+"servlet" API for servicing web requests.  It doesn't do much - sets
+the content type and writes the response text.
+
+If you run this script:
+
+    C:\dev\fan\bin>fan ../examples/web/hello.fan
+    [09:57:40 11-Apr-08] [info] [fand] booting...
+    [09:57:40 11-Apr-08] [info] [web] WispService started on port 8080
+
+You should be able to hit [http://localhost:8080/] with your browser!
