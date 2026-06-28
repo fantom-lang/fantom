@@ -23,14 +23,14 @@ const abstract class WebRepoAuth
   ** What algorithms are supported to compute the "secret" to use
   ** for digital signatures.  They should be sorted from most
   ** preferred to least preferred.  Standard values are:
-  **   - 'PASSWORD': simple plaintext password is used as secret
-  **   - 'SALTED-HMAC-SHA1': HMAC of "user:salt" with password as key
+  **   - `PASSWORD`: simple plaintext password is used as secret
+  **   - `SALTED-HMAC-SHA1`: HMAC of "user:salt" with password as key
   abstract Str[] secretAlgorithms()
 
   ** What algorithms are supported for computing the signature of a request.
   ** They should be sorted from most preferred to least preferred.
   ** Standard values are:
-  **   - 'HMAC-SHA1': SHA-1 HMAC using secret as key
+  **   - `HMAC-SHA1`: SHA-1 HMAC using secret as key
   ** The default implementation of both client and server only
   ** supports "HMAC-SHA1".
   virtual Str[] signatureAlgorithms() { ["HMAC-SHA1"] }
@@ -47,7 +47,7 @@ const abstract class WebRepoAuth
 
   ** Get the secret as a byte buffer for the given user and algorithm
   ** which can be used to verify the digital signature of a request.
-  ** See `secretAlgorithms` for list of algorithms (parameter is guaranteed
+  ** See [secretAlgorithms] for list of algorithms (parameter is guaranteed
   ** to be in all upper case).
   abstract Buf secret(Obj? user, Str algorithm)
 

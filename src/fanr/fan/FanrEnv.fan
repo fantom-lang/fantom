@@ -8,11 +8,11 @@
 
 **
 ** FanrRepo models the local environment that we install to and publish from.
-** See [docFanr]`docFanr::Concepts#env`.
+** See [docFanr](docFanr::Concepts#env).
 **
 class FanrEnv
 {
-  ** Constructor for given `sys::Env`
+  ** Constructor for given [sys::Env]
   new make(Env env := Env.cur) { this.env = env }
 
   ** Env instance we are wrapping

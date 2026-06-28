@@ -12,7 +12,7 @@ using concurrent
 
 **
 ** WebRepo is a client implementation of a repository over HTTP
-** using a simple REST based API.  `WebRepoMod` implements the
+** using a simple REST based API.  [WebRepoMod] implements the
 ** server side of the fanr HTTP protocol.
 **
 internal const class WebRepo : Repo

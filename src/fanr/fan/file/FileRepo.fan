@@ -12,11 +12,11 @@ using concurrent
 ** FileRepo implements a repository on the file system using
 ** a simple directory structure:
 **
-**   alpha/
-**     alpha-1.0.1.pod
-**     alpha-1.0.2.pod
-**   beta/
-**     beta-1.0.2.pod
+**     alpha/
+**       alpha-1.0.1.pod
+**       alpha-1.0.2.pod
+**     beta/
+**       beta-1.0.2.pod
 **
 ** A background actor is used to manage the cached data
 ** structures read from the disk.

@@ -8,7 +8,7 @@
 
 **
 ** Repo models a database of pod versions
-** See [docFanr]`docFanr::Concepts#repos`.
+** See [docFanr](docFanr::Concepts#repos).
 **
 abstract const class Repo
 {
@@ -27,8 +27,8 @@ abstract const class Repo
   abstract Uri uri()
 
   ** Ping the repo and return summary props.  Standard props include:
-  **   - 'fanr.type': qname of Repo implementation class
-  **   - 'fanr.version': version string of 'fanr' pod being used
+  **   - `fanr.type`: qname of Repo implementation class
+  **   - `fanr.version`: version string of `fanr` pod being used
   abstract Str:Str ping()
 
   ** Find an exact match for the given pod name and version.  If
@@ -36,7 +36,7 @@ abstract const class Repo
   ** return null or throw UnknownPodErr based on checked flag.
   abstract PodSpec? find(Str podName, Version? version, Bool checked := true)
 
-  ** Find pod versions which match query.  The 'numVersions'
+  ** Find pod versions which match query.  The `numVersions`
   ** specifies how many different versions will be matched for a
   ** single pod.  Multiple pod versions are matched from highest
   ** version to lowest version, so a limit of one will always match

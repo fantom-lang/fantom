@@ -11,26 +11,26 @@ using util
 
 **
 ** WebRepoMod implements basic server side functionality for
-** publishing a repo over HTTP to be used by 'WebRepo'. URI
+** publishing a repo over HTTP to be used by `WebRepo`. URI
 ** namespace:
 **
-**    Method   Uri                       Operation
-**    ------   --------------------      ---------
-**    GET      {base}/ping               ping meta-data
-**    GET      {base}/find/{name}        pod find current
-**    GET      {base}/find/{name}/{ver}  pod find
-**    GET      {base}/query?{query}      pod query
-**    POST     {base}/query              pod query
-**    GET      {base}/pod/{name}/{ver}   pod download
-**    POST     {base}/publish            publish pod
-**    GET      {base}/auth?{username}    authentication info
+**      Method   Uri                       Operation
+**      ------   --------------------      ---------
+**      GET      {base}/ping               ping meta-data
+**      GET      {base}/find/{name}        pod find current
+**      GET      {base}/find/{name}/{ver}  pod find
+**      GET      {base}/query?{query}      pod query
+**      POST     {base}/query              pod query
+**      GET      {base}/pod/{name}/{ver}   pod download
+**      POST     {base}/publish            publish pod
+**      GET      {base}/auth?{username}    authentication info
 **
-** See [Web Repos]`docFanr::WebRepos`.
+** See [Web Repos](docFanr::WebRepos).
 **
 **
 const class WebRepoMod : WebMod
 {
-  ** Constructor, must set `repo`.
+  ** Constructor, must set [repo].
   new make(|This|? f := null) { if (f != null) f(this) }
 
   ** Repository to publish on the web, typically a local FileRepo.
@@ -41,14 +41,14 @@ const class WebRepoMod : WebMod
   const WebRepoAuth auth := PublicWebRepoAuth()
 
   ** Meta-data to include in ping requests.  If customized,
-  ** then be sure to include standard props defined by `Repo.ping`.
+  ** then be sure to include standard props defined by [Repo.ping].
   const Str:Str pingMeta :=
   [
     "fanr.type":   WebRepo#.toStr,
     "fanr.version": WebRepoMod#.pod.version.toStr
   ]
 
-  ** Dir to store temp files, defaults to 'Env.tempDir'
+  ** Dir to store temp files, defaults to `Env.tempDir`
   const File tempDir := Env.cur.tempDir
 
 //////////////////////////////////////////////////////////////////////////

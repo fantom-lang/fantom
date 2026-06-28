@@ -9,8 +9,8 @@
 **
 ** Command implements a top-level command in the fanr command line tool.
 **
-** Commands declare their options using the `CommandOpt` facet which
-** works similiar to `util::AbstractMain`.  If the field is a Bool, then
+** Commands declare their options using the [CommandOpt] facet which
+** works similiar to [util::AbstractMain].  If the field is a Bool, then
 ** the option is treated as a flag option.  Otherwise it must be one of
 ** these types: Str, Uri.
 **
@@ -27,7 +27,7 @@ abstract class Command
   ** Short summary of command for usage screen
   abstract Str summary()
 
-  ** Execute command.  If there is a failure then throw `err`,
+  ** Execute command.  If there is a failure then throw [err],
   ** otherwise the command is assumed to be successful.
   abstract Void run()
 
@@ -38,7 +38,7 @@ abstract class Command
   ** Stdout for printing command output
   OutStream out := Env.cur.out
 
-  ** Log a warning to `out`
+  ** Log a warning to [out]
   Void warn(Str msg)
   {
     out.printLine("WARN: $msg")
@@ -51,7 +51,7 @@ abstract class Command
     return CommandErr(msg, cause)
   }
 
-  ** Ask for y/n confirmation or skip if '-y' option specified.
+  ** Ask for y/n confirmation or skip if `-y` option specified.
   Bool confirm(Str msg)
   {
     if (skipConfirm) return true
@@ -414,7 +414,7 @@ internal const class CommandErr : Err
 **************************************************************************
 
 **
-** Facet for annotating an `Command` argument field.
+** Facet for annotating an [Command] argument field.
 **
 facet class CommandArg
 {
@@ -430,7 +430,7 @@ facet class CommandArg
 **************************************************************************
 
 **
-** Facet for annotating an `Command` option field.
+** Facet for annotating an [Command] option field.
 **
 facet class CommandOpt
 {

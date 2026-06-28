@@ -7,7 +7,7 @@
 //
 
 **
-** Command line main for 'fanr'
+** Command line main for `fanr`
 **
 @NoDoc
 class Main

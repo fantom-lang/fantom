@@ -8,7 +8,7 @@
 
 **
 ** Tokenizer for fanr query language.
-** See `docFanr::Queries` for details and formal grammer.
+** See [docFanr::Queries] for details and formal grammer.
 **
 internal class Tokenizer
 {
@@ -31,7 +31,7 @@ internal class Tokenizer
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Read the next token, store result in `tok` and `val`
+  ** Read the next token, store result in [tok] and [val]
   **
   Token next()
   {

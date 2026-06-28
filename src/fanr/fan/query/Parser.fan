@@ -8,7 +8,7 @@
 
 **
 ** Parser for fanr query language.
-** See `docFanr::Queries` for details and formal grammer.
+** See [docFanr::Queries] for details and formal grammer.
 **
 internal class Parser
 {

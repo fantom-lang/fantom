@@ -8,11 +8,11 @@
 
 **
 ** Query models a parsed query against the pod database.
-** See `docFanr::Queries` for details and formal grammer.
+** See [docFanr::Queries] for details and formal grammer.
 **
 const class Query
 {
-  ** Parse query string - see `docFanr::Queries` for format.
+  ** Parse query string - see [docFanr::Queries] for format.
   static new fromStr(Str s, Bool checked := true)
   {
     try
@@ -31,7 +31,7 @@ const class Query
 
   internal const QueryPart[] parts
 
-  ** Return query string - see `docFanr::Queries` for format.
+  ** Return query string - see [docFanr::Queries] for format.
   override Str toStr() { parts.join(",") }
 
   ** Hash is based on query parts
