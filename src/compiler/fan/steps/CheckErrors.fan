@@ -15,13 +15,14 @@
 **
 ** Since CheckErrors already performs a full tree walk down to each leaf
 ** expression, we also do a couple of other AST decorations in this step:
-**   1) add temp local for field assignments like return ++x
-**   2) add temp local for returns inside protected region
-**   3) check for field accessor optimization
-**   4) check for field storage requirements
-**   5) add implicit coersions: auto-casts, boxing, to non-nullable
-**   6) implicit call to toImmutable when assigning to const field
-**   7) mark ClosureExpr.setsConst
+**
+**     1) add temp local for field assignments like return ++x
+**     2) add temp local for returns inside protected region
+**     3) check for field accessor optimization
+**     4) check for field storage requirements
+**     5) add implicit coersions: auto-casts, boxing, to non-nullable
+**     6) implicit call to toImmutable when assigning to const field
+**     7) mark ClosureExpr.setsConst
 **
 class CheckErrors : CompilerStep
 {

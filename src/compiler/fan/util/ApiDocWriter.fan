@@ -9,7 +9,7 @@
 **
 ** ApiDocWriter is used to write out an AST definition in
 ** the Fantom API doc formatted used by compilerDoc.
-** See 'compilerDoc::ApiDocParser' for formal definition.
+** See `compilerDoc::ApiDocParser` for formal definition.
 **
 class ApiDocWriter
 {

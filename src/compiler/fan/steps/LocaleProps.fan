@@ -8,7 +8,7 @@
 
 **
 ** LocaleProps is used to generate or merge locale/en.props
-** if any locale literals specified defaults such as '$<foo=Foo>'
+** if any locale literals specified defaults such as `$<foo=Foo>`
 **
 class LocaleProps : CompilerStep
 {

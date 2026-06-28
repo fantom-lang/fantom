@@ -313,7 +313,7 @@ class CodeAsm : CompilerSupport
   }
 
   **
-  ** Compute the range of this switch and return as a list of '[min, max]'
+  ** Compute the range of this switch and return as a list of `[min, max]`
   ** if the switch is a candidate for a table switch as a series of
   ** contiguous (or near contiguous) cases which can be represented an
   ** offset into a jump table.  Return null if the switch is not numeric

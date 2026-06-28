@@ -61,11 +61,13 @@ class TokenVal : Loc
   ** but only if on the same line:
   **
   ** Ok:
-  **   call(...)
+  **
+  **     call(...)
   **
   ** Not ok:
-  **   call
-  **     (...)
+  **
+  **     call
+  **       (...)
   **
   Bool isCallOpenParen()
   {
@@ -77,11 +79,13 @@ class TokenVal : Loc
   ** but only if on the same line:
   **
   ** Ok:
-  **   expr[...]
+  **
+  **     expr[...]
   **
   ** Not ok:
-  **   expr
-  **     [...]
+  **
+  **     expr
+  **       [...]
   **
   Bool isIndexOpenBracket()
   {

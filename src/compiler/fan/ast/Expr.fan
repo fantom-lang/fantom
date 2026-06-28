@@ -923,23 +923,24 @@ class CallExpr : NameExpr
 **
 ** ShortcutExpr is used for operator expressions which are a shortcut
 ** to a method call:
-**   a + b     =>  a.plus(b)
-**   a - b     =>  a.minus(b)
-**   a * b     =>  a.mult(b)
-**   a / b     =>  a.div(b)
-**   a % b     =>  a.mod(b)
-**   a[b]      =>  a.get(b)
-**   a[b] = c  =>  a.set(b, c)
-**   -a        =>  a.negate()
-**   ++a, a++  =>  a.increment()
-**   --a, a--  =>  a.decrement()
-**   a == b    =>  a.equals(b)
-**   a != b    =>  ! a.equals(b)
-**   a <=>     =>  a.compare(b)
-**   a > b     =>  a.compare(b) > 0
-**   a >= b    =>  a.compare(b) >= 0
-**   a < b     =>  a.compare(b) < 0
-**   a <= b    =>  a.compare(b) <= 0
+**
+**     a + b     =>  a.plus(b)
+**     a - b     =>  a.minus(b)
+**     a * b     =>  a.mult(b)
+**     a / b     =>  a.div(b)
+**     a % b     =>  a.mod(b)
+**     a[b]      =>  a.get(b)
+**     a[b] = c  =>  a.set(b, c)
+**     -a        =>  a.negate()
+**     ++a, a++  =>  a.increment()
+**     --a, a--  =>  a.decrement()
+**     a == b    =>  a.equals(b)
+**     a != b    =>  ! a.equals(b)
+**     a <=>     =>  a.compare(b)
+**     a > b     =>  a.compare(b) > 0
+**     a >= b    =>  a.compare(b) >= 0
+**     a < b     =>  a.compare(b) < 0
+**     a <= b    =>  a.compare(b) <= 0
 **
 class ShortcutExpr : CallExpr
 {
@@ -1028,8 +1029,9 @@ class ShortcutExpr : CallExpr
 **
 ** In this example, IndexedAssignExpr shortcuts Int.plus and
 ** its target shortcuts List.get:
-**   x := [2]
-**   x[0] += 3
+**
+**     x := [2]
+**     x[0] += 3
 **
 class IndexedAssignExpr : ShortcutExpr
 {

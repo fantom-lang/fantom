@@ -360,7 +360,7 @@ class FuncType : GenericType
   }
 
   **
-  ** Return if this function type has 'This' type in its signature.
+  ** Return if this function type has `This` type in its signature.
   **
   Bool usesThis()
   {

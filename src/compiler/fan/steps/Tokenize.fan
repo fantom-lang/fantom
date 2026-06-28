@@ -10,7 +10,8 @@
 ** Tokenize is responsible for parsing all the source files into a
 ** a list of tokens.  Each source file is mapped to a CompilationUnit
 ** and stored in the PodDef.units field:
-**   Compiler.srcFiles -> Compiler.pod.units
+**
+**     Compiler.srcFiles -> Compiler.pod.units
 **
 ** During the standard pipeline this step is called by the InitInput step.
 **

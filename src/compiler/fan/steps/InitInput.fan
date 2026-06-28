@@ -77,7 +77,7 @@ class InitInput : CompilerStep
   }
 
   **
-  ** Return 'null' if pod name is valid, or return a
+  ** Return `null` if pod name is valid, or return a
   ** descriptive error message if name is not valid.
   **
   @NoDoc static Str? isValidPodName(Str name)
@@ -111,7 +111,7 @@ class InitInput : CompilerStep
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Init 'compiler.pod' with PodDef
+  ** Init `compiler.pod` with PodDef
   **
   private Void initPod()
   {

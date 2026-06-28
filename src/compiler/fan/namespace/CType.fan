@@ -123,8 +123,8 @@ mixin CType : CNode
   **
   ** If this type is being used for type inference then get the
   ** type as it should be inferred.  Typically we just return this.
-  ** However some FFI types such as '[java]::int' are never used
-  ** on the stack directly and are inferred to be 'sys::Int'.
+  ** However some FFI types such as `[java]::int` are never used
+  ** on the stack directly and are inferred to be `sys::Int`.
   **
   virtual CType inferredAs() { this }
 
@@ -200,8 +200,8 @@ mixin CType : CNode
   }
 
   **
-  ** If this is a parameterized type which uses 'This',
-  ** then replace 'This' with the specified type.
+  ** If this is a parameterized type which uses `This`,
+  ** then replace `This` with the specified type.
   **
   virtual CType parameterizeThis(CType thisType) { this }
 

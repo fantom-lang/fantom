@@ -21,7 +21,7 @@ class FPodNamespace : CNamespace
 
   **
   ** Make a FPod namespace which looks in the specified directory
-  ** to resolve pod files or null to delegate to 'Env.findPodFile'.
+  ** to resolve pod files or null to delegate to `Env.findPodFile`.
   **
   new make(File? dir)
   {

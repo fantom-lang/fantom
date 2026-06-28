@@ -46,7 +46,7 @@ mixin CSlot : CNode
 
   **
   ** If this a foreign function interface slot.  A FFI slot is one
-  ** declared in another language.  See `usesForeign` to check if the
+  ** declared in another language.  See [usesForeign] to check if the
   ** slot uses any FFI types in its signature.
   **
   virtual Bool isForeign() { false }
@@ -57,7 +57,7 @@ mixin CSlot : CNode
   Bool usesForeign() { usesBridge != null }
 
   **
-  ** If this a foreign function return the bridge.  See `usesForeign` to
+  ** If this a foreign function return the bridge.  See [usesForeign] to
   ** check if the slot uses any FFI types in its signature.
   **
   virtual CBridge? bridge() { parent.pod.bridge }

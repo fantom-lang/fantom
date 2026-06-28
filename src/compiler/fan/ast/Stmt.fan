@@ -356,7 +356,8 @@ class ThrowStmt : Stmt
 
 **
 ** ForStmt models a for loop of the format:
-**   for (init; condition; update) block
+**
+**     for (init; condition; update) block
 **
 class ForStmt : Stmt
 {
@@ -403,7 +404,8 @@ class ForStmt : Stmt
 
 **
 ** WhileStmt models a while loop of the format:
-**   while (condition) block
+**
+**     while (condition) block
 **
 class WhileStmt : Stmt
 {

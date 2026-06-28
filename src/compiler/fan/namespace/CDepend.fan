@@ -7,7 +7,7 @@
 //
 
 **
-** CDepend is a compiler dependency which wraps `sys::Depend`
+** CDepend is a compiler dependency which wraps [sys::Depend]
 **
 class CDepend
 {

@@ -118,7 +118,7 @@ class CompilerInput
   Bool isTest := false
 
   **
-  ** If set to true, then disassembled fcode is dumped to 'log.out'.
+  ** If set to true, then disassembled fcode is dumped to `log.out`.
   **
   Bool fcodeDump := false
 
@@ -143,11 +143,11 @@ class CompilerInput
 
   **
   ** Generate a type cast coercion between collections with different
-  ** parameterized types. For example normal Fantom we can use 'Str[]'
-  ** where 'Obj[]' it expected with no cast.  But when transpiling
+  ** parameterized types. For example normal Fantom we can use `Str[]`
+  ** where `Obj[]` it expected with no cast.  But when transpiling
   ** Java, these must be explicitly cast. The compiler actually generates
-  ** a proper parameterized type cast such as 'Obj[]', but in Java this
-  ** isn't valid so we always just cast to the generic type 'List'.
+  ** a proper parameterized type cast such as `Obj[]`, but in Java this
+  ** isn't valid so we always just cast to the generic type `List`.
   **
   Bool coerceParameterizedCollectionTypes
 
@@ -163,14 +163,14 @@ class CompilerInput
 
   **
   ** List of Fantom source files or directories containing Fantom
-  ** source files to compile.  Uris are relative to `baseDir`.  This
+  ** source files to compile.  Uris are relative to [baseDir].  This
   ** field is used only in file mode.
   **
   Uri[]? srcFiles
 
   **
   ** List of resource files or directories containing resource files
-  ** to include in the pod zip.  Uris are relative to `baseDir`.
+  ** to include in the pod zip.  Uris are relative to [baseDir].
   ** This field is used only in file mode.  If a file has a "jar"
   ** extension then its contents are unzipped into the target pod.
   **
@@ -178,15 +178,15 @@ class CompilerInput
 
   **
   ** List of JavaScript files or directories containing JavaScript files
-  ** to include in the JavaScript output.  Uris are relative to `baseDir`.
+  ** to include in the JavaScript output.  Uris are relative to [baseDir].
   ** This field is used only in file mode.
   **
   Uri[]? jsFiles
 
   **
-  ** List of files or directores containing '.props' files that should
+  ** List of files or directores containing `.props` files that should
   ** be compiled to JavaScript.  If this field is null then it defaults
-  ** to `resFiles`.  Uris are relative to `baseDir`.
+  ** to [resFiles].  Uris are relative to [baseDir].
   ** This field is used only in file mode.
   **
   Uri[]? jsPropsFiles

@@ -15,22 +15,22 @@
 **
 ** For each it-block which sets const fields:
 **
-**   doCall(Foo it)
-**   {
-**     this.checkInCtor(it)
-**     ...
-**   }
+**     doCall(Foo it)
+**     {
+**       this.checkInCtor(it)
+**       ...
+**     }
 **
 ** For each constructor which takes an it-block:
 **
-**   new make(..., |This| f)
-**   {
-**     f?.enterCtor(this)
-**     ...
-**     checksField$Foo()  // if non-nullable fields need runtime checks
-**     f?.exitCtor()      // for every return
-**     return
-**   }
+**     new make(..., |This| f)
+**     {
+**       f?.enterCtor(this)
+**       ...
+**       checksField$Foo()  // if non-nullable fields need runtime checks
+**       f?.exitCtor()      // for every return
+**       return
+**     }
 **
 **
 class ConstChecks : CompilerStep

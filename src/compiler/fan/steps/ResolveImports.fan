@@ -143,7 +143,8 @@ class ResolveImports : CompilerStep
   ** imports in the specified unit (this includes types within
   ** the pod being compilied itself).  For example if foo::Thing
   ** and bar::Thing are imported, then importedTypes would contain
-  **   "Thing" : [foo::Thing, bar::Thing]
+  **
+  **     "Thing" : [foo::Thing, bar::Thing]
   **
   private Void resolveImportedTypes(CompilationUnit unit)
   {

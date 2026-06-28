@@ -489,8 +489,10 @@ class Tokenizer : CompilerSupport
   ** When we hit a $ inside a string it indicates an embedded
   ** expression.  We make this look like a stream of tokens
   ** such that:
-  **   "a ${b} c" -> "a " + b + " c"
-  **   "a $<b> c" -> "a " + LocaleExpr("b") + " c"
+  **
+  **     "a ${b} c" -> "a " + b + " c"
+  **     "a $<b> c" -> "a " + LocaleExpr("b") + " c"
+  **
   ** Return true if more in the string literal.
   **
   private Bool interpolation(Int line, Int col, Str s, Quoted q)

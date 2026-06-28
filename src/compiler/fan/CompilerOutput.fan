@@ -9,10 +9,10 @@
 **
 ** CompilerOutput encapsulates the result of a compile.  The compiler
 ** can output in three modes:
-**   - 'transientPod': compiles to an in-memory pod
-**   - 'podFile': compile a pod file to the file system, but don't
+**   - `transientPod`: compiles to an in-memory pod
+**   - `podFile`: compile a pod file to the file system, but don't
 **     automatically load it.
-**   - 'js': runs through frontend of compiler to build AST and
+**   - `js`: runs through frontend of compiler to build AST and
 **     generates JavaScript code (doesn't perform any backend
 **     fcode or pod generation)
 **
@@ -24,17 +24,17 @@ class CompilerOutput
   CompilerOutputMode? mode
 
   **
-  ** If `CompilerOutputMode.transientPod` mode, this is loaded pod.
+  ** If [CompilerOutputMode.transientPod] mode, this is loaded pod.
   **
   Pod? transientPod
 
   **
-  ** If `CompilerOutputMode.podFile` mode, the pod zip file written to disk.
+  ** If [CompilerOutputMode.podFile] mode, the pod zip file written to disk.
   **
   File? podFile
 
   **
-  ** If `CompilerOutputMode.js` mode, the JavaScript code string.
+  ** If [CompilerOutputMode.js] mode, the JavaScript code string.
   **
   Str? js
   Str? cjs
@@ -46,7 +46,7 @@ class CompilerOutput
 **************************************************************************
 
 **
-** Input source from the file system - see `CompilerOutput`
+** Input source from the file system - see [CompilerOutput]
 **
 enum class CompilerOutputMode
 {

@@ -36,7 +36,7 @@ class Coercer : CompilerSupport
   }
 
   **
-  ** Return if `coerce` would not report a compiler error.
+  ** Return if [coerce] would not report a compiler error.
   **
   Bool canCoerce(Expr expr, CType expected)
   {
@@ -177,7 +177,7 @@ class Coercer : CompilerSupport
   }
 
   **
-  ** Force a coercion even *after* we have determined that 'from.fits(to)'
+  ** Force a coercion even *after* we have determined that `from.fits(to)`
   **
   private Bool forceCoerce(CType from, CType to)
   {

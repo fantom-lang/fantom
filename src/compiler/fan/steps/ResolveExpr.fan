@@ -181,7 +181,7 @@ class ResolveExpr : CompilerStep
   }
 
   **
-  ** Resolve locale literal '$<pod::key=def>'
+  ** Resolve locale literal `$<pod::key=def>`
   **
   private Expr resolveLocaleLiteral(LocaleLiteralExpr expr)
   {
@@ -596,7 +596,7 @@ class ResolveExpr : CompilerStep
   }
 
   **
-  ** Walk all the slots in 'base' and match any constructor
+  ** Walk all the slots in `base` and match any constructor
   ** that could be called using the given arguments.
   **
   private Void findCtorMatches(Str:CMethod matches, CType base, Expr[] args)
@@ -686,7 +686,7 @@ class ResolveExpr : CompilerStep
   }
 
   **
-  ** Given a shortcut method such as 'lhs op rhs' figure
+  ** Given a shortcut method such as `lhs op rhs` figure
   ** out which method to use for the operator symbol.
   **
   private CMethod? resolveBinaryOperator(ShortcutExpr expr)

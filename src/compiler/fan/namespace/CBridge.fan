@@ -45,7 +45,7 @@ abstract class CBridge : CompilerSupport
   ** the expression is not type compatible run the onErr function.
   ** Default implementation provides standard Fantom coercion.
   **
-  ** If the bridge is going to coerce 'expr' into a new expression,
+  ** If the bridge is going to coerce `expr` into a new expression,
   ** then it should mark the resulting expression as synthetic.
   ** A synthetic expression must be "undoable":
   **   - TypeCheckExpr where target is uncoerced expr
@@ -74,8 +74,9 @@ abstract class CBridge : CompilerSupport
   ** Given a dot operator slot access on the given foreign
   ** base type, determine the appopriate slot to use based on
   ** whether parens were used
-  **   base.name    =>  noParens = true
-  **   base.name()  =>  noParens = false
+  **
+  **     base.name    =>  noParens = true
+  **     base.name()  =>  noParens = false
   **
   abstract CSlot? resolveSlotAccess(CType base, Str name, Bool noParens)
 

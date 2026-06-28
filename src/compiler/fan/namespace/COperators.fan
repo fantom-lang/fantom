@@ -34,9 +34,10 @@ class COperators
 
   **
   ** Given a method name get the operator prefix:
-  **   "plus"     =>  "plus"
-  **   "plusInt"  =>  "plus"
-  **   "fooBar"   =>  null
+  **
+  **     "plus"     =>  "plus"
+  **     "plusInt"  =>  "plus"
+  **     "fooBar"   =>  null
   **
   static Str? toPrefix(Str methodName)
   {
@@ -45,7 +46,8 @@ class COperators
 
   **
   ** Get operators defined for prefix.  For example:
-  **   find("plus") => [plus, plusFloat, plusDecimal]
+  **
+  **     find("plus") => [plus, plusFloat, plusDecimal]
   **
   CMethod[] find(Str prefix)
   {

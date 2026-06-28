@@ -102,7 +102,7 @@ class ClosureToImmutable : CompilerStep
   }
 
   **
-  ** Generate: 'isImmutable() { return result }'
+  ** Generate: `isImmutable() { return result }`
   **
   private Void genIsImmutable(TypeDef cls, Expr result)
   {
@@ -120,10 +120,10 @@ class ClosureToImmutable : CompilerStep
   ** Generate toImmutable which raises an error with a nice error
   ** message as to why the function is not immutable.
   **
-  **   Obj toImmutable()
-  **   {
-  **     throw NotImmutableErr.make(msg);
-  **   }
+  **     Obj toImmutable()
+  **     {
+  **       throw NotImmutableErr.make(msg);
+  **     }
   **
   private Void genToImmutableErr(TypeDef cls, Str msg)
   {
@@ -138,16 +138,16 @@ class ClosureToImmutable : CompilerStep
   ** of this closure with toImmutable called on every field
   ** along with a flag to keep track of which state we are in.
   **
-  **   Obj toImmutable()
-  **   {
-  **     r := make( (T1)f1.toImmutable, ... )
-  **     r.isImmutable$ = true
-  **     return true
-  **   }
+  **     Obj toImmutable()
+  **     {
+  **       r := make( (T1)f1.toImmutable, ... )
+  **       r.isImmutable$ = true
+  **       return true
+  **     }
   **
-  **   Bool isImmutable() { immutable }
+  **     Bool isImmutable() { immutable }
   **
-  **   private Bool immutable
+  **     private Bool immutable
   **
   private Void genToImmutable(TypeDef cls)
   {
@@ -200,7 +200,7 @@ class ClosureToImmutable : CompilerStep
     m.code.add(ReturnStmt.makeSynthetic(loc, LocalVarExpr(loc, temp)))
   }
 
-  ** Stub the 'Obj toImmutable()' method
+  ** Stub the `Obj toImmutable()` method
   private MethodDef stubToImmutable(TypeDef cls)
   {
     loc := cls.loc

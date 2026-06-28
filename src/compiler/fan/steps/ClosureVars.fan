@@ -12,18 +12,18 @@
 ** ClosureVars is used to process closure variables which have
 ** been enclosed from their parent scope:
 **
-**  ResolveExpr
-**  -----------
-**  ResolveExpr we detected variables used from parent scope
-**  and created shadow variables in the closure's scope with
-**  a reference via 'MethodVar.shadows'.  Also during this step
-**  we note any variables which are reassigned making them
-**  non-final (according to Java final variable semantics).
+** ResolveExpr
+** -----------
+** ResolveExpr we detected variables used from parent scope
+** and created shadow variables in the closure's scope with
+** a reference via `MethodVar.shadows`.  Also during this step
+** we note any variables which are reassigned making them
+** non-final (according to Java final variable semantics).
 **
-**  Process Method
-**  --------------
-**  First we walk all types looking for methods which use
-**  closure variables:
+** Process Method
+** --------------
+** First we walk all types looking for methods which use
+** closure variables:
 **
 **   1. For each one walk thru its variables to see if any variables
 **      enclosed are non-final (reassigned at some point).  These
@@ -39,24 +39,25 @@
 **         x = x + 1  =>   x.val = x.val + 1
 **
 **   3. If any params were wrapped, we generated a new local variable
-**      in 'wrapNonFinalVars'.  During the expr tree walk we replaced all
+**      in `wrapNonFinalVars`.  During the expr tree walk we replaced all
 **      references to the param to its new wrapped local.   To finish
 **      processing the method we insert a bit of code in the beginning
 **      of the method to initialize the local.
 **
-**  Process Closure
-**  ---------------
-**  After we have walked all methods using closure variables (which
-**  might include closure doCall methods themselves), then we walk
-**  all the closures.
+** Process Closure
+** ---------------
+** After we have walked all methods using closure variables (which
+** might include closure doCall methods themselves), then we walk
+** all the closures.
 **
 **   1. For each shadowed variables we need:
 **        a. Define field on the closure to store variable
 **        b. Pass variable to closure constructor at substitution site
 **        c. Add variable to as closure constructor param
 **        d. Assign param to field in constructor
-**      If the variable has been wrapped we are doing this for the
-**      wrapped variable (we don't unwrap it).
+**
+**        If the variable has been wrapped we are doing this for the
+**        wrapped variable (we don't unwrap it).
 **
 **   2. If any of the closures shadowed variables are wrapped, then
 **      we do a expr tree walk of doCall - the exact same thing as
@@ -156,9 +157,9 @@ class ClosureVars : CompilerStep
 
   **
   ** Walk the method body:
-  **   1.  Create wrapper for each local var definition which requries it
-  **   2.  Add unwrap val access for each use of a wrapped local variable
-  **   3.  If using a wrapped param, then replace with wrapped local
+  **   1. Create wrapper for each local var definition which requries it
+  **   2. Add unwrap val access for each use of a wrapped local variable
+  **   3. If using a wrapped param, then replace with wrapped local
   **
   private Void walkMethod(MethodDef method)
   {
@@ -189,11 +190,11 @@ class ClosureVars : CompilerStep
   ** If a local variable has been hoisted onto the heap with
   ** a wrapper, then generate wrapper initialization:
   **
-  **   // original code
-  **   local := 3
+  **     // original code
+  **     local := 3
   **
-  **   // becomes
-  **   local := Wrap$Int(3)
+  **     // becomes
+  **     local := Wrap$Int(3)
   **
   private Stmt[]? fixLocalDef(LocalDefStmt stmt)
   {
@@ -258,10 +259,10 @@ class ClosureVars : CompilerStep
   ** After we have walked the expr tree, we go back and initialize
   ** the wrapper for any wrapped params used inside closures:
   **
-  **   Void foo(Int x)
-  **   {
-  **     x$wrapper := Wrap$Int(x)
-  **     ...
+  **     Void foo(Int x)
+  **     {
+  **       x$wrapper := Wrap$Int(x)
+  **       ...
   **
   private Void fixWrappedParams(MethodDef method)
   {
@@ -280,9 +281,9 @@ class ClosureVars : CompilerStep
 
   **
   ** Walk each closure:
-  **   1.  Find all the shadowed variables
-  **   2.  Call addVarToClosure for each shadowed variable
-  **   3.  If needed do expr tree walk
+  **   1. Find all the shadowed variables
+  **   2. Call addVarToClosure for each shadowed variable
+  **   3. If needed do expr tree walk
   **
   private Void processClosure(ClosureExpr closure)
   {
@@ -400,7 +401,7 @@ class ClosureVars : CompilerStep
   **
   ** Given a variable type, generate a wrapper class of the format:
   **
-  **   class Wrap$ctype[$n] { CType val }
+  **     class Wrap$ctype[$n] { CType val }
   **
   ** Wrappers are used to manage variables on the heap so that they
   ** can be shared between methods and closures.  We generate one

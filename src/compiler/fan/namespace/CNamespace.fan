@@ -301,7 +301,7 @@ abstract class CNamespace
 
   **
   ** Convenience to flatten and order all pod dependencies.
-  ** See `flattenDepends` and `orderByDepends`
+  ** See [flattenDepends] and [orderByDepends]
   **
   CPod[] flattenAndOrderByDepends(CPod[] pods)
   {
@@ -310,7 +310,7 @@ abstract class CNamespace
 
   **
   ** Expand a set of pods to include all their recursive dependencies.
-  ** This method does not order them; see `orderByDepends`.
+  ** This method does not order them; see [orderByDepends].
   **
   CPod[] flattenDepends(CPod[] pods)
   {
@@ -331,7 +331,7 @@ abstract class CNamespace
 
   **
   ** Order a list of pods by their dependencies.
-  ** This method does not flatten dependencies - see `flattenDepends`.
+  ** This method does not flatten dependencies - see [flattenDepends].
   **
   CPod[] orderByDepends(CPod[] pods)
   {

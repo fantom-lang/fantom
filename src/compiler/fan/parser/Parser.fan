@@ -40,7 +40,7 @@ public class Parser : CompilerSupport
   **
   ** Top level parse a compilation unit:
   **
-  **   <compilationUnit> :=  [<usings>] <typeDef>*
+  **     <compilationUnit> :=  [<usings>] <typeDef>*
   **
   Void parse()
   {
@@ -56,12 +56,12 @@ public class Parser : CompilerSupport
   ** Parse <using>* - note that we are just skipping them because
   ** they are already parsed by ScanForUsingsAndTypes.
   **
-  **   <using>       :=  <usingPod> | <usingType> | <usingAs>
-  **   <usingPod>    :=  "using" <podSpec> <eos>
-  **   <usingType>   :=  "using" <podSpec> "::" <id> <eos>
-  **   <usingAs>     :=  "using" <podSpec> "::" <id> "as" <id> <eos>
-  **   <podSpec>     :=  <id> | <str> | <ffiPodSpec>
-  **   <ffiPodSpec>  := "[" <id> "]" <id> ("." <id>)*
+  **     <using>       :=  <usingPod> | <usingType> | <usingAs>
+  **     <usingPod>    :=  "using" <podSpec> <eos>
+  **     <usingType>   :=  "using" <podSpec> "::" <id> <eos>
+  **     <usingAs>     :=  "using" <podSpec> "::" <id> "as" <id> <eos>
+  **     <podSpec>     :=  <id> | <str> | <ffiPodSpec>
+  **     <ffiPodSpec>  := "[" <id> "]" <id> ("." <id>)*
   **
   private Void usings()
   {
@@ -97,27 +97,28 @@ public class Parser : CompilerSupport
 
   **
   ** TypeDef:
-  **   <typeDef>      :=  <classDef> | <mixinDef> | <enumDef> | <facetDef>
   **
-  **   <classDef>     :=  <classHeader> <classBody>
-  **   <classHeader>  :=  [<doc>] <facets> <typeFlags> "class" [<inheritance>]
-  **   <classFlags>   :=  [<protection>] ["abstract"] ["final"]
-  **   <classBody>    :=  "{" <slotDefs> "}"
+  **     <typeDef>      :=  <classDef> | <mixinDef> | <enumDef> | <facetDef>
   **
-  **   <enumDef>      :=  <enumHeader> <enumBody>
-  **   <enumHeader>   :=  [<doc>] <facets> <protection> "enum" [<inheritance>]
-  **   <enumBody>     :=  "{" <enumDefs> <slotDefs> "}"
+  **     <classDef>     :=  <classHeader> <classBody>
+  **     <classHeader>  :=  [<doc>] <facets> <typeFlags> "class" [<inheritance>]
+  **     <classFlags>   :=  [<protection>] ["abstract"] ["final"]
+  **     <classBody>    :=  "{" <slotDefs> "}"
   **
-  **   <facetDef      :=  <facetHeader> <enumBody>
-  **   <facetHeader>  :=  [<doc>] <facets> [<protection>] "facet" "class" <id> [<inheritance>]
-  **   <facetBody>    :=  "{" <slotDefs> "}"
+  **     <enumDef>      :=  <enumHeader> <enumBody>
+  **     <enumHeader>   :=  [<doc>] <facets> <protection> "enum" [<inheritance>]
+  **     <enumBody>     :=  "{" <enumDefs> <slotDefs> "}"
   **
-  **   <mixinDef>     :=  <enumHeader> <enumBody>
-  **   <mixinHeader>  :=  [<doc>] <facets> <protection> "mixin" [<inheritance>]
-  **   <mixinBody>    :=  "{" <slotDefs> "}"
+  **     <facetDef      :=  <facetHeader> <enumBody>
+  **     <facetHeader>  :=  [<doc>] <facets> [<protection>] "facet" "class" <id> [<inheritance>]
+  **     <facetBody>    :=  "{" <slotDefs> "}"
   **
-  **   <protection>   :=  "public" | "protected" | "private" | "internal"
-  **   <inheritance>  :=  ":" <typeList>
+  **     <mixinDef>     :=  <enumHeader> <enumBody>
+  **     <mixinHeader>  :=  [<doc>] <facets> <protection> "mixin" [<inheritance>]
+  **     <mixinBody>    :=  "{" <slotDefs> "}"
+  **
+  **     <protection>   :=  "public" | "protected" | "private" | "internal"
+  **     <inheritance>  :=  ":" <typeList>
   **
   Void typeDef()
   {
@@ -325,7 +326,8 @@ public class Parser : CompilerSupport
 
   **
   ** Enum definition list:
-  **   <enumDefs>  :=  <enumDef> ("," <enumDef>)* <eos>
+  **
+  **     <enumDefs>  :=  <enumDef> ("," <enumDef>)* <eos>
   **
   private Void enumDefs(TypeDef def)
   {
@@ -355,7 +357,8 @@ public class Parser : CompilerSupport
 
   **
   ** Enum definition:
-  **   <enumDef>  :=  <facets> <id> ["(" <args> ")"]
+  **
+  **     <enumDef>  :=  <facets> <id> ["(" <args> ")"]
   **
   private EnumDef enumDef(Int ordinal)
   {
@@ -389,7 +392,8 @@ public class Parser : CompilerSupport
 
   **
   ** Slot definition:
-  **   <slotDef> :=  <fieldDef> | <methodDef> | <ctorDef>
+  **
+  **     <slotDef> :=  <fieldDef> | <methodDef> | <ctorDef>
   **
   private SlotDef slotDef(TypeDef parent, DocDef? doc)
   {
@@ -454,11 +458,12 @@ public class Parser : CompilerSupport
 
   **
   ** Field definition:
-  **   <fieldDef>     :=  <facets> <fieldFlags> [<type>] <id> [":=" <expr>]
-  **                      [ "{" [<fieldGetter>] [<fieldSetter>] "}" ] <eos>
-  **   <fieldFlags>   :=  [<protection>] ["readonly"] ["static"]
-  **   <fieldGetter>  :=  "get" (<eos> | <block>)
-  **   <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
+  **
+  **     <fieldDef>     :=  <facets> <fieldFlags> [<type>] <id> [":=" <expr>]
+  **                        [ "{" [<fieldGetter>] [<fieldSetter>] "}" ] <eos>
+  **     <fieldFlags>   :=  [<protection>] ["readonly"] ["static"]
+  **     <fieldGetter>  :=  "get" (<eos> | <block>)
+  **     <fieldSetter>  :=  <protection> "set" (<eos> | <block>)
   **
   private FieldDef fieldDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef? type, Str name)
   {
@@ -640,11 +645,12 @@ public class Parser : CompilerSupport
 
   **
   ** Method definition:
-  **   <methodDef>      :=  <facets> <methodFlags> <type> <id> "(" <params> ")" <methodBody>
-  **   <methodFlags>    :=  [<protection>] ["virtual"] ["override"] ["abstract"] ["static"]
-  **   <params>         :=  [<param> ("," <param>)*]
-  **   <param>          :=  <type> <id> [":=" <expr>]
-  **   <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
+  **
+  **     <methodDef>      :=  <facets> <methodFlags> <type> <id> "(" <params> ")" <methodBody>
+  **     <methodFlags>    :=  [<protection>] ["virtual"] ["override"] ["abstract"] ["static"]
+  **     <params>         :=  [<param> ("," <param>)*]
+  **     <param>          :=  <type> <id> [":=" <expr>]
+  **     <methodBody>     :=  <eos> | ( "{" <stmts> "}" )
   **
   private MethodDef methodDef(Loc loc, TypeDef parent, DocDef? doc, FacetDef[]? facets, Int flags, TypeRef ret, Str name)
   {
@@ -758,10 +764,11 @@ public class Parser : CompilerSupport
 
   **
   ** Facet definition:
-  **   <facets>     := <facet>*
-  **   <facet>      := "@" <simpleType> [<facetVals>]
-  **   <facetVals>  := "{" <facetVal> (<eos> <facetVal>)* "}"
-  **   <facetVal>   := <id> "=" <expr>
+  **
+  **     <facets>     := <facet>*
+  **     <facet>      := "@" <simpleType> [<facetVals>]
+  **     <facetVals>  := "{" <facetVal> (<eos> <facetVal>)* "}"
+  **     <facetVal>   := <id> "=" <expr>
   **
   private FacetDef[]? facets()
   {
@@ -833,8 +840,9 @@ public class Parser : CompilerSupport
 
   **
   ** Statement:
-  **   <stmt>  :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
-  **               <throw> | <while> | <try> | <exprStmt> | <localDef> | <itAdd>
+  **
+  **     <stmt>  :=  <break> | <continue> | <for> | <if> | <return> | <switch> |
+  **                 <throw> | <while> | <try> | <exprStmt> | <localDef> | <itAdd>
   **
   private Stmt stmt()
   {
@@ -858,9 +866,10 @@ public class Parser : CompilerSupport
 
   **
   ** Expression or local variable declaration:
-  **   <exprStmt>  :=  <expr> <eos>
-  **   <localDef>  :=  [<type>] <id> [":=" <expr>] <eos>
-  **   <itAdd>     :=  <expr> ("," <expr>)*
+  **
+  **     <exprStmt>  :=  <expr> <eos>
+  **     <localDef>  :=  [<type>] <id> [":=" <expr>] <eos>
+  **     <itAdd>     :=  <expr> ("," <expr>)*
   **
   private Stmt exprOrLocalDefStmt(Bool isEndOfStmt)
   {
@@ -909,7 +918,8 @@ public class Parser : CompilerSupport
 
   **
   ** Comma operator is sugar for it.add(target):
-  **   <itAdd>  :=  <expr> ("," <expr>)* <eos>
+  **
+  **     <itAdd>  :=  <expr> ("," <expr>)* <eos>
   **
   private Expr itAdd(Expr e)
   {
@@ -951,7 +961,8 @@ public class Parser : CompilerSupport
 
   **
   ** If/else statement:
-  **   <if>  :=  "if" "(" <expr> ")" <block> [ "else" <block> ]
+  **
+  **     <if>  :=  "if" "(" <expr> ")" <block> [ "else" <block> ]
   **
   private IfStmt ifStmt()
   {
@@ -972,7 +983,8 @@ public class Parser : CompilerSupport
 
   **
   ** Return statement:
-  **   <return>  :=  "return" [<expr>] <eos>
+  **
+  **     <return>  :=  "return" [<expr>] <eos>
   **
   private ReturnStmt returnStmt()
   {
@@ -988,7 +1000,8 @@ public class Parser : CompilerSupport
 
   **
   ** Throw statement:
-  **   <throw>  :=  "throw" <expr> <eos>
+  **
+  **     <throw>  :=  "throw" <expr> <eos>
   **
   private ThrowStmt throwStmt()
   {
@@ -1001,7 +1014,8 @@ public class Parser : CompilerSupport
 
   **
   ** While statement:
-  **   <while>  :=  "while" "(" <expr> ")" <block>
+  **
+  **     <while>  :=  "while" "(" <expr> ")" <block>
   **
   private WhileStmt whileStmt()
   {
@@ -1015,8 +1029,9 @@ public class Parser : CompilerSupport
 
   **
   ** For statement:
-  **   <for>      :=  "for" "(" [<forInit>] ";" <expr> ";" <expr> ")" <block>
-  **   <forInit>  :=  <expr> | <localDef>
+  **
+  **     <for>      :=  "for" "(" [<forInit>] ";" <expr> ";" <expr> ")" <block>
+  **     <forInit>  :=  <expr> | <localDef>
   **
   private ForStmt forStmt()
   {
@@ -1040,7 +1055,8 @@ public class Parser : CompilerSupport
 
   **
   ** Break statement:
-  **   <break>  :=  "break" <eos>
+  **
+  **     <break>  :=  "break" <eos>
   **
   private BreakStmt breakStmt()
   {
@@ -1052,7 +1068,8 @@ public class Parser : CompilerSupport
 
   **
   ** Continue statement:
-  **   <continue>  :=  "continue" <eos>
+  **
+  **     <continue>  :=  "continue" <eos>
   **
   private ContinueStmt continueStmt()
   {
@@ -1064,10 +1081,11 @@ public class Parser : CompilerSupport
 
   **
   ** Try-catch-finally statement:
-  **   <try>       :=  "try" "{" <stmt>* "}" <catch>* [<finally>]
-  **   <catch>     :=  "catch" [<catchDef>] "{" <stmt>* "}"
-  **   <catchDef>  :=  "(" <type> <id> ")"
-  **   <finally>   :=  "finally" "{" <stmt>* "}"
+  **
+  **     <try>       :=  "try" "{" <stmt>* "}" <catch>* [<finally>]
+  **     <catch>     :=  "catch" [<catchDef>] "{" <stmt>* "}"
+  **     <catchDef>  :=  "(" <type> <id> ")"
+  **     <finally>   :=  "finally" "{" <stmt>* "}"
   **
   private TryStmt tryStmt()
   {
@@ -1112,9 +1130,10 @@ public class Parser : CompilerSupport
 
   **
   ** Switch statement:
-  **   <switch>   :=  "switch" "(" <expr> ")" "{" <case>* [<default>] "}"
-  **   <case>     :=  "case" <expr> ":" <stmts>
-  **   <default>  :=  "default" ":" <stmts>
+  **
+  **     <switch>   :=  "switch" "(" <expr> ")" "{" <case>* [<default>] "}"
+  **     <case>     :=  "case" <expr> ":" <stmts>
+  **     <default>  :=  "default" ":" <stmts>
   **
   private SwitchStmt switchStmt()
   {
@@ -1172,7 +1191,8 @@ public class Parser : CompilerSupport
 
   **
   ** Expression:
-  **   <expr>  :=  <assignExpr>
+  **
+  **     <expr>  :=  <assignExpr>
   **
   private Expr expr()
   {
@@ -1181,8 +1201,9 @@ public class Parser : CompilerSupport
 
   **
   ** Assignment expression:
-  **   <assignExpr>     :=  <ifExpr> [<assignOp> <assignExpr>]
-  **   <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
+  **
+  **     <assignExpr>     :=  <ifExpr> [<assignOp> <assignExpr>]
+  **     <assignOp>       :=  "=" | "*=" | "/=" | "%=" | "+=" | "-="
   **
   private Expr assignExpr(Expr? expr := null)
   {
@@ -1200,9 +1221,10 @@ public class Parser : CompilerSupport
 
   **
   ** Ternary/Elvis expressions:
-  **   <ifExpr>       :=  <ternaryExpr> | <elvisExpr>
-  **   <ternaryExpr>  :=  <condOrExpr> ["?" <ifExprBody> ":" <ifExprBody>]
-  **   <elvisExpr>    :=  <condOrExpr> "?:" <ifExprBody>
+  **
+  **     <ifExpr>       :=  <ternaryExpr> | <elvisExpr>
+  **     <ternaryExpr>  :=  <condOrExpr> ["?" <ifExprBody> ":" <ifExprBody>]
+  **     <elvisExpr>    :=  <condOrExpr> "?:" <ifExprBody>
   **
   private Expr ifExpr()
   {
@@ -1231,8 +1253,9 @@ public class Parser : CompilerSupport
 
   **
   ** If expression body (ternary/elvis):
-  **   <ifExprBody>   :=  <condOrExpr> | <ifExprThrow>
-  **   <ifExprThrow>  :=  "throw" <expr>
+  **
+  **     <ifExprBody>   :=  <condOrExpr> | <ifExprThrow>
+  **     <ifExprThrow>  :=  "throw" <expr>
   **
   private Expr ifExprBody()
   {
@@ -1250,7 +1273,8 @@ public class Parser : CompilerSupport
 
   **
   ** Conditional or expression:
-  **   <condOrExpr>  :=  <condAndExpr>  ("||" <condAndExpr>)*
+  **
+  **     <condOrExpr>  :=  <condAndExpr>  ("||" <condAndExpr>)*
   **
   private Expr condOrExpr()
   {
@@ -1270,7 +1294,8 @@ public class Parser : CompilerSupport
 
   **
   ** Conditional and expression:
-  **   <condAndExpr>  :=  <equalityExpr> ("&&" <equalityExpr>)*
+  **
+  **     <condAndExpr>  :=  <equalityExpr> ("&&" <equalityExpr>)*
   **
   private Expr condAndExpr()
   {
@@ -1290,7 +1315,8 @@ public class Parser : CompilerSupport
 
   **
   ** Equality expression:
-  **   <equalityExpr>  :=  <relationalExpr> [("==" | "!=" | "===" | "!==") <relationalExpr>]
+  **
+  **     <equalityExpr>  :=  <relationalExpr> [("==" | "!=" | "===" | "!==") <relationalExpr>]
   **
   private Expr equalityExpr()
   {
@@ -1322,9 +1348,10 @@ public class Parser : CompilerSupport
 
   **
   ** Relational expression:
-  **   <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
-  **   <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
-  **   <compareExpr>    :=  <rangeExpr> [("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>]
+  **
+  **     <relationalExpr> :=  <typeCheckExpr> | <compareExpr>
+  **     <typeCheckExpr>  :=  <rangeExpr> [("is" | "as" | "isnot") <type>]
+  **     <compareExpr>    :=  <rangeExpr> [("<" | "<=" | ">" | ">=" | "<=>") <rangeExpr>]
   **
   private Expr relationalExpr()
   {
@@ -1355,7 +1382,8 @@ public class Parser : CompilerSupport
 
   **
   ** Range expression:
-  **   <rangeExpr>  :=  <bitOrExpr> ((".." | "...") <bitOrExpr>)*
+  **
+  **     <rangeExpr>  :=  <bitOrExpr> ((".." | "...") <bitOrExpr>)*
   **
   private Expr rangeExpr()
   {
@@ -1372,7 +1400,8 @@ public class Parser : CompilerSupport
 
   **
   ** Additive expression:
-  **   <addExpr>  :=  <multExpr> (("+" | "-") <multExpr>)*
+  **
+  **     <addExpr>  :=  <multExpr> (("+" | "-") <multExpr>)*
   **
   private Expr addExpr()
   {
@@ -1384,7 +1413,8 @@ public class Parser : CompilerSupport
 
   **
   ** Multiplicative expression:
-  **   <multExpr>  :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
+  **
+  **     <multExpr>  :=  <parenExpr> (("*" | "/" | "%") <parenExpr>)*
   **
   private Expr multExpr()
   {
@@ -1396,9 +1426,10 @@ public class Parser : CompilerSupport
 
   **
   ** Paren grouped expression:
-  **   <parenExpr>    :=  <unaryExpr> | <castExpr> | <groupedExpr>
-  **   <castExpr>     :=  "(" <type> ")" <parenExpr>
-  **   <groupedExpr>  :=  "(" <expr> ")" <termChain>*
+  **
+  **     <parenExpr>    :=  <unaryExpr> | <castExpr> | <groupedExpr>
+  **     <castExpr>     :=  "(" <type> ")" <parenExpr>
+  **     <groupedExpr>  :=  "(" <expr> ")" <termChain>*
   **
   private Expr parenExpr()
   {
@@ -1435,9 +1466,10 @@ public class Parser : CompilerSupport
 
   **
   ** Unary expression:
-  **   <unaryExpr>    :=  <prefixExpr> | <termExpr> | <postfixExpr>
-  **   <prefixExpr>   :=  ("!" | "+" | "-" | "~" | "++" | "--") <parenExpr>
-  **   <postfixExpr>  :=  <termExpr> ("++" | "--")
+  **
+  **     <unaryExpr>    :=  <prefixExpr> | <termExpr> | <postfixExpr>
+  **     <prefixExpr>   :=  ("!" | "+" | "-" | "~" | "++" | "--") <parenExpr>
+  **     <postfixExpr>  :=  <termExpr> ("++" | "--")
   **
   private Expr unaryExpr()
   {
@@ -1494,7 +1526,7 @@ public class Parser : CompilerSupport
   ** optionally followed by a chain of accessor expressions - such
   ** as "x.y[z](a, b)".
   **
-  **   <termExpr>  :=  <termBase> <termChain>*
+  **     <termExpr>  :=  <termBase> <termChain>*
   **
   private Expr termExpr(Expr? target := null)
   {
@@ -1511,12 +1543,12 @@ public class Parser : CompilerSupport
   **
   ** Atomic base of a termExpr
   **
-  **   <termBase>    :=  <literal> | <idExpr> | <closure> | <dsl>
-  **   <literal>     :=  "null" | "this" | "super" | <bool> | <int> |
-  **                     <float> | <str> | <duration> | <list> | <map> | <uri> |
-  **                     <typeLiteral> | <slotLiteral>
-  **   <typeLiteral> :=  <type> "#"
-  **   <slotLiteral> :=  [<type>] "#" <id>
+  **     <termBase>    :=  <literal> | <idExpr> | <closure> | <dsl>
+  **     <literal>     :=  "null" | "this" | "super" | <bool> | <int> |
+  **                       <float> | <str> | <duration> | <list> | <map> | <uri> |
+  **                       <typeLiteral> | <slotLiteral>
+  **     <typeLiteral> :=  <type> "#"
+  **     <slotLiteral> :=  [<type>] "#" <id>
   **
   private Expr termBaseExpr()
   {
@@ -1637,9 +1669,9 @@ public class Parser : CompilerSupport
   ** target expression contains a chained access, then return the new
   ** expression, otherwise return null.
   **
-  **   <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr>
-  **   <compiledCall>   :=  "." <idExpr>
-  **   <dynamicCall>    :=  "->" <idExpr>
+  **     <termChain>      :=  <compiledCall> | <dynamicCall> | <indexExpr>
+  **     <compiledCall>   :=  "." <idExpr>
+  **     <dynamicCall>    :=  "->" <idExpr>
   **
   private Expr? termChainExpr(Expr target)
   {
@@ -1684,9 +1716,10 @@ public class Parser : CompilerSupport
 
   **
   ** Identifier expression:
-  **   <idExpr>  :=  <local> | <field> | <call>
-  **   <local>   :=  <id>
-  **   <field>   :=  ["*"] <id>
+  **
+  **     <idExpr>  :=  <local> | <field> | <call>
+  **     <local>   :=  <id>
+  **     <field>   :=  ["*"] <id>
   **
   private Expr idExpr(Expr? target, Bool dynamicCall, Bool safeCall)
   {
@@ -1746,7 +1779,8 @@ public class Parser : CompilerSupport
 
   **
   ** Call expression:
-  **   <call>  :=  <id> ["(" <args> ")"] [<closure>]
+  **
+  **     <call>  :=  <id> ["(" <args> ")"] [<closure>]
   **
   private CallExpr callExpr(Expr? target)
   {
@@ -1759,7 +1793,8 @@ public class Parser : CompilerSupport
 
   **
   ** Parse args with known parens:
-  **   <args>  := [<expr> ("," <expr>)*] [<closure>]
+  **
+  **     <args>  := [<expr> ("," <expr>)*] [<closure>]
   **
   private Void callArgs(CallExpr call, Bool closureOk := true)
   {
@@ -1784,7 +1819,8 @@ public class Parser : CompilerSupport
 
   **
   ** Call operator:
-  **   <callOp>  := "(" <args> ")" [<closure>]
+  **
+  **     <callOp>  := "(" <args> ")" [<closure>]
   **
   private Expr callOp(Expr target)
   {
@@ -1799,7 +1835,8 @@ public class Parser : CompilerSupport
 
   **
   ** Index expression:
-  **   <indexExpr>  := "[" <expr> "]"
+  **
+  **     <indexExpr>  := "[" <expr> "]"
   **
   private Expr indexExpr(Expr target)
   {
@@ -1822,11 +1859,12 @@ public class Parser : CompilerSupport
 
   **
   ** Collection literal:
-  **   <list>       :=  [<type>] "[" <listItems> "]"
-  **   <listItems>  :=  "," | (<expr> ("," <expr>)*)
-  **   <map>        :=  [<mapType>] "[" <mapItems> "]"
-  **   <mapItems>   :=  ":" | (<mapPair> ("," <mapPair>)*)
-  **   <mapPair>    :=  <expr> ":" <expr>
+  **
+  **     <list>       :=  [<type>] "[" <listItems> "]"
+  **     <listItems>  :=  "," | (<expr> ("," <expr>)*)
+  **     <map>        :=  [<mapType>] "[" <mapItems> "]"
+  **     <mapItems>   :=  ":" | (<mapPair> ("," <mapPair>)*)
+  **     <mapPair>    :=  <expr> ":" <expr>
   **
   private Expr collectionLiteralExpr(Loc loc, CType? explicitType)
   {
@@ -1861,9 +1899,12 @@ public class Parser : CompilerSupport
 
   **
   ** Parse List literal; if first is null then
-  **   cur must be on lbracket
+  **
+  **     cur must be on lbracket
+  **
   ** else
-  **   cur must be on comma after first item
+  **
+  **     cur must be on comma after first item
   **
   private ListLiteralExpr listLiteralExpr(Loc loc, CType? explicitType, Expr? first)
   {
@@ -1902,9 +1943,12 @@ public class Parser : CompilerSupport
 
   **
   ** Parse Map literal; if first is null:
-  **   cur must be on lbracket
+  **
+  **     cur must be on lbracket
+  **
   ** else
-  **   cur must be on colon of first key/value pair
+  **
+  **     cur must be on colon of first key/value pair
   **
   private MapLiteralExpr mapLiteralExpr(Loc loc, CType? explicitType, Expr? first)
   {
@@ -2094,9 +2138,10 @@ public class Parser : CompilerSupport
 
   **
   ** Type signature:
-  **   <type>      :=  <simpleType> | <listType> | <mapType> | <funcType>
-  **   <listType>  :=  <type> "[]"
-  **   <mapType>   :=  ["["] <type> ":" <type> ["]"]
+  **
+  **     <type>      :=  <simpleType> | <listType> | <mapType> | <funcType>
+  **     <listType>  :=  <type> "[]"
+  **     <mapType>   :=  ["["] <type> ":" <type> ["]"]
   **
   private CType ctype(Bool isTypeRef := false)
   {
@@ -2176,7 +2221,8 @@ public class Parser : CompilerSupport
 
   **
   ** Simple type signature:
-  **   <simpleType>  :=  <id> ["::" <id>]
+  **
+  **     <simpleType>  :=  <id> ["::" <id>]
   **
   private CType simpleType()
   {
@@ -2220,13 +2266,14 @@ public class Parser : CompilerSupport
 
   **
   ** Method type signature:
-  **   <funcType>       :=  "|" ("->" | <funcTypeSig>) "|"
-  **   <funcTypeSig>    :=  <formals> ["->" <type>]
-  **   <formals>        :=  [<formal> ("," <formal>)*]
-  **   <formal>         :=  <formFull> | <formalInferred> | <formalTypeOnly>
-  **   <formalFull>     :=  <type> <id>
-  **   <formalInferred> :=  <id>
-  **   <formalTypeOnly> :=  <type>
+  **
+  **     <funcType>       :=  "|" ("->" | <funcTypeSig>) "|"
+  **     <funcTypeSig>    :=  <formals> ["->" <type>]
+  **     <formals>        :=  [<formal> ("," <formal>)*]
+  **     <formal>         :=  <formFull> | <formalInferred> | <formalTypeOnly>
+  **     <formalFull>     :=  <type> <id>
+  **     <formalInferred> :=  <id>
+  **     <formalTypeOnly> :=  <type>
   **
   ** If isTypeRef is true (slot signatures), then we requrie explicit
   ** parameter types.

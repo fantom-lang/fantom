@@ -10,10 +10,10 @@
 **
 ** TypeParser is used to parser formal type signatures into CTypes.
 **
-**   x::N
-**   x::V[]
-**   x::V[x::K]
-**   |x::A, ... -> x::R|
+**     x::N
+**     x::V[]
+**     x::V[x::K]
+**     |x::A, ... -> x::R|
 **
 class TypeParser
 {
