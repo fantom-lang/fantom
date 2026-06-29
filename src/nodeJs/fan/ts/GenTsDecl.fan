@@ -383,11 +383,13 @@ class GenTsDecl
     if (text == null) return
 
     // doc comments are authored in markdown, which is also the format JSDoc/
-    // TSDoc expects, so emit the text directly as a JSDoc comment block
+    // TSDoc expects, so emit the text directly as a JSDoc comment block.
+    // break up any "*/" with a space so it cannot prematurely close the block
     ind := Str.spaces(indent)
     out.print("$ind/**\n")
     text.splitLines.each |line|
     {
+      line = line.replace("*/", "* /")
       out.print(line.isEmpty ? "$ind *\n" : "$ind * $line\n")
     }
     out.print("$ind */\n")
