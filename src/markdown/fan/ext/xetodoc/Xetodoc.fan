@@ -347,8 +347,8 @@ internal class VideoRenderer : NodeRenderer
   {
     uri := video.uri
     path := uri.toStr
-    if (!path.startsWith("video://vimeo/")) echo("WARN: invalid vimeo URI: $uri")
-    else path = path["video://vimeo/".size..-1]
+    if (!path.startsWith("video://vimeo/")) throw ParseErr("Invalid vimeo uri: ${uri}")
+    path = path["video://vimeo/".size..-1]
     src := `https://player.vimeo.com/video/${path}`
     attrs := stdAttrs.dup.addAll([
       "title": "${video.altText}",
