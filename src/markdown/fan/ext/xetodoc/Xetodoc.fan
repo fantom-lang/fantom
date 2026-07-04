@@ -141,13 +141,16 @@ internal class WarnProcessor : PostProcessor, Visitor
 
   override Void visitHtmlBlock(HtmlBlock block)
   {
-    cb(block, "Block HTML is ignored")
+    // don't warn on comments which are ignored by design
+    if (!isComment(block.literal)) cb(block, "Block HTML is ignored")
   }
 
   override Void visitHtmlInline(HtmlInline inline)
   {
-    cb(inline, "Inline HTML is ignored")
+    if (!isComment(inline.literal)) cb(inline, "Inline HTML is ignored")
   }
+
+  private static Bool isComment(Str? literal) { literal != null && literal.trimStart.startsWith("<!--") }
 
 }
 
