@@ -70,8 +70,16 @@ const class WispService : Service
   **
   @NoDoc const Log log := Log.get("web")
 
-  ** The [inet::SocketConfig] to use for creating sockets
-  const SocketConfig socketConfig := SocketConfig.cur
+  ** The [inet::SocketConfig] to use for creating sockets.  This may be
+  ** updated at runtime to rotate the TLS keystore for new connections
+  ** without restarting the service.  Existing connections are unaffected;
+  ** connections accepted after the update use the new config.
+  SocketConfig socketConfig
+  {
+    get { socketConfigRef.val }
+    set { socketConfigRef.val = it }
+  }
+  private const AtomicRef socketConfigRef := AtomicRef(SocketConfig.cur)
 
   ** Return `true` if service is successfully listening on registered port.
   @NoDoc Bool isListening() { isListeningRef.val }
@@ -232,7 +240,7 @@ const class WispService : Service
     {
       try
       {
-        socket := listener.accept
+        socket := listener.accept(socketConfig)
         WispActor(this).send(Unsafe(socket))
       }
       catch (Err e)

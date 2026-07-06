@@ -106,11 +106,12 @@ public class TcpListenerPeer
     }
   }
 
-  public TcpSocket doAccept(TcpListener fan)
+  public TcpSocket doAccept(TcpListener fan, SocketConfig config)
   {
     try
     {
-      TcpSocket s = TcpSocketPeer.makeNative(new Socket(), this.config, true);
+      SocketConfig c = (config != null) ? config : this.config;
+      TcpSocket s = TcpSocketPeer.makeNative(new Socket(), c, true);
       implAccept(s.peer.socket);
       s.peer.connected(s);
       return s;

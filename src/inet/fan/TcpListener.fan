@@ -83,8 +83,14 @@ class TcpListener
   ** listener's [SocketConfig.acceptTimeout] is configured, then accept
   ** will timeout with an IOErr.
   **
-  TcpSocket accept() { return doAccept }
-  private native TcpSocket doAccept()
+  ** If 'config' is non-null then the accepted socket is created with
+  ** that configuration; otherwise this listener's own config is used.
+  ** This allows a server to rotate its [SocketConfig] (such as an
+  ** updated TLS keystore) for new connections without recreating the
+  ** listener.
+  **
+  TcpSocket accept(SocketConfig? config := null) { return doAccept(config) }
+  private native TcpSocket doAccept(SocketConfig? config)
 
   **
   ** Close this server socket.  This method is guaranteed to never
