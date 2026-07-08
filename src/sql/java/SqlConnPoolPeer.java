@@ -84,6 +84,19 @@ public class SqlConnPoolPeer
       long linger = self.linger.ticks();
       long maxLifetime = self.maxLifetime.ticks();
 
+      // warn once per checkout for connections held in-use
+      // suspiciously long; likely a stuck query or hung callback
+      long leakWarn = self.leakWarn.ticks();
+      for (int i=0; i<entries.size(); ++i)
+      {
+        Entry entry = entries.get(i);
+        if (entry.inUse && !entry.leakWarned && (now - entry.useStart) > leakWarn)
+        {
+          entry.leakWarned = true;
+          self.log.warn("SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn);
+        }
+      }
+
       // check common case efficiently just to see if we have any to close
       boolean anyToClose = false;
       for (int i=0; i<entries.size(); ++i)
@@ -195,6 +208,7 @@ public class SqlConnPoolPeer
     if (entry != null)
     {
       entry.inUse = true;
+      entry.useStart = Duration.nowTicks();
       return entry;
     }
 
@@ -203,6 +217,7 @@ public class SqlConnPoolPeer
     {
       entry = new Entry(open(self));
       entry.inUse = true;
+      entry.useStart = entry.created;
       entries.add(entry);
       return entry;
     }
@@ -236,6 +251,7 @@ public class SqlConnPoolPeer
     synchronized (this)
     {
       entry.inUse = false;
+      entry.leakWarned = false;
       entry.lastUse = Duration.nowTicks();
       notifyAll();
     }
@@ -301,6 +317,8 @@ public class SqlConnPoolPeer
     final long created;   // Duration.ticks when connection was opened
     boolean inUse;        // is this entry currently being used
     long lastUse;         // Duration.ticks of last execute
+    long useStart;        // Duration.ticks when current use began
+    boolean leakWarned;   // have we warned about current use being stuck
 
     public String toString()
     {

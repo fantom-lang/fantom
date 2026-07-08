@@ -48,6 +48,11 @@ const class SqlConnPool
   ** until released back to the pool.
   const Duration maxLifetime := 30min
 
+  ** Time a connection may be held by an execute callback before
+  ** checkLinger logs a warning that it may be stuck or leaked.
+  ** The warning is logged once per checkout.
+  const Duration leakWarn := 2min
+
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
 
@@ -76,7 +81,8 @@ const class SqlConnPool
   native Void execute(|SqlConn| f)
 
   ** Close idle connections that have lingered past the linger timeout
-  ** or lived past the maxLifetime.
+  ** or lived past the maxLifetime.  Also log a warning for connections
+  ** held in-use longer than leakWarn.
   native Void checkLinger()
 
   ** Return if [close] has been called.
