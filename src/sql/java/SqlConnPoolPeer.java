@@ -55,39 +55,57 @@ public class SqlConnPoolPeer
     return closed;
   }
 
-  public synchronized void close(SqlConnPool self)
+  public void close(SqlConnPool self)
   {
-    if (closed) return;
-    closed = true;
-    for (int i=0; i<entries.size(); ++i)
-      close(self, entries.get(i));
-    entries.clear();
+    // remove all entries under the lock, then close them outside
+    // the lock since closing may block on network I/O; wake any
+    // blocked allocators so they fail fast instead of timing out
+    ArrayList<Entry> toClose;
+    synchronized (this)
+    {
+      if (closed) return;
+      closed = true;
+      toClose = entries;
+      entries = new ArrayList<>();
+      notifyAll();
+    }
+    for (int i=0; i<toClose.size(); ++i)
+      close(self, toClose.get(i));
   }
 
-  public synchronized void checkLinger(SqlConnPool self)
+  public void checkLinger(SqlConnPool self)
   {
-    long now = Duration.nowTicks();
-    long linger = self.linger.ticks();
-    long maxLifetime = self.maxLifetime.ticks();
-
-    // check common case efficiently just to see if we have any to close
-    boolean anyToClose = false;
-    for (int i=0; i<entries.size(); ++i)
+    // remove expired entries under the lock, then close them
+    // outside the lock since closing may block on network I/O
+    ArrayList<Entry> expired;
+    synchronized (this)
     {
-      Entry entry = entries.get(i);
-      if (isExpired(entry, now, linger, maxLifetime)) { anyToClose = true; break; }
-    }
-    if (!anyToClose) return;
+      long now = Duration.nowTicks();
+      long linger = self.linger.ticks();
+      long maxLifetime = self.maxLifetime.ticks();
 
-    // close expired entries and build new list of entries to keep
-    ArrayList<Entry> keep = new ArrayList<>(entries.size());
-    for (int i=0; i<entries.size(); ++i)
-    {
-      Entry entry = entries.get(i);
-      if (isExpired(entry, now, linger, maxLifetime)) close(self, entry);
-      else keep.add(entry);
+      // check common case efficiently just to see if we have any to close
+      boolean anyToClose = false;
+      for (int i=0; i<entries.size(); ++i)
+      {
+        Entry entry = entries.get(i);
+        if (isExpired(entry, now, linger, maxLifetime)) { anyToClose = true; break; }
+      }
+      if (!anyToClose) return;
+
+      // build new lists of entries to close and keep
+      ArrayList<Entry> keep = new ArrayList<>(entries.size());
+      expired = new ArrayList<>();
+      for (int i=0; i<entries.size(); ++i)
+      {
+        Entry entry = entries.get(i);
+        if (isExpired(entry, now, linger, maxLifetime)) expired.add(entry);
+        else keep.add(entry);
+      }
+      this.entries = keep;
     }
-    this.entries = keep;
+    for (int i=0; i<expired.size(); ++i)
+      close(self, expired.get(i));
   }
 
   private static boolean isExpired(Entry entry, long now, long linger, long maxLifetime)
@@ -121,27 +139,23 @@ public class SqlConnPoolPeer
   private synchronized Entry allocateEntry(SqlConnPool self, long deadline)
     throws InterruptedException
   {
-    // try top find an available entry
-    Entry entry = doAllocate(self);
-    if (entry != null) return entry;
-
-    // block until one frees up
     while (true)
     {
+      // check that we aren't closed
+      if (closed) throw Err.make("SqlConnPool is closed");
+
+      // try to find an available entry or open a new one
+      Entry entry = doAllocate(self);
+      if (entry != null) return entry;
+
       // check if we have waited past our deadline
       long toSleep = deadline - System.nanoTime()/1000000L;
-      if (toSleep <= 0) break;
+      if (toSleep <= 0)
+        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.timeout + ")");
 
       // sleep until we get a notify
       wait(toSleep);
-
-      // try again
-      entry = doAllocate(self);
-      if (entry != null) return entry;
     }
-
-    // raise timeout error
-    throw TimeoutErr.make("SqlConn cannot be acquired (" + self.timeout + ")");
   }
 
   private boolean validate(Entry entry)
@@ -168,9 +182,6 @@ public class SqlConnPoolPeer
 
   private Entry doAllocate(SqlConnPool self)
   {
-    // check that we aren't closed
-    if (closed) throw Err.make("SqlConnPool is closed");
-
     // find most recently used entry that is not currently in use
     Entry entry = null;
     for (int i=0; i<entries.size(); ++i)
@@ -232,6 +243,11 @@ public class SqlConnPoolPeer
 
   private SqlConn open(SqlConnPool self)
   {
+    // bound how long a connect may block; note this is a JVM
+    // wide setting on DriverManager (see SqlConnPool fandoc)
+    if (self.connectTimeout != null)
+      DriverManager.setLoginTimeout((int)self.connectTimeout.toSec());
+
     SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
 
     // set auto-commit based on connection pool property

@@ -31,6 +31,12 @@ const class SqlConnPool
   ** Max time to block waiting for a connection before raising TimeoutErr
   const Duration timeout := 30sec
 
+  ** Max time to wait when opening a new connection to the database
+  ** before failing.  If null then the JDBC driver default is used.
+  ** Note this is implemented via the global DriverManager.setLoginTimeout
+  ** which applies JVM wide to all JDBC connections.
+  const Duration? connectTimeout := null
+
   ** Time to linger an idle connection before closing it.  An external
   ** actor must call checkLinger periodically to close idle connetions.
   const Duration linger := 5min
