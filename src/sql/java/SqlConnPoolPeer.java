@@ -173,11 +173,9 @@ public class SqlConnPoolPeer
 
   private boolean validate(Entry entry)
   {
-    // pool only creates SqlConnImpl; treat anything else as valid
-    if (!(entry.conn instanceof SqlConnImpl)) return true;
     try
     {
-      return ((SqlConnImpl)entry.conn).peer.jconn.isValid(validateTimeout);
+      return entry.conn.isValid();
     }
     catch (Throwable e)
     {
@@ -334,9 +332,6 @@ public class SqlConnPoolPeer
   // only validate a connection on borrow if it has been idle
   // longer than this threshold (in Duration ticks)
   private static final long validateThreshold = 500L * 1000000L;  // 500ms
-
-  // seconds passed to java.sql.Connection.isValid on borrow
-  private static final int validateTimeout = 3;
 
   private ArrayList<Entry> entries = new ArrayList<>();
   private boolean closed;

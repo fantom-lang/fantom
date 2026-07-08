@@ -44,6 +44,12 @@ mixin SqlConn
   **
   abstract Bool isClosed()
 
+  **
+  ** Return if this connection is still alive and usable.  For JDBC
+  ** connections this pings the database using 'java.sql.Connection.isValid'.
+  **
+  @NoDoc virtual Bool isValid() { true }
+
 //////////////////////////////////////////////////////////////////////////
 // Data
 //////////////////////////////////////////////////////////////////////////

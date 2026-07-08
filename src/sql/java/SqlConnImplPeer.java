@@ -79,6 +79,21 @@ public class SqlConnImplPeer
     }
   }
 
+  public boolean isValid(SqlConnImpl self)
+  {
+    try
+    {
+      return jconn.isValid(isValidTimeout);
+    }
+    catch (Throwable e)
+    {
+      return false;
+    }
+  }
+
+  // seconds passed to java.sql.Connection.isValid
+  static final int isValidTimeout = 3;
+
   public boolean close(SqlConnImpl self)
   {
     try
