@@ -68,7 +68,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<entries.size(); ++i)
     {
       Entry entry = entries.get(i);
-      boolean expired = (now - entry.lastUse) > linger;
+      boolean expired = !entry.inUse && (now - entry.lastUse) > linger;
       if (expired) { anyToClose = true; break; }
     }
     if (!anyToClose) return;
@@ -78,7 +78,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<entries.size(); ++i)
     {
       Entry entry = entries.get(i);
-      boolean expired = (now - entry.lastUse) > linger;
+      boolean expired = !entry.inUse && (now - entry.lastUse) > linger;
       if (expired) close(self, entry);
       else keep.add(entry);
     }
