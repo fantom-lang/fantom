@@ -31,17 +31,23 @@ public class SqlConnPoolPeer
     throws Throwable
   {
     Entry entry = allocate(self);
-    Throwable err = null;
     try
     {
       f.call(entry.conn);
     }
     catch (Throwable e)
     {
-      err = e;
+      // if the error left the connection broken then evict it
+      // from the pool instead of releasing it back for reuse
+      if (validate(entry)) release(self, entry);
+      else
+      {
+        self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+        evict(self, entry);
+      }
+      throw e;
     }
     release(self, entry);
-    if (err != null) throw err;
   }
 
   public boolean isClosed(SqlConnPool self)
