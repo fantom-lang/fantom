@@ -194,11 +194,34 @@ public class SqlConnPoolPeer
     return null;
   }
 
-  private synchronized void release(SqlConnPool self, Entry entry)
+  private void release(SqlConnPool self, Entry entry)
   {
-    entry.inUse = false;
-    entry.lastUse = Duration.nowTicks();
-    notifyAll();
+    // reset the connection so the next borrower gets a clean
+    // slate; if the reset fails then evict the connection
+    try
+    {
+      // roll back any uncommitted work first; must happen before
+      // restoring auto-commit since setAutoCommit(true) on a
+      // dangling transaction would commit it
+      if (!entry.conn.autoCommit()) entry.conn.rollback();
+
+      // restore pool's auto-commit mode in case callback changed it
+      boolean poolMode = self.autoCommit();
+      if (entry.conn.autoCommit() != poolMode) entry.conn.autoCommit(poolMode);
+    }
+    catch (Throwable e)
+    {
+      self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+      evict(self, entry);
+      return;
+    }
+
+    synchronized (this)
+    {
+      entry.inUse = false;
+      entry.lastUse = Duration.nowTicks();
+      notifyAll();
+    }
   }
 
   private SqlConn open(SqlConnPool self)
