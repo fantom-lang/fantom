@@ -35,6 +35,13 @@ const class SqlConnPool
   ** actor must call checkLinger periodically to close idle connetions.
   const Duration linger := 5min
 
+  ** Max lifetime of a connection before it is retired, regardless of
+  ** how recently it was used.  This protects against database and
+  ** network infrastructure that kills long lived connections.  It is
+  ** enforced by checkLinger; connections in use are never retired
+  ** until released back to the pool.
+  const Duration maxLifetime := 30min
+
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
 
@@ -62,7 +69,8 @@ const class SqlConnPool
   ** Do not close the connection inside the callback.
   native Void execute(|SqlConn| f)
 
-  ** Close idle connections that have lingered past the linger timeout.
+  ** Close idle connections that have lingered past the linger timeout
+  ** or lived past the maxLifetime.
   native Void checkLinger()
 
   ** Return if [close] has been called.

@@ -68,14 +68,14 @@ public class SqlConnPoolPeer
   {
     long now = Duration.nowTicks();
     long linger = self.linger.ticks();
+    long maxLifetime = self.maxLifetime.ticks();
 
     // check common case efficiently just to see if we have any to close
     boolean anyToClose = false;
     for (int i=0; i<entries.size(); ++i)
     {
       Entry entry = entries.get(i);
-      boolean expired = !entry.inUse && (now - entry.lastUse) > linger;
-      if (expired) { anyToClose = true; break; }
+      if (isExpired(entry, now, linger, maxLifetime)) { anyToClose = true; break; }
     }
     if (!anyToClose) return;
 
@@ -84,11 +84,17 @@ public class SqlConnPoolPeer
     for (int i=0; i<entries.size(); ++i)
     {
       Entry entry = entries.get(i);
-      boolean expired = !entry.inUse && (now - entry.lastUse) > linger;
-      if (expired) close(self, entry);
+      if (isExpired(entry, now, linger, maxLifetime)) close(self, entry);
       else keep.add(entry);
     }
     this.entries = keep;
+  }
+
+  private static boolean isExpired(Entry entry, long now, long linger, long maxLifetime)
+  {
+    if (entry.inUse) return false;
+    return (now - entry.lastUse) > linger ||
+           (now - entry.created) > maxLifetime;
   }
 
   private Entry allocate(SqlConnPool self)
@@ -253,6 +259,7 @@ public class SqlConnPoolPeer
     s.append("  uri:      ").append(self.uri).append("\n");
     s.append("  maxConns: ").append(self.maxConns).append("\n");
     s.append("  linger:   ").append(self.linger).append("\n");
+    s.append("  maxLifetime: ").append(self.maxLifetime).append("\n");
     s.append("  idle:     ").append(idle).append("\n");
     s.append("  inUse:    ").append(inUse).append("\n");
     s.append("  entries:  ").append(entries.size()).append("\n");
@@ -270,10 +277,12 @@ public class SqlConnPoolPeer
     Entry(SqlConn conn)
     {
       this.conn    = conn;
-      this.lastUse = Duration.nowTicks();
+      this.created = Duration.nowTicks();
+      this.lastUse = this.created;
     }
 
     final SqlConn conn;   // open connection
+    final long created;   // Duration.ticks when connection was opened
     boolean inUse;        // is this entry currently being used
     long lastUse;         // Duration.ticks of last execute
 
