@@ -85,7 +85,28 @@ public class SqlConnPoolPeer
     this.entries = keep;
   }
 
-  private synchronized Entry allocate(SqlConnPool self)
+  private Entry allocate(SqlConnPool self)
+    throws InterruptedException
+  {
+    long deadline = System.nanoTime()/1000000L + self.timeout.millis();
+    while (true)
+    {
+      Entry entry = allocateEntry(self, deadline);
+
+      // skip validation if entry was used recently, which
+      // includes connections just opened by doAllocate
+      long idle = Duration.nowTicks() - entry.lastUse;
+      if (idle < validateThreshold) return entry;
+
+      // ping connection to verify it is still alive; if not then
+      // close it, discard it from the pool, and allocate again
+      if (validate(entry)) return entry;
+      self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+      evict(self, entry);
+    }
+  }
+
+  private synchronized Entry allocateEntry(SqlConnPool self, long deadline)
     throws InterruptedException
   {
     // try top find an available entry
@@ -93,8 +114,6 @@ public class SqlConnPoolPeer
     if (entry != null) return entry;
 
     // block until one frees up
-    long msTimeout = self.timeout.millis();
-    long deadline = System.nanoTime()/1000000L + msTimeout;
     while (true)
     {
       // check if we have waited past our deadline
@@ -111,6 +130,28 @@ public class SqlConnPoolPeer
 
     // raise timeout error
     throw TimeoutErr.make("SqlConn cannot be acquired (" + self.timeout + ")");
+  }
+
+  private boolean validate(Entry entry)
+  {
+    // pool only creates SqlConnImpl; treat anything else as valid
+    if (!(entry.conn instanceof SqlConnImpl)) return true;
+    try
+    {
+      return ((SqlConnImpl)entry.conn).peer.jconn.isValid(validateTimeout);
+    }
+    catch (Throwable e)
+    {
+      return false;
+    }
+  }
+
+  private void evict(SqlConnPool self, Entry entry)
+  {
+    // remove from pool under lock, but close outside the
+    // lock since closing may block on network I/O
+    synchronized (this) { entries.remove(entry); notifyAll(); }
+    close(self, entry);
   }
 
   private Entry doAllocate(SqlConnPool self)
@@ -217,6 +258,13 @@ public class SqlConnPoolPeer
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
+
+  // only validate a connection on borrow if it has been idle
+  // longer than this threshold (in Duration ticks)
+  private static final long validateThreshold = 500L * 1000000L;  // 500ms
+
+  // seconds passed to java.sql.Connection.isValid on borrow
+  private static final int validateTimeout = 3;
 
   private ArrayList<Entry> entries = new ArrayList<>();
   private boolean closed;
