@@ -182,7 +182,7 @@ public class SqlConnPoolPeer
     s.append("SqlConnPool\n");
     s.append("  uri:      ").append(self.uri).append("\n");
     s.append("  maxConns: ").append(self.maxConns).append("\n");
-    s.append("  linger:   ").append(self.maxConns).append("\n");
+    s.append("  linger:   ").append(self.linger).append("\n");
     s.append("  idle:     ").append(idle).append("\n");
     s.append("  inUse:    ").append(inUse).append("\n");
     s.append("  entries:  ").append(entries.size()).append("\n");
