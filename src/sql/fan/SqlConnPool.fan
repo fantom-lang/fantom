@@ -31,9 +31,27 @@ const class SqlConnPool
   ** Max time to block waiting for a connection before raising TimeoutErr
   const Duration timeout := 30sec
 
+  ** Max time to wait when opening a new connection to the database
+  ** before failing.  If null then the JDBC driver default is used.
+  ** Note this is implemented via the global DriverManager.setLoginTimeout
+  ** which applies JVM wide to all JDBC connections.
+  const Duration? connectTimeout := null
+
   ** Time to linger an idle connection before closing it.  An external
   ** actor must call checkLinger periodically to close idle connetions.
   const Duration linger := 5min
+
+  ** Max lifetime of a connection before it is retired, regardless of
+  ** how recently it was used.  This protects against database and
+  ** network infrastructure that kills long lived connections.  It is
+  ** enforced by checkLinger; connections in use are never retired
+  ** until released back to the pool.
+  const Duration maxLifetime := 30min
+
+  ** Time a connection may be held by an execute callback before
+  ** checkLinger logs a warning that it may be stuck or leaked.
+  ** The warning is logged once per checkout.
+  const Duration leakWarn := 2min
 
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
@@ -62,7 +80,9 @@ const class SqlConnPool
   ** Do not close the connection inside the callback.
   native Void execute(|SqlConn| f)
 
-  ** Close idle connections that have lingered past the linger timeout.
+  ** Close idle connections that have lingered past the linger timeout
+  ** or lived past the maxLifetime.  Also log a warning for connections
+  ** held in-use longer than leakWarn.
   native Void checkLinger()
 
   ** Return if [close] has been called.

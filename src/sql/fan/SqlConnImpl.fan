@@ -45,6 +45,11 @@ class SqlConnImpl : SqlConn
   **
   override native Bool isClosed()
 
+  **
+  ** Ping that the connection is still alive using JDBC Connection.isValid.
+  **
+  @NoDoc override native Bool isValid()
+
 //////////////////////////////////////////////////////////////////////////
 // Data
 //////////////////////////////////////////////////////////////////////////
@@ -94,12 +99,22 @@ internal class TestSqlConn: SqlConn
   const Int id
   override Bool close() { closed = true}
   override Bool isClosed() { return closed }
+  override Bool isValid() { valid }
   override SqlMeta meta() { throw Err() }
   override Statement sql(Str sql) { throw Err() }
   override Bool autoCommit
-  override Void commit() {}
-  override Void rollback() {}
+  {
+    set { ops.add("autoCommit($it)"); &autoCommit = it }
+  }
+  override Void commit() { commits++; ops.add("commit") }
+  override Void rollback() { rollbacks++; ops.add("rollback") }
   override Str toStr() { "TestSqlConn-$id" }
   private Bool closed
+
+  // test hooks to simulate failures and record pool behavior
+  Bool valid := true
+  Int commits
+  Int rollbacks
+  Str[] ops := [,]
 }
 
