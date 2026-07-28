@@ -11,6 +11,7 @@
 ** calls to Statement.executeBatch().  The batches are executed in chunks that
 ** are no greater than a given maximum chunk size.
 **
+@NoDoc
 class BatchExecutor
 {
   ** Create a BatchExecutor.  The Statement must already be prepared.
