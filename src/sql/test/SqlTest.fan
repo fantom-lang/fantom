@@ -49,6 +49,7 @@ class SqlTest : Test
       preparedStmts
       executeStmts
       batchExecute
+      batchExecutor
       withPrepare
       mysqlVariable
       postgresBuf
@@ -558,6 +559,33 @@ class SqlTest : Test
       id  := (Int) r->farmer_id
       age := (Int) r->age
       verifyEq(id*id, age)
+    }
+  }
+
+  Void batchExecutor()
+  {
+    ids := Int[,]
+    stmt := db.sql("select farmer_id from farmers")
+    stmt.queryEach(null) |r| { ids.add(r->farmer_id) }
+
+    stmt = db.sql(
+      "update farmers set age = farmer_id * 42
+       where farmer_id = @farmerId").prepare
+
+    batch := BatchExecutor(stmt, 2)
+    ids.each |id| { batch.add(["farmerId": id]) }
+    res := batch.finish
+    // The result will be an array filled with '1',
+    // indicating that each row was updated.
+    verifyEq(res, Int?[,].fill(1, ids.size))
+
+    // double check
+    db.commit
+    stmt = db.sql("select farmer_id, age from farmers")
+    stmt.queryEach(null) |r| {
+      id  := (Int) r->farmer_id
+      age := (Int) r->age
+      verifyEq(id*42, age)
     }
   }
 
