@@ -210,8 +210,8 @@ const class WispService : Service
   {
     portType := port == httpPort ? "http" : "https"
     ephemeral := port == -1
-    // loop until we successfully bind to port
-    while (true)
+    // loop until we successfully bind to port or service is stopped
+    while (!listenerPool.isStopped)
     {
       try
       {
@@ -221,9 +221,10 @@ const class WispService : Service
       catch (Err e)
       {
         log.err("WispService cannot bind to ${portType} port ${port}", e)
-        Actor.sleep(10sec)
+        10.times |->| { if (!listenerPool.isStopped) Actor.sleep(1sec) }
       }
     }
+    if (listenerPool.isStopped) return
 
     // if ephemeral then set field with port assigned by OS
     if (ephemeral)
