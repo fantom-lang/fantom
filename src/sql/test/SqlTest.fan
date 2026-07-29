@@ -569,7 +569,7 @@ class SqlTest : Test
     stmt.queryEach(null) |r| { ids.add(r->farmer_id) }
 
     stmt = db.sql(
-      "update farmers set age = farmer_id * 42
+      "update farmers set age = farmer_id + 42
        where farmer_id = @farmerId").prepare
 
     batch := BatchExecutor(stmt, 2)
@@ -585,7 +585,7 @@ class SqlTest : Test
     stmt.queryEach(null) |r| {
       id  := (Int) r->farmer_id
       age := (Int) r->age
-      verifyEq(id*42, age)
+      verifyEq(id+42, age)
     }
   }
 
