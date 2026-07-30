@@ -83,7 +83,7 @@ class Statement
   **
   ** If the driver returns auto-generated keys for some but not all of the
   ** commands, throw SqlErr since the keys cannot be correlated to their
-  ** commands.  See `generatedKeys`.
+  ** commands.  See `batchKeys`.
   **
   native Int?[] executeBatch([Str:Obj]?[] paramsList)
 
@@ -93,7 +93,7 @@ class Statement
   ** for that command.  Return an empty list if executeBatch has not been
   ** called on this statement.
   **
-  native Obj?[] generatedKeys()
+  native Obj?[] batchKeys()
 
   **
   ** If the last execute has more results from a multi-result stored

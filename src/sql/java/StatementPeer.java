@@ -423,7 +423,7 @@ public class StatementPeer
     }
   }
 
-  public List generatedKeys(Statement self)
+  public List batchKeys(Statement self)
   {
     return genKeys;
   }
