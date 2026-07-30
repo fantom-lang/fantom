@@ -88,9 +88,9 @@ class Statement
   native Int?[] executeBatch([Str:Obj]?[] paramsList)
 
   **
-  ** Keys, if any, from the most recent `executeBatch`, with one entry
-  ** per batch command.  An entry is null if the driver did not return a key
-  ** for that command.  Return an empty list if executeBatch has not been
+  ** The keys, if any, from the most recent call to `executeBatch()`, with one
+  ** entry per batch command.  An entry is null if the driver did not return a
+  ** key for that command.  Return an empty list if executeBatch has not been
   ** called on this statement.
   **
   native Obj?[] batchKeys()

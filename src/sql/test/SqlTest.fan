@@ -48,10 +48,15 @@ class SqlTest : Test
       transactions
       preparedStmts
       executeStmts
+
       batchUpdate
       batchInsert
       batchInsertAuto
+
       batchExecutorUpdate
+      batchExecutorInsert
+      batchExecutorInsertAuto
+
       withPrepare
       mysqlVariable
       postgresBuf
@@ -622,7 +627,6 @@ class SqlTest : Test
 
   Void batchInsertAuto()
   {
-
     // drop and re-create
     if (db.meta.tableExists("batch_insert_auto"))
       db.sql("drop table batch_insert_auto").execute
@@ -692,6 +696,108 @@ class SqlTest : Test
       id  := (Int) r->farmer_id
       age := (Int) r->age
       verifyEq(id+42, age)
+    }
+  }
+
+  Void batchExecutorInsert()
+  {
+    // drop and re-create
+    if (db.meta.tableExists("batch_insert"))
+      db.sql("drop table batch_insert").execute
+
+    if (dbType == DbType.postgres)
+    {
+      db.sql(
+       "create table batch_insert (
+        id   int,
+        name text not null)").execute
+    }
+    else
+    {
+      db.sql(
+       "create table batch_insert (
+        id   int not null,
+        name varchar(255) not null,
+        primary key (id))").execute
+    }
+
+    // batch insert
+    stmt := db.sql(
+      "insert into batch_insert (id, name) values (@id, @name)").prepare
+    batch := BatchExecutor(stmt, 3)
+    [
+      ["id": 1, "name":"aaa"],
+      ["id": 2, "name":"bbb"],
+      ["id": 3, "name":"ccc"],
+      ["id": 4, "name":"ddd"],
+    ].each |x| { batch.add(x) }
+    batch.finish
+
+    // check keys.  Note that postgres populates the keys even
+    // though they weren't auto-generated
+    keys := batch.keys
+    if (dbType == DbType.postgres)
+      verifyEq(keys, Obj?[1,2,3,4])
+    else
+      verifyEq(keys, Obj?[null,null,null,null])
+
+    // make sure records were created
+    stmt = db.sql("select * from batch_insert order by id")
+    n := 0
+    names := ["aaa", "bbb", "ccc", "ddd"]
+    stmt.queryEach(null) |r| {
+      verifyEq(r->id, n+1)
+      verifyEq(r->name, names[n])
+      n++
+    }
+  }
+
+  Void batchExecutorInsertAuto()
+  {
+    // drop and re-create
+    if (db.meta.tableExists("batch_insert_auto"))
+      db.sql("drop table batch_insert_auto").execute
+
+    if (dbType == DbType.postgres)
+    {
+      db.sql(
+       "create table batch_insert_auto (
+        id   serial,
+        name text not null)").execute
+    }
+    else
+    {
+      db.sql(
+       "create table batch_insert_auto (
+        id   int auto_increment not null,
+        name varchar(255) not null,
+        primary key (id))").execute
+    }
+
+    // batch insert
+    stmt := db.sql(
+      "insert into batch_insert_auto (name) values (@name)").prepare
+    batch := BatchExecutor(stmt, 3)
+    [
+      ["name":"aaa"],
+      ["name":"bbb"],
+      ["name":"ccc"],
+      ["name":"ddd"],
+    ].each |x| { batch.add(x) }
+    batch.finish
+
+    // check auto-generated keys
+    keys := batch.keys
+    verifyEq(keys, Obj?[1,2,3,4])
+
+    // make sure records were created
+    stmt = db.sql("select * from batch_insert_auto order by id")
+    n := 0
+    names := ["aaa", "bbb", "ccc", "ddd"]
+    stmt.queryEach(null) |r| {
+      verifyEq(r->id, n+1)
+      verifyEq(r->name, names[n])
+      n++
     }
   }
 
