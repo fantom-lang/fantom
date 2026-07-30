@@ -203,5 +203,5 @@ For postgres, setup the fantest database and user account via:
 In addition, both JDBC drivers must be installed, and "etc/sql/config.props"
 must have a reference to the classpath of both drivers, e.g.
 
-    java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
+    java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
