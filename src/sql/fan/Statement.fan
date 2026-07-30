@@ -81,7 +81,19 @@ class Statement
   ** the batch, consistent with the underlying DBMS -- either always continuing
   ** to process commands or never continuing to process commands.
   **
+  ** If the driver returns auto-generated keys for some but not all of the
+  ** commands, throw SqlErr since the keys cannot be correlated to their
+  ** commands.  See `generatedKeys`.
+  **
   native Int?[] executeBatch([Str:Obj]?[] paramsList)
+
+  **
+  ** Keys, if any, from the most recent `executeBatch`, with one entry
+  ** per batch command.  An entry is null if the driver did not return a key
+  ** for that command.  Return an empty list if executeBatch has not been
+  ** called on this statement.
+  **
+  native Obj?[] generatedKeys()
 
   **
   ** If the last execute has more results from a multi-result stored
