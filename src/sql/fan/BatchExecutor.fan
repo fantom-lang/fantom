@@ -28,21 +28,25 @@ class BatchExecutor
     queued.add(params)
     if (queued.size > maxChunkSize)
     {
-      results.addAll(stmt.executeBatch(queued))
+      r := stmt.executeBatch(queued)
+      result.updateCounts.addAll(r.updateCounts)
+      result.keys.addAll(r.keys)
       queued.clear
     }
   }
 
-  ** Finish execution, and return the concatenated results from each
-  ** call to Statement.executeBatch().
-  Int?[] finish()
+  ** Finish execution, and return the collated results from each call
+  ** to Statement.executeBatch().
+  BatchResult finish()
   {
     if (queued.size > 0)
     {
-      results.addAll(stmt.executeBatch(queued))
+      r := stmt.executeBatch(queued)
+      result.updateCounts.addAll(r.updateCounts)
+      result.keys.addAll(r.keys)
       queued.clear
     }
-    return results
+    return result
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,6 +57,6 @@ class BatchExecutor
   private Int maxChunkSize
 
   private [Str:Obj][] queued := [Str:Obj][,]
-  private Int?[] results := [,]
+  private BatchResult result := BatchResult(Int?[,], Obj?[,])
 }
 

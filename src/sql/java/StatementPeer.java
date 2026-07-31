@@ -305,10 +305,7 @@ public class StatementPeer
         List keys = null;
         while (rs.next())
         {
-          // get key as Long or String
-          Object key;
-          try { key = rs.getLong(1); }
-          catch (Exception e) { key = rs.getString(1); }
+          Object key = readGenKey(rs);
 
           // lazily create keys list with proper type
           if (keys == null)
@@ -330,11 +327,59 @@ public class StatementPeer
     return Long.valueOf(-1);
   }
 
-  public List executeBatch(Statement self, List paramsList)
+  /**
+   * Read the auto-generated key for the current row as a Long, or as a
+   * String for databases like Oracle which do not allow access as an Int.
+   */
+  private static Object readGenKey(ResultSet rs)
+    throws SQLException
+  {
+    try { return rs.getLong(1); }
+    catch (Exception e) { return rs.getString(1); }
+  }
+
+  /**
+   * Auto-generated keys for the batch just executed, with one entry per
+   * command.  Entries are null if the driver returned no keys at all.  If
+   * the driver returns keys for some but not all of the commands they cannot
+   * be correlated to their commands, so that case is an error.
+   */
+  private List readBatchGenKeys(PreparedStatement pstmt, int numCommands)
+    throws SQLException
+  {
+    List keys = List.make(Sys.ObjType.toNullable(), numCommands);
+
+    if (isAutoKeys)
+    {
+      ResultSet rs = pstmt.getGeneratedKeys();
+      try
+      {
+        while (rs.next()) keys.add(readGenKey(rs));
+      }
+      finally
+      {
+        rs.close();
+      }
+
+      if (keys.size() == numCommands) return keys;
+
+      if (keys.size() != 0)
+        throw SqlErr.make("Driver returned " + keys.size() +
+          " auto-generated keys for " + numCommands + " batch commands");
+    }
+
+    // no keys returned: one null per command
+    for (int i = 0; i < numCommands; i++) keys.add(null);
+    return keys;
+  }
+
+  public BatchResult executeBatch(Statement self, List paramsList)
   {
     if (!prepared)
       throw SqlErr.make("Statement has not been prepared.");
     PreparedStatement pstmt = (PreparedStatement)stmt;
+
+    List genKeys = List.make(Sys.ObjType.toNullable(), 0);
 
     try
     {
@@ -348,8 +393,11 @@ public class StatementPeer
       // execute batch
       int[] exec = pstmt.executeBatch();
 
+      // gather auto-generated keys before the statement is reused
+      genKeys = readBatchGenKeys(pstmt, (int)paramsList.size());
+
       // process result
-      List result = List.make(Sys.IntType, exec.length);
+      List updateCounts = List.make(Sys.IntType, exec.length);
       for (int i = 0; i < exec.length; i++)
       {
         int n = exec[i];
@@ -358,9 +406,10 @@ public class StatementPeer
         // java.sql.Statement.SUCCESS_NO_INFO. We treat that as a null,
         // indicating that the command was processed successfully but that the
         // number of rows affected is unknown.
-        result.add(n < 0 ? null : (long)n);
+        updateCounts.add(n < 0 ? null : (long)n);
       }
-      return result;
+
+      return BatchResult.make(updateCounts, genKeys);
     }
     catch (SQLException ex)
     {
