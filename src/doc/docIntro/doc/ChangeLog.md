@@ -17,6 +17,7 @@ license:    Licensed under the Academic Free License version 3.0
 - Lock.withLock
 - Doc.isHidden
 - WebClient strips auth headers on redirect to different origin
+- SQL executeBatch now returns BatchResult (breaking change)
 
 *Build 1.0.83 (12 Mar 2026)*
 - Future support for JS promises
