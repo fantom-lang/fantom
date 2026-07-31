@@ -82,7 +82,7 @@ class Statement
   **
   ** If the driver returns auto-generated keys for some but not all of the
   ** commands, throw SqlErr since the keys cannot be correlated to their
-  ** commands.  See `batchKeys`.
+  ** commands.
   **
   ** If one of the commands in a batch update fails to execute properly, this
   ** method throws a SqlErr that wraps a java.sql.BatchUpdateException, and a
