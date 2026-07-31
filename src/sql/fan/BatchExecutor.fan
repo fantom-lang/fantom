@@ -28,32 +28,25 @@ class BatchExecutor
     queued.add(params)
     if (queued.size > maxChunkSize)
     {
-      results.addAll(stmt.executeBatch(queued))
-      keyList.addAll(stmt.batchKeys)
+      r := stmt.executeBatch(queued)
+      result.updateCounts.addAll(r.updateCounts)
+      result.keys.addAll(r.keys)
       queued.clear
     }
   }
 
-  ** Finish execution, and return the concatenated results from each
-  ** call to Statement.executeBatch().
-  Int?[] finish()
+  ** Finish execution, and return the collated results from each call
+  ** to Statement.executeBatch().
+  BatchResult finish()
   {
     if (queued.size > 0)
     {
-      results.addAll(stmt.executeBatch(queued))
-      keyList.addAll(stmt.batchKeys)
+      r := stmt.executeBatch(queued)
+      result.updateCounts.addAll(r.updateCounts)
+      result.keys.addAll(r.keys)
       queued.clear
     }
-    return results
-  }
-
-  ** The keys, if any, from the the finished BatchExecutor, with one
-  ** entry per call to add().  This method should not be called until
-  ** finish() has been called -- if you call it before then, it will
-  ** return an incomplete list of keys.
-  Obj?[] keys()
-  {
-    return keyList
+    return result
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,7 +57,6 @@ class BatchExecutor
   private Int maxChunkSize
 
   private [Str:Obj][] queued := [Str:Obj][,]
-  private Int?[] results := [,]
-  private Obj?[] keyList := [,]
+  private BatchResult result := BatchResult(Int?[,], Obj?[,])
 }
 

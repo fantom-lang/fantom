@@ -338,12 +338,6 @@ public class StatementPeer
     catch (Exception e) { return rs.getString(1); }
   }
 
-  /** Empty auto-generated key list. */
-  private static List emptyGenKeys()
-  {
-    return List.make(Sys.ObjType.toNullable(), 0);
-  }
-
   /**
    * Auto-generated keys for the batch just executed, with one entry per
    * command.  Entries are null if the driver returned no keys at all.  If
@@ -379,14 +373,13 @@ public class StatementPeer
     return keys;
   }
 
-  public List executeBatch(Statement self, List paramsList)
+  public BatchResult executeBatch(Statement self, List paramsList)
   {
     if (!prepared)
       throw SqlErr.make("Statement has not been prepared.");
     PreparedStatement pstmt = (PreparedStatement)stmt;
 
-    // discard keys from any previous batch
-    this.genKeys = emptyGenKeys();
+    List genKeys = List.make(Sys.ObjType.toNullable(), 0);
 
     try
     {
@@ -401,10 +394,10 @@ public class StatementPeer
       int[] exec = pstmt.executeBatch();
 
       // gather auto-generated keys before the statement is reused
-      this.genKeys = readBatchGenKeys(pstmt, (int)paramsList.size());
+      genKeys = readBatchGenKeys(pstmt, (int)paramsList.size());
 
       // process result
-      List result = List.make(Sys.IntType, exec.length);
+      List updateCounts = List.make(Sys.IntType, exec.length);
       for (int i = 0; i < exec.length; i++)
       {
         int n = exec[i];
@@ -413,19 +406,15 @@ public class StatementPeer
         // java.sql.Statement.SUCCESS_NO_INFO. We treat that as a null,
         // indicating that the command was processed successfully but that the
         // number of rows affected is unknown.
-        result.add(n < 0 ? null : (long)n);
+        updateCounts.add(n < 0 ? null : (long)n);
       }
-      return result;
+
+      return BatchResult.make(updateCounts, genKeys);
     }
     catch (SQLException ex)
     {
       throw SqlConnImplPeer.err(ex);
     }
-  }
-
-  public List batchKeys(Statement self)
-  {
-    return genKeys;
   }
 
   public List more(Statement self)
@@ -528,7 +517,6 @@ public class StatementPeer
   private java.sql.Statement stmt;
   private Map paramMap;
   private int limit = 0;              // limit field value
-  private List genKeys = emptyGenKeys(); // keys from last executeBatch
 
   // These are set during init():
   private boolean isInsert;           // does sql contain insert keyword
