@@ -50,6 +50,14 @@ const class FilePack : Weblet
     return make(buf, mimeType)
   }
 
+  ** Construct a bundle for generated content which is already gzipped.
+  ** Use this when content is computed and can be compressed as it is
+  ** written to avoid buffering the uncompressed form.
+  @NoDoc static new makeGzip(Buf gzipBuf, MimeType mimeType)
+  {
+    make(gzipBuf, mimeType)
+  }
+
   ** Private constructor
   private new make(Buf buf, MimeType mimeType)
   {
