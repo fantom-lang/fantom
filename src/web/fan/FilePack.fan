@@ -84,6 +84,15 @@ const class FilePack : Weblet
   }
   private const AtomicRef uriRef := AtomicRef()
 
+  ** Configurable extra response headers for onGet such as SourceMap
+  @NoDoc Str:Str headers
+  {
+    get { headersRef.val }
+    set { headersRef.val = it.toImmutable }
+  }
+  private const AtomicRef headersRef := AtomicRef(emptyHeaders)
+  private static const Str:Str emptyHeaders := [:]
+
 //////////////////////////////////////////////////////////////////////////
 // Weblet
 //////////////////////////////////////////////////////////////////////////
@@ -98,6 +107,9 @@ const class FilePack : Weblet
     // set identity headers
     res.headers["ETag"] = etag
     res.headers["Last-Modified"] = modified.toHttpStr
+
+    // extra configured headers
+    headers.each |v, n| { res.headers[n] = v }
 
     // check if we can return a 304 not modified
     if (FileWeblet.doCheckNotModified(req, res, etag, modified)) return
