@@ -154,18 +154,7 @@ class FileWeblet : Weblet
   **
   private static Bool isGzipFile(File file)
   {
-    mime := file.mimeType
-    if (mime == null) return false
-    if (mime.mediaType == "text") return true
-    if (mime.mediaType == "application")
-    {
-      if (mime.subType == "json") return true
-    }
-    if (mime.mediaType == "image")
-    {
-      if (mime.subType == "svg+xml") return true
-    }
-    return false
+    file.mimeType?.isText ?: false
   }
 
   **

@@ -242,7 +242,8 @@ class MimeType extends Obj {
 
   isText() {
     return (this.#mediaType == "text") ||
-           (this.#mediaType == "application" && this.#subType == "json");
+           (this.#mediaType == "application" && this.#subType == "json") ||
+           (this.#mediaType == "image" && this.#subType == "svg+xml");
   }
 
 //////////////////////////////////////////////////////////////////////////
