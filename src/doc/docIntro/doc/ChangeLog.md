@@ -13,6 +13,7 @@ license:    Licensed under the Academic Free License version 3.0
 - Str.truncate
 - StrBuf.tab, sp, nl
 - Uri.origin
+- File.etag
 - Win.evalToFunc
 - Lock.withLock
 - Doc.isHidden

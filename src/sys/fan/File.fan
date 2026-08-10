@@ -128,6 +128,17 @@ abstract const class File
   **
   virtual MimeType? mimeType()
 
+  **
+  ** Entity tag which uniquely identifies the file content version or
+  ** null if content versioning is not supported.  The value is an
+  ** opaque string without the surrounding quotes.  Valid characters
+  ** are printable ASCII excluding the double quote: 0x21 and 0x23-0x7E
+  ** per RFC 7232 entity-tag grammar.  The default implementation
+  ** returns null; subclasses may override to make content versioning
+  ** pluggable for HTTP serving such as `web::FileWeblet`.
+  **
+  virtual Str? etag()
+
 //////////////////////////////////////////////////////////////////////////
 // Access
 //////////////////////////////////////////////////////////////////////////

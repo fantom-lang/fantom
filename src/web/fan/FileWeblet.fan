@@ -45,24 +45,36 @@ class FileWeblet : Weblet
 
   **
   ** Get the modified time of the file floored to 1 second
-  ** which is the most precise that HTTP can deal with.
+  ** which is the most precise that HTTP can deal with.  Return
+  ** null if the file has no modified time in which case the
+  ** Last-Modified and If-Modified-Since headers are not used.
   **
-  virtual DateTime modified()
+  virtual DateTime? modified()
   {
-    return file.modified.floor(1sec)
+    return file.modified?.floor(1sec)
   }
 
   **
   ** Compute the ETag for the file being serviced which uniquely
-  ** identifies the file version.  The default implementation is
-  ** a hash of the modified time and the file size.  The result
-  ** of this method must conform to the ETag syntax and be
-  ** wrapped in quotes.
+  ** identifies the file version.  If the file provides its own
+  ** `sys::File.etag` then it is used, otherwise the default
+  ** implementation is a hash of the modified time and the file
+  ** size.  The result of this method must conform to the ETag
+  ** syntax and be wrapped in quotes.
   **
   virtual Str etag()
   {
-    return "\"" + file.size.toHex + "-" + file.modified.ticks.toHex + "\""
+    fileTag := file.etag
+    if (fileTag != null) return "\"" + fileTag + "\""
+    return "\"" + (file.size ?: 0).toHex + "-" + (file.modified?.ticks ?: 0).toHex + "\""
   }
+
+  **
+  ** Apply gzip content encoding when the client accepts it and the
+  ** file mime type is compressible.  Origins fronted by an edge which
+  ** performs its own compression should set this to false.
+  **
+  Bool gzip := true
 
   **
   ** Checks if the file being served is under the given directory.
@@ -103,7 +115,8 @@ class FileWeblet : Weblet
 
     // set identity headers
     res.headers["ETag"] = etag
-    res.headers["Last-Modified"] = modified.toHttpStr
+    mod := modified
+    if (mod != null) res.headers["Last-Modified"] = mod.toHttpStr
 
     // extra headers
     if (extraResHeaders != null)
@@ -120,7 +133,7 @@ class FileWeblet : Weblet
     // and if so send the file using gzip compression (we don't
     // know content length in this case)
     ae := req.headers["Accept-Encoding"] ?: ""
-    if (isGzipFile(file) && WebUtil.parseQVals(ae)["gzip"] > 0f)
+    if (gzip && isGzipFile(file) && WebUtil.parseQVals(ae)["gzip"] > 0f)
     {
       res.statusCode = 200
       res.headers["Content-Encoding"] = "gzip"
@@ -132,7 +145,7 @@ class FileWeblet : Weblet
 
     // service a normal 200 with no compression
     res.statusCode = 200
-    res.headers["Content-Length"] = file.size.toStr
+    if (file.size != null) res.headers["Content-Length"] = file.size.toStr
     file.withIn |in| { in.pipe(res.out, file.size) }
   }
 
@@ -170,7 +183,7 @@ class FileWeblet : Weblet
   **
   ** Utility for standard check modified logic
   **
-  @NoDoc static Bool doCheckNotModified(WebReq req, WebRes res, Str etag, DateTime modified)
+  @NoDoc static Bool doCheckNotModified(WebReq req, WebRes res, Str etag, DateTime? modified)
   {
     // check If-Match-None
     matchNone := req.headers["If-None-Match"]
@@ -189,7 +202,7 @@ class FileWeblet : Weblet
 
     // check If-Modified-Since
     since := req.headers["If-Modified-Since"]
-    if (since != null)
+    if (since != null && modified != null)
     {
       sinceTime := DateTime.fromHttpStr(since, false)
       if (modified == sinceTime)
