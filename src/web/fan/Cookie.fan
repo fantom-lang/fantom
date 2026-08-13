@@ -48,6 +48,7 @@ const class Cookie
         p := MimeType.parseParams(params)
         it.domain = p["Domain"]
         it.path = p.get("Path", "/")
+        it.maxAge = parseMaxAge(p)
       }
     }
     catch (Err e)
@@ -55,6 +56,30 @@ const class Cookie
       if (checked) throw ParseErr("Cookie: $s")
       return null
     }
+  }
+
+  **
+  ** Parse the cookie lifetime from the Max-Age/Expires attributes.
+  ** Max-Age takes precedence over Expires (RFC 6265 § 5.2.2/5.2.1).
+  ** Return null if neither is specified or cannot be parsed.
+  **
+  private static Duration? parseMaxAge(Str:Str p)
+  {
+    maxAge := p["Max-Age"]
+    if (maxAge != null)
+    {
+      sec := maxAge.toInt(10, false)
+      return sec == null ? null : Duration(sec.max(0) * 1sec.ticks)
+    }
+
+    expires := p["Expires"]
+    if (expires != null)
+    {
+      ts := DateTime.fromHttpStr(expires, false)
+      if (ts != null) return (ts - DateTime.nowUtc).max(0sec)
+    }
+
+    return null
   }
 
   **

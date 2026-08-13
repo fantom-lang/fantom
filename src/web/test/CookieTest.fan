@@ -38,6 +38,20 @@ class CookieTest : Test
     verifyCookie(Cookie.fromStr("foo=bar; Domain=foo.org; Path=/baz/"), Cookie("foo", "bar") {it.domain="foo.org";it.path="/baz/"} )
     verifyCookie(Cookie.fromStr("foo=bar; Domain=foo.org; Path=/baz/; HttpOnly"), Cookie("foo", "bar") {it.domain="foo.org";it.path="/baz/"} )
 
+    // Max-Age parsing; takes precedence over Expires
+    verifyEq(Cookie.fromStr("foo=bar; Max-Age=3600").maxAge, 1hr)
+    verifyEq(Cookie.fromStr("foo=bar; Max-Age=0").maxAge, 0sec)
+    verifyEq(Cookie.fromStr("foo=bar; Max-Age=-1").maxAge, 0sec)
+    verifyEq(Cookie.fromStr("foo=bar; Max-Age=bad").maxAge, null)
+    future := (DateTime.nowUtc + 1day).toHttpStr
+    verifyEq(Cookie.fromStr("foo=bar; Max-Age=0; Expires=$future").maxAge, 0sec)
+
+    // Expires in the past is a delete, future is non-zero
+    verifyEq(Cookie.fromStr("foo=bar; Expires=Sat, 01 Jan 2000 00:00:00 GMT").maxAge, 0sec)
+    verify(Cookie.fromStr("foo=bar; Expires=$future").maxAge > 23hr)
+    verifyEq(Cookie.fromStr("foo=bar; Expires=bad").maxAge, null)
+    verifyEq(Cookie.fromStr("foo=bar").maxAge, null)
+
     verifyErr(ParseErr#) { c := Cookie.fromStr("=bar") }
     verifyErr(ArgErr#) { c := Cookie("\$path", "bar") }
     verifyErr(ArgErr#) { c := Cookie("foo bar", "bar") }
