@@ -159,6 +159,12 @@ const class Cookie
   const Duration? maxAge
 
   **
+  ** Is this cookie expired, meaning the client should discard it
+  ** and any existing cookie of the same name (RFC 6265 § 5.3).
+  **
+  Bool isExpired() { maxAge != null && maxAge.ticks <= 0 }
+
+  **
   ** Specifies the domain for which the cookie is valid.
   ** An explicit domain must always start with a dot.  If
   ** null (the default) then the cookie only applies to
@@ -208,7 +214,7 @@ const class Cookie
       // we need to use Max-Age *and* Expires since many browsers
       // such as Safari and IE still don't recognize max-age
       s.add(";Max-Age=").add(maxAge.toSec)
-      if (maxAge.ticks <= 0)
+      if (isExpired)
         s.add(";Expires=").add("Sat, 01 Jan 2000 00:00:00 GMT")
       else
         s.add(";Expires=").add((DateTime.nowUtc+maxAge).toHttpStr)

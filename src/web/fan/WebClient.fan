@@ -182,8 +182,10 @@ class WebClient
   ** Cookies to pass for "Cookie" request header.  If set to an empty
   ** list then the "Cookie" request header is removed.  After a request
   ** has been completed if the "Set-Cookie" response header specified
-  ** one or more cookies then this field is automatically updated with
-  ** the server specified cookies.
+  ** one or more cookies then this field is automatically merged with
+  ** the server specified cookies: a cookie replaces an existing cookie
+  ** of the same name, an expired cookie removes it, otherwise it is
+  ** appended.  Cookies are cleared if a redirect crosses an origin.
   **
   Cookie[] cookies := Cookie#.emptyList
   {
@@ -199,6 +201,24 @@ class WebClient
         it.first.toNameValStr :
         it.join("; ") |c| { c.toNameValStr }
     }
+  }
+
+  **
+  ** Merge the "Set-Cookie" cookies from a response into `cookies`.  Each
+  ** incoming cookie replaces any existing cookie of the same name, and an
+  ** expired cookie just removes it (RFC 6265 § 5.3).  We key off name only
+  ** since we don't match domain/path when sending the "Cookie" request
+  ** header.  Replaced cookies move to the end of the list.
+  **
+  private Void mergeCookies(Cookie[] setCookies)
+  {
+    acc := cookies.dup
+    setCookies.each |c|
+    {
+      acc = acc.exclude |x| { x.name == c.name }
+      if (!c.isExpired) acc.add(c)
+    }
+    cookies = acc
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -539,7 +559,7 @@ class WebClient
       // parse response headers
       setCookies := Cookie[,]
       resHeaders = WebUtil.doParseHeaders(in, setCookies)
-      if (!setCookies.isEmpty) cookies = setCookies
+      if (!setCookies.isEmpty) mergeCookies(setCookies)
     }
     catch (Err e) throw IOErr("Invalid HTTP response: $res", e)
 
@@ -581,12 +601,14 @@ class WebClient
       if (!newUri.isAbs) newUri = reqUri + newUri
       if (reqUri == newUri && numRedirects > 20) throw Err("Cyclical redirect: $newUri")
 
-      // strip sensitive headers across an origin boundary
+      // strip sensitive headers across an origin boundary; clearing the
+      // cookies field also removes the "Cookie" header via its setter and
+      // prevents the old origin's cookies from being merged forward
       if (reqUri.origin != newUri.origin)
       {
         reqHeaders.remove("Authorization")
-        reqHeaders.remove("Cookie")
         reqHeaders.remove("Proxy-Authorization")
+        cookies = Cookie#.emptyList
       }
 
       reqUri = newUri

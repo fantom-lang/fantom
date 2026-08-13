@@ -213,6 +213,61 @@ class WebClientTest : Test
     finally wisp->stop
   }
 
+  Void testRedirectCookies()
+  {
+    wisp := Slot.findMethod("wisp::WispService.testSetup").call(RedirectMod())
+    wisp->start
+    wisp->waitUntilListening(5sec)
+    port := wisp->httpPort
+    try
+    {
+      base := `http://localhost:${port}`
+
+      // hop 1 sets session cookie, hop 2 sets its own; both survive
+      c := WebClient(base + `/redir?loc=/dest&set=session&val=abc`)
+      c.getStr
+      verifyEq(cookieMap(c), ["session":"abc", "landing":"xyz"])
+      verifyEq(c.reqHeaders["Cookie"], "session=abc; landing=xyz")
+
+      // hop 2 re-setting the same name replaces it, does not duplicate
+      c = WebClient(base + `/redir?loc=/dest&set=landing&val=stale`)
+      c.getStr
+      verifyEq(cookieMap(c), ["landing":"xyz"])
+      verifyEq(c.reqHeaders["Cookie"], "landing=xyz")
+
+      // a replaced cookie moves to the end of the list
+      c = WebClient(base + `/dest`)
+      c.cookies = [Cookie("landing", "stale"), Cookie("pre", "kept")]
+      c.getStr
+      verifyEq(c.reqHeaders["Cookie"], "pre=kept; landing=xyz")
+
+      // pre-existing cookie survives a response that sets an unrelated one
+      c = WebClient(base + `/dest`)
+      c.cookies = [Cookie("pre", "kept")]
+      c.getStr
+      verifyEq(cookieMap(c), ["pre":"kept", "landing":"xyz"])
+
+      // expired cookie removes it
+      c = WebClient(base + `/dest?del=landing`)
+      c.cookies = [Cookie("pre", "kept")]
+      c.getStr
+      verifyEq(cookieMap(c), ["pre":"kept"])
+
+      // cross-origin redirect clears cookies collected from prior origin
+      c = WebClient(base + `/redir?loc=http://127.0.0.1:${port}/dest&set=session&val=abc`)
+      c.getStr
+      verifyEq(cookieMap(c), ["landing":"xyz"])
+    }
+    finally wisp->stop
+  }
+
+  private Str:Str cookieMap(WebClient c)
+  {
+    acc := Str:Str[:] { ordered = true }
+    c.cookies.each |x| { acc[x.name] = x.val }
+    return acc
+  }
+
 }
 
 **************************************************************************
@@ -226,12 +281,22 @@ internal const class RedirectMod : WebMod
     if (req.uri.pathStr == "/redir")
     {
       loc := req.uri.query["loc"] ?: "/"
+      set := req.uri.query["set"]
+      val := req.uri.query["val"] ?: ""
       res.statusCode = 302
       res.headers["Location"] = loc
+      if (set != null) res.headers["Set-Cookie"] = "$set=$val; Path=/"
       res.headers["Content-Length"] = "0"
       res.out.flush
       return
     }
+
+    // landing page always refreshes its own cookie like session middleware
+    del := req.uri.query["del"]
+    if (del != null)
+      res.headers["Set-Cookie"] = "$del=; Max-Age=0; Path=/"
+    else
+      res.headers["Set-Cookie"] = "landing=xyz; Path=/"
 
     hasAuth := req.headers["Authorization"] != null ? "yes" : "no"
     hasCookie := req.headers["Cookie"] != null ? "yes" : "no"
