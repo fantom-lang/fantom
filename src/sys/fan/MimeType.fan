@@ -115,8 +115,12 @@ const final class MimeType
 
   **
   ** Return if this mime type is known to be text.  This includes all "text/*"
-  ** mime types along with special cases like "application/json" and
-  ** "image/svg+xml".
+  ** mime types, "application/json", and any type using a "+json" or "+xml"
+  ** structured suffix such as "application/ld+json" or "image/svg+xml".
+  **
+  ** This does not identify every text format - one which neither starts with
+  ** "text/" nor carries a structured suffix returns false - but a true result
+  ** is definitive.
   **
   Bool isText()
 

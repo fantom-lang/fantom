@@ -300,9 +300,10 @@ public final class MimeType
 
   public boolean isText()
   {
-    return (mediaType.equals("text")) ||
-           (mediaType.equals("application") && subType.equals("json")) ||
-           (mediaType.equals("image") && subType.equals("svg+xml"));
+    return mediaType.equals("text") ||
+           subType.equals("json") ||
+           subType.endsWith("+json") ||
+           subType.endsWith("+xml");
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -218,6 +218,21 @@ class MimeTypeTest : Test
     verifyIsText("video/mpeg", false)
     verifyIsText("application/x-word", false)
     verifyIsText("application/json",true)
+
+    // a "+json" or "+xml" structured suffix is always text, whatever the
+    // media type: the suffix says how the payload is serialized
+    verifyIsText("image/svg+xml", true)
+    verifyIsText("application/ld+json", true)
+    verifyIsText("application/vnd.haystack+json", true)
+    verifyIsText("application/vnd.haystack+json;version=4", true)
+    verifyIsText("application/atom+xml", true)
+
+    // params do not change the answer
+    verifyIsText("application/json; charset=utf-8", true)
+
+    // a subtype which merely contains json or xml is not a suffix
+    verifyIsText("application/jsonish", false)
+    verifyIsText("application/xmlfoo", false)
   }
 
   Void verifyIsText(Str s, Bool expect)
