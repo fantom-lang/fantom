@@ -366,6 +366,15 @@ abstract const class File
   virtual File rename(Str newName)
 
   **
+  ** Atomically move this file to the given target file, replacing
+  ** the target if it already exists.  If the move cannot be performed
+  ** atomically then raise IOErr.  Raise UnsupportedErr if this file
+  ** type does not support atomic moves.  Return the `to` destination
+  ** file.
+  **
+  virtual File atomicMove(File to)
+
+  **
   ** Delete this file.  If this file represents a directory, then
   ** recursively delete it.  If the file does not exist, then no
   ** action is taken.  Throw IOErr on error.
@@ -522,6 +531,7 @@ internal const class LocalFile : File
   override File plus(Uri uri, Bool checkSlash := true)
   override File create()
   override File moveTo(File to)
+  override File atomicMove(File to)
   override Void delete()
   override File deleteOnExit()
   override Buf open(Str mode := "rw")

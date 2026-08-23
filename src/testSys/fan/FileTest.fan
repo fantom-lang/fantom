@@ -341,6 +341,29 @@ class FileTest : Test
     verifyErr(IOErr#) { dirA.rename("foo") }
   }
 
+  Void testAtomicMove()
+  {
+    dir := (tempDir + `dirA/`).create
+    a := (tempDir + `a.txt`); a.out.print("alpha").close
+    b := (dir + `b.txt`); b.out.print("beta").close
+
+    // errors
+    verifyErr(ArgErr#) { dir.atomicMove(this.tempDir + `bad`) }
+    verifyErr(ArgErr#) { a.atomicMove(this.tempDir + `bad/`) }
+    verifyErr(UnsupportedErr#) { Buf().toFile(`mem`).atomicMove(this.tempDir + `mem`) }
+
+    // move to new target
+    x := a.atomicMove(dir + `x.txt`)
+    verifyEq(a.exists, false)
+    verifyEq(x.readAllStr, "alpha")
+
+    // move replacing existing target
+    x = x.atomicMove(b)
+    verifyEq(x, b)
+    verifyEq(b.readAllStr, "alpha")
+    verifyEq((dir + `x.txt`).exists, false)
+  }
+
   Void testStreamConvenience()
   {
     f := tempDir + `testfile.txt`

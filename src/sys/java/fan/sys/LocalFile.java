@@ -11,6 +11,7 @@ import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
@@ -418,6 +419,33 @@ public class LocalFile
 
     if (!file.renameTo(dest.file))
       throw IOErr.make("moveTo failed: " + to);
+
+    return to;
+  }
+
+  public File atomicMove(File to)
+  {
+    if (isDir() != to.isDir())
+    {
+      if (isDir())
+        throw ArgErr.make("atomicMove must be dir `" + to + "`");
+      else
+        throw ArgErr.make("atomicMove must not be dir `" + to + "`");
+    }
+
+    if (!(to instanceof LocalFile))
+      throw IOErr.make("Cannot move LocalFile to " + to.typeof());
+    LocalFile dest = (LocalFile)to;
+
+    try
+    {
+      Files.move(file.toPath(), dest.file.toPath(),
+        StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+    }
+    catch (java.io.IOException e)
+    {
+      throw IOErr.make("atomicMove failed: " + to, e);
+    }
 
     return to;
   }
