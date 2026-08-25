@@ -330,7 +330,7 @@ joules_per_gram, J/g; m2*sec-2; 0.0010
 joules_per_kilogram, J/kg; m2*sec-2
 joules_per_kilogram_dry_air, J/kg_dry; m2*sec-2
 btu_per_pound, BTU/lb; m2*sec-2; 2326.0
-btu_per_pound_dry_air, BTU/lb_dry, btu/lb_dry; m2*sec-2; 2326.0
+btu_per_pound_dry_air, btu/lb_dry, BTU/lb_dry; m2*sec-2; 2326.0
 kilobtu_per_pound, kBTU/lb; m2*sec-2; 2326000.0
 kilobtu_per_pound_dry_air, kBTU/lb_dry; m2*sec-2; 2326000.0
 kilojoules_per_kilogram, kJ/kg; m2*sec-2; 1000.0
