@@ -279,12 +279,12 @@ watt_hour, Wh; kg1*m2*sec-2; 3600.0
 kilowatt_hour, kWh; kg1*m2*sec-2; 3600000.0
 megawatt_hour, MWh; kg1*m2*sec-2; 3.6E9
 gigawatt_hour, GWh; kg1*m2*sec-2; 3.6E12
-btu, BTU; kg1*m2*sec-2; 1054.852
-kilobtu, kBTU; kg1*m2*sec-2; 1054852.0
-megabtu, MBTU, MMBTU; kg1*m2*sec-2; 1.054852E9
+btu, BTU; kg1*m2*sec-2; 1055.05585262
+kilobtu, kBTU; kg1*m2*sec-2; 1055055.85262
+megabtu, MBTU, MMBTU; kg1*m2*sec-2; 1.05505585262E9
 horsepower_hour, hph; kg1*m2*sec-2; 2686088.6
 calorie, cal; kg1*m2*sec-2; 4.184
-therm; kg1*m2*sec-2; 1.05506E8
+therm; kg1*m2*sec-2; 1.05505585262E8
 tons_refrigeration_hour, tonrefh; kg1*m2*sec-2; 1.26606708E7
 megajoule, MJ; kg1*m2*sec-2; 1000000.0
 gigajoule, GJ; kg1*m2*sec-2; 1000000000.0
@@ -316,21 +316,23 @@ megawatt_hours_per_square_meter, MWh/m²; kg1*sec-2; 3.6E9
 megawatt_hours_per_square_foot, MWh/ft²; kg1*sec-2; 3.8750077500155E10
 megajoules_per_square_meter, MJ/m²; kg1*sec-2; 1000000.0
 megajoules_per_square_foot, MJ/ft²; kg1*sec-2; 1.076391041671E7
-btu_per_square_foot, BTU/ft²; kg1*sec-2; 1.135433731957E4
-kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.135433731957E7
-megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.135433731957E10
+btu_per_square_foot, BTU/ft²; kg1*sec-2; 1.1356526682226975E4
+kilobtu_per_square_foot, kBTU/ft²; kg1*sec-2; 1.1356526682226975E7
+megabtu_per_square_foot, MBTU/ft²; kg1*sec-2; 1.1356526682226975E10
 
 -- energy by volume (kg1*m-1*sec-2)
 joules_per_cubic_meter, J/m³; kg1*m-1*sec-2
 gigajoules_per_cubic_meter, GJ/m³; kg1*m-1*sec-2; 1000000000.0
 kilowatt_hours_per_cubic_meter, kWh/m³; kg1*m-1*sec-2; 3600000.0
 
--- enthalpy (m2*sec-2)
+-- specific enthalpy (m2*sec-2)
 joules_per_gram, J/g; m2*sec-2; 0.0010
 joules_per_kilogram, J/kg; m2*sec-2
 joules_per_kilogram_dry_air, J/kg_dry; m2*sec-2
-btu_per_pound, BTU/lb; m2*sec-2; 2325.5576058607867
-btus_per_pound_dry_air, btu/lb_dry; m2*sec-2; 2326.0
+btu_per_pound, BTU/lb; m2*sec-2; 2326.0
+btu_per_pound_dry_air, BTU/lb_dry, btu/lb_dry; m2*sec-2; 2326.0
+kilobtu_per_pound, kBTU/lb; m2*sec-2; 2326000.0
+kilobtu_per_pound_dry_air, kBTU/lb_dry; m2*sec-2; 2326000.0
 kilojoules_per_kilogram, kJ/kg; m2*sec-2; 1000.0
 kilojoules_per_kilogram_dry_air, kJ/kg_dry; m2*sec-2; 1000.0
 megajoules_per_kilogram_dry_air, MJ/kg_dry; m2*sec-2; 1000000.0
@@ -443,13 +445,13 @@ milliwatt, mW; kg1*m2*sec-3; 0.0010
 kilowatt, kW; kg1*m2*sec-3; 1000.0
 megawatt, MW; kg1*m2*sec-3; 1000000.0
 gigawatt, GW; kg1*m2*sec-3; 1.0E9
-btus_per_hour, BTU/h; kg1*m2*sec-3; 0.292875
-therms_per_hour, therm/h; kg1*m2*sec-3; 29287.5
+btus_per_hour, BTU/h; kg1*m2*sec-3; 0.2930710701722222
+therms_per_hour, therm/h; kg1*m2*sec-3; 29307.10701722222
 horsepower, hp; kg1*m2*sec-3; 745.7
 foot_pounds_per_second, ftlbs/sec; kg1*m2*sec-3; 1.355818
 tons_refrigeration, tonref; kg1*m2*sec-3; 3516.853
-kilobtus_per_hour, kBTU/h; kg1*m2*sec-3; 293.07107017222
-megabtus_per_hour, MBTU/h, MMBTU/h; kg1*m2*sec-3; 293071.07017222
+kilobtus_per_hour, kBTU/h; kg1*m2*sec-3; 293.0710701722222
+megabtus_per_hour, MBTU/h, MMBTU/h; kg1*m2*sec-3; 293071.0701722222
 joules_per_hour, J/h; kg1*m2*sec-3; 0.000277777778
 kilojoules_per_hour, kJ/h; kg1*m2*sec-3; 0.277777778
 megajoules_per_hour, MJ/h; kg1*m2*sec-3; 277.777778
@@ -460,7 +462,7 @@ watts_per_square_meter, W/m²; kg1*sec-3
 watts_per_square_foot, W/ft²; kg1*sec-3; 10.7639104
 kilowatts_per_square_meter, kW/m²; kg1*sec-3; 1000.0
 kilowatts_per_square_foot, kW/ft²; kg1*sec-3; 10763.9104
-kilobtus_per_hour_per_square_foot, kBTU/h/ft²; kg1*sec-3; 3153.8257472
+kilobtus_per_hour_per_square_foot, kBTU/h/ft²; kg1*sec-3; 3154.590745063049
 
 -- power by volumetric flow (kg*m-1*sec-2)
 watts_per_cubic_meters_per_second, W/m³/s; kg1*m-1*sec-2
