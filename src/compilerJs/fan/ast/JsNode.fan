@@ -51,25 +51,34 @@ abstract class JsNode
     return def.hasFacet("sys::Js") || c.input.forceJs
   }
 
+  ** Warn if this type is not available in JS. FFI types are always safe since
+  ** qnameToJs rewrites them to parse-but-fail. Note we check every component of
+  ** a generic so one bad type does not mask its siblings.
   Bool checkJsSafety(CType ctype, Loc? loc)
   {
-    if (ctype is TypeRef) return checkJsSafety(ctype->t, loc)
+    if (ctype.isForeign) return true
+    else if (ctype is TypeRef) return checkJsSafety(ctype->t, loc)
     else if (ctype is NullableType) return checkJsSafety(ctype->root, loc)
     else if (ctype is ListType) return checkJsSafety(ctype->v, loc)
     else if (ctype is MapType)
     {
-      return checkJsSafety(ctype->k, loc) && checkJsSafety(ctype->v, loc)
+      k := checkJsSafety(ctype->k, loc)
+      v := checkJsSafety(ctype->v, loc)
+      return k && v
     }
     else if (ctype is FuncType)
     {
       safe := true
       ft := (FuncType)ctype
-      ft.params.each |param| { safe = safe && checkJsSafety(param, loc) }
-      safe = safe && checkJsSafety(ft.returns, loc)
-      return safe
+      ft.params.each |param| { safe = checkJsSafety(param, loc) && safe }
+      return checkJsSafety(ft.returns, loc) && safe
     }
     else if (!(ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null || c.input.forceJs))
     {
+      // dedupe so a type emitted repeatedly at one spot warns once
+      key := "${ctype.qname}:${loc}"
+      if (plugin.reportedNonJs[key]) return false
+      plugin.reportedNonJs[key] = true
       warn("Type '${ctype.qname}' not available in JS", loc)
       return false
     }
@@ -115,26 +124,9 @@ abstract class JsNode
     // code will parse but fail if actually invoked
     if (js.contains(".[java].")) js = js.replace(".[java].", ".")
     else if (js.contains("[java]")) js = js.replace("[java]", "java.fail")
-    else checkEmittedType(ctype, loc)
+    else checkJsSafety(ctype, loc)
 
     return js
-  }
-
-  ** Every emitted type name routes thru qnameToJs, so this is the single
-  ** choke point where a reference to a type with no JS can be caught. Java
-  ** FFI is excluded above since it is rewritten to parse-but-fail by design.
-  private Void checkEmittedType(CType ctype, Loc? loc)
-  {
-    t := resolveType(ctype)
-    if (t.isForeign || t.isSynthetic) return
-
-    // dedupe: one warning per type per source location - note Loc.toStr
-    // renders the source token, so key off the actual file/line/col
-    key := "${t.qname}:${loc?.file}:${loc?.line}:${loc?.col}"
-    if (plugin.reportedNonJs[key]) return
-    plugin.reportedNonJs[key] = true
-
-    checkJsSafety(t, loc)
   }
 
   ** Get the name that should be used for the generated field in JS code.

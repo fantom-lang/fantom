@@ -46,9 +46,8 @@ class CompileJsPlugin : CompilerStep
 
   [Str:Bool] dependOnNames := [:] { def = false }
 
-  ** Non-JS types already reported, keyed by "type qname:location". Every
-  ** emitted type name routes thru JsNode.qnameToJs, so without this a
-  ** single bad reference warns once per use.
+  ** Non-JS types already warned about, keyed by "qname:loc" so that a type
+  ** emitted more than once at the same location only warns once
   [Str:Bool] reportedNonJs := [:] { def = false }
 
   JsClosure closureSupport { private set }

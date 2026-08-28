@@ -137,8 +137,7 @@ class JsExpr : JsNode
   {
     if (t.isList || t.isMap || t.isFunc)
     {
-      // generic signature is emitted as a string, so it never reaches
-      // qnameToJs - check the parameterized types directly
+      // signature is emitted as a str, so check the parameterized types here
       checkJsSafety(t, loc)
       js.w("sys.Type.find(\"${t.signature}\")", loc)
     }
@@ -197,7 +196,8 @@ class JsExpr : JsNode
     js.w("]")
 
     t := (MapType)(x.explicitType ?: x.ctype)
-    checkJsSafety(t, loc)  // signature emitted as a str, so bypasses qnameToJs
+    // signature is emitted as a str, so check the parameterized types here
+    checkJsSafety(t, loc)
     js.w(", sys.Type.find(\"${t.k.signature}\")")
     js.w(", sys.Type.find(\"${t.v.signature}\")")
     js.w(")")

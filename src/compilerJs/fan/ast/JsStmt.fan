@@ -60,6 +60,9 @@ class JsStmt : JsNode
     // don't write def for catch vars since we handle that ourselves in writeCatches()
     if (stmt.isCatchVar) return
 
+    // local var types are erased in the emitted js, so check them explicitly
+    if (stmt.ctype != null) checkJsSafety(stmt.ctype, stmt.loc)
+
     js.w("let ", loc)
     if (stmt.init == null) js.w(stmt.name, loc)
     else
