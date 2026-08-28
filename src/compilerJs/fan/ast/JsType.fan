@@ -81,6 +81,10 @@ class JsType : JsNode
 
   override Void write()
   {
+    // signature types are erased in the emitted js, so they never reach
+    // the qnameToJs choke point - they must be checked explicitly
+    mixins.each |m| { if (!m.isForeign) checkJsSafety(m, loc) }
+
     // class/mixin - note mixins do not extend Obj
     if (def.isMixin)
       js.wl("class ${name} {", loc)
@@ -159,6 +163,8 @@ class JsType : JsNode
 
   private Void writeField(FieldDef f)
   {
+    if (!f.type.isForeign) checkJsSafety(f.type, f.loc)
+
     privName   := fieldToJs(f.name)
     accessName := methodToJs(f.name)
 
@@ -362,6 +368,8 @@ class JsType : JsNode
     // skip abstract methods
     if (m.isAbstract) return
 
+    checkMethodSafety(m)
+
     if (m.isStatic || m.isInstanceCtor) js.w("static ")
     js.wl("${methName}${methodParams(methParams)} {", m.loc)
     js.indent
@@ -408,6 +416,16 @@ class JsType : JsNode
 
     js.unindent
     js.wl("}").nl
+  }
+
+  ** Param and return types are erased in the emitted js, so they never reach
+  ** the qnameToJs choke point. Getters/setters are skipped since their type
+  ** is already reported against the field itself.
+  private Void checkMethodSafety(MethodDef m)
+  {
+    if (m.isGetter || m.isSetter) return
+    m.params.each |p| { if (!p.type.isForeign) checkJsSafety(p.type, m.loc) }
+    if (!m.isInstanceCtor && !m.returns.isForeign) checkJsSafety(m.returns, m.loc)
   }
 
   private Void writeClosureSupport(MethodDef m, Str methName, CParam[] methParams)

@@ -105,7 +105,7 @@ abstract class JsNode
 
   ** Get the module-qualified name for this CType. If the type is in the
   ** this pod, it does not need to be qualified
-  Str qnameToJs(CType ctype)
+  Str qnameToJs(CType ctype, Loc? loc := this.loc)
   {
     podName := ctype.pod.name
     thisPod := podName == plugin.pod.name
@@ -115,8 +115,26 @@ abstract class JsNode
     // code will parse but fail if actually invoked
     if (js.contains(".[java].")) js = js.replace(".[java].", ".")
     else if (js.contains("[java]")) js = js.replace("[java]", "java.fail")
+    else checkEmittedType(ctype, loc)
 
     return js
+  }
+
+  ** Every emitted type name routes thru qnameToJs, so this is the single
+  ** choke point where a reference to a type with no JS can be caught. Java
+  ** FFI is excluded above since it is rewritten to parse-but-fail by design.
+  private Void checkEmittedType(CType ctype, Loc? loc)
+  {
+    t := resolveType(ctype)
+    if (t.isForeign || t.isSynthetic) return
+
+    // dedupe: one warning per type per source location - note Loc.toStr
+    // renders the source token, so key off the actual file/line/col
+    key := "${t.qname}:${loc?.file}:${loc?.line}:${loc?.col}"
+    if (plugin.reportedNonJs[key]) return
+    plugin.reportedNonJs[key] = true
+
+    checkJsSafety(t, loc)
   }
 
   ** Get the name that should be used for the generated field in JS code.
