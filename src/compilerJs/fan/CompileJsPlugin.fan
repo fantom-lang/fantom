@@ -46,10 +46,6 @@ class CompileJsPlugin : CompilerStep
 
   [Str:Bool] dependOnNames := [:] { def = false }
 
-  ** Non-JS types already warned about, keyed by "qname:loc" so that a type
-  ** emitted more than once at the same location only warns once
-  [Str:Bool] reportedNonJs := [:] { def = false }
-
   JsClosure closureSupport { private set }
 
 //////////////////////////////////////////////////////////////////////////

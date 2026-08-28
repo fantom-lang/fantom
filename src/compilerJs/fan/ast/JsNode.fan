@@ -75,10 +75,6 @@ abstract class JsNode
     }
     else if (!(ctype.pod.name == "sys" || ctype.isSynthetic || ctype.facet("sys::Js") != null || c.input.forceJs))
     {
-      // dedupe so a type emitted repeatedly at one spot warns once
-      key := "${ctype.qname}:${loc}"
-      if (plugin.reportedNonJs[key]) return false
-      plugin.reportedNonJs[key] = true
       warn("Type '${ctype.qname}' not available in JS", loc)
       return false
     }
