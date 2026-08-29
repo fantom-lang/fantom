@@ -27,6 +27,7 @@ public abstract class NativeConsole extends Console
     return cur;
   }
   private static NativeConsole cur;
+  private static final java.util.logging.Logger jlineLogger = java.util.logging.Logger.getLogger("org.jline");
 
   /*
    * To test jline2:
@@ -35,6 +36,11 @@ public abstract class NativeConsole extends Console
 
   private static NativeConsole create()
   {
+    // silence jline warning when no tty available such as spawned processes;
+    // must keep strong ref because jline calls getLogger on every log call
+    // and the LogManager only holds the logger weakly
+    jlineLogger.setLevel(java.util.logging.Level.OFF);
+
     try { return new Jline3Console(); } catch (Exception e) {}
     try { return new Jline2Console(); } catch (Exception e) {}
     if (System.console() != null) return new JavaConsole(System.console());
