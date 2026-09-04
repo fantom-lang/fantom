@@ -507,6 +507,23 @@ public class StatementPeer
     this.limit = 0;
     if (limit != null && limit.longValue() < Integer.MAX_VALUE)
       this.limit = limit.intValue();
+
+    // An unprepared statement is created fresh for each execution, so
+    // createStatement applies the limit and the statement we may be
+    // holding here is already closed.  A prepared one is created once,
+    // at prepare, so a limit set afterwards has to be pushed to the live
+    // statement or it is silently ignored.  setMaxRows(0) means no limit.
+    if (prepared && stmt != null)
+    {
+      try
+      {
+        stmt.setMaxRows(this.limit);
+      }
+      catch (SQLException e)
+      {
+        throw SqlConnImplPeer.err(e);
+      }
+    }
   }
 
   private void createStatement(Statement self)

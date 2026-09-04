@@ -427,13 +427,30 @@ abstract class SqlTest : Test
     verifyNull(stmt.limit)
     verifyEq(stmt.query.size, 5)
 
-    // prepared: the limit must be set before prepare, since that is when
-    // the underlying JDBC statement is created
+    // prepared, with the limit set before prepare
     stmt = db.sql("select * from $valsTable")
     stmt.limit = 2
     stmt.prepare
     try
       verifyEq(stmt.query.size, 2)
+    finally
+      stmt.close
+
+    // and set after prepare, which has to reach the statement that
+    // prepare already created
+    stmt = db.sql("select * from $valsTable").prepare
+    try
+    {
+      verifyEq(stmt.query.size, 5)
+      stmt.limit = 2
+      verifyEq(stmt.limit, 2)
+      verifyEq(stmt.query.size, 2)
+
+      // and clearing it again restores the full result
+      stmt.limit = null
+      verifyNull(stmt.limit)
+      verifyEq(stmt.query.size, 5)
+    }
     finally
       stmt.close
   }
