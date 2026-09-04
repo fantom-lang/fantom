@@ -442,6 +442,12 @@ public class StatementPeer
   {
     if (!prepared)
       throw SqlErr.make("Statement has not been prepared.");
+
+    // a statement with no params tolerates a null map; one with params
+    // does not, and saying which are missing beats a NullPointerException
+    if (params == null && !paramMap.isEmpty())
+      throw SqlErr.make("Statement requires params: " + paramMap.keys().join(", "));
+
     PreparedStatement pstmt = (PreparedStatement)stmt;
 
     Iterator i = paramMap.pairsIterator();
@@ -471,7 +477,8 @@ public class StatementPeer
         }
         catch (Exception e)
         {
-          throw SqlErr.make("Param name='" + key + "' class='" + value.getClass().getName() + "'; " +
+          String cls = (value == null) ? "null" : value.getClass().getName();
+          throw SqlErr.make("Param name='" + key + "' class='" + cls + "'; " +
                             e.getMessage(), Err.make(e));
         }
       }

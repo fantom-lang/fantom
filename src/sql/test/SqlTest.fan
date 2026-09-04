@@ -570,6 +570,30 @@ abstract class SqlTest : Test
     // v_str is the one not-null column
     verifyErr(SqlErr#) { insert(valsTable, ["v_str": null, "v_i32": 9]) }
 
+    // a statement with params needs a params map, and says which ones
+    withParams := db.sql("select * from $valsTable where v_i32 = @n").prepare
+    try
+    {
+      caught := false
+      try
+        withParams.query
+      catch (SqlErr e)
+      {
+        caught = true
+        verify(e.msg.contains("n"), e.msg)
+      }
+      verify(caught, "expected SqlErr for missing params map")
+    }
+    finally
+      withParams.close
+
+    // but a statement with no params is happy without one
+    noParams := db.sql("select * from $valsTable").prepare
+    try
+      verifyEq(noParams.query.size, 1)
+    finally
+      noParams.close
+
     // a statement is unusable once closed
     stmt := db.sql("select * from $valsTable").prepare
     verifyEq(stmt.query.size, 1)
