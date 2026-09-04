@@ -397,7 +397,7 @@ public class StatementPeer
       genKeys = readBatchGenKeys(pstmt, (int)paramsList.size());
 
       // process result
-      List updateCounts = List.make(Sys.IntType, exec.length);
+      List updateCounts = List.make(Sys.IntType.toNullable(), exec.length);
       for (int i = 0; i < exec.length; i++)
       {
         int n = exec[i];
