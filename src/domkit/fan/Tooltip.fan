@@ -21,8 +21,6 @@ using dom
   {
     this.style.addClass("domkit-Popup")
     this.style->zIndex = 2000
-    // this.onEvent(EventType.mouseEnter, false) { inTooltip=true;  check }
-    // this.onEvent("mouseleave", false) { inTooltip=false; check }
   }
 
   ** Time mouse must be over bound node before opening the
@@ -41,36 +39,31 @@ using dom
   ** Check if tooltip should be opened or closed.
   private Void check()
   {
-    if (inNode) // || inTooltip)
+    if (inNode)
     {
-      // open
-      if (delay == null)
-      {
-        if (isOpen) return
-        open
-      }
-      else
-      {
-        if (isOpen) return
-        if (timerId != null) return
-        timerId = Win.cur.setTimeout(delay) { this.open }
-      }
+      if (isOpen || timerId != null) return
+      if (delay == null) open
+      else timerId = Win.cur.setTimeout(delay) { this.timerId=null; this.open }
     }
     else
     {
-      // close
-      if (isOpen) { close; return }
       if (timerId != null) { Win.cur.clearTimeout(timerId); timerId=null }
+      if (isOpen) close
     }
   }
 
   ** Is Tooltip open.
   private Bool isOpen() { parent != null }
 
+  ** Is bound node still mounted in the document.
+  private Bool mounted() { Win.cur.doc.body.containsChild(node) }
+
   ** Open tooltip over bound parent node.
   private Void open()
   {
-    this.timerId = null
+    // an unmounted node never fires mouseleave, which would orphan
+    // the tooltip forever; likewise never open if mouse already left
+    if (isOpen || !inNode || !mounted) return
 
     x := node.pagePos.x
     y := node.pagePos.y + node.size.h + 1
@@ -93,20 +86,22 @@ using dom
     if ((y + sz.h + gutter) > vp.h) this.style->top  = "${vp.h-sz.h-gutter}px"
 
     this.transition(["opacity": "1"], null, 100ms)
+
+    // failsafe: close if node unmounted while open
+    watchId = Win.cur.setInterval(500ms) { if (!this.mounted) { this.inNode=false; this.close } }
   }
 
   ** Close this tooltip.
   @NoDoc Void close()
   {
-    this.transition(["opacity":"0"], null, 100ms) {
-      this.parent?.remove(this)
-    }
+    if (watchId != null) { Win.cur.clearInterval(watchId); watchId=null }
+    this.transition(["opacity":"0"], null, 100ms) { this.parent?.remove(this) }
   }
 
   private static const Int gutter := 12
 
-  private Elem? node                // parent elem
-  private Int? timerId              // open delay timer
-  private Bool inNode    := false   // is mouse inside parent node
-  private Bool inTooltip := false   // is mouse inside tooltip
+  private Elem? node             // parent elem
+  private Int? timerId           // open delay timer
+  private Int? watchId           // open watchdog interval
+  private Bool inNode := false   // is mouse inside parent node
 }
