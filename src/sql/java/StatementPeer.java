@@ -397,7 +397,7 @@ public class StatementPeer
       genKeys = readBatchGenKeys(pstmt, (int)paramsList.size());
 
       // process result
-      List updateCounts = List.make(Sys.IntType, exec.length);
+      List updateCounts = List.make(Sys.IntType.toNullable(), exec.length);
       for (int i = 0; i < exec.length; i++)
       {
         int n = exec[i];
@@ -442,6 +442,12 @@ public class StatementPeer
   {
     if (!prepared)
       throw SqlErr.make("Statement has not been prepared.");
+
+    // a statement with no params tolerates a null map; one with params
+    // does not, and saying which are missing beats a NullPointerException
+    if (params == null && !paramMap.isEmpty())
+      throw SqlErr.make("Statement requires params: " + paramMap.keys().join(", "));
+
     PreparedStatement pstmt = (PreparedStatement)stmt;
 
     Iterator i = paramMap.pairsIterator();
@@ -471,7 +477,8 @@ public class StatementPeer
         }
         catch (Exception e)
         {
-          throw SqlErr.make("Param name='" + key + "' class='" + value.getClass().getName() + "'; " +
+          String cls = (value == null) ? "null" : value.getClass().getName();
+          throw SqlErr.make("Param name='" + key + "' class='" + cls + "'; " +
                             e.getMessage(), Err.make(e));
         }
       }
@@ -500,6 +507,23 @@ public class StatementPeer
     this.limit = 0;
     if (limit != null && limit.longValue() < Integer.MAX_VALUE)
       this.limit = limit.intValue();
+
+    // An unprepared statement is created fresh for each execution, so
+    // createStatement applies the limit and the statement we may be
+    // holding here is already closed.  A prepared one is created once,
+    // at prepare, so a limit set afterwards has to be pushed to the live
+    // statement or it is silently ignored.  setMaxRows(0) means no limit.
+    if (prepared && stmt != null)
+    {
+      try
+      {
+        stmt.setMaxRows(this.limit);
+      }
+      catch (SQLException e)
+      {
+        throw SqlConnImplPeer.err(e);
+      }
+    }
   }
 
   private void createStatement(Statement self)

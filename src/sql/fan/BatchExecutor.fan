@@ -26,7 +26,7 @@ class BatchExecutor
   Void add(Str:Obj params)
   {
     queued.add(params)
-    if (queued.size > maxChunkSize)
+    if (queued.size >= maxChunkSize)
     {
       r := stmt.executeBatch(queued)
       result.updateCounts.addAll(r.updateCounts)
