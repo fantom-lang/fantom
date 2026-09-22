@@ -68,6 +68,48 @@ public class SysInStream
     }
   }
 
+  /**
+   * Bulk read the remaining bytes and decode them in one pass
+   */
+  public String readAllStr(boolean normalizeNewlines)
+  {
+    try
+    {
+      MemBuf buf = readAllBytes();
+      String s = charsetDecoder.decodeAll(buf.buf, buf.size);
+      if (normalizeNewlines && s.indexOf('\r') >= 0) s = s.replace("\r\n", "\n").replace('\r', '\n');
+      return s;
+    }
+    finally
+    {
+      try { close(); } catch (Exception e) { e.printStackTrace(); }
+    }
+  }
+
+  /**
+   * Read remaining bytes, sized by available() so a file fits in one read
+   */
+  private MemBuf readAllBytes()
+  {
+    try
+    {
+      byte[] buf = new byte[Math.max(in.available() + 1, 1024)];
+      int size = 0;
+      while (true)
+      {
+        if (size == buf.length) buf = java.util.Arrays.copyOf(buf, size * 2);
+        int n = in.read(buf, size, buf.length - size);
+        if (n < 0) break;
+        size += n;
+      }
+      return new MemBuf(buf, size);
+    }
+    catch (IOException e)
+    {
+      throw IOErr.make(e);
+    }
+  }
+
   public Long readBuf(Buf buf, long n)
   {
     try

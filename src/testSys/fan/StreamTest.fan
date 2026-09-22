@@ -935,6 +935,115 @@ class StreamTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Read All Str
+//////////////////////////////////////////////////////////////////////////
+
+  Void testReadAllStrCharsets()
+  {
+    // newlines adjacent to multi-byte chars
+    s    := "ascii é 中\r\né\rendé"
+    norm := "ascii é 中\né\nendé"
+    verifyReadAllStr(Charset.utf8,    s, norm)
+    verifyReadAllStr(Charset.utf16BE, s, norm)
+    verifyReadAllStr(Charset.utf16LE, s, norm)
+    verifyReadAllStr(Charset.utf8, "4-byte \u{1f973}\r\n", "4-byte \u{1f973}\n")
+
+    // pure ascii
+    verifyReadAllStr(Charset.utf8, "", "")
+    verifyReadAllStr(Charset.utf8, "ascii\r\nonly\r", "ascii\nonly\n")
+  }
+
+  Void verifyReadAllStr(Charset charset, Str s, Str norm)
+  {
+    f := tempDir + `readAllStr-charset.txt`
+    out := f.out
+    out.charset = charset
+    out.print(s)
+    out.close
+
+    in := f.in
+    in.charset = charset
+    verifyEq(in.readAllStr(false), s)
+
+    in = f.in
+    in.charset = charset
+    verifyEq(in.readAllStr, norm)
+  }
+
+  Void testReadAllStrInvalid()
+  {
+    if (Env.cur.runtime == "js") return
+
+    verifyReadAllStrInvalid(Buf().print("ab").write(0xff).print("cd"))  // bad lead byte
+    verifyReadAllStrInvalid(Buf().print("ab").write(0x80).print("cd"))  // stray continuation
+    verifyReadAllStrInvalid(Buf().print("ab").write(0xc3).print("cd"))  // bad continuation
+    verifyReadAllStrInvalid(Buf().print("ab").write(0xe4).write(0xb8))  // truncated at end
+  }
+
+  Void verifyReadAllStrInvalid(Buf buf)
+  {
+    f := tempDir + `readAllStr-invalid.txt`
+    f.out.writeBuf(buf.flip).close
+
+    in := f.in
+    verifyErr(IOErr#) { in.readAllStr }
+    verifyErr(IOErr#) { in.read }  // closed on error
+  }
+
+  Void testReadAllStrUnknownSize()
+  {
+    // zip entry streams don't report their size, so the read buffer grows
+    s := StrBuf()
+    500.times |i| { s.add("line $i\r\n") }
+    verifyReadAllStrZip(s.toStr)
+    s.add("é中")
+    verifyReadAllStrZip(s.toStr)
+  }
+
+  Void verifyReadAllStrZip(Str s)
+  {
+    f := tempDir + `readAllStr.zip`
+    zip := Zip.write(f.out)
+    zip.writeNext(`/a.txt`).print(s).close
+    zip.close
+
+    zip = Zip.read(f.in)
+    verifyEq(zip.readNext.readAllStr, s.replace("\r\n", "\n"))
+    zip.close
+  }
+
+  Void testReadAllStrAfterRead()
+  {
+    f := tempDir + `readAllStr-after.txt`
+    f.out.print("héllo\r\nwörld").close
+
+    // after chars already read
+    in := f.in
+    verifyEq(in.readChar, 'h')
+    verifyEq(in.readChar, 'é')
+    verifyEq(in.readAllStr, "llo\nwörld")
+
+    // after chars pushed back
+    in = f.in
+    verifyEq(in.readChar, 'h')
+    in.unreadChar('h')
+    in.unreadChar('ß')
+    verifyEq(in.readAllStr, "ßhéllo\nwörld")
+
+    // after charset switched mid-stream
+    out := f.out
+    out.print("ab")
+    out.charset = Charset.utf16BE
+    out.print("é\r\nx")
+    out.close
+    in = f.in
+    verifyEq(in.readChar, 'a')
+    verifyEq(in.readChar, 'b')
+    in.charset = Charset.utf16BE
+    verifyEq(in.readAllStr, "é\nx")
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Props
 //////////////////////////////////////////////////////////////////////////
 

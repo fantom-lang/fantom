@@ -132,6 +132,13 @@ public class Charset
 
   static class Utf8Decoder extends Decoder
   {
+    /** Pure ASCII is a single copy as a Latin-1 string */
+    public String decodeAll(byte[] bytes, int n)
+    {
+      for (int i = 0; i < n; ++i) if (bytes[i] < 0) return super.decodeAll(bytes, n);
+      return new String(bytes, 0, n, java.nio.charset.StandardCharsets.ISO_8859_1);
+    }
+
     public int decode(InStream in)
     {
       int c = in.r();
@@ -427,6 +434,15 @@ public class Charset
   {
     /** Read the next code point from the InStream */
     public abstract int decode(InStream in);
+
+    /** Decode bytes to a string without newline normalization */
+    public String decodeAll(byte[] bytes, int n)
+    {
+      InStream in = new MemBuf(bytes, n).in();
+      StringBuilder s = new StringBuilder(n);
+      for (int c; (c = decode(in)) >= 0; ) s.appendCodePoint(c);
+      return s.toString();
+    }
   }
 
   /**
