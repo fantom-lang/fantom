@@ -24,7 +24,8 @@ class SqlConnPoolTest : Test
       it.uri      = "test"
       it.maxConns = 2
       it.linger   = 200ms
-      it.timeout  = 300ms
+      it.checkoutTimeout  = 300ms
+      it.bookkeepingInterval = 1hr
     }
 
 
@@ -95,7 +96,7 @@ class SqlConnPoolTest : Test
     // wait for linger time and verify conns are closed
     reset()
     Actor.sleep(cp.linger)
-    cp.checkLinger
+    cp.onBookkeeping
     verifyPool(cp, actors, 0, 0, [null, null, null, null])
 
     // run one quickly
@@ -104,8 +105,8 @@ class SqlConnPoolTest : Test
 
     // verify timeouts
     reset()
-    f1 = execute(a1, cp.timeout+40ms)
-    f2 = execute(a2, cp.timeout+40ms)
+    f1 = execute(a1, cp.checkoutTimeout+40ms)
+    f2 = execute(a2, cp.checkoutTimeout+40ms)
     f3 = a3.send(1sec)
     f4 = a4.send(1sec)
     verifyPool(cp, actors, 2, 0, ["2", "3", null, null])
@@ -180,7 +181,7 @@ class SqlConnPoolTest : Test
     cp.close
 
     // auto-commit pool: no rollback on release
-    cp2 := SqlConnPool { it.uri = "test"; it.autoCommit = true }
+    cp2 := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.autoCommit = true }
     TestSqlConn? c2 := null
     cp2.execute |c| { c2 = c }
     verifyEq(c2.rollbacks, 0)
@@ -197,7 +198,7 @@ class SqlConnPoolTest : Test
 
   Void testMaxLifetime()
   {
-    cp := SqlConnPool { it.uri = "test"; it.linger = 1min; it.maxLifetime = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.linger = 1min; it.maxLifetime = 100ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
 
@@ -205,7 +206,7 @@ class SqlConnPoolTest : Test
     5.times { Actor.sleep(30ms); cp.execute |c| { verifySame(c, c1) } }
 
     // retired by age even though never idle
-    cp.checkLinger
+    cp.onBookkeeping
     verifyEq(c1.isClosed, true)
     verifyEq(debugInt(cp.debug, "entries"), 0)
     cp.close
@@ -213,28 +214,48 @@ class SqlConnPoolTest : Test
 
   Void testInUseNotReaped()
   {
-    cp := SqlConnPool { it.uri = "test"; it.linger = 50ms; it.maxLifetime = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.linger = 50ms; it.maxLifetime = 50ms }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
 
     // conn is past linger and maxLifetime but in use; not reaped
     f := execute(a, 200ms)
     Actor.sleep(100ms)
-    cp.checkLinger
+    cp.onBookkeeping
     verifyEq(debugInt(cp.debug, "entries"), 1)
     verifyEq(debugInt(cp.debug, "inUse"), 1)
     f.get
 
     // once released and idle it is reaped
     Actor.sleep(60ms)
-    cp.checkLinger
+    cp.onBookkeeping
     verifyEq(debugInt(cp.debug, "entries"), 0)
     cp.close
   }
 
+  Void testBookkeepingRuns()
+  {
+    // the pool drives its own bookkeeping; nothing external calls it
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 50ms; it.linger = 50ms }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    verifyEq(debugInt(cp.debug, "entries"), 1)
+
+    // idle past linger; reaped without any call to onBookkeeping
+    endTime := Duration.now + 5sec
+    while (debugInt(cp.debug, "entries") > 0 && Duration.now < endTime)
+      Actor.sleep(20ms)
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    verifyEq(c1.isClosed, true)
+
+    // and the timer stops with the pool
+    cp.close
+    verifyEq(cp.isClosed, true)
+  }
+
   Void testLeakWarn()
   {
-    cp := SqlConnPool { it.uri = "test"; it.leakWarn = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms }
     count := AtomicInt()
     handler := |LogRec rec| { if (rec.msg.contains("held in-use")) count.increment }
     Log.addHandler(handler)
@@ -246,15 +267,15 @@ class SqlConnPoolTest : Test
       // hold past leakWarn; warns once even with multiple checks
       f := execute(a, 200ms)
       Actor.sleep(100ms)
-      cp.checkLinger
-      cp.checkLinger
+      cp.onBookkeeping
+      cp.onBookkeeping
       verifyEq(count.val, 1)
       f.get
 
       // next long checkout warns again
       f = execute(a, 200ms)
       Actor.sleep(100ms)
-      cp.checkLinger
+      cp.onBookkeeping
       verifyEq(count.val, 2)
       f.get
     }
@@ -264,7 +285,7 @@ class SqlConnPoolTest : Test
 
   Void testCloseFailFast()
   {
-    cp := SqlConnPool { it.uri = "test"; it.maxConns = 1; it.timeout = 5sec }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 1; it.checkoutTimeout = 5sec }
     ap := ActorPool()
     a1 := SqlConnPoolTestActor(ap, cp, "a1")
     a2 := SqlConnPoolTestActor(ap, cp, "a2")
@@ -284,7 +305,7 @@ class SqlConnPoolTest : Test
 
   Void testStress()
   {
-    cp := SqlConnPool { it.uri = "test"; it.maxConns = 3; it.timeout = 10sec; it.linger = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
     ap := ActorPool { it.maxThreads = 8 }
     actors := SqlConnPoolStressActor[,]
     8.times { actors.add(SqlConnPoolStressActor(ap, cp)) }
@@ -298,7 +319,7 @@ class SqlConnPoolTest : Test
     verify(debugInt(cp.debug, "entries") <= 3)
     verifyEq(debugInt(cp.debug, "inUse"), 0)
     Actor.sleep(150ms)
-    cp.checkLinger
+    cp.onBookkeeping
     verifyEq(debugInt(cp.debug, "entries"), 0)
     cp.close
   }

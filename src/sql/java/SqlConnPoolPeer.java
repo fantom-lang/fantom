@@ -8,6 +8,8 @@
 package fan.sql;
 
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.sql.*;
 import fan.sys.*;
 
@@ -21,6 +23,34 @@ public class SqlConnPoolPeer
   public static SqlConnPoolPeer make(SqlConnPool fan)
   {
     return new SqlConnPoolPeer();
+  }
+
+  // Called from the Fantom constructor after the it-block has run, so the
+  // configuration is in place; the peer itself is built before that.
+  public void startBookkeeping(final SqlConnPool self)
+  {
+    final int poolNum = poolCounter.incrementAndGet();
+    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(new ThreadFactory()
+    {
+      public Thread newThread(Runnable r)
+      {
+        Thread t = new Thread(r, "sqlConnPool-" + poolNum + "-bookkeeping");
+        t.setDaemon(true);
+        return t;
+      }
+    });
+
+    long ms = self.bookkeepingInterval.millis();
+    // fixed delay, not fixed rate: a slow pass must not let passes pile up
+    this.bookkeeper.scheduleWithFixedDelay(new Runnable()
+    {
+      public void run()
+      {
+        // never let a failed pass kill the schedule
+        try { onBookkeeping(self); }
+        catch (Throwable e) { self.log.err("SqlConnPool bookkeeping failed", Err.make(e)); }
+      }
+    }, ms, ms, TimeUnit.MILLISECONDS);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -69,17 +99,25 @@ public class SqlConnPoolPeer
       entries = new ArrayList<>();
       notifyAll();
     }
+
+    // stop bookkeeping outside the lock; a pass blocked on the monitor
+    // would otherwise deadlock shutdown
+    if (bookkeeper != null) bookkeeper.shutdownNow();
+
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
   }
 
-  public void checkLinger(SqlConnPool self)
+  public void onBookkeeping(SqlConnPool self)
   {
     // remove expired entries under the lock, then close them
     // outside the lock since closing may block on network I/O
     ArrayList<Entry> expired;
     synchronized (this)
     {
+      // close already took the entries; nothing to do
+      if (closed) return;
+
       long now = Duration.nowTicks();
       long linger = self.linger.ticks();
       long maxLifetime = self.maxLifetime.ticks();
@@ -131,7 +169,7 @@ public class SqlConnPoolPeer
   private Entry allocate(SqlConnPool self)
     throws InterruptedException
   {
-    long deadline = System.nanoTime()/1000000L + self.timeout.millis();
+    long deadline = System.nanoTime()/1000000L + self.checkoutTimeout.millis();
     while (true)
     {
       Entry entry = allocateEntry(self, deadline);
@@ -164,7 +202,7 @@ public class SqlConnPoolPeer
       // check if we have waited past our deadline
       long toSleep = deadline - System.nanoTime()/1000000L;
       if (toSleep <= 0)
-        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.timeout + ")");
+        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.checkoutTimeout + ")");
 
       // sleep until we get a notify
       wait(toSleep);
@@ -333,7 +371,11 @@ public class SqlConnPoolPeer
   // longer than this threshold (in Duration ticks)
   private static final long validateThreshold = 500L * 1000000L;  // 500ms
 
+  // names the bookkeeping thread of each pool in this JVM
+  private static final AtomicInteger poolCounter = new AtomicInteger();
+
   private ArrayList<Entry> entries = new ArrayList<>();
+  private ScheduledExecutorService bookkeeper;
   private boolean closed;
 }
 
