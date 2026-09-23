@@ -17,6 +17,9 @@ const class SqlConnPool
   new make(|This|? f)
   {
     if (f != null) f(this)
+    ka := keepaliveInterval
+    if (ka != null && ka >= linger)
+      log.warn("SqlConnPool keepaliveInterval ($ka) is not less than linger ($linger); idle connections are closed before a keepalive can run")
     startBookkeeping
   }
 
@@ -58,6 +61,19 @@ const class SqlConnPool
   ** is logged that it may be stuck or leaked.  The warning is logged once
   ** per checkout.
   const Duration leakWarn := 2min
+
+  ** How long an idle connection may sit before bookkeeping pings it to
+  ** keep it alive.  Network infrastructure between the pool and the
+  ** database -- NAT gateways, firewalls, load balancers -- silently drops
+  ** idle flows, and a connection killed that way looks healthy until the
+  ** next query fails.  A ping that fails evicts the connection then and
+  ** there rather than on somebody's next checkout.  This must be less
+  ** than `linger` to have any effect, since otherwise the connection is
+  ** closed for being idle first.  If null then idle connections are
+  ** never pinged.
+  **
+  ** A keepalive is not a use: it does not defer `linger`.
+  const Duration? keepaliveInterval := 2min
 
   ** Only ping a connection on checkout if it has been idle at least this
   ** long.  A connection used moments ago is almost certainly still good,

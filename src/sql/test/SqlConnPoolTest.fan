@@ -24,6 +24,7 @@ class SqlConnPoolTest : Test
       it.uri      = "test"
       it.maxConns = 2
       it.linger   = 200ms
+      it.keepaliveInterval = null
       it.checkoutTimeout  = 300ms
       it.bookkeepingInterval = 1hr
     }
@@ -198,7 +199,7 @@ class SqlConnPoolTest : Test
 
   Void testMaxLifetime()
   {
-    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.linger = 1min; it.maxLifetime = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.keepaliveInterval = null; it.linger = 1min; it.maxLifetime = 100ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
 
@@ -214,7 +215,7 @@ class SqlConnPoolTest : Test
 
   Void testInUseNotReaped()
   {
-    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.linger = 50ms; it.maxLifetime = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.keepaliveInterval = null; it.linger = 50ms; it.maxLifetime = 50ms }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
 
@@ -236,7 +237,7 @@ class SqlConnPoolTest : Test
   Void testBookkeepingRuns()
   {
     // the pool drives its own bookkeeping; nothing external calls it
-    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 50ms; it.linger = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 50ms; it.keepaliveInterval = null; it.linger = 50ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(debugInt(cp.debug, "entries"), 1)
@@ -290,6 +291,61 @@ class SqlConnPoolTest : Test
     cp.execute |c| { c1 = c }
     verifyNotNull(c1)
     verifyEq(debugInt(cp.debug, "entries"), 1)
+    cp.close
+  }
+
+  Void testKeepalive()
+  {
+    // idle connections are pinged so infrastructure cannot kill them
+    // unnoticed; a ping that fails evicts the connection then and there
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.linger = 1hr
+      it.keepaliveInterval = 50ms
+      it.validationTimeout = 250ms
+    }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    verifyNull(c1.lastValidateTimeout)
+
+    // idle past keepaliveInterval: pinged, alive, still pooled
+    Actor.sleep(100ms)
+    cp.onBookkeeping
+    verifyEq(c1.lastValidateTimeout, 250ms)
+    verifyEq(debugInt(cp.debug, "entries"), 1)
+    verifyEq(c1.isClosed, false)
+
+    // now the connection is dead: the next ping reaps it without
+    // anyone having to check it out first
+    c1.valid = false
+    Actor.sleep(60ms)
+    cp.onBookkeeping
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    verifyEq(c1.isClosed, true)
+    cp.close
+  }
+
+  Void testKeepaliveDoesNotDeferLinger()
+  {
+    // linger measures from the last real use; if a ping counted as one
+    // the connection would never age out
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.linger = 300ms
+      it.keepaliveInterval = 50ms
+    }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+
+    // ping repeatedly across the linger window
+    6.times { Actor.sleep(60ms); cp.onBookkeeping }
+
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    verifyEq(c1.isClosed, true)
     cp.close
   }
 
@@ -427,7 +483,7 @@ class SqlConnPoolTest : Test
 
   Void testStress()
   {
-    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.keepaliveInterval = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
     ap := ActorPool { it.maxThreads = 8 }
     actors := SqlConnPoolStressActor[,]
     8.times { actors.add(SqlConnPoolStressActor(ap, cp)) }
