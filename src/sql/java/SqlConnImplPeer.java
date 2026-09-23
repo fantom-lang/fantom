@@ -34,6 +34,16 @@ public class SqlConnImplPeer
     {
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
+
+      // test hook "test:<millis>": a connect that takes a while and, like
+      // a driver blocked in a socket connect, does not answer an interrupt
+      if (uri.startsWith("test:"))
+      {
+        long end = System.currentTimeMillis() + Long.parseLong(uri.substring(5));
+        while (System.currentTimeMillis() < end)
+          { try { Thread.sleep(10); } catch (InterruptedException e) {} }
+        return TestSqlConn.make();
+      }
       if (user == null)
       {
         //support for certificate auth

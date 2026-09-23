@@ -293,6 +293,42 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
+  Void testConnectTimeout()
+  {
+    // the connect takes 400ms and ignores interrupt, like a real driver
+    cp := SqlConnPool
+    {
+      it.uri = "test:400"
+      it.bookkeepingInterval = 1hr
+      it.maxConns = 1
+      it.connectTimeout = 100ms
+    }
+    before := TestSqlConn.openCount.val
+
+    verifyErr(TimeoutErr#) { cp.execute |c| {} }
+
+    // the slot is released even though the connect is still running
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+
+    // the abandoned connect lands late; its connection must be closed,
+    // not pooled and not leaked
+    Actor.sleep(600ms)
+    verifyEq(TestSqlConn.openCount.val, before)
+    cp.close
+  }
+
+  Void testOpenFailureClosesConn()
+  {
+    // onOpen throws after the connect succeeded: the connection is live
+    // and unreferenced, so open must close it before propagating
+    cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr }
+    before := TestSqlConn.openCount.val
+    cp.failNext.val = true
+    verifyErr(IOErr#) { cp.execute |c| {} }
+    verifyEq(TestSqlConn.openCount.val, before)
+    cp.close
+  }
+
   Void testLeakWarn()
   {
     cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms }

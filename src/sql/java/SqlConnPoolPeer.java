@@ -9,7 +9,7 @@ package fan.sql;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.*;
 import java.sql.*;
 import fan.sys.*;
 
@@ -25,20 +25,26 @@ public class SqlConnPoolPeer
     return new SqlConnPoolPeer();
   }
 
+  // Daemon threads named for the pool, so a stack dump says which pool
+  // and which role a thread belongs to.
+  private ThreadFactory threadFactory(final String role)
+  {
+    return new ThreadFactory()
+    {
+      public Thread newThread(Runnable r)
+      {
+        Thread t = new Thread(r, "sqlConnPool-" + poolNum + "-" + role);
+        t.setDaemon(true);
+        return t;
+      }
+    };
+  }
+
   // Called from the Fantom constructor after the it-block has run, so the
   // configuration is in place; the peer itself is built before that.
   public void startBookkeeping(final SqlConnPool self)
   {
-    final int poolNum = poolCounter.incrementAndGet();
-    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(new ThreadFactory()
-    {
-      public Thread newThread(Runnable r)
-      {
-        Thread t = new Thread(r, "sqlConnPool-" + poolNum + "-bookkeeping");
-        t.setDaemon(true);
-        return t;
-      }
-    });
+    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("bookkeeping"));
 
     long ms = self.bookkeepingInterval.millis();
     // fixed delay, not fixed rate: a slow pass must not let passes pile up
@@ -101,8 +107,11 @@ public class SqlConnPoolPeer
     }
 
     // stop bookkeeping outside the lock; a pass blocked on the monitor
-    // would otherwise deadlock shutdown
+    // would otherwise deadlock shutdown.  In flight connects are
+    // interrupted; any that still land are closed by their own task,
+    // since openReserved sees the pool closed and discards them.
     if (bookkeeper != null) bookkeeper.shutdownNow();
+    connector.shutdownNow();
 
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
@@ -348,18 +357,87 @@ public class SqlConnPoolPeer
 
   private SqlConn open(SqlConnPool self)
   {
-    // bound how long a connect may block; note this is a JVM
-    // wide setting on DriverManager (see SqlConnPool fandoc)
-    if (self.connectTimeout != null)
-      DriverManager.setLoginTimeout((int)self.connectTimeout.toSec());
+    SqlConn c = connect(self);
+    try
+    {
+      // set auto-commit based on connection pool property
+      c.autoCommit(self.autoCommit());
 
-    SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
-
-    // set auto-commit based on connection pool property
-    c.autoCommit(self.autoCommit());
-
-    self.onOpen(c);
+      self.onOpen(c);
+    }
+    // the connection is open but unusable and nothing else holds a
+    // reference to it; onOpen never completed so onClose is not called
+    catch (RuntimeException e) { closeQuietly(c); throw e; }
+    catch (Error e)            { closeQuietly(c); throw e; }
     return c;
+  }
+
+  // Open the JDBC connection on the connect executor so connectTimeout
+  // can bound it.  This is per-pool; the old DriverManager.setLoginTimeout
+  // was a JVM wide setting that every pool and every other JDBC user in
+  // the process shared.
+  private SqlConn connect(final SqlConnPool self)
+  {
+    final AtomicReference<Object> holder = new AtomicReference<Object>();
+    Future<?> future = connector.submit(new Runnable()
+    {
+      public void run()
+      {
+        SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
+
+        // our caller may have given up while we were connecting, in
+        // which case this connection belongs to nobody
+        if (!holder.compareAndSet(null, c)) closeQuietly(c);
+      }
+    });
+
+    try
+    {
+      if (self.connectTimeout == null) future.get();
+      else future.get(self.connectTimeout.millis(), TimeUnit.MILLISECONDS);
+    }
+    catch (TimeoutException e)
+    {
+      // cancel is best effort: a driver blocked in a socket connect
+      // does not answer an interrupt, which is why abandon exists
+      future.cancel(true);
+      abandon(holder);
+      throw TimeoutErr.make("SqlConn open exceeded connectTimeout (" + self.connectTimeout + ")");
+    }
+    catch (ExecutionException e)
+    {
+      Throwable cause = e.getCause();
+      if (cause instanceof RuntimeException) throw (RuntimeException)cause;
+      if (cause instanceof Error) throw (Error)cause;
+      throw Err.make(cause);
+    }
+    catch (InterruptedException e)
+    {
+      future.cancel(true);
+      abandon(holder);
+      Thread.currentThread().interrupt();
+      throw Err.make(e);
+    }
+
+    Object v = holder.get();
+    if (v instanceof SqlConn) return (SqlConn)v;
+    throw Err.make("SqlConn open produced no connection");
+  }
+
+  // Give up on an in flight connect.  Claiming the holder first is what
+  // makes this airtight: either we get there first and the connect task
+  // closes the connection when it lands, or it got there first and we
+  // close the connection it left behind.
+  private void abandon(AtomicReference<Object> holder)
+  {
+    if (holder.compareAndSet(null, ABANDONED)) return;
+    Object v = holder.get();
+    if (v instanceof SqlConn) closeQuietly((SqlConn)v);
+  }
+
+  private static void closeQuietly(SqlConn c)
+  {
+    try { c.close(); } catch (Throwable e) {}
   }
 
   private void close(SqlConnPool self, Entry entry)
@@ -426,8 +504,19 @@ public class SqlConnPoolPeer
   // longer than this threshold (in Duration ticks)
   private static final long validateThreshold = 500L * 1000000L;  // 500ms
 
-  // names the bookkeeping thread of each pool in this JVM
+  // names the threads of each pool in this JVM
   private static final AtomicInteger poolCounter = new AtomicInteger();
+
+  // holder sentinel: the caller stopped waiting for an in flight connect
+  private static final Object ABANDONED = new Object();
+
+  private final int poolNum = poolCounter.incrementAndGet();
+
+  // cached, not single threaded: opens run concurrently up to maxConns,
+  // and one thread here would re-serialize what opening outside the
+  // pool lock exists to parallelize
+  private final ExecutorService connector =
+    Executors.newCachedThreadPool(threadFactory("connect"));
 
   private ArrayList<Entry> entries = new ArrayList<>();
   private ScheduledExecutorService bookkeeper;

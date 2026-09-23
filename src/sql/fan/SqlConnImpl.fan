@@ -95,9 +95,18 @@ class SqlConnImpl : SqlConn
 internal class TestSqlConn: SqlConn
 {
   static const AtomicInt idCounter := AtomicInt()
-  internal new make() { id = idCounter.getAndIncrement }
+
+  ** Connections created minus connections closed; a pool that leaks a
+  ** connection leaves this above where it started.
+  static const AtomicInt openCount := AtomicInt()
+
+  internal new make() { id = idCounter.getAndIncrement; openCount.increment }
   const Int id
-  override Bool close() { closed = true}
+  override Bool close()
+  {
+    if (!closed) { closed = true; openCount.decrement }
+    return true
+  }
   override Bool isClosed() { return closed }
   override Bool isValid() { valid }
   override SqlMeta meta() { throw Err() }
