@@ -108,6 +108,12 @@ const class SqlConnPool
   ** onClose is invoked just before a connection is closed by the pool.
   protected virtual Void onClose(SqlConn c) {}
 
+  ** Capture a stack trace at every checkout so the `leakWarn` warning can
+  ** report where the connection was taken from the pool.  Off by default:
+  ** filling in a stack trace is not cheap and this pays it on every
+  ** checkout, so turn it on while hunting a specific leak.
+  const Bool leakTrace := false
+
   ** Logger
   const Log log := Log.get("sqlPool")
 
@@ -139,6 +145,9 @@ const class SqlConnPool
   ** Close all connections, stop bookkeeping, and raise exception on any
   ** new executes
   native Void close()
+
+  ** Snapshot of the pool's current gauges and cumulative counters
+  native SqlConnPoolStats stats()
 
   ** Return debug dump string for current state
   @NoDoc native Str debug()

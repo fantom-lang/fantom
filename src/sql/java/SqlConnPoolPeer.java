@@ -67,6 +67,7 @@ public class SqlConnPoolPeer
     throws Throwable
   {
     Entry entry = allocate(self);
+    synchronized (this) { checkouts++; }
     try
     {
       f.call(entry.conn);
@@ -142,7 +143,10 @@ public class SqlConnPoolPeer
         if (entry.inUse && !entry.opening && !entry.leakWarned && (now - entry.useStart) > leakWarn)
         {
           entry.leakWarned = true;
-          self.log.warn("SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn);
+          leakWarnings++;
+          String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
+          if (entry.checkoutTrace == null) self.log.warn(msg);
+          else self.log.warn(msg, Err.make(entry.checkoutTrace));
         }
       }
 
@@ -161,7 +165,7 @@ public class SqlConnPoolPeer
         for (int i=0; i<entries.size(); ++i)
         {
           Entry entry = entries.get(i);
-          if (isExpired(entry, now, linger, maxLifetime)) expired.add(entry);
+          if (isExpired(entry, now, linger, maxLifetime)) { expired.add(entry); retired++; }
           else keep.add(entry);
         }
         this.entries = keep;
@@ -209,7 +213,7 @@ public class SqlConnPoolPeer
         // took this connection and closed it
         if (closed) continue;
 
-        if (!ok) { entries.remove(entry); dead.add(entry); notifyAll(); }
+        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; notifyAll(); }
       }
     }
 
@@ -276,10 +280,15 @@ public class SqlConnPoolPeer
       // check if we have waited past our deadline
       long toSleep = deadline - System.nanoTime()/1000000L;
       if (toSleep <= 0)
+      {
+        checkoutTimeouts++;
         throw TimeoutErr.make("SqlConn cannot be acquired (" + self.checkoutTimeout + ")");
+      }
 
       // sleep until we get a notify
-      wait(toSleep);
+      waiting++;
+      try { wait(toSleep); }
+      finally { waiting--; }
     }
   }
 
@@ -299,7 +308,7 @@ public class SqlConnPoolPeer
   {
     // remove from pool under lock, but close outside the
     // lock since closing may block on network I/O
-    synchronized (this) { entries.remove(entry); notifyAll(); }
+    synchronized (this) { entries.remove(entry); evicted++; notifyAll(); }
     close(self, entry);
   }
 
@@ -319,6 +328,7 @@ public class SqlConnPoolPeer
     {
       entry.inUse = true;
       entry.useStart = Duration.nowTicks();
+      if (self.leakTrace) entry.checkoutTrace = new Throwable("checked out here");
       return entry;
     }
 
@@ -336,6 +346,7 @@ public class SqlConnPoolPeer
       entry.created = Duration.nowTicks();
       entry.lastUse = entry.created;
       entry.useStart = entry.created;
+      if (self.leakTrace) entry.checkoutTrace = new Throwable("checked out here");
       entries.add(entry);
       return entry;
     }
@@ -361,6 +372,7 @@ public class SqlConnPoolPeer
       {
         entry.conn = conn;
         entry.opening = false;
+        opened++;
       }
     }
 
@@ -404,6 +416,7 @@ public class SqlConnPoolPeer
     {
       entry.inUse = false;
       entry.leakWarned = false;
+      entry.checkoutTrace = null;
       entry.lastUse = Duration.nowTicks();
       notifyAll();
     }
@@ -510,6 +523,17 @@ public class SqlConnPoolPeer
     conn.close();
   }
 
+  public synchronized SqlConnPoolStats stats(SqlConnPool self)
+  {
+    int total = entries.size();
+    int active = 0;
+    for (int i=0; i<entries.size(); ++i)
+      if (entries.get(i).inUse) active++;
+
+    return SqlConnPoolStats.make(total, active, total-active, waiting, self.maxConns,
+      checkouts, checkoutTimeouts, opened, retired, evicted, leakWarnings);
+  }
+
   public synchronized String debug(SqlConnPool self)
   {
     int idle = 0;
@@ -526,6 +550,13 @@ public class SqlConnPoolPeer
     s.append("  idle:     ").append(idle).append("\n");
     s.append("  inUse:    ").append(inUse).append("\n");
     s.append("  entries:  ").append(entries.size()).append("\n");
+    s.append("  waiting:  ").append(waiting).append("\n");
+    s.append("  checkouts: ").append(checkouts).append("\n");
+    s.append("  checkoutTimeouts: ").append(checkoutTimeouts).append("\n");
+    s.append("  opened:   ").append(opened).append("\n");
+    s.append("  retired:  ").append(retired).append("\n");
+    s.append("  evicted:  ").append(evicted).append("\n");
+    s.append("  leakWarnings: ").append(leakWarnings).append("\n");
     for (int i=0; i<entries.size(); ++i)
       s.append("    ").append(entries.get(i)).append("\n");
     return s.toString();
@@ -545,6 +576,7 @@ public class SqlConnPoolPeer
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
+    Throwable checkoutTrace; // checkout site, captured only when leakTrace is on
 
     public String toString()
     {
@@ -575,5 +607,15 @@ public class SqlConnPoolPeer
   private ArrayList<Entry> entries = new ArrayList<>();
   private ScheduledExecutorService bookkeeper;
   private boolean closed;
+
+  // written and read under the pool lock, so a stats snapshot is
+  // internally consistent without any atomics
+  private int waiting;
+  private long checkouts;
+  private long checkoutTimeouts;
+  private long opened;
+  private long retired;
+  private long evicted;
+  private long leakWarnings;
 }
 

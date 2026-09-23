@@ -294,6 +294,99 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
+  Void testStats()
+  {
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.keepaliveInterval = null
+      it.maxConns = 1
+      it.checkoutTimeout = 100ms
+      it.linger = 50ms
+    }
+    st := cp.stats
+    verifyEq(st.total, 0)
+    verifyEq(st.checkouts, 0)
+    verifyEq(st.opened, 0)
+    verifyEq(st.maxConns, 1)
+
+    // one checkout opens one connection and leaves it idle
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    st = cp.stats
+    verifyEq(st.checkouts, 1)
+    verifyEq(st.opened, 1)
+    verifyEq(st.total, 1)
+    verifyEq(st.active, 0)
+    verifyEq(st.idle, 1)
+
+    // held by an actor: active, and a second caller waits then times out
+    ap := ActorPool()
+    a := SqlConnPoolTestActor(ap, cp, "a")
+    f := execute(a, 400ms)
+    verifyEq(cp.stats.active, 1)
+    verifyErr(TimeoutErr#) { cp.execute |c| {} }
+    verifyEq(cp.stats.checkoutTimeouts, 1)
+    f.get
+
+    // closed for age is retired, not evicted
+    Actor.sleep(60ms)
+    cp.onBookkeeping
+    st = cp.stats
+    verifyEq(st.total, 0)
+    verifyEq(st.retired, 1)
+    verifyEq(st.evicted, 0)
+
+    // a broken connection is evicted, and that is not routine
+    TestSqlConn? c2 := null
+    cp.execute |c| { c2 = c }
+    verifyErr(IOErr#) { cp.execute |c| { ((TestSqlConn)c).valid = false; throw IOErr("boom") } }
+    st = cp.stats
+    verifyEq(st.evicted, 1)
+    verifyEq(st.retired, 1)
+    cp.close
+  }
+
+  Void testLeakTrace()
+  {
+    count := AtomicInt()
+    lastTrace := AtomicRef("")
+    handler := |LogRec rec|
+    {
+      if (!rec.msg.contains("held in-use")) return
+      count.increment
+      lastTrace.val = rec.err?.traceToStr ?: ""
+    }
+    Log.addHandler(handler)
+    try
+    {
+      // off: the warning names the connection but not the checkout site
+      cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms }
+      ap := ActorPool()
+      a := SqlConnPoolTestActor(ap, cp, "a")
+      f := execute(a, 300ms)
+      Actor.sleep(100ms)
+      cp.onBookkeeping
+      verifyEq(count.val, 1)
+      verifyEq(lastTrace.val, "")
+      f.get
+      cp.close
+
+      // on: the warning carries the stack where the connection was taken
+      cp2 := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms; it.leakTrace = true }
+      a2 := SqlConnPoolTestActor(ap, cp2, "a2")
+      f2 := execute(a2, 300ms)
+      Actor.sleep(100ms)
+      cp2.onBookkeeping
+      verifyEq(count.val, 2)
+      verify(lastTrace.val.toStr.contains("checked out here"))
+      f2.get
+      cp2.close
+    }
+    finally { Log.removeHandler(handler) }
+  }
+
   Void testQueryTimeout()
   {
     // every connection the pool opens carries the pool's default

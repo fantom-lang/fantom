@@ -24,6 +24,25 @@ A pool of Connections is managed by the [sql::SqlConnPool] class.  To use a
 connection created by this pool, use the
 [SqlConnPool.execute](sql::SqlConnPool.execute) method.
 
+The pool runs its own bookkeeping on a background thread: it closes
+connections idle past `linger`, retires connections older than `maxLifetime`,
+pings idle connections every `keepaliveInterval` so infrastructure cannot kill
+them unnoticed, and warns about connections held past `leakWarn`.  There is
+nothing to drive from the outside.
+
+Four timeouts bound the ways a database can stop answering, and they are
+distinct:
+
+  - `checkoutTimeout`: waiting for a connection to free up in the pool
+  - `connectTimeout`: opening a new connection
+  - `queryTimeout`: running a statement, batches included
+  - `validationTimeout`: the liveness ping
+
+[SqlConnPool.stats](sql::SqlConnPool.stats) returns a snapshot: current
+gauges plus cumulative counters for checkouts, timeouts, opens, retirements
+and evictions.  Note `retired` counts connections closed for age, which is
+routine, while `evicted` counts connections closed because they were broken.
+
 ## Connections in Java
 When running in a Java VM, Fantom uses JDBC under the covers.  Using
 MySQL as an example, follow these steps to open a connection in
