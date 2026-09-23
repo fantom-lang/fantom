@@ -253,6 +253,46 @@ class SqlConnPoolTest : Test
     verifyEq(cp.isClosed, true)
   }
 
+  Void testOpenOutsideLock()
+  {
+    // four slow opens must overlap; if open ran under the pool lock
+    // they would serialize and take at least 4 x openDelay
+    cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 4 }
+    cp.slow.val = true
+    ap := ActorPool()
+    actors := SqlConnPoolTestActor[,]
+    4.times |i| { actors.add(SqlConnPoolTestActor(ap, cp, "a" + i)) }
+
+    t1 := Duration.now
+    futures := Future[,]
+    actors.each |a| { futures.add(a.send(10ms)) }
+    futures.each |f| { f.get(10sec) }
+    elapsed := Duration.now - t1
+
+    verifyEq(cp.opens.val, 4)
+    verify(elapsed < 900ms, "opens serialized: $elapsed")
+    verifyEq(debugInt(cp.debug, "entries"), 4)
+    cp.close
+  }
+
+  Void testOpenFailureReleasesSlot()
+  {
+    // the slot is reserved under the lock before the open runs, so a
+    // failed open must give it back or the pool leaks capacity forever
+    cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 1 }
+
+    cp.failNext.val = true
+    verifyErr(IOErr#) { cp.execute |c| {} }
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+
+    // capacity intact: the one connection is still available
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    verifyNotNull(c1)
+    verifyEq(debugInt(cp.debug, "entries"), 1)
+    cp.close
+  }
+
   Void testLeakWarn()
   {
     cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms }
@@ -411,3 +451,26 @@ internal const class SqlConnPoolStressActor : Actor
   }
 }
 
+
+**************************************************************************
+** SlowOpenPool
+**************************************************************************
+
+** Pool whose onOpen can be made slow or made to fail, to exercise the
+** fact that connections are opened outside the pool lock.
+internal const class SlowOpenPool : SqlConnPool
+{
+  new make(|This| f) : super(f) {}
+
+  const Duration openDelay := 300ms
+  const AtomicBool slow := AtomicBool(false)
+  const AtomicBool failNext := AtomicBool(false)
+  const AtomicInt opens := AtomicInt()
+
+  protected override Void onOpen(SqlConn c)
+  {
+    opens.increment
+    if (failNext.compareAndSet(true, false)) throw IOErr("open failed")
+    if (slow.val) Actor.sleep(openDelay)
+  }
+}

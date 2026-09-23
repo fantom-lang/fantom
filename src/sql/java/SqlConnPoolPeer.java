@@ -128,7 +128,8 @@ public class SqlConnPoolPeer
       for (int i=0; i<entries.size(); ++i)
       {
         Entry entry = entries.get(i);
-        if (entry.inUse && !entry.leakWarned && (now - entry.useStart) > leakWarn)
+        // a slot still opening is not a leaked checkout
+        if (entry.inUse && !entry.opening && !entry.leakWarned && (now - entry.useStart) > leakWarn)
         {
           entry.leakWarned = true;
           self.log.warn("SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn);
@@ -173,6 +174,16 @@ public class SqlConnPoolPeer
     while (true)
     {
       Entry entry = allocateEntry(self, deadline);
+
+      // a reserved slot has no connection yet; open it out here where
+      // we hold no lock.  A failed open must give the slot back or the
+      // pool leaks capacity for the life of the process.
+      if (entry.opening)
+      {
+        try { openReserved(self, entry); }
+        catch (Throwable e) { releaseReserved(self, entry); throw e; }
+        return entry;
+      }
 
       // skip validation if entry was used recently, which
       // includes connections just opened by doAllocate
@@ -248,11 +259,19 @@ public class SqlConnPoolPeer
       return entry;
     }
 
-    // allocate a new entry
+    // reserve a slot for a new connection, but do not open it here:
+    // opening blocks on network I/O and this runs under the pool lock,
+    // which every release and every other allocate also needs.  The
+    // caller opens the connection outside the lock and fills the entry
+    // in via openReserved.  Reserving under the lock is what keeps
+    // maxConns honest while the open is in flight.
     if (entries.size() < self.maxConns)
     {
-      entry = new Entry(open(self));
+      entry = new Entry();
       entry.inUse = true;
+      entry.opening = true;
+      entry.created = Duration.nowTicks();
+      entry.lastUse = entry.created;
       entry.useStart = entry.created;
       entries.add(entry);
       return entry;
@@ -260,6 +279,40 @@ public class SqlConnPoolPeer
 
     // no joy
     return null;
+  }
+
+  // Open the connection for a reserved slot, outside the pool lock, and
+  // publish it into the entry.  The entry is already in the pool marked
+  // inUse, so no other thread will hand it out while this runs.
+  private void openReserved(SqlConnPool self, Entry entry)
+  {
+    SqlConn conn = open(self);
+
+    boolean stale = false;
+    synchronized (this)
+    {
+      // the pool was closed while we were opening; close() already took
+      // the entry list, so this connection belongs to nobody
+      if (closed) stale = true;
+      else
+      {
+        entry.conn = conn;
+        entry.opening = false;
+      }
+    }
+
+    if (stale)
+    {
+      close(self, conn);
+      throw Err.make("SqlConnPool is closed");
+    }
+  }
+
+  // Give back a reserved slot whose open failed or was abandoned
+  private void releaseReserved(SqlConnPool self, Entry entry)
+  {
+    // wake a waiter: the slot it was blocked on is free again
+    synchronized (this) { entries.remove(entry); notifyAll(); }
   }
 
   private void release(SqlConnPool self, Entry entry)
@@ -311,8 +364,15 @@ public class SqlConnPoolPeer
 
   private void close(SqlConnPool self, Entry entry)
   {
-    self.onClose(entry.conn);
-    entry.conn.close();
+    // a reserved slot whose open never completed has no connection
+    if (entry.conn == null) return;
+    close(self, entry.conn);
+  }
+
+  private void close(SqlConnPool self, SqlConn conn)
+  {
+    self.onClose(conn);
+    conn.close();
   }
 
   public synchronized String debug(SqlConnPool self)
@@ -342,22 +402,17 @@ public class SqlConnPoolPeer
 
   static class Entry
   {
-    Entry(SqlConn conn)
-    {
-      this.conn    = conn;
-      this.created = Duration.nowTicks();
-      this.lastUse = this.created;
-    }
-
-    final SqlConn conn;   // open connection
-    final long created;   // Duration.ticks when connection was opened
+    SqlConn conn;         // open connection; null while opening
+    long created;         // Duration.ticks when the slot was reserved
     boolean inUse;        // is this entry currently being used
+    boolean opening;      // slot reserved, connection not yet opened
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
 
     public String toString()
     {
+      if (opening) return "Entry opening";
       Duration age = Duration.make(Duration.nowTicks() - lastUse);
       return "Entry " + conn + " inUse=" + inUse + " age=" + age.toLocale();
     }
