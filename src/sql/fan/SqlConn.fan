@@ -46,9 +46,11 @@ mixin SqlConn
 
   **
   ** Return if this connection is still alive and usable.  For JDBC
-  ** connections this pings the database using 'java.sql.Connection.isValid'.
+  ** connections this pings the database using 'java.sql.Connection.isValid',
+  ** giving up after the given timeout.  JDBC resolves the timeout in whole
+  ** seconds, so anything under a second is rounded up to one second.
   **
-  @NoDoc virtual Bool isValid() { true }
+  @NoDoc virtual Bool isValid(Duration timeout) { true }
 
 //////////////////////////////////////////////////////////////////////////
 // Data

@@ -48,7 +48,7 @@ class SqlConnImpl : SqlConn
   **
   ** Ping that the connection is still alive using JDBC Connection.isValid.
   **
-  @NoDoc override native Bool isValid()
+  @NoDoc override native Bool isValid(Duration timeout)
 
 //////////////////////////////////////////////////////////////////////////
 // Data
@@ -108,7 +108,11 @@ internal class TestSqlConn: SqlConn
     return true
   }
   override Bool isClosed() { return closed }
-  override Bool isValid() { valid }
+  override Bool isValid(Duration timeout)
+  {
+    lastValidateTimeout = timeout
+    return valid
+  }
   override SqlMeta meta() { throw Err() }
   override Statement sql(Str sql) { throw Err() }
   override Bool autoCommit
@@ -122,6 +126,7 @@ internal class TestSqlConn: SqlConn
 
   // test hooks to simulate failures and record pool behavior
   Bool valid := true
+  Duration? lastValidateTimeout
   Int commits
   Int rollbacks
   Str[] ops := [,]

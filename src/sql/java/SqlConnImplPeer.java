@@ -89,20 +89,20 @@ public class SqlConnImplPeer
     }
   }
 
-  public boolean isValid(SqlConnImpl self)
+  public boolean isValid(SqlConnImpl self, Duration timeout)
   {
     try
     {
-      return jconn.isValid(isValidTimeout);
+      // JDBC resolves this in whole seconds and treats 0 as "no timeout",
+      // so round up: a sub-second setting must not become unbounded
+      int secs = (int)Math.max(1L, (timeout.millis() + 999L) / 1000L);
+      return jconn.isValid(secs);
     }
     catch (Throwable e)
     {
       return false;
     }
   }
-
-  // seconds passed to java.sql.Connection.isValid
-  static final int isValidTimeout = 3;
 
   public boolean close(SqlConnImpl self)
   {

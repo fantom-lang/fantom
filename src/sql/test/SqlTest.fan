@@ -88,7 +88,7 @@ abstract class SqlTest : Test
   Void testSmoke()
   {
     verifyFalse(db.isClosed)
-    verify(db.isValid)
+    verify(db.isValid(3sec))
 
     createVals
     verify(db.meta.tableExists(valsTable))

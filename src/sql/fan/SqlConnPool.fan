@@ -59,6 +59,19 @@ const class SqlConnPool
   ** per checkout.
   const Duration leakWarn := 2min
 
+  ** Only ping a connection on checkout if it has been idle at least this
+  ** long.  A connection used moments ago is almost certainly still good,
+  ** and the ping costs a database round trip on every checkout.  If null
+  ** then connections are never pinged on checkout.  Note this governs
+  ** checkout only: a connection is always validated after an execute
+  ** callback raises, since there the error is evidence something broke.
+  const Duration? validateAfterIdle := 500ms
+
+  ** Max time the liveness ping may take before the connection is treated
+  ** as broken.  JDBC resolves this in whole seconds, so anything under a
+  ** second is rounded up to one second.
+  const Duration validationTimeout := 3sec
+
   ** How often the pool runs its own bookkeeping: close connections idle
   ** past `linger`, retire connections older than `maxLifetime`, and warn
   ** about connections held past `leakWarn`.  The pool schedules this

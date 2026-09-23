@@ -293,6 +293,52 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
+  Void testValidateAfterIdle()
+  {
+    // shorter than the 500ms default, so the ping happens sooner
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.validateAfterIdle = 50ms
+      it.validationTimeout = 250ms
+    }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    c1.valid = false
+
+    Actor.sleep(100ms)
+    TestSqlConn? c2 := null
+    cp.execute |c| { c2 = c }
+    verifyNotSame(c1, c2)
+    verifyEq(c1.isClosed, true)
+
+    // the pool's validationTimeout reaches the connection
+    verifyEq(c1.lastValidateTimeout, 250ms)
+    cp.close
+  }
+
+  Void testValidateDisabled()
+  {
+    // null: never ping on checkout, however long the connection sat idle
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.validateAfterIdle = null }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    c1.valid = false
+
+    Actor.sleep(600ms)
+    TestSqlConn? c2 := null
+    cp.execute |c| { c2 = c }
+    verifySame(c1, c2)
+    verifyNull(c1.lastValidateTimeout)
+
+    // a callback error still validates: that path is not idle gated
+    verifyErr(IOErr#) { cp.execute |c| { throw IOErr("boom") } }
+    verifyEq(c1.isClosed, true)
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    cp.close
+  }
+
   Void testConnectTimeout()
   {
     // the connect takes 400ms and ignores interrupt, like a real driver

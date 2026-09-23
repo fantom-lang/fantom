@@ -75,7 +75,7 @@ public class SqlConnPoolPeer
     {
       // if the error left the connection broken then evict it
       // from the pool instead of releasing it back for reuse
-      if (validate(entry)) release(self, entry);
+      if (validate(self, entry)) release(self, entry);
       else
       {
         self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
@@ -194,14 +194,16 @@ public class SqlConnPoolPeer
         return entry;
       }
 
-      // skip validation if entry was used recently, which
-      // includes connections just opened by doAllocate
+      // skip the ping if disabled, or if the entry was used recently,
+      // which includes connections just opened by doAllocate
+      Duration validateAfterIdle = self.validateAfterIdle;
+      if (validateAfterIdle == null) return entry;
       long idle = Duration.nowTicks() - entry.lastUse;
-      if (idle < validateThreshold) return entry;
+      if (idle < validateAfterIdle.ticks()) return entry;
 
       // ping connection to verify it is still alive; if not then
       // close it, discard it from the pool, and allocate again
-      if (validate(entry)) return entry;
+      if (validate(self, entry)) return entry;
       self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
       evict(self, entry);
     }
@@ -229,11 +231,11 @@ public class SqlConnPoolPeer
     }
   }
 
-  private boolean validate(Entry entry)
+  private boolean validate(SqlConnPool self, Entry entry)
   {
     try
     {
-      return entry.conn.isValid();
+      return entry.conn.isValid(self.validationTimeout);
     }
     catch (Throwable e)
     {
@@ -499,10 +501,6 @@ public class SqlConnPoolPeer
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
-
-  // only validate a connection on borrow if it has been idle
-  // longer than this threshold (in Duration ticks)
-  private static final long validateThreshold = 500L * 1000000L;  // 500ms
 
   // names the threads of each pool in this JVM
   private static final AtomicInteger poolCounter = new AtomicInteger();
