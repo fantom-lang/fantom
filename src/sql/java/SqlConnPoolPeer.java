@@ -417,6 +417,9 @@ public class SqlConnPoolPeer
       // set auto-commit based on connection pool property
       c.autoCommit(self.autoCommit());
 
+      // statements created on this connection inherit the pool's timeout
+      c.setQueryTimeout(self.queryTimeout);
+
       self.onOpen(c);
     }
     // the connection is open but unusable and nothing else holds a

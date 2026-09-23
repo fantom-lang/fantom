@@ -62,6 +62,14 @@ const class SqlConnPool
   ** per checkout.
   const Duration leakWarn := 2min
 
+  ** Default timeout applied to every statement created on connections
+  ** from this pool.  Null means no timeout.
+  **
+  ** This applies to batch execution as well: JDBC's statement timeout is
+  ** per execution, so a large executeBatch must finish within it.  Code
+  ** with batches that legitimately run longer has to raise this.
+  const Duration? queryTimeout := 60sec
+
   ** How long an idle connection may sit before bookkeeping pings it to
   ** keep it alive.  Network infrastructure between the pool and the
   ** database -- NAT gateways, firewalls, load balancers -- silently drops

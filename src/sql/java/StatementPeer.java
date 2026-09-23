@@ -534,6 +534,11 @@ public class StatementPeer
     else
       stmt = self.conn.peer.jconn.createStatement();
     if (limit > 0) stmt.setMaxRows(limit);
+
+    // pool-wide default; JDBC resolves this in whole seconds and treats
+    // 0 as "no limit", so round up rather than silently disabling it
+    Duration qt = self.conn.queryTimeout();
+    if (qt != null) stmt.setQueryTimeout((int)Math.max(1L, (qt.millis() + 999L) / 1000L));
   }
 
   private boolean prepared = false;

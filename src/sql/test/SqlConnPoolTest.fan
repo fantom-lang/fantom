@@ -294,6 +294,23 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
+  Void testQueryTimeout()
+  {
+    // every connection the pool opens carries the pool's default
+    cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.queryTimeout = 45sec }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    verifyEq(c1.queryTimeout, 45sec)
+    cp.close
+
+    // null means statements are not bounded
+    cp2 := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.queryTimeout = null }
+    TestSqlConn? c2 := null
+    cp2.execute |c| { c2 = c }
+    verifyNull(c2.queryTimeout)
+    cp2.close
+  }
+
   Void testKeepalive()
   {
     // idle connections are pinged so infrastructure cannot kill them
