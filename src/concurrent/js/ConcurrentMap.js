@@ -62,6 +62,12 @@ class ConcurrentMap extends sys.Obj {
 
   remove(key) { return this.#map.remove(key); }
 
+  removeIfEq(key, val) {
+    if (!this.containsKey(key) || !sys.ObjUtil.equals(this.get(key), val)) return false;
+    this.#map.remove(key);
+    return true;
+  }
+
   clear() { this.#map.clear(); }
 
   each(f) { this.#map.each(f); }

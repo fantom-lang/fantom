@@ -49,6 +49,10 @@ native const final class ConcurrentMap
   ** Remove a value by key, ignore if key not mapped
   Obj? remove(Obj key)
 
+  ** Remove the key only if it is currently mapped to a value equal to
+  ** the given value.  Return true if removed.
+  Bool removeIfEq(Obj key, Obj val)
+
   ** Remove all the key/value pairs
   Void clear()
 

@@ -16,6 +16,7 @@ license:    Licensed under the Academic Free License version 3.0
 - File.atomicMove, File.etag
 - Win.evalToFunc
 - Lock.withLock
+- ConcurrentMap.removeIfEq
 - Doc.isHidden
 - WebClient strips auth headers on redirect to different origin
 - SQL executeBatch now returns BatchResult (breaking change)

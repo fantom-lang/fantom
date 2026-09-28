@@ -41,6 +41,13 @@ class ConcurrentMapTest : Test
     verifyEq(m.remove("b"), 30)
     verifyConcurrentMap(m, Str:Int["a":10, "c":40])
 
+    verifyEq(m.removeIfEq("notThere", 10), false)
+    verifyEq(m.removeIfEq("a", 99), false)
+    verifyConcurrentMap(m, Str:Int["a":10, "c":40])
+    verifyEq(m.removeIfEq("a", 10), true)
+    verifyConcurrentMap(m, Str:Int["c":40])
+    m["a"] = 10
+
     m.clear
     verifyEq(m.size, 0)
     verifyConcurrentMap(m, Str:Int[:])

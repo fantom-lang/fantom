@@ -71,6 +71,8 @@ public final class ConcurrentMap extends FanObj
 
   public Object remove(Object key) { return map.remove(key); }
 
+  public boolean removeIfEq(Object key, Object val) { return map.remove(key, val); }
+
   public void clear() { map.clear(); }
 
   public void each(Func f)
