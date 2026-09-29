@@ -569,15 +569,14 @@ abstract class SqlTest : Test
 
   Void testQueryTimeout()
   {
-    // a query that runs past the connection's timeout is aborted
+    // a query past the connection's timeout is aborted
     db.setQueryTimeout(1sec)
     t1 := Duration.now
     verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
     verify(Duration.now - t1 < 15sec, "did not abort")
 
-    // sub-second timeouts round up to one second.  JDBC takes whole
-    // seconds and reads 0 as "no timeout", so truncating would turn this
-    // into an unbounded query rather than a tighter one.
+    // sub-second timeouts round up to one second; truncating would give
+    // JDBC a 0, which means no timeout
     db.setQueryTimeout(100ms)
     t2 := Duration.now
     verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
@@ -590,8 +589,7 @@ abstract class SqlTest : Test
 
   Void testQueryTimeoutFromPool()
   {
-    // the pool stamps its default onto every connection it opens, which
-    // is the path xbd and everything else actually takes
+    // the pool stamps its default onto every connection it opens
     d := dialect
     pool := SqlConnPool
     {

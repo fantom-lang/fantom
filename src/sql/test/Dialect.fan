@@ -160,8 +160,7 @@ internal const class Dialect
   ** Short name used in test output
   const Str name
 
-  ** Function that blocks the server for a number of seconds, used to
-  ** test statement timeouts
+  ** Function that blocks the server for a number of seconds
   const Str sleepFunc
 
   ** Query that blocks the server for the given duration

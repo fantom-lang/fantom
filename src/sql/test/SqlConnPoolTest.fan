@@ -236,7 +236,7 @@ class SqlConnPoolTest : Test
 
   Void testBookkeepingRuns()
   {
-    // the pool drives its own bookkeeping; nothing external calls it
+    // bookkeeping runs on the pool's own timer
     cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 50ms; it.keepaliveInterval = null; it.linger = 50ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
@@ -256,8 +256,8 @@ class SqlConnPoolTest : Test
 
   Void testOpenOutsideLock()
   {
-    // four slow opens must overlap; if open ran under the pool lock
-    // they would serialize and take at least 4 x openDelay
+    // four slow opens must overlap.  Under the pool lock they would
+    // serialize and take at least 4 x openDelay.
     cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 4 }
     cp.slow.val = true
     ap := ActorPool()
@@ -278,15 +278,15 @@ class SqlConnPoolTest : Test
 
   Void testOpenFailureReleasesSlot()
   {
-    // the slot is reserved under the lock before the open runs, so a
-    // failed open must give it back or the pool leaks capacity forever
+    // the slot is reserved before the open runs, so a failed open must
+    // release it
     cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.maxConns = 1 }
 
     cp.failNext.val = true
     verifyErr(IOErr#) { cp.execute |c| {} }
     verifyEq(debugInt(cp.debug, "entries"), 0)
 
-    // capacity intact: the one connection is still available
+    // capacity intact
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyNotNull(c1)
@@ -296,10 +296,9 @@ class SqlConnPoolTest : Test
 
   Void testSlowOpenStress()
   {
-    // the reservation protocol under real contention.  Opens are slow
-    // here, so the window between reserving a slot and filling it is
-    // wide enough for other threads to race it; with instant opens that
-    // window is nanoseconds and proves nothing.
+    // the reservation protocol under contention.  Opens are slow so the
+    // window between reserving a slot and filling it is wide enough for
+    // other threads to hit it.
     before := TestSqlConn.openCount.val
     cp := SlowOpenPool
     {
@@ -320,7 +319,7 @@ class SqlConnPoolTest : Test
     actors.each |a| { 30.times { futures.add(a.send("go")) } }
     futures.each |f| { verifyEq(f.get(60sec), "ok") }
 
-    // maxConns was never exceeded and everything is back in the pool
+    // maxConns held and everything is back in the pool
     st := cp.stats
     verify(st.total <= 3, "total=$st.total")
     verifyEq(st.active, 0)
@@ -329,21 +328,21 @@ class SqlConnPoolTest : Test
     cp.close
     verifyEq(debugInt(cp.debug, "entries"), 0)
 
-    // every connection the pool ever opened has been closed
+    // no connection was left open
     verifyEq(TestSqlConn.openCount.val, before)
   }
 
   Void testCloseDuringConnect()
   {
-    // a connect still in flight when the pool closes must not leave a
-    // live connection behind
+    // a connect in flight when the pool closes must not leave a live
+    // connection behind
     before := TestSqlConn.openCount.val
     cp := SqlConnPool { it.uri = "test:400"; it.bookkeepingInterval = 1hr; it.keepaliveInterval = null }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := a.send(10ms)
 
-    // let the connect get under way, then pull the pool out from under it
+    // close while the connect is still running
     Actor.sleep(100ms)
     cp.close
     verifyErr(Err#) { f.get(10sec) }
@@ -355,7 +354,8 @@ class SqlConnPoolTest : Test
 
   Void testCloseDuringKeepalive()
   {
-    // same for a connection held by an in flight keepalive ping
+    // a connection held by an in flight keepalive ping must not survive
+    // the close either
     before := TestSqlConn.openCount.val
     cp := SqlConnPool
     {
@@ -392,14 +392,14 @@ class SqlConnPoolTest : Test
     a := SqlConnPoolTestActor(ap, cp, "a")
     b := SqlConnPoolTestActor(ap, cp, "b")
 
-    // a holds the only connection; b blocks waiting for it
+    // a holds the only connection; b blocks
     f := execute(a, 400ms)
     bf := b.send(1ms)
     endTime := Duration.now + 5sec
     while (cp.stats.waiting == 0 && Duration.now < endTime) Actor.sleep(10ms)
     verifyEq(cp.stats.waiting, 1)
 
-    // held past leakWarn, so bookkeeping counts a warning
+    // held past leakWarn
     Actor.sleep(100ms)
     cp.onBookkeeping
     verifyEq(cp.stats.leakWarnings, 1)
@@ -412,7 +412,7 @@ class SqlConnPoolTest : Test
 
   Void testKeepaliveCountsEviction()
   {
-    // eviction through the keepalive path, which testStats does not reach
+    // eviction through the keepalive path
     cp := SqlConnPool
     {
       it.uri = "test"
@@ -450,7 +450,7 @@ class SqlConnPoolTest : Test
     verifyEq(st.opened, 0)
     verifyEq(st.maxConns, 1)
 
-    // one checkout opens one connection and leaves it idle
+    // one checkout opens one connection, left idle
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     st = cp.stats
@@ -460,7 +460,7 @@ class SqlConnPoolTest : Test
     verifyEq(st.active, 0)
     verifyEq(st.idle, 1)
 
-    // held by an actor: active, and a second caller waits then times out
+    // held by an actor, so a second caller times out
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := execute(a, 400ms)
@@ -469,7 +469,7 @@ class SqlConnPoolTest : Test
     verifyEq(cp.stats.checkoutTimeouts, 1)
     f.get
 
-    // closed for age is retired, not evicted
+    // closed for age counts as retired
     Actor.sleep(60ms)
     cp.onBookkeeping
     st = cp.stats
@@ -477,7 +477,7 @@ class SqlConnPoolTest : Test
     verifyEq(st.retired, 1)
     verifyEq(st.evicted, 0)
 
-    // a broken connection is evicted, and that is not routine
+    // a broken connection counts as evicted
     TestSqlConn? c2 := null
     cp.execute |c| { c2 = c }
     verifyErr(IOErr#) { cp.execute |c| { ((TestSqlConn)c).valid = false; throw IOErr("boom") } }
@@ -500,7 +500,7 @@ class SqlConnPoolTest : Test
     Log.addHandler(handler)
     try
     {
-      // off: the warning names the connection but not the checkout site
+      // off: no trace on the warning
       cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms }
       ap := ActorPool()
       a := SqlConnPoolTestActor(ap, cp, "a")
@@ -512,7 +512,7 @@ class SqlConnPoolTest : Test
       f.get
       cp.close
 
-      // on: the warning carries the stack where the connection was taken
+      // on: the warning carries the checkout stack
       cp2 := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.leakWarn = 50ms; it.leakTrace = true }
       a2 := SqlConnPoolTestActor(ap, cp2, "a2")
       f2 := execute(a2, 300ms)
@@ -528,14 +528,14 @@ class SqlConnPoolTest : Test
 
   Void testQueryTimeout()
   {
-    // every connection the pool opens carries the pool's default
+    // connections inherit the pool's default
     cp := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.queryTimeout = 45sec }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(c1.queryTimeout, 45sec)
     cp.close
 
-    // null means statements are not bounded
+    // null leaves statements unbounded
     cp2 := SqlConnPool { it.uri = "test"; it.bookkeepingInterval = 1hr; it.queryTimeout = null }
     TestSqlConn? c2 := null
     cp2.execute |c| { c2 = c }
@@ -545,8 +545,7 @@ class SqlConnPoolTest : Test
 
   Void testKeepalive()
   {
-    // idle connections are pinged so infrastructure cannot kill them
-    // unnoticed; a ping that fails evicts the connection then and there
+    // idle connections are pinged, and a failed ping evicts
     cp := SqlConnPool
     {
       it.uri = "test"
@@ -559,15 +558,14 @@ class SqlConnPoolTest : Test
     cp.execute |c| { c1 = c }
     verifyNull(c1.lastValidateTimeout)
 
-    // idle past keepaliveInterval: pinged, alive, still pooled
+    // idle past keepaliveInterval: pinged and kept
     Actor.sleep(100ms)
     cp.onBookkeeping
     verifyEq(c1.lastValidateTimeout, 250ms)
     verifyEq(debugInt(cp.debug, "entries"), 1)
     verifyEq(c1.isClosed, false)
 
-    // now the connection is dead: the next ping reaps it without
-    // anyone having to check it out first
+    // dead connection: the next ping evicts it with no checkout involved
     c1.valid = false
     Actor.sleep(60ms)
     cp.onBookkeeping
@@ -578,8 +576,7 @@ class SqlConnPoolTest : Test
 
   Void testKeepaliveDoesNotDeferLinger()
   {
-    // linger measures from the last real use; if a ping counted as one
-    // the connection would never age out
+    // linger measures from the last use; a ping must not defer it
     cp := SqlConnPool
     {
       it.uri = "test"
@@ -600,7 +597,7 @@ class SqlConnPoolTest : Test
 
   Void testValidateAfterIdle()
   {
-    // shorter than the 500ms default, so the ping happens sooner
+    // shorter than the 500ms default
     cp := SqlConnPool
     {
       it.uri = "test"
@@ -637,7 +634,7 @@ class SqlConnPoolTest : Test
     verifySame(c1, c2)
     verifyNull(c1.lastValidateTimeout)
 
-    // a callback error still validates: that path is not idle gated
+    // a callback error still validates; that path is not idle gated
     verifyErr(IOErr#) { cp.execute |c| { throw IOErr("boom") } }
     verifyEq(c1.isClosed, true)
     verifyEq(debugInt(cp.debug, "entries"), 0)
@@ -646,7 +643,7 @@ class SqlConnPoolTest : Test
 
   Void testConnectTimeout()
   {
-    // the connect takes 400ms and ignores interrupt, like a real driver
+    // the connect takes 400ms and ignores interrupt
     cp := SqlConnPool
     {
       it.uri = "test:400"
@@ -658,11 +655,10 @@ class SqlConnPoolTest : Test
 
     verifyErr(TimeoutErr#) { cp.execute |c| {} }
 
-    // the slot is released even though the connect is still running
+    // the slot is released while the connect is still running
     verifyEq(debugInt(cp.debug, "entries"), 0)
 
-    // the abandoned connect lands late; its connection must be closed,
-    // not pooled and not leaked
+    // the abandoned connect lands late; its connection must be closed
     Actor.sleep(600ms)
     verifyEq(TestSqlConn.openCount.val, before)
     cp.close
@@ -670,8 +666,8 @@ class SqlConnPoolTest : Test
 
   Void testOpenFailureClosesConn()
   {
-    // onOpen throws after the connect succeeded: the connection is live
-    // and unreferenced, so open must close it before propagating
+    // onOpen throws after a successful connect, so open must close the
+    // connection before propagating
     cp := SlowOpenPool { it.uri = "test"; it.bookkeepingInterval = 1hr }
     before := TestSqlConn.openCount.val
     cp.failNext.val = true
@@ -843,8 +839,7 @@ internal const class SqlConnPoolStressActor : Actor
 ** SlowOpenPool
 **************************************************************************
 
-** Pool whose onOpen can be made slow or made to fail, to exercise the
-** fact that connections are opened outside the pool lock.
+** Pool whose onOpen can be made slow or made to fail.
 internal const class SlowOpenPool : SqlConnPool
 {
   new make(|This| f) : super(f) {}
@@ -866,8 +861,8 @@ internal const class SlowOpenPool : SqlConnPool
 ** SqlConnPoolBookkeepActor
 **************************************************************************
 
-** Runs one bookkeeping pass off the test thread, so the test can close
-** the pool while a keepalive ping is in flight.
+** Runs one bookkeeping pass off the test thread, so the pool can be
+** closed while a keepalive ping is in flight.
 internal const class SqlConnPoolBookkeepActor : Actor
 {
   new make(ActorPool ap, SqlConnPool cp) : super(ap) { this.cp = cp }

@@ -35,8 +35,8 @@ public class SqlConnImplPeer
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
 
-      // test hook "test:<millis>": a connect that takes a while and, like
-      // a driver blocked in a socket connect, does not answer an interrupt
+      // test hook "test:<millis>": a slow connect that does not answer an
+      // interrupt, as a driver blocked in a socket connect does not
       if (uri.startsWith("test:"))
       {
         long end = System.currentTimeMillis() + Long.parseLong(uri.substring(5));
@@ -93,8 +93,7 @@ public class SqlConnImplPeer
   {
     try
     {
-      // JDBC resolves this in whole seconds and treats 0 as "no timeout",
-      // so round up: a sub-second setting must not become unbounded
+      // JDBC takes whole seconds and treats 0 as no timeout, so round up
       int secs = (int)Math.max(1L, (timeout.millis() + 999L) / 1000L);
       return jconn.isValid(secs);
     }

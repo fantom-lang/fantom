@@ -24,24 +24,22 @@ A pool of Connections is managed by the [sql::SqlConnPool] class.  To use a
 connection created by this pool, use the
 [SqlConnPool.execute](sql::SqlConnPool.execute) method.
 
-The pool runs its own bookkeeping on a background thread: it closes
-connections idle past `linger`, retires connections older than `maxLifetime`,
-pings idle connections every `keepaliveInterval` so infrastructure cannot kill
-them unnoticed, and warns about connections held past `leakWarn`.  There is
-nothing to drive from the outside.
+The pool runs bookkeeping on a background thread, with nothing to drive from
+the outside.  Each pass closes connections idle past `linger`, retires
+connections older than `maxLifetime`, pings idle connections due a
+`keepaliveInterval`, and warns about connections held past `leakWarn`.
 
-Four timeouts bound the ways a database can stop answering, and they are
-distinct:
+Four separate timeouts apply:
 
-  - `checkoutTimeout`: waiting for a connection to free up in the pool
+  - `checkoutTimeout`: waiting for a connection to become available
   - `connectTimeout`: opening a new connection
   - `queryTimeout`: running a statement, batches included
-  - `validationTimeout`: the liveness ping
+  - `validationTimeout`: a liveness ping
 
-[SqlConnPool.stats](sql::SqlConnPool.stats) returns a snapshot: current
-gauges plus cumulative counters for checkouts, timeouts, opens, retirements
-and evictions.  Note `retired` counts connections closed for age, which is
-routine, while `evicted` counts connections closed because they were broken.
+[SqlConnPool.stats](sql::SqlConnPool.stats) returns a snapshot of the gauges
+plus cumulative counters for checkouts, timeouts, opens, retirements and
+evictions.  `retired` counts connections closed for age; `evicted` counts
+connections closed as broken.
 
 ## Connections in Java
 When running in a Java VM, Fantom uses JDBC under the covers.  Using

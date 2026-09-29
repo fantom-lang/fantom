@@ -8,8 +8,8 @@
 
 **
 ** SqlConnPoolStats is an immutable snapshot of a `SqlConnPool`.  Gauges
-** describe the pool at the instant the snapshot was taken; counters are
-** cumulative since the pool was created and never reset.
+** are as of the snapshot; counters are cumulative since the pool was
+** created and are never reset.
 **
 const class SqlConnPoolStats
 {
@@ -34,36 +34,34 @@ const class SqlConnPoolStats
   const Int total
 
   ** Connections currently checked out.  A slot reserved for a connection
-  ** that is still opening counts here, since it is spoken for.
+  ** that is still opening counts here.
   const Int active
 
-  ** Connections available for checkout.  A connection held briefly by a
-  ** keepalive ping counts here.
+  ** Connections available for checkout.  A connection held by a keepalive
+  ** ping counts here.
   const Int idle
 
-  ** Threads blocked waiting for a connection to free up
+  ** Threads blocked waiting for a connection
   const Int waiting
 
-  ** `SqlConnPool.maxConns`, for context against `total`
+  ** `SqlConnPool.maxConns`
   const Int maxConns
 
   ** Connections handed to an execute callback
   const Int checkouts
 
-  ** Checkouts that gave up after `SqlConnPool.checkoutTimeout` elapsed
+  ** Checkouts that gave up after `SqlConnPool.checkoutTimeout`
   const Int checkoutTimeouts
 
   ** Connections opened against the database
   const Int opened
 
   ** Connections closed for age: idle past `SqlConnPool.linger`, or older
-  ** than `SqlConnPool.maxLifetime`.  Routine; a busy pool retires
-  ** connections continuously.
+  ** than `SqlConnPool.maxLifetime`
   const Int retired
 
-  ** Connections closed because they were broken: failed validation on
-  ** checkout, failed after an execute callback raised, or failed a
-  ** keepalive ping.  Unlike `retired` this is not routine.
+  ** Connections closed as broken: failed validation on checkout, failed
+  ** after an execute callback raised, or failed a keepalive ping
   const Int evicted
 
   ** Warnings logged for connections held past `SqlConnPool.leakWarn`

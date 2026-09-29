@@ -65,8 +65,8 @@ class SqlConnImpl : SqlConn
   override Statement sql(Str sql) { Statement(this, sql) }
 
   **
-  ** Default statement timeout, applied by Statement as each JDBC
-  ** statement is created.  Null means no timeout.
+  ** Default statement timeout applied as each JDBC statement is created,
+  ** or null for no timeout.
   **
   @NoDoc Duration? queryTimeout
 
@@ -104,8 +104,7 @@ internal class TestSqlConn: SqlConn
 {
   static const AtomicInt idCounter := AtomicInt()
 
-  ** Connections created minus connections closed; a pool that leaks a
-  ** connection leaves this above where it started.
+  ** Connections created minus connections closed
   static const AtomicInt openCount := AtomicInt()
 
   internal new make() { id = idCounter.getAndIncrement; openCount.increment }

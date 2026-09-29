@@ -25,8 +25,7 @@ public class SqlConnPoolPeer
     return new SqlConnPoolPeer();
   }
 
-  // Daemon threads named for the pool, so a stack dump says which pool
-  // and which role a thread belongs to.
+  // Daemon threads, named so a stack dump identifies the pool and role
   private ThreadFactory threadFactory(final String role)
   {
     return new ThreadFactory()
@@ -40,19 +39,19 @@ public class SqlConnPoolPeer
     };
   }
 
-  // Called from the Fantom constructor after the it-block has run, so the
-  // configuration is in place; the peer itself is built before that.
+  // Must run after the Fantom it-block, which is where bookkeepingInterval
+  // is set; the peer itself is constructed before that
   public void startBookkeeping(final SqlConnPool self)
   {
     this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("bookkeeping"));
 
     long ms = self.bookkeepingInterval.millis();
-    // fixed delay, not fixed rate: a slow pass must not let passes pile up
+    // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
     this.bookkeeper.scheduleWithFixedDelay(new Runnable()
     {
       public void run()
       {
-        // never let a failed pass kill the schedule
+        // an uncaught throwable would cancel the schedule
         try { onBookkeeping(self); }
         catch (Throwable e) { self.log.err("SqlConnPool bookkeeping failed", Err.make(e)); }
       }
@@ -107,10 +106,9 @@ public class SqlConnPoolPeer
       notifyAll();
     }
 
-    // stop bookkeeping outside the lock; a pass blocked on the monitor
-    // would otherwise deadlock shutdown.  In flight connects are
-    // interrupted; any that still land are closed by their own task,
-    // since openReserved sees the pool closed and discards them.
+    // outside the lock: a pass blocked on the monitor would deadlock
+    // shutdown.  Connects still in flight are closed by openReserved,
+    // which discards them once the pool is closed.
     if (bookkeeper != null) bookkeeper.shutdownNow();
     connector.shutdownNow();
 
@@ -126,7 +124,7 @@ public class SqlConnPoolPeer
     ArrayList<Entry> toPing = new ArrayList<>();
     synchronized (this)
     {
-      // close already took the entries; nothing to do
+      // close has already taken the entries
       if (closed) return;
 
       long now = Duration.nowTicks();
@@ -139,7 +137,7 @@ public class SqlConnPoolPeer
       for (int i=0; i<entries.size(); ++i)
       {
         Entry entry = entries.get(i);
-        // a slot still opening is not a leaked checkout
+        // a slot still opening is not a checkout
         if (entry.inUse && !entry.opening && !entry.leakWarned && (now - entry.useStart) > leakWarn)
         {
           entry.leakWarned = true;
@@ -171,10 +169,9 @@ public class SqlConnPoolPeer
         this.entries = keep;
       }
 
-      // reserve idle connections due a keepalive.  Reserving under the
-      // lock is what stops the ping racing a checkout; the ping itself
-      // runs below, outside the lock.  Expiry ran first, so anything
-      // already past linger was reaped rather than pinged.
+      // reserve under the lock so a ping cannot race a checkout; the ping
+      // itself runs below, outside the lock.  Expiry ran first, so
+      // anything already past linger is gone rather than pinged.
       if (self.keepaliveInterval != null)
       {
         long keepalive = self.keepaliveInterval.ticks();
@@ -195,9 +192,9 @@ public class SqlConnPoolPeer
     if (!toPing.isEmpty()) keepalive(self, toPing);
   }
 
-  // Ping idle connections that have gone quiet, outside the pool lock.
-  // Deliberately does not touch lastUse: a keepalive is not a use, and
-  // counting it as one would hold connections open past linger forever.
+  // Ping reserved idle connections, outside the pool lock.  Must not
+  // touch lastUse: a ping is not a use, and counting it as one would hold
+  // connections open past linger indefinitely.
   private void keepalive(SqlConnPool self, ArrayList<Entry> toPing)
   {
     ArrayList<Entry> dead = new ArrayList<>();
@@ -209,8 +206,7 @@ public class SqlConnPoolPeer
       {
         entry.pinging = false;
 
-        // the pool shut down while we were pinging; close already
-        // took this connection and closed it
+        // pool closed during the ping; close already took this connection
         if (closed) continue;
 
         if (!ok) { entries.remove(entry); dead.add(entry); evicted++; notifyAll(); }
@@ -240,9 +236,9 @@ public class SqlConnPoolPeer
     {
       Entry entry = allocateEntry(self, deadline);
 
-      // a reserved slot has no connection yet; open it out here where
-      // we hold no lock.  A failed open must give the slot back or the
-      // pool leaks capacity for the life of the process.
+      // a reserved slot has no connection yet; open it here, holding no
+      // lock.  A failed open must release the slot or the pool leaks
+      // capacity permanently.
       if (entry.opening)
       {
         try { openReserved(self, entry); }
@@ -250,8 +246,7 @@ public class SqlConnPoolPeer
         return entry;
       }
 
-      // skip the ping if disabled, or if the entry was used recently,
-      // which includes connections just opened by doAllocate
+      // skip the ping if disabled, or if the entry was used recently
       Duration validateAfterIdle = self.validateAfterIdle;
       if (validateAfterIdle == null) return entry;
       long idle = Duration.nowTicks() - entry.lastUse;
@@ -332,12 +327,11 @@ public class SqlConnPoolPeer
       return entry;
     }
 
-    // reserve a slot for a new connection, but do not open it here:
-    // opening blocks on network I/O and this runs under the pool lock,
-    // which every release and every other allocate also needs.  The
-    // caller opens the connection outside the lock and fills the entry
-    // in via openReserved.  Reserving under the lock is what keeps
-    // maxConns honest while the open is in flight.
+    // reserve a slot without opening it: this runs under the pool lock,
+    // which every release and allocate needs, and opening blocks on
+    // network I/O.  The caller opens outside the lock via openReserved.
+    // Reserving under the lock bounds maxConns while an open is in
+    // flight.
     if (entries.size() < self.maxConns)
     {
       entry = new Entry();
@@ -357,7 +351,7 @@ public class SqlConnPoolPeer
 
   // Open the connection for a reserved slot, outside the pool lock, and
   // publish it into the entry.  The entry is already in the pool marked
-  // inUse, so no other thread will hand it out while this runs.
+  // inUse, so no other thread can hand it out while this runs.
   private void openReserved(SqlConnPool self, Entry entry)
   {
     SqlConn conn = open(self);
@@ -365,8 +359,7 @@ public class SqlConnPoolPeer
     boolean stale = false;
     synchronized (this)
     {
-      // the pool was closed while we were opening; close() already took
-      // the entry list, so this connection belongs to nobody
+      // pool closed during the open; close() already took the entry list
       if (closed) stale = true;
       else
       {
@@ -383,10 +376,10 @@ public class SqlConnPoolPeer
     }
   }
 
-  // Give back a reserved slot whose open failed or was abandoned
+  // Release a reserved slot whose open failed
   private void releaseReserved(SqlConnPool self, Entry entry)
   {
-    // wake a waiter: the slot it was blocked on is free again
+    // notify: the slot a waiter was blocked on is free again
     synchronized (this) { entries.remove(entry); notifyAll(); }
   }
 
@@ -435,17 +428,15 @@ public class SqlConnPoolPeer
 
       self.onOpen(c);
     }
-    // the connection is open but unusable and nothing else holds a
-    // reference to it; onOpen never completed so onClose is not called
+    // nothing else holds a reference to this connection; onOpen did not
+    // complete, so onClose is not called
     catch (RuntimeException e) { closeQuietly(c); throw e; }
     catch (Error e)            { closeQuietly(c); throw e; }
     return c;
   }
 
   // Open the JDBC connection on the connect executor so connectTimeout
-  // can bound it.  This is per-pool; the old DriverManager.setLoginTimeout
-  // was a JVM wide setting that every pool and every other JDBC user in
-  // the process shared.
+  // can bound it without driver support
   private SqlConn connect(final SqlConnPool self)
   {
     final AtomicReference<Object> holder = new AtomicReference<Object>();
@@ -455,8 +446,7 @@ public class SqlConnPoolPeer
       {
         SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
 
-        // our caller may have given up while we were connecting, in
-        // which case this connection belongs to nobody
+        // the caller may have given up while we were connecting
         if (!holder.compareAndSet(null, c)) closeQuietly(c);
       }
     });
@@ -468,8 +458,8 @@ public class SqlConnPoolPeer
     }
     catch (TimeoutException e)
     {
-      // cancel is best effort: a driver blocked in a socket connect
-      // does not answer an interrupt, which is why abandon exists
+      // best effort only: a driver blocked in a socket connect does not
+      // answer an interrupt, so abandon must handle a late arrival
       future.cancel(true);
       abandon(holder);
       throw TimeoutErr.make("SqlConn open exceeded connectTimeout (" + self.connectTimeout + ")");
@@ -494,10 +484,9 @@ public class SqlConnPoolPeer
     throw Err.make("SqlConn open produced no connection");
   }
 
-  // Give up on an in flight connect.  Claiming the holder first is what
-  // makes this airtight: either we get there first and the connect task
-  // closes the connection when it lands, or it got there first and we
-  // close the connection it left behind.
+  // Give up on an in flight connect.  Exactly one of the two parties
+  // claims the holder: if this call wins, the connect task closes the
+  // connection when it lands; if the task won, close it here.
   private void abandon(AtomicReference<Object> holder)
   {
     if (holder.compareAndSet(null, ABANDONED)) return;
@@ -512,7 +501,7 @@ public class SqlConnPoolPeer
 
   private void close(SqlConnPool self, Entry entry)
   {
-    // a reserved slot whose open never completed has no connection
+    // a reserved slot whose open never completed
     if (entry.conn == null) return;
     close(self, entry.conn);
   }
@@ -572,11 +561,11 @@ public class SqlConnPoolPeer
     long created;         // Duration.ticks when the slot was reserved
     boolean inUse;        // is this entry currently being used
     boolean opening;      // slot reserved, connection not yet opened
-    boolean pinging;      // held by a keepalive ping, do not hand out
+    boolean pinging;      // held by a keepalive ping; not available
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
-    Throwable checkoutTrace; // checkout site, captured only when leakTrace is on
+    Throwable checkoutTrace; // checkout site, captured when leakTrace is on
 
     public String toString()
     {
@@ -596,11 +585,11 @@ public class SqlConnPoolPeer
   // holder sentinel: the caller stopped waiting for an in flight connect
   private static final Object ABANDONED = new Object();
 
+
   private final int poolNum = poolCounter.incrementAndGet();
 
   // cached, not single threaded: opens run concurrently up to maxConns,
-  // and one thread here would re-serialize what opening outside the
-  // pool lock exists to parallelize
+  // and a single thread would re-serialize them
   private final ExecutorService connector =
     Executors.newCachedThreadPool(threadFactory("connect"));
 
@@ -609,7 +598,7 @@ public class SqlConnPoolPeer
   private boolean closed;
 
   // written and read under the pool lock, so a stats snapshot is
-  // internally consistent without any atomics
+  // consistent without atomics
   private int waiting;
   private long checkouts;
   private long checkoutTimeouts;

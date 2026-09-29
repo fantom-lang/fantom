@@ -19,7 +19,7 @@ const class SqlConnPool
     if (f != null) f(this)
     ka := keepaliveInterval
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepaliveInterval ($ka) is not less than linger ($linger); idle connections are closed before a keepalive can run")
+      log.warn("SqlConnPool keepaliveInterval ($ka) must be less than linger ($linger) to take effect")
     startBookkeeping
   }
 
@@ -35,17 +35,15 @@ const class SqlConnPool
   ** Max number of simultaneous connections to allow before blocking threads
   const Int maxConns := 10
 
-  ** Max time to block waiting to check out a connection from the pool
-  ** before raising TimeoutErr.  This is the wait for an available
-  ** connection, not the time to open a new one; see `connectTimeout`.
+  ** Max time to block waiting for a connection to become available in the
+  ** pool before raising TimeoutErr.  Opening a new connection is bounded
+  ** separately by `connectTimeout`.
   const Duration checkoutTimeout := 30sec
 
-  ** Max time to wait when opening a new connection to the database before
-  ** raising TimeoutErr.  This bounds this pool only; it does not depend on
-  ** driver support and is not a JVM wide setting.  If null then a connect
-  ** blocks for as long as the driver allows.  A connect that lands after
-  ** its timeout is closed rather than pooled, so a slow database cannot
-  ** leak connections.
+  ** Max time to wait when opening a new connection before raising
+  ** TimeoutErr, or null to wait as long as the driver allows.  Scoped to
+  ** this pool and enforced without driver support.  A connect that
+  ** completes after the timeout is closed rather than pooled.
   const Duration? connectTimeout := null
 
   ** Time to linger an idle connection before closing it.
@@ -62,44 +60,33 @@ const class SqlConnPool
   ** per checkout.
   const Duration leakWarn := 2min
 
-  ** Default timeout applied to every statement created on connections
-  ** from this pool.  Null means no timeout.
-  **
-  ** This applies to batch execution as well: JDBC's statement timeout is
-  ** per execution, so a large executeBatch must finish within it.  Code
-  ** with batches that legitimately run longer has to raise this.
+  ** Default timeout applied to every statement created on connections from
+  ** this pool, or null for no timeout.  Applies per execution, so a batch
+  ** must complete within it.  JDBC resolves it in whole seconds; anything
+  ** under a second is rounded up to one second.
   const Duration? queryTimeout := 60sec
 
-  ** How long an idle connection may sit before bookkeeping pings it to
-  ** keep it alive.  Network infrastructure between the pool and the
-  ** database -- NAT gateways, firewalls, load balancers -- silently drops
-  ** idle flows, and a connection killed that way looks healthy until the
-  ** next query fails.  A ping that fails evicts the connection then and
-  ** there rather than on somebody's next checkout.  This must be less
-  ** than `linger` to have any effect, since otherwise the connection is
-  ** closed for being idle first.  If null then idle connections are
-  ** never pinged.
-  **
-  ** A keepalive is not a use: it does not defer `linger`.
+  ** How long an idle connection may sit before bookkeeping pings it, or
+  ** null to never ping idle connections.  A failed ping evicts the
+  ** connection.  Must be less than `linger` to have any effect.  A ping
+  ** does not count as a use and does not defer `linger`.
   const Duration? keepaliveInterval := 2min
 
-  ** Only ping a connection on checkout if it has been idle at least this
-  ** long.  A connection used moments ago is almost certainly still good,
-  ** and the ping costs a database round trip on every checkout.  If null
-  ** then connections are never pinged on checkout.  Note this governs
-  ** checkout only: a connection is always validated after an execute
-  ** callback raises, since there the error is evidence something broke.
+  ** Ping a connection on checkout only if it has been idle at least this
+  ** long, or null to never ping on checkout.  The ping costs a database
+  ** round trip.  Governs checkout only: a connection is always validated
+  ** after an execute callback raises.
   const Duration? validateAfterIdle := 500ms
 
-  ** Max time the liveness ping may take before the connection is treated
-  ** as broken.  JDBC resolves this in whole seconds, so anything under a
-  ** second is rounded up to one second.
+  ** Max time a liveness ping may take before the connection is treated as
+  ** broken.  JDBC resolves this in whole seconds; anything under a second
+  ** is rounded up to one second.
   const Duration validationTimeout := 3sec
 
-  ** How often the pool runs its own bookkeeping: close connections idle
-  ** past `linger`, retire connections older than `maxLifetime`, and warn
-  ** about connections held past `leakWarn`.  The pool schedules this
-  ** itself; callers never drive it.
+  ** How often the pool runs bookkeeping: close connections idle past
+  ** `linger`, retire connections older than `maxLifetime`, ping idle
+  ** connections due a keepalive, and warn about connections held past
+  ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
   const Duration bookkeepingInterval := 30sec
 
   ** onOpen is invoked just after a connection is opened by the pool.
@@ -108,21 +95,19 @@ const class SqlConnPool
   ** onClose is invoked just before a connection is closed by the pool.
   protected virtual Void onClose(SqlConn c) {}
 
-  ** Capture a stack trace at every checkout so the `leakWarn` warning can
-  ** report where the connection was taken from the pool.  Off by default:
-  ** filling in a stack trace is not cheap and this pays it on every
-  ** checkout, so turn it on while hunting a specific leak.
+  ** Capture a stack trace at every checkout and include it in the
+  ** `leakWarn` warning.  Costs a stack fill per checkout, so it is off by
+  ** default.
   const Bool leakTrace := false
 
   ** Logger
   const Log log := Log.get("sqlPool")
 
   ** autoCommit sets the autoCommit mode used by connections in the pool.
-  ** It is applied when a connection is opened and restored every time a
-  ** connection is released back to the pool, so a callback that changes
-  ** the mode cannot leak it to the next borrower.  Changing this at
-  ** runtime takes effect for each pooled connection the next time it is
-  ** released.
+  ** Applied when a connection is opened and restored when it is released,
+  ** so a callback cannot leave the mode changed for the next borrower.
+  ** Changing it at runtime takes effect per connection on its next
+  ** release.
   **
   ** If auto-commit is true then each statement is executed and committed
   ** as an individual transaction.  Otherwise statements are grouped into
@@ -146,19 +131,18 @@ const class SqlConnPool
   ** new executes
   native Void close()
 
-  ** Snapshot of the pool's current gauges and cumulative counters
+  ** Snapshot of the pool's gauges and cumulative counters
   native SqlConnPoolStats stats()
 
   ** Return debug dump string for current state
   @NoDoc native Str debug()
 
-  ** Start the pool's bookkeeping timer; called once from the constructor
-  ** after the it-block has run so the configuration is in place.
+  ** Start the bookkeeping timer.  Must be called after the it-block has
+  ** run, since it reads `bookkeepingInterval`.
   @NoDoc native Void startBookkeeping()
 
-  ** One bookkeeping pass.  Scheduled by the pool itself every
-  ** `bookkeepingInterval`; exposed only so tests can drive it
-  ** deterministically.
+  ** Run one bookkeeping pass.  Called on the timer; exposed so tests can
+  ** drive it directly.
   @NoDoc native Void onBookkeeping()
 }
 
