@@ -294,6 +294,145 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
+  Void testSlowOpenStress()
+  {
+    // the reservation protocol under real contention.  Opens are slow
+    // here, so the window between reserving a slot and filling it is
+    // wide enough for other threads to race it; with instant opens that
+    // window is nanoseconds and proves nothing.
+    before := TestSqlConn.openCount.val
+    cp := SlowOpenPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.keepaliveInterval = null
+      it.maxConns = 3
+      it.checkoutTimeout = 10sec
+      it.linger = 100ms
+      it.openDelay = 30ms
+    }
+    cp.slow.val = true
+
+    ap := ActorPool()
+    actors := SqlConnPoolStressActor[,]
+    8.times { actors.add(SqlConnPoolStressActor(ap, cp)) }
+    futures := Future[,]
+    actors.each |a| { 30.times { futures.add(a.send("go")) } }
+    futures.each |f| { verifyEq(f.get(60sec), "ok") }
+
+    // maxConns was never exceeded and everything is back in the pool
+    st := cp.stats
+    verify(st.total <= 3, "total=$st.total")
+    verifyEq(st.active, 0)
+    verifyEq(st.waiting, 0)
+
+    cp.close
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+
+    // every connection the pool ever opened has been closed
+    verifyEq(TestSqlConn.openCount.val, before)
+  }
+
+  Void testCloseDuringConnect()
+  {
+    // a connect still in flight when the pool closes must not leave a
+    // live connection behind
+    before := TestSqlConn.openCount.val
+    cp := SqlConnPool { it.uri = "test:400"; it.bookkeepingInterval = 1hr; it.keepaliveInterval = null }
+    ap := ActorPool()
+    a := SqlConnPoolTestActor(ap, cp, "a")
+    f := a.send(10ms)
+
+    // let the connect get under way, then pull the pool out from under it
+    Actor.sleep(100ms)
+    cp.close
+    verifyErr(Err#) { f.get(10sec) }
+
+    Actor.sleep(600ms)
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    verifyEq(TestSqlConn.openCount.val, before)
+  }
+
+  Void testCloseDuringKeepalive()
+  {
+    // same for a connection held by an in flight keepalive ping
+    before := TestSqlConn.openCount.val
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.linger = 1hr
+      it.keepaliveInterval = 50ms
+    }
+    cp.execute |c| {}
+    Actor.sleep(100ms)
+
+    ap := ActorPool()
+    pinger := SqlConnPoolBookkeepActor(ap, cp)
+    pf := pinger.send("go")
+    cp.close
+    pf.get(10sec)
+
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+    verifyEq(TestSqlConn.openCount.val, before)
+  }
+
+  Void testStatsWaitingAndLeaks()
+  {
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.keepaliveInterval = null
+      it.maxConns = 1
+      it.checkoutTimeout = 2sec
+      it.leakWarn = 50ms
+    }
+    ap := ActorPool()
+    a := SqlConnPoolTestActor(ap, cp, "a")
+    b := SqlConnPoolTestActor(ap, cp, "b")
+
+    // a holds the only connection; b blocks waiting for it
+    f := execute(a, 400ms)
+    bf := b.send(1ms)
+    endTime := Duration.now + 5sec
+    while (cp.stats.waiting == 0 && Duration.now < endTime) Actor.sleep(10ms)
+    verifyEq(cp.stats.waiting, 1)
+
+    // held past leakWarn, so bookkeeping counts a warning
+    Actor.sleep(100ms)
+    cp.onBookkeeping
+    verifyEq(cp.stats.leakWarnings, 1)
+
+    f.get
+    bf.get
+    verifyEq(cp.stats.waiting, 0)
+    cp.close
+  }
+
+  Void testKeepaliveCountsEviction()
+  {
+    // eviction through the keepalive path, which testStats does not reach
+    cp := SqlConnPool
+    {
+      it.uri = "test"
+      it.bookkeepingInterval = 1hr
+      it.linger = 1hr
+      it.keepaliveInterval = 50ms
+    }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    c1.valid = false
+
+    Actor.sleep(100ms)
+    cp.onBookkeeping
+    st := cp.stats
+    verifyEq(st.evicted, 1)
+    verifyEq(st.retired, 0)
+    verifyEq(st.total, 0)
+    cp.close
+  }
+
   Void testStats()
   {
     cp := SqlConnPool
@@ -720,5 +859,24 @@ internal const class SlowOpenPool : SqlConnPool
     opens.increment
     if (failNext.compareAndSet(true, false)) throw IOErr("open failed")
     if (slow.val) Actor.sleep(openDelay)
+  }
+}
+
+**************************************************************************
+** SqlConnPoolBookkeepActor
+**************************************************************************
+
+** Runs one bookkeeping pass off the test thread, so the test can close
+** the pool while a keepalive ping is in flight.
+internal const class SqlConnPoolBookkeepActor : Actor
+{
+  new make(ActorPool ap, SqlConnPool cp) : super(ap) { this.cp = cp }
+
+  const SqlConnPool cp
+
+  override Obj? receive(Obj? msg)
+  {
+    cp.onBookkeeping
+    return "ok"
   }
 }

@@ -564,6 +564,52 @@ abstract class SqlTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Query Timeout
+//////////////////////////////////////////////////////////////////////////
+
+  Void testQueryTimeout()
+  {
+    // a query that runs past the connection's timeout is aborted
+    db.setQueryTimeout(1sec)
+    t1 := Duration.now
+    verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
+    verify(Duration.now - t1 < 15sec, "did not abort")
+
+    // sub-second timeouts round up to one second.  JDBC takes whole
+    // seconds and reads 0 as "no timeout", so truncating would turn this
+    // into an unbounded query rather than a tighter one.
+    db.setQueryTimeout(100ms)
+    t2 := Duration.now
+    verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
+    verify(Duration.now - t2 < 15sec, "sub-second timeout did not apply")
+
+    // null leaves statements unbounded
+    db.setQueryTimeout(null)
+    db.sql(dialect.sleepSql(1sec)).query
+  }
+
+  Void testQueryTimeoutFromPool()
+  {
+    // the pool stamps its default onto every connection it opens, which
+    // is the path xbd and everything else actually takes
+    d := dialect
+    pool := SqlConnPool
+    {
+      it.uri = d.uri
+      it.username = d.username
+      it.password = d.password
+      it.queryTimeout = 1sec
+    }
+    try
+    {
+      t1 := Duration.now
+      verifyErr(SqlErr#) { pool.execute |c| { c.sql(d.sleepSql(30sec)).query } }
+      verify(Duration.now - t1 < 15sec, "pool timeout did not reach the statement")
+    }
+    finally { pool.close }
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Errors
 //////////////////////////////////////////////////////////////////////////
 
