@@ -14,7 +14,14 @@ using concurrent
 const class SqlConnPool
 {
   ** It-block construtor
-  new make(|This|? f) { if (f != null) f(this) }
+  new make(|This|? f)
+  {
+    if (f != null) f(this)
+    ka := keepaliveInterval
+    if (ka != null && ka >= linger)
+      log.warn("SqlConnPool keepaliveInterval ($ka) must be less than linger ($linger) to take effect")
+    startBookkeeping
+  }
 
   ** Connection URI
   const Str uri
@@ -28,30 +35,59 @@ const class SqlConnPool
   ** Max number of simultaneous connections to allow before blocking threads
   const Int maxConns := 10
 
-  ** Max time to block waiting for a connection before raising TimeoutErr
-  const Duration timeout := 30sec
+  ** Max time to block waiting for a connection to become available in the
+  ** pool before raising TimeoutErr.  Opening a new connection is bounded
+  ** separately by `connectTimeout`.
+  const Duration checkoutTimeout := 30sec
 
-  ** Max time to wait when opening a new connection to the database
-  ** before failing.  If null then the JDBC driver default is used.
-  ** Note this is implemented via the global DriverManager.setLoginTimeout
-  ** which applies JVM wide to all JDBC connections.
+  ** Max time to wait when opening a new connection before raising
+  ** TimeoutErr, or null to wait as long as the driver allows.  Scoped to
+  ** this pool and enforced without driver support.  A connect that
+  ** completes after the timeout is closed rather than pooled.
   const Duration? connectTimeout := null
 
-  ** Time to linger an idle connection before closing it.  An external
-  ** actor must call checkLinger periodically to close idle connetions.
+  ** Time to linger an idle connection before closing it.
   const Duration linger := 5min
 
   ** Max lifetime of a connection before it is retired, regardless of
   ** how recently it was used.  This protects against database and
-  ** network infrastructure that kills long lived connections.  It is
-  ** enforced by checkLinger; connections in use are never retired
-  ** until released back to the pool.
+  ** network infrastructure that kills long lived connections.
+  ** Connections in use are never retired until released back to the pool.
   const Duration maxLifetime := 30min
 
-  ** Time a connection may be held by an execute callback before
-  ** checkLinger logs a warning that it may be stuck or leaked.
-  ** The warning is logged once per checkout.
+  ** Time a connection may be held by an execute callback before a warning
+  ** is logged that it may be stuck or leaked.  The warning is logged once
+  ** per checkout.
   const Duration leakWarn := 2min
+
+  ** Default timeout applied to every statement created on connections from
+  ** this pool, or null for no timeout.  Applies per execution, so a batch
+  ** must complete within it.  JDBC resolves it in whole seconds; anything
+  ** under a second is rounded up to one second.
+  const Duration? queryTimeout := 60sec
+
+  ** How long an idle connection may sit before bookkeeping pings it, or
+  ** null to never ping idle connections.  A failed ping evicts the
+  ** connection.  Must be less than `linger` to have any effect.  A ping
+  ** does not count as a use and does not defer `linger`.
+  const Duration? keepaliveInterval := 2min
+
+  ** Ping a connection on checkout only if it has been idle at least this
+  ** long, or null to never ping on checkout.  The ping costs a database
+  ** round trip.  Governs checkout only: a connection is always validated
+  ** after an execute callback raises.
+  const Duration? validateAfterIdle := 500ms
+
+  ** Max time a liveness ping may take before the connection is treated as
+  ** broken.  JDBC resolves this in whole seconds; anything under a second
+  ** is rounded up to one second.
+  const Duration validationTimeout := 3sec
+
+  ** How often the pool runs bookkeeping: close connections idle past
+  ** `linger`, retire connections older than `maxLifetime`, ping idle
+  ** connections due a keepalive, and warn about connections held past
+  ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
+  const Duration bookkeepingInterval := 30sec
 
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
@@ -59,11 +95,19 @@ const class SqlConnPool
   ** onClose is invoked just before a connection is closed by the pool.
   protected virtual Void onClose(SqlConn c) {}
 
+  ** Capture a stack trace at every checkout and include it in the
+  ** `leakWarn` warning.  Costs a stack fill per checkout, so it is off by
+  ** default.
+  const Bool leakTrace := false
+
   ** Logger
   const Log log := Log.get("sqlPool")
 
-  ** autoCommit sets the autoCommit field on a connection just after it is
-  ** opened by the pool.
+  ** autoCommit sets the autoCommit mode used by connections in the pool.
+  ** Applied when a connection is opened and restored when it is released,
+  ** so a callback cannot leave the mode changed for the next borrower.
+  ** Changing it at runtime takes effect per connection on its next
+  ** release.
   **
   ** If auto-commit is true then each statement is executed and committed
   ** as an individual transaction.  Otherwise statements are grouped into
@@ -76,22 +120,29 @@ const class SqlConnPool
   private const AtomicBool isAutoCommit := AtomicBool(false)
 
   ** Allocate a SQL connection inside the given callback.  If a connection
-  ** cannot be acquired before [timeout] elapses then a TimeoutErr is raised.
-  ** Do not close the connection inside the callback.
+  ** cannot be acquired before [checkoutTimeout] elapses then a TimeoutErr
+  ** is raised.  Do not close the connection inside the callback.
   native Void execute(|SqlConn| f)
-
-  ** Close idle connections that have lingered past the linger timeout
-  ** or lived past the maxLifetime.  Also log a warning for connections
-  ** held in-use longer than leakWarn.
-  native Void checkLinger()
 
   ** Return if [close] has been called.
   native Bool isClosed()
 
-  ** Close all connections and raise exception on any new executes
+  ** Close all connections, stop bookkeeping, and raise exception on any
+  ** new executes
   native Void close()
+
+  ** Snapshot of the pool's gauges and cumulative counters
+  native SqlConnPoolStats stats()
 
   ** Return debug dump string for current state
   @NoDoc native Str debug()
+
+  ** Start the bookkeeping timer.  Must be called after the it-block has
+  ** run, since it reads `bookkeepingInterval`.
+  @NoDoc native Void startBookkeeping()
+
+  ** Run one bookkeeping pass.  Called on the timer; exposed so tests can
+  ** drive it directly.
+  @NoDoc native Void onBookkeeping()
 }
 

@@ -88,7 +88,7 @@ abstract class SqlTest : Test
   Void testSmoke()
   {
     verifyFalse(db.isClosed)
-    verify(db.isValid)
+    verify(db.isValid(3sec))
 
     createVals
     verify(db.meta.tableExists(valsTable))
@@ -561,6 +561,50 @@ abstract class SqlTest : Test
     }
     finally
       sel.close
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Query Timeout
+//////////////////////////////////////////////////////////////////////////
+
+  Void testQueryTimeout()
+  {
+    // a query past the connection's timeout is aborted
+    db.setQueryTimeout(1sec)
+    t1 := Duration.now
+    verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
+    verify(Duration.now - t1 < 15sec, "did not abort")
+
+    // sub-second timeouts round up to one second; truncating would give
+    // JDBC a 0, which means no timeout
+    db.setQueryTimeout(100ms)
+    t2 := Duration.now
+    verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
+    verify(Duration.now - t2 < 15sec, "sub-second timeout did not apply")
+
+    // null leaves statements unbounded
+    db.setQueryTimeout(null)
+    db.sql(dialect.sleepSql(1sec)).query
+  }
+
+  Void testQueryTimeoutFromPool()
+  {
+    // the pool stamps its default onto every connection it opens
+    d := dialect
+    pool := SqlConnPool
+    {
+      it.uri = d.uri
+      it.username = d.username
+      it.password = d.password
+      it.queryTimeout = 1sec
+    }
+    try
+    {
+      t1 := Duration.now
+      verifyErr(SqlErr#) { pool.execute |c| { c.sql(d.sleepSql(30sec)).query } }
+      verify(Duration.now - t1 < 15sec, "pool timeout did not reach the statement")
+    }
+    finally { pool.close }
   }
 
 //////////////////////////////////////////////////////////////////////////

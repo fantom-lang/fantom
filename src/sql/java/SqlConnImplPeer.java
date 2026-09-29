@@ -34,6 +34,16 @@ public class SqlConnImplPeer
     {
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
+
+      // test hook "test:<millis>": a slow connect that does not answer an
+      // interrupt, as a driver blocked in a socket connect does not
+      if (uri.startsWith("test:"))
+      {
+        long end = System.currentTimeMillis() + Long.parseLong(uri.substring(5));
+        while (System.currentTimeMillis() < end)
+          { try { Thread.sleep(10); } catch (InterruptedException e) {} }
+        return TestSqlConn.make();
+      }
       if (user == null)
       {
         //support for certificate auth
@@ -79,20 +89,19 @@ public class SqlConnImplPeer
     }
   }
 
-  public boolean isValid(SqlConnImpl self)
+  public boolean isValid(SqlConnImpl self, Duration timeout)
   {
     try
     {
-      return jconn.isValid(isValidTimeout);
+      // JDBC takes whole seconds and treats 0 as no timeout, so round up
+      int secs = (int)Math.max(1L, (timeout.millis() + 999L) / 1000L);
+      return jconn.isValid(secs);
     }
     catch (Throwable e)
     {
       return false;
     }
   }
-
-  // seconds passed to java.sql.Connection.isValid
-  static final int isValidTimeout = 3;
 
   public boolean close(SqlConnImpl self)
   {

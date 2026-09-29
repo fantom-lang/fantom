@@ -48,7 +48,7 @@ class SqlConnImpl : SqlConn
   **
   ** Ping that the connection is still alive using JDBC Connection.isValid.
   **
-  @NoDoc override native Bool isValid()
+  @NoDoc override native Bool isValid(Duration timeout)
 
 //////////////////////////////////////////////////////////////////////////
 // Data
@@ -63,6 +63,14 @@ class SqlConnImpl : SqlConn
   ** Create a statement for this database.
   **
   override Statement sql(Str sql) { Statement(this, sql) }
+
+  **
+  ** Default statement timeout applied as each JDBC statement is created,
+  ** or null for no timeout.
+  **
+  @NoDoc Duration? queryTimeout
+
+  @NoDoc override Void setQueryTimeout(Duration? t) { queryTimeout = t }
 
 //////////////////////////////////////////////////////////////////////////
 // Transactions
@@ -95,11 +103,23 @@ class SqlConnImpl : SqlConn
 internal class TestSqlConn: SqlConn
 {
   static const AtomicInt idCounter := AtomicInt()
-  internal new make() { id = idCounter.getAndIncrement }
+
+  ** Connections created minus connections closed
+  static const AtomicInt openCount := AtomicInt()
+
+  internal new make() { id = idCounter.getAndIncrement; openCount.increment }
   const Int id
-  override Bool close() { closed = true}
+  override Bool close()
+  {
+    if (!closed) { closed = true; openCount.decrement }
+    return true
+  }
   override Bool isClosed() { return closed }
-  override Bool isValid() { valid }
+  override Bool isValid(Duration timeout)
+  {
+    lastValidateTimeout = timeout
+    return valid
+  }
   override SqlMeta meta() { throw Err() }
   override Statement sql(Str sql) { throw Err() }
   override Bool autoCommit
@@ -111,8 +131,12 @@ internal class TestSqlConn: SqlConn
   override Str toStr() { "TestSqlConn-$id" }
   private Bool closed
 
+  override Void setQueryTimeout(Duration? t) { queryTimeout = t }
+
   // test hooks to simulate failures and record pool behavior
   Bool valid := true
+  Duration? lastValidateTimeout
+  Duration? queryTimeout
   Int commits
   Int rollbacks
   Str[] ops := [,]

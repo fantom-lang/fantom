@@ -84,6 +84,7 @@ internal const class Dialect
     // auto_increment must be a key
     it.autoKeySuffix = "primary key (id)"
 
+    it.sleepFunc           = "sleep"
     it.hasArrays           = false
     it.hasUserVars         = true
     it.hasJsonb            = false
@@ -120,6 +121,7 @@ internal const class Dialect
     // serial needs no separate key constraint
     it.autoKeySuffix = null
 
+    it.sleepFunc           = "pg_sleep"
     it.hasArrays           = true
     it.hasUserVars         = false
     it.hasJsonb            = true
@@ -157,6 +159,12 @@ internal const class Dialect
 
   ** Short name used in test output
   const Str name
+
+  ** Function that blocks the server for a number of seconds
+  const Str sleepFunc
+
+  ** Query that blocks the server for the given duration
+  Str sleepSql(Duration d) { "select ${sleepFunc}(${d.toSec})" }
 
   ** Expected SqlMeta.productName; asserted at connect so that crossed
   ** ports fail immediately instead of deep inside a type assertion

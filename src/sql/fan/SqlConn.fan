@@ -46,9 +46,19 @@ mixin SqlConn
 
   **
   ** Return if this connection is still alive and usable.  For JDBC
-  ** connections this pings the database using 'java.sql.Connection.isValid'.
+  ** connections this pings the database using 'java.sql.Connection.isValid'
+  ** and gives up after the given timeout.  JDBC resolves the timeout in
+  ** whole seconds; anything under a second is rounded up to one second.
   **
-  @NoDoc virtual Bool isValid() { true }
+  @NoDoc virtual Bool isValid(Duration timeout) { true }
+
+  **
+  ** Set the default timeout applied to statements created on this
+  ** connection, or null for no timeout.  Applies per execution, batches
+  ** included.  JDBC resolves it in whole seconds; anything under a second
+  ** is rounded up to one second.
+  **
+  @NoDoc virtual Void setQueryTimeout(Duration? t) {}
 
 //////////////////////////////////////////////////////////////////////////
 // Data

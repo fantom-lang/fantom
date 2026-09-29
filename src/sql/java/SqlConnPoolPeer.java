@@ -8,6 +8,8 @@
 package fan.sql;
 
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import java.sql.*;
 import fan.sys.*;
 
@@ -23,6 +25,39 @@ public class SqlConnPoolPeer
     return new SqlConnPoolPeer();
   }
 
+  // Daemon threads, named so a stack dump identifies the pool and role
+  private ThreadFactory threadFactory(final String role)
+  {
+    return new ThreadFactory()
+    {
+      public Thread newThread(Runnable r)
+      {
+        Thread t = new Thread(r, "sqlConnPool-" + poolNum + "-" + role);
+        t.setDaemon(true);
+        return t;
+      }
+    };
+  }
+
+  // Must run after the Fantom it-block, which is where bookkeepingInterval
+  // is set; the peer itself is constructed before that
+  public void startBookkeeping(final SqlConnPool self)
+  {
+    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("bookkeeping"));
+
+    long ms = self.bookkeepingInterval.millis();
+    // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
+    this.bookkeeper.scheduleWithFixedDelay(new Runnable()
+    {
+      public void run()
+      {
+        // an uncaught throwable would cancel the schedule
+        try { onBookkeeping(self); }
+        catch (Throwable e) { self.log.err("SqlConnPool bookkeeping failed", Err.make(e)); }
+      }
+    }, ms, ms, TimeUnit.MILLISECONDS);
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // SqlConnPool
 //////////////////////////////////////////////////////////////////////////
@@ -31,6 +66,7 @@ public class SqlConnPoolPeer
     throws Throwable
   {
     Entry entry = allocate(self);
+    synchronized (this) { checkouts++; }
     try
     {
       f.call(entry.conn);
@@ -39,7 +75,7 @@ public class SqlConnPoolPeer
     {
       // if the error left the connection broken then evict it
       // from the pool instead of releasing it back for reuse
-      if (validate(entry)) release(self, entry);
+      if (validate(self, entry)) release(self, entry);
       else
       {
         self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
@@ -69,17 +105,28 @@ public class SqlConnPoolPeer
       entries = new ArrayList<>();
       notifyAll();
     }
+
+    // outside the lock: a pass blocked on the monitor would deadlock
+    // shutdown.  Connects still in flight are closed by openReserved,
+    // which discards them once the pool is closed.
+    if (bookkeeper != null) bookkeeper.shutdownNow();
+    connector.shutdownNow();
+
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
   }
 
-  public void checkLinger(SqlConnPool self)
+  public void onBookkeeping(SqlConnPool self)
   {
     // remove expired entries under the lock, then close them
     // outside the lock since closing may block on network I/O
-    ArrayList<Entry> expired;
+    ArrayList<Entry> expired = new ArrayList<>();
+    ArrayList<Entry> toPing = new ArrayList<>();
     synchronized (this)
     {
+      // close has already taken the entries
+      if (closed) return;
+
       long now = Duration.nowTicks();
       long linger = self.linger.ticks();
       long maxLifetime = self.maxLifetime.ticks();
@@ -90,10 +137,14 @@ public class SqlConnPoolPeer
       for (int i=0; i<entries.size(); ++i)
       {
         Entry entry = entries.get(i);
-        if (entry.inUse && !entry.leakWarned && (now - entry.useStart) > leakWarn)
+        // a slot still opening is not a checkout
+        if (entry.inUse && !entry.opening && !entry.leakWarned && (now - entry.useStart) > leakWarn)
         {
           entry.leakWarned = true;
-          self.log.warn("SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn);
+          leakWarnings++;
+          String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
+          if (entry.checkoutTrace == null) self.log.warn(msg);
+          else self.log.warn(msg, Err.make(entry.checkoutTrace));
         }
       }
 
@@ -104,26 +155,75 @@ public class SqlConnPoolPeer
         Entry entry = entries.get(i);
         if (isExpired(entry, now, linger, maxLifetime)) { anyToClose = true; break; }
       }
-      if (!anyToClose) return;
 
-      // build new lists of entries to close and keep
-      ArrayList<Entry> keep = new ArrayList<>(entries.size());
-      expired = new ArrayList<>();
-      for (int i=0; i<entries.size(); ++i)
+      if (anyToClose)
       {
-        Entry entry = entries.get(i);
-        if (isExpired(entry, now, linger, maxLifetime)) expired.add(entry);
-        else keep.add(entry);
+        // build new lists of entries to close and keep
+        ArrayList<Entry> keep = new ArrayList<>(entries.size());
+        for (int i=0; i<entries.size(); ++i)
+        {
+          Entry entry = entries.get(i);
+          if (isExpired(entry, now, linger, maxLifetime)) { expired.add(entry); retired++; }
+          else keep.add(entry);
+        }
+        this.entries = keep;
       }
-      this.entries = keep;
+
+      // reserve under the lock so a ping cannot race a checkout; the ping
+      // itself runs below, outside the lock.  Expiry ran first, so
+      // anything already past linger is gone rather than pinged.
+      if (self.keepaliveInterval != null)
+      {
+        long keepalive = self.keepaliveInterval.ticks();
+        for (int i=0; i<entries.size(); ++i)
+        {
+          Entry entry = entries.get(i);
+          if (entry.inUse || entry.opening || entry.pinging) continue;
+          if ((now - entry.lastUse) < keepalive) continue;
+          entry.pinging = true;
+          toPing.add(entry);
+        }
+      }
     }
+
     for (int i=0; i<expired.size(); ++i)
       close(self, expired.get(i));
+
+    if (!toPing.isEmpty()) keepalive(self, toPing);
+  }
+
+  // Ping reserved idle connections, outside the pool lock.  Must not
+  // touch lastUse: a ping is not a use, and counting it as one would hold
+  // connections open past linger indefinitely.
+  private void keepalive(SqlConnPool self, ArrayList<Entry> toPing)
+  {
+    ArrayList<Entry> dead = new ArrayList<>();
+    for (int i=0; i<toPing.size(); ++i)
+    {
+      Entry entry = toPing.get(i);
+      boolean ok = validate(self, entry);
+      synchronized (this)
+      {
+        entry.pinging = false;
+
+        // pool closed during the ping; close already took this connection
+        if (closed) continue;
+
+        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; notifyAll(); }
+      }
+    }
+
+    for (int i=0; i<dead.size(); ++i)
+    {
+      Entry entry = dead.get(i);
+      self.log.warn("SqlConnPool keepalive evicting dead connection: " + entry.conn);
+      close(self, entry);
+    }
   }
 
   private static boolean isExpired(Entry entry, long now, long linger, long maxLifetime)
   {
-    if (entry.inUse) return false;
+    if (entry.inUse || entry.pinging) return false;
     return (now - entry.lastUse) > linger ||
            (now - entry.created) > maxLifetime;
   }
@@ -131,19 +231,30 @@ public class SqlConnPoolPeer
   private Entry allocate(SqlConnPool self)
     throws InterruptedException
   {
-    long deadline = System.nanoTime()/1000000L + self.timeout.millis();
+    long deadline = System.nanoTime()/1000000L + self.checkoutTimeout.millis();
     while (true)
     {
       Entry entry = allocateEntry(self, deadline);
 
-      // skip validation if entry was used recently, which
-      // includes connections just opened by doAllocate
+      // a reserved slot has no connection yet; open it here, holding no
+      // lock.  A failed open must release the slot or the pool leaks
+      // capacity permanently.
+      if (entry.opening)
+      {
+        try { openReserved(self, entry); }
+        catch (Throwable e) { releaseReserved(self, entry); throw e; }
+        return entry;
+      }
+
+      // skip the ping if disabled, or if the entry was used recently
+      Duration validateAfterIdle = self.validateAfterIdle;
+      if (validateAfterIdle == null) return entry;
       long idle = Duration.nowTicks() - entry.lastUse;
-      if (idle < validateThreshold) return entry;
+      if (idle < validateAfterIdle.ticks()) return entry;
 
       // ping connection to verify it is still alive; if not then
       // close it, discard it from the pool, and allocate again
-      if (validate(entry)) return entry;
+      if (validate(self, entry)) return entry;
       self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
       evict(self, entry);
     }
@@ -164,18 +275,23 @@ public class SqlConnPoolPeer
       // check if we have waited past our deadline
       long toSleep = deadline - System.nanoTime()/1000000L;
       if (toSleep <= 0)
-        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.timeout + ")");
+      {
+        checkoutTimeouts++;
+        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.checkoutTimeout + ")");
+      }
 
       // sleep until we get a notify
-      wait(toSleep);
+      waiting++;
+      try { wait(toSleep); }
+      finally { waiting--; }
     }
   }
 
-  private boolean validate(Entry entry)
+  private boolean validate(SqlConnPool self, Entry entry)
   {
     try
     {
-      return entry.conn.isValid();
+      return entry.conn.isValid(self.validationTimeout);
     }
     catch (Throwable e)
     {
@@ -187,7 +303,7 @@ public class SqlConnPoolPeer
   {
     // remove from pool under lock, but close outside the
     // lock since closing may block on network I/O
-    synchronized (this) { entries.remove(entry); notifyAll(); }
+    synchronized (this) { entries.remove(entry); evicted++; notifyAll(); }
     close(self, entry);
   }
 
@@ -198,7 +314,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<entries.size(); ++i)
     {
       Entry x = entries.get(i);
-      if (x.inUse) continue;
+      if (x.inUse || x.pinging) continue;
       if (entry == null || x.lastUse > entry.lastUse) entry = x;
     }
 
@@ -207,21 +323,64 @@ public class SqlConnPoolPeer
     {
       entry.inUse = true;
       entry.useStart = Duration.nowTicks();
+      if (self.leakTrace) entry.checkoutTrace = new Throwable("checked out here");
       return entry;
     }
 
-    // allocate a new entry
+    // reserve a slot without opening it: this runs under the pool lock,
+    // which every release and allocate needs, and opening blocks on
+    // network I/O.  The caller opens outside the lock via openReserved.
+    // Reserving under the lock bounds maxConns while an open is in
+    // flight.
     if (entries.size() < self.maxConns)
     {
-      entry = new Entry(open(self));
+      entry = new Entry();
       entry.inUse = true;
+      entry.opening = true;
+      entry.created = Duration.nowTicks();
+      entry.lastUse = entry.created;
       entry.useStart = entry.created;
+      if (self.leakTrace) entry.checkoutTrace = new Throwable("checked out here");
       entries.add(entry);
       return entry;
     }
 
     // no joy
     return null;
+  }
+
+  // Open the connection for a reserved slot, outside the pool lock, and
+  // publish it into the entry.  The entry is already in the pool marked
+  // inUse, so no other thread can hand it out while this runs.
+  private void openReserved(SqlConnPool self, Entry entry)
+  {
+    SqlConn conn = open(self);
+
+    boolean stale = false;
+    synchronized (this)
+    {
+      // pool closed during the open; close() already took the entry list
+      if (closed) stale = true;
+      else
+      {
+        entry.conn = conn;
+        entry.opening = false;
+        opened++;
+      }
+    }
+
+    if (stale)
+    {
+      close(self, conn);
+      throw Err.make("SqlConnPool is closed");
+    }
+  }
+
+  // Release a reserved slot whose open failed
+  private void releaseReserved(SqlConnPool self, Entry entry)
+  {
+    // notify: the slot a waiter was blocked on is free again
+    synchronized (this) { entries.remove(entry); notifyAll(); }
   }
 
   private void release(SqlConnPool self, Entry entry)
@@ -250,6 +409,7 @@ public class SqlConnPoolPeer
     {
       entry.inUse = false;
       entry.leakWarned = false;
+      entry.checkoutTrace = null;
       entry.lastUse = Duration.nowTicks();
       notifyAll();
     }
@@ -257,24 +417,110 @@ public class SqlConnPoolPeer
 
   private SqlConn open(SqlConnPool self)
   {
-    // bound how long a connect may block; note this is a JVM
-    // wide setting on DriverManager (see SqlConnPool fandoc)
-    if (self.connectTimeout != null)
-      DriverManager.setLoginTimeout((int)self.connectTimeout.toSec());
+    SqlConn c = connect(self);
+    try
+    {
+      // set auto-commit based on connection pool property
+      c.autoCommit(self.autoCommit());
 
-    SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
+      // statements created on this connection inherit the pool's timeout
+      c.setQueryTimeout(self.queryTimeout);
 
-    // set auto-commit based on connection pool property
-    c.autoCommit(self.autoCommit());
-
-    self.onOpen(c);
+      self.onOpen(c);
+    }
+    // nothing else holds a reference to this connection; onOpen did not
+    // complete, so onClose is not called
+    catch (RuntimeException e) { closeQuietly(c); throw e; }
+    catch (Error e)            { closeQuietly(c); throw e; }
     return c;
+  }
+
+  // Open the JDBC connection on the connect executor so connectTimeout
+  // can bound it without driver support
+  private SqlConn connect(final SqlConnPool self)
+  {
+    final AtomicReference<Object> holder = new AtomicReference<Object>();
+    Future<?> future = connector.submit(new Runnable()
+    {
+      public void run()
+      {
+        SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
+
+        // the caller may have given up while we were connecting
+        if (!holder.compareAndSet(null, c)) closeQuietly(c);
+      }
+    });
+
+    try
+    {
+      if (self.connectTimeout == null) future.get();
+      else future.get(self.connectTimeout.millis(), TimeUnit.MILLISECONDS);
+    }
+    catch (TimeoutException e)
+    {
+      // best effort only: a driver blocked in a socket connect does not
+      // answer an interrupt, so abandon must handle a late arrival
+      future.cancel(true);
+      abandon(holder);
+      throw TimeoutErr.make("SqlConn open exceeded connectTimeout (" + self.connectTimeout + ")");
+    }
+    catch (ExecutionException e)
+    {
+      Throwable cause = e.getCause();
+      if (cause instanceof RuntimeException) throw (RuntimeException)cause;
+      if (cause instanceof Error) throw (Error)cause;
+      throw Err.make(cause);
+    }
+    catch (InterruptedException e)
+    {
+      future.cancel(true);
+      abandon(holder);
+      Thread.currentThread().interrupt();
+      throw Err.make(e);
+    }
+
+    Object v = holder.get();
+    if (v instanceof SqlConn) return (SqlConn)v;
+    throw Err.make("SqlConn open produced no connection");
+  }
+
+  // Give up on an in flight connect.  Exactly one of the two parties
+  // claims the holder: if this call wins, the connect task closes the
+  // connection when it lands; if the task won, close it here.
+  private void abandon(AtomicReference<Object> holder)
+  {
+    if (holder.compareAndSet(null, ABANDONED)) return;
+    Object v = holder.get();
+    if (v instanceof SqlConn) closeQuietly((SqlConn)v);
+  }
+
+  private static void closeQuietly(SqlConn c)
+  {
+    try { c.close(); } catch (Throwable e) {}
   }
 
   private void close(SqlConnPool self, Entry entry)
   {
-    self.onClose(entry.conn);
-    entry.conn.close();
+    // a reserved slot whose open never completed
+    if (entry.conn == null) return;
+    close(self, entry.conn);
+  }
+
+  private void close(SqlConnPool self, SqlConn conn)
+  {
+    self.onClose(conn);
+    conn.close();
+  }
+
+  public synchronized SqlConnPoolStats stats(SqlConnPool self)
+  {
+    int total = entries.size();
+    int active = 0;
+    for (int i=0; i<entries.size(); ++i)
+      if (entries.get(i).inUse) active++;
+
+    return SqlConnPoolStats.make(total, active, total-active, waiting, self.maxConns,
+      checkouts, checkoutTimeouts, opened, retired, evicted, leakWarnings);
   }
 
   public synchronized String debug(SqlConnPool self)
@@ -293,6 +539,13 @@ public class SqlConnPoolPeer
     s.append("  idle:     ").append(idle).append("\n");
     s.append("  inUse:    ").append(inUse).append("\n");
     s.append("  entries:  ").append(entries.size()).append("\n");
+    s.append("  waiting:  ").append(waiting).append("\n");
+    s.append("  checkouts: ").append(checkouts).append("\n");
+    s.append("  checkoutTimeouts: ").append(checkoutTimeouts).append("\n");
+    s.append("  opened:   ").append(opened).append("\n");
+    s.append("  retired:  ").append(retired).append("\n");
+    s.append("  evicted:  ").append(evicted).append("\n");
+    s.append("  leakWarnings: ").append(leakWarnings).append("\n");
     for (int i=0; i<entries.size(); ++i)
       s.append("    ").append(entries.get(i)).append("\n");
     return s.toString();
@@ -304,22 +557,19 @@ public class SqlConnPoolPeer
 
   static class Entry
   {
-    Entry(SqlConn conn)
-    {
-      this.conn    = conn;
-      this.created = Duration.nowTicks();
-      this.lastUse = this.created;
-    }
-
-    final SqlConn conn;   // open connection
-    final long created;   // Duration.ticks when connection was opened
+    SqlConn conn;         // open connection; null while opening
+    long created;         // Duration.ticks when the slot was reserved
     boolean inUse;        // is this entry currently being used
+    boolean opening;      // slot reserved, connection not yet opened
+    boolean pinging;      // held by a keepalive ping; not available
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
+    Throwable checkoutTrace; // checkout site, captured when leakTrace is on
 
     public String toString()
     {
+      if (opening) return "Entry opening";
       Duration age = Duration.make(Duration.nowTicks() - lastUse);
       return "Entry " + conn + " inUse=" + inUse + " age=" + age.toLocale();
     }
@@ -329,11 +579,32 @@ public class SqlConnPoolPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  // only validate a connection on borrow if it has been idle
-  // longer than this threshold (in Duration ticks)
-  private static final long validateThreshold = 500L * 1000000L;  // 500ms
+  // names the threads of each pool in this JVM
+  private static final AtomicInteger poolCounter = new AtomicInteger();
+
+  // holder sentinel: the caller stopped waiting for an in flight connect
+  private static final Object ABANDONED = new Object();
+
+
+  private final int poolNum = poolCounter.incrementAndGet();
+
+  // cached, not single threaded: opens run concurrently up to maxConns,
+  // and a single thread would re-serialize them
+  private final ExecutorService connector =
+    Executors.newCachedThreadPool(threadFactory("connect"));
 
   private ArrayList<Entry> entries = new ArrayList<>();
+  private ScheduledExecutorService bookkeeper;
   private boolean closed;
+
+  // written and read under the pool lock, so a stats snapshot is
+  // consistent without atomics
+  private int waiting;
+  private long checkouts;
+  private long checkoutTimeouts;
+  private long opened;
+  private long retired;
+  private long evicted;
+  private long leakWarnings;
 }
 
