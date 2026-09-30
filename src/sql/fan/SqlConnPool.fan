@@ -17,9 +17,9 @@ const class SqlConnPool
   new make(|This|? f)
   {
     if (f != null) f(this)
-    ka := keepaliveInterval
+    ka := keepAliveInterval
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepaliveInterval ($ka) must be less than linger ($linger) to take effect")
+      log.warn("SqlConnPool keepAliveInterval ($ka) must be less than linger ($linger) to take effect")
     startHouseKeeping
   }
 
@@ -70,7 +70,7 @@ const class SqlConnPool
   ** null to never ping idle connections.  A failed ping evicts the
   ** connection.  Must be less than `linger` to have any effect.  A ping
   ** does not count as a use and does not defer `linger`.
-  const Duration? keepaliveInterval := 2min
+  const Duration? keepAliveInterval := 2min
 
   ** Ping a connection on checkout only if it has been idle at least this
   ** long, or null to never ping on checkout.  The ping costs a database
@@ -85,7 +85,7 @@ const class SqlConnPool
 
   ** How often the pool runs houseKeeping: close connections idle past
   ** `linger`, retire connections older than `maxLifetime`, ping idle
-  ** connections due a keepalive, and warn about connections held past
+  ** connections due a keepAlive, and warn about connections held past
   ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
   const Duration houseKeepingInterval := 30sec
 

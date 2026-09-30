@@ -37,7 +37,7 @@ const class SqlConnPoolStats
   ** that is still opening counts here.
   const Int active
 
-  ** Connections available for checkout.  A connection held by a keepalive
+  ** Connections available for checkout.  A connection held by a keepAlive
   ** ping counts here.
   const Int idle
 
@@ -61,7 +61,7 @@ const class SqlConnPoolStats
   const Int retired
 
   ** Connections closed as broken: failed validation on checkout, failed
-  ** after an execute callback raised, or failed a keepalive ping
+  ** after an execute callback raised, or failed a keepAlive ping
   const Int evicted
 
   ** Warnings logged for connections held past `SqlConnPool.leakWarn`

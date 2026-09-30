@@ -24,7 +24,7 @@ class SqlConnPoolTest : Test
       it.uri      = "test"
       it.maxConns = 2
       it.linger   = 200ms
-      it.keepaliveInterval = null
+      it.keepAliveInterval = null
       it.checkoutTimeout  = 300ms
       it.houseKeepingInterval = 1hr
     }
@@ -199,7 +199,7 @@ class SqlConnPoolTest : Test
 
   Void testMaxLifetime()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepaliveInterval = null; it.linger = 1min; it.maxLifetime = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.linger = 1min; it.maxLifetime = 100ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
 
@@ -215,7 +215,7 @@ class SqlConnPoolTest : Test
 
   Void testInUseNotReaped()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepaliveInterval = null; it.linger = 50ms; it.maxLifetime = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.linger = 50ms; it.maxLifetime = 50ms }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
 
@@ -237,7 +237,7 @@ class SqlConnPoolTest : Test
   Void testHouseKeepingRuns()
   {
     // houseKeeping runs on the pool's own timer
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 50ms; it.keepaliveInterval = null; it.linger = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 50ms; it.keepAliveInterval = null; it.linger = 50ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(debugInt(cp.debug, "entries"), 1)
@@ -304,7 +304,7 @@ class SqlConnPoolTest : Test
     {
       it.uri = "test"
       it.houseKeepingInterval = 1hr
-      it.keepaliveInterval = null
+      it.keepAliveInterval = null
       it.maxConns = 3
       it.checkoutTimeout = 10sec
       it.linger = 100ms
@@ -337,7 +337,7 @@ class SqlConnPoolTest : Test
     // a connect in flight when the pool closes must not leave a live
     // connection behind
     before := TestSqlConn.openCount.val
-    cp := SqlConnPool { it.uri = "test:400"; it.houseKeepingInterval = 1hr; it.keepaliveInterval = null }
+    cp := SqlConnPool { it.uri = "test:400"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := a.send(10ms)
@@ -354,7 +354,7 @@ class SqlConnPoolTest : Test
 
   Void testCloseDuringKeepalive()
   {
-    // a connection held by an in flight keepalive ping must not survive
+    // a connection held by an in flight keepAlive ping must not survive
     // the close either
     before := TestSqlConn.openCount.val
     cp := SqlConnPool
@@ -362,7 +362,7 @@ class SqlConnPoolTest : Test
       it.uri = "test"
       it.houseKeepingInterval = 1hr
       it.linger = 1hr
-      it.keepaliveInterval = 50ms
+      it.keepAliveInterval = 50ms
     }
     cp.execute |c| {}
     Actor.sleep(100ms)
@@ -383,7 +383,7 @@ class SqlConnPoolTest : Test
     {
       it.uri = "test"
       it.houseKeepingInterval = 1hr
-      it.keepaliveInterval = null
+      it.keepAliveInterval = null
       it.maxConns = 1
       it.checkoutTimeout = 2sec
       it.leakWarn = 50ms
@@ -412,13 +412,13 @@ class SqlConnPoolTest : Test
 
   Void testKeepaliveCountsEviction()
   {
-    // eviction through the keepalive path
+    // eviction through the keepAlive path
     cp := SqlConnPool
     {
       it.uri = "test"
       it.houseKeepingInterval = 1hr
       it.linger = 1hr
-      it.keepaliveInterval = 50ms
+      it.keepAliveInterval = 50ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
@@ -439,7 +439,7 @@ class SqlConnPoolTest : Test
     {
       it.uri = "test"
       it.houseKeepingInterval = 1hr
-      it.keepaliveInterval = null
+      it.keepAliveInterval = null
       it.maxConns = 1
       it.checkoutTimeout = 100ms
       it.linger = 50ms
@@ -551,14 +551,14 @@ class SqlConnPoolTest : Test
       it.uri = "test"
       it.houseKeepingInterval = 1hr
       it.linger = 1hr
-      it.keepaliveInterval = 50ms
+      it.keepAliveInterval = 50ms
       it.validationTimeout = 250ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyNull(c1.lastValidateTimeout)
 
-    // idle past keepaliveInterval: pinged and kept
+    // idle past keepAliveInterval: pinged and kept
     Actor.sleep(100ms)
     cp.onHouseKeeping
     verifyEq(c1.lastValidateTimeout, 250ms)
@@ -582,7 +582,7 @@ class SqlConnPoolTest : Test
       it.uri = "test"
       it.houseKeepingInterval = 1hr
       it.linger = 300ms
-      it.keepaliveInterval = 50ms
+      it.keepAliveInterval = 50ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
@@ -728,7 +728,7 @@ class SqlConnPoolTest : Test
 
   Void testStress()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepaliveInterval = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
     ap := ActorPool { it.maxThreads = 8 }
     actors := SqlConnPoolStressActor[,]
     8.times { actors.add(SqlConnPoolStressActor(ap, cp)) }
@@ -862,7 +862,7 @@ internal const class SlowOpenPool : SqlConnPool
 **************************************************************************
 
 ** Runs one houseKeeping pass off the test thread, so the pool can be
-** closed while a keepalive ping is in flight.
+** closed while a keepAlive ping is in flight.
 internal const class SqlConnPoolBookkeepActor : Actor
 {
   new make(ActorPool ap, SqlConnPool cp) : super(ap) { this.cp = cp }

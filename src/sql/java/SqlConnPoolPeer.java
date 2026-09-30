@@ -172,14 +172,14 @@ public class SqlConnPoolPeer
       // reserve under the lock so a ping cannot race a checkout; the ping
       // itself runs below, outside the lock.  Expiry ran first, so
       // anything already past linger is gone rather than pinged.
-      if (self.keepaliveInterval != null)
+      if (self.keepAliveInterval != null)
       {
-        long keepalive = self.keepaliveInterval.ticks();
+        long keepAlive = self.keepAliveInterval.ticks();
         for (int i=0; i<entries.size(); ++i)
         {
           Entry entry = entries.get(i);
           if (entry.inUse || entry.opening || entry.pinging) continue;
-          if ((now - entry.lastUse) < keepalive) continue;
+          if ((now - entry.lastUse) < keepAlive) continue;
           entry.pinging = true;
           toPing.add(entry);
         }
@@ -189,13 +189,13 @@ public class SqlConnPoolPeer
     for (int i=0; i<expired.size(); ++i)
       close(self, expired.get(i));
 
-    if (!toPing.isEmpty()) keepalive(self, toPing);
+    if (!toPing.isEmpty()) keepAlive(self, toPing);
   }
 
   // Ping reserved idle connections, outside the pool lock.  Must not
   // touch lastUse: a ping is not a use, and counting it as one would hold
   // connections open past linger indefinitely.
-  private void keepalive(SqlConnPool self, ArrayList<Entry> toPing)
+  private void keepAlive(SqlConnPool self, ArrayList<Entry> toPing)
   {
     ArrayList<Entry> dead = new ArrayList<>();
     for (int i=0; i<toPing.size(); ++i)
@@ -216,7 +216,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<dead.size(); ++i)
     {
       Entry entry = dead.get(i);
-      self.log.warn("SqlConnPool keepalive evicting dead connection: " + entry.conn);
+      self.log.warn("SqlConnPool keepAlive evicting dead connection: " + entry.conn);
       close(self, entry);
     }
   }
@@ -561,7 +561,7 @@ public class SqlConnPoolPeer
     long created;         // Duration.ticks when the slot was reserved
     boolean inUse;        // is this entry currently being used
     boolean opening;      // slot reserved, connection not yet opened
-    boolean pinging;      // held by a keepalive ping; not available
+    boolean pinging;      // held by a keepAlive ping; not available
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
