@@ -598,5 +598,15 @@ public class SqlUtil
     arrayToList.put(Double[].class,    toFanDoubleList);
     arrayToList.put(Timestamp[].class, toFanTimestampList);
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Misc
+//////////////////////////////////////////////////////////////////////////
+
+  // JDBC takes whole seconds and treats 0 as no timeout, so round up
+  static int toJdbcSeconds(long millis)
+  {
+    return (int)Math.max(1L, (millis + 999L) / 1000L);
+  }
 }
 

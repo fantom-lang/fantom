@@ -93,8 +93,7 @@ public class SqlConnImplPeer
   {
     try
     {
-      // JDBC takes whole seconds and treats 0 as no timeout, so round up
-      int secs = (int)Math.max(1L, (timeout.millis() + 999L) / 1000L);
+      int secs = SqlUtil.toJdbcSeconds(timeout.millis());
       return jconn.isValid(secs);
     }
     catch (Throwable e)
