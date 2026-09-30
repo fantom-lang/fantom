@@ -122,6 +122,7 @@ public class SqlConnPoolPeer
     // outside the lock since closing may block on network I/O
     ArrayList<Entry> expired = new ArrayList<>();
     ArrayList<Entry> toPing = new ArrayList<>();
+    ArrayList<Entry> leaked = new ArrayList<>();
     synchronized (this)
     {
       // close has already taken the entries
@@ -142,9 +143,7 @@ public class SqlConnPoolPeer
         {
           entry.leakWarned = true;
           leakWarnings++;
-          String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
-          if (entry.checkoutTrace == null) self.log.warn(msg);
-          else self.log.warn(msg, Err.make(entry.checkoutTrace));
+          leaked.add(entry);
         }
       }
 
@@ -184,6 +183,15 @@ public class SqlConnPoolPeer
           toPing.add(entry);
         }
       }
+    }
+
+    // log outside the lock: a log handler is arbitrary code and does I/O
+    for (int i=0; i<leaked.size(); ++i)
+    {
+      Entry entry = leaked.get(i);
+      String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
+      if (entry.checkoutTrace == null) self.log.warn(msg);
+      else self.log.warn(msg, Err.make(entry.checkoutTrace));
     }
 
     for (int i=0; i<expired.size(); ++i)
@@ -536,12 +544,15 @@ public class SqlConnPoolPeer
     return (fan.sys.Map)m.toImmutable();
   }
 
-  public synchronized String debug(SqlConnPool self)
+  public String debug(SqlConnPool self)
   {
-    int idle = 0;
-    int inUse = 0;
-    for (int i=0; i<entries.size(); ++i)
-      if (entries.get(i).inUse) inUse++; else idle++;
+    fan.sys.Map st = stats(self);
+
+    // copy the entries under a short lock and format outside it; the
+    // per-entry fields are read without the lock, which is benign for a
+    // debug dump
+    ArrayList<Entry> snapshot;
+    synchronized (this) { snapshot = new ArrayList<>(entries); }
 
     StringBuilder s = new StringBuilder();
     s.append("SqlConnPool\n");
@@ -549,18 +560,18 @@ public class SqlConnPoolPeer
     s.append("  maxConns: ").append(self.maxConns).append("\n");
     s.append("  linger:   ").append(self.linger).append("\n");
     s.append("  maxLifetime: ").append(self.maxLifetime).append("\n");
-    s.append("  idle:     ").append(idle).append("\n");
-    s.append("  inUse:    ").append(inUse).append("\n");
-    s.append("  entries:  ").append(entries.size()).append("\n");
-    s.append("  waiting:  ").append(waiting).append("\n");
-    s.append("  checkouts: ").append(checkouts.get()).append("\n");
-    s.append("  checkoutTimeouts: ").append(checkoutTimeouts).append("\n");
-    s.append("  opened:   ").append(opened).append("\n");
-    s.append("  retired:  ").append(retired).append("\n");
-    s.append("  evicted:  ").append(evicted).append("\n");
-    s.append("  leakWarnings: ").append(leakWarnings).append("\n");
-    for (int i=0; i<entries.size(); ++i)
-      s.append("    ").append(entries.get(i)).append("\n");
+    s.append("  idle:     ").append(st.get("idle")).append("\n");
+    s.append("  inUse:    ").append(st.get("active")).append("\n");
+    s.append("  entries:  ").append(st.get("total")).append("\n");
+    s.append("  waiting:  ").append(st.get("waiting")).append("\n");
+    s.append("  checkouts: ").append(st.get("checkouts")).append("\n");
+    s.append("  checkoutTimeouts: ").append(st.get("checkoutTimeouts")).append("\n");
+    s.append("  opened:   ").append(st.get("opened")).append("\n");
+    s.append("  retired:  ").append(st.get("retired")).append("\n");
+    s.append("  evicted:  ").append(st.get("evicted")).append("\n");
+    s.append("  leakWarnings: ").append(st.get("leakWarnings")).append("\n");
+    for (int i=0; i<snapshot.size(); ++i)
+      s.append("    ").append(snapshot.get(i)).append("\n");
     return s.toString();
   }
 
