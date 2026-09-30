@@ -421,8 +421,9 @@ public class SqlConnPoolPeer
 
   private void close(SqlConnPool self, SqlConn conn)
   {
-    self.onClose(conn);
-    conn.close();
+    // a raising onClose must not leak the connection
+    try { self.onClose(conn); }
+    finally { conn.close(); }
   }
 
   // fan.sys.Map is qualified throughout: java.util is imported too
