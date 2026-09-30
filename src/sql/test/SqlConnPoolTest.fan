@@ -755,6 +755,33 @@ class SqlConnPoolTest : Test
     f1.get
   }
 
+  Void testCloseDuringCheckout()
+  {
+    // close aborts a checked out connection; the callback then fails and
+    // the connection is not closed or counted a second time
+    cp := CloseCountPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.validateAfterIdle = null }
+    ap := ActorPool()
+    a := Actor(ap) |msg->Obj?|
+    {
+      cp.execute |c|
+      {
+        Actor.sleep(200ms)
+        ((TestSqlConn)c).valid = false
+        throw IOErr("boom")
+      }
+      return null
+    }
+    f := a.send(null)
+    endTime := Duration.now + 5sec
+    while (cp.stats["active"] != 1 && Duration.now < endTime) Actor.sleep(10ms)
+
+    cp.close
+    verifyEq(cp.closes.val, 1)
+    verifyErr(IOErr#) { f.get(5sec) }
+    verifyEq(cp.closes.val, 1)
+    verifyEq(cp.stats["evicted"], 0)
+  }
+
   Void testStress()
   {
     cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
@@ -893,6 +920,20 @@ internal const class SlowOpenPool : SqlConnPool
     if (failNext.compareAndSet(true, false)) throw IOErr("open failed")
     if (slow.val) Actor.sleep(openDelay)
   }
+}
+
+**************************************************************************
+** CloseCountPool
+**************************************************************************
+
+** Counts onClose calls
+internal const class CloseCountPool : SqlConnPool
+{
+  new make(|This| f) : super(f) {}
+
+  const AtomicInt closes := AtomicInt()
+
+  protected override Void onClose(SqlConn c) { closes.increment }
 }
 
 **************************************************************************

@@ -93,7 +93,7 @@ public class SqlConnImplPeer
     }
   }
 
-  // setNetworkTimeout requires an executor; clearing the timeout needs none
+  // setNetworkTimeout and abort require an executor; run their work inline
   private static final java.util.concurrent.Executor DIRECT = new java.util.concurrent.Executor()
   {
     public void execute(Runnable r) { r.run(); }
@@ -144,6 +144,19 @@ public class SqlConnImplPeer
     {
       return false;
     }
+  }
+
+  // Close a connection another thread may be using: JDBC abort is safe
+  // to call concurrently with a running statement, close is not
+  static void abort(SqlConn c)
+  {
+    if (c instanceof SqlConnImpl)
+    {
+      java.sql.Connection jconn = ((SqlConnImpl)c).peer.jconn;
+      try { if (jconn != null) { jconn.abort(DIRECT); return; } }
+      catch (Throwable e) {}
+    }
+    c.close();
   }
 
   public boolean close(SqlConnImpl self)
