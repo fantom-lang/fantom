@@ -39,21 +39,21 @@ public class SqlConnPoolPeer
     };
   }
 
-  // Must run after the Fantom it-block, which is where bookkeepingInterval
+  // Must run after the Fantom it-block, which is where houseKeepingInterval
   // is set; the peer itself is constructed before that
-  public void startBookkeeping(final SqlConnPool self)
+  public void startHouseKeeping(final SqlConnPool self)
   {
-    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("bookkeeping"));
+    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
 
-    long ms = self.bookkeepingInterval.millis();
+    long ms = self.houseKeepingInterval.millis();
     // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
     this.bookkeeper.scheduleWithFixedDelay(new Runnable()
     {
       public void run()
       {
         // an uncaught throwable would cancel the schedule
-        try { onBookkeeping(self); }
-        catch (Throwable e) { self.log.err("SqlConnPool bookkeeping failed", Err.make(e)); }
+        try { onHouseKeeping(self); }
+        catch (Throwable e) { self.log.err("SqlConnPool houseKeeping failed", Err.make(e)); }
       }
     }, ms, ms, TimeUnit.MILLISECONDS);
   }
@@ -116,7 +116,7 @@ public class SqlConnPoolPeer
       close(self, toClose.get(i));
   }
 
-  public void onBookkeeping(SqlConnPool self)
+  public void onHouseKeeping(SqlConnPool self)
   {
     // remove expired entries under the lock, then close them
     // outside the lock since closing may block on network I/O

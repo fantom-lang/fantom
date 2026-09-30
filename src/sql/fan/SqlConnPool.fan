@@ -20,7 +20,7 @@ const class SqlConnPool
     ka := keepaliveInterval
     if (ka != null && ka >= linger)
       log.warn("SqlConnPool keepaliveInterval ($ka) must be less than linger ($linger) to take effect")
-    startBookkeeping
+    startHouseKeeping
   }
 
   ** Connection URI
@@ -66,7 +66,7 @@ const class SqlConnPool
   ** under a second is rounded up to one second.
   const Duration? queryTimeout := 60sec
 
-  ** How long an idle connection may sit before bookkeeping pings it, or
+  ** How long an idle connection may sit before houseKeeping pings it, or
   ** null to never ping idle connections.  A failed ping evicts the
   ** connection.  Must be less than `linger` to have any effect.  A ping
   ** does not count as a use and does not defer `linger`.
@@ -83,11 +83,11 @@ const class SqlConnPool
   ** is rounded up to one second.
   const Duration validationTimeout := 3sec
 
-  ** How often the pool runs bookkeeping: close connections idle past
+  ** How often the pool runs houseKeeping: close connections idle past
   ** `linger`, retire connections older than `maxLifetime`, ping idle
   ** connections due a keepalive, and warn about connections held past
   ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
-  const Duration bookkeepingInterval := 30sec
+  const Duration houseKeepingInterval := 30sec
 
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
@@ -127,7 +127,7 @@ const class SqlConnPool
   ** Return if [close] has been called.
   native Bool isClosed()
 
-  ** Close all connections, stop bookkeeping, and raise exception on any
+  ** Close all connections, stop houseKeeping, and raise exception on any
   ** new executes
   native Void close()
 
@@ -137,12 +137,12 @@ const class SqlConnPool
   ** Return debug dump string for current state
   @NoDoc native Str debug()
 
-  ** Start the bookkeeping timer.  Must be called after the it-block has
-  ** run, since it reads `bookkeepingInterval`.
-  @NoDoc native Void startBookkeeping()
+  ** Start the houseKeeping timer.  Must be called after the it-block has
+  ** run, since it reads `houseKeepingInterval`.
+  @NoDoc native Void startHouseKeeping()
 
-  ** Run one bookkeeping pass.  Called on the timer; exposed so tests can
+  ** Run one houseKeeping pass.  Called on the timer; exposed so tests can
   ** drive it directly.
-  @NoDoc native Void onBookkeeping()
+  @NoDoc native Void onHouseKeeping()
 }
 
