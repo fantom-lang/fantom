@@ -57,7 +57,7 @@ public class SqlConnPoolPeer
     return closed;
   }
 
-  public void close(SqlConnPool self)
+  public void closeNative(SqlConnPool self)
   {
     // remove all entries under the lock, then close them outside
     // the lock since closing may block on network I/O; wake any
@@ -73,11 +73,9 @@ public class SqlConnPoolPeer
     }
 
     // connects still in flight are closed by openReserved, which
-    // discards them once the pool is closed
-    self.houseKeepingActorPool.kill();
-
-    // checked out and pinging entries are in use on another thread; their
-    // release, evict, and keepAlive find the pool closed and leave them
+    // discards them once the pool is closed.  Checked out and pinging
+    // entries are in use on another thread; their release, evict, and
+    // keepAlive find the pool closed and leave them
     for (int i=0; i<toClose.size(); ++i)
     {
       Entry entry = toClose.get(i);

@@ -151,7 +151,13 @@ const class SqlConnPool
 
   ** Close all connections, stop houseKeeping, and raise exception on any
   ** new executes
-  native Void close()
+  Void close()
+  {
+    closeNative
+    houseKeepingActorPool.kill
+  }
+
+  private native Void closeNative()
 
   ** Snapshot of the pool's gauges and cumulative counters:
   **
