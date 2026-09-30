@@ -8,7 +8,6 @@
 package fan.sql;
 
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.sql.*;
 import fan.sys.*;
@@ -23,39 +22,6 @@ public class SqlConnPoolPeer
   public static SqlConnPoolPeer make(SqlConnPool fan)
   {
     return new SqlConnPoolPeer();
-  }
-
-  // Daemon threads, named so a stack dump identifies the pool and role
-  private ThreadFactory threadFactory(final String role)
-  {
-    return new ThreadFactory()
-    {
-      public Thread newThread(Runnable r)
-      {
-        Thread t = new Thread(r, "sqlConnPool-" + poolNum + "-" + role);
-        t.setDaemon(true);
-        return t;
-      }
-    };
-  }
-
-  // Must run after the Fantom it-block, which is where houseKeepingFreq
-  // is set; the peer itself is constructed before that
-  public void startHouseKeeping(final SqlConnPool self)
-  {
-    this.houseKeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
-
-    long ms = self.houseKeepingFreq.millis();
-    // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
-    this.houseKeeper.scheduleWithFixedDelay(new Runnable()
-    {
-      public void run()
-      {
-        // an uncaught throwable would cancel the schedule
-        try { onHouseKeeping(self); }
-        catch (Throwable e) { self.log.err("SqlConnPool houseKeeping failed", Err.make(e)); }
-      }
-    }, ms, ms, TimeUnit.MILLISECONDS);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,10 +72,9 @@ public class SqlConnPoolPeer
       notifyAll();
     }
 
-    // outside the lock: a pass blocked on the monitor would deadlock
-    // shutdown.  Connects still in flight are closed by openReserved,
-    // which discards them once the pool is closed.
-    if (houseKeeper != null) houseKeeper.shutdownNow();
+    // connects still in flight are closed by openReserved, which
+    // discards them once the pool is closed
+    self.houseKeepingActorPool.kill();
 
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
@@ -543,14 +508,10 @@ public class SqlConnPoolPeer
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  // names the threads of each pool in this JVM
-  private static final AtomicInteger poolCounter = new AtomicInteger();
-
-  private final int poolNum = poolCounter.incrementAndGet();
-
   private ArrayList<Entry> entries = new ArrayList<>();
-  private ScheduledExecutorService houseKeeper;
-  private boolean closed;
+
+  // volatile: isClosed reads it without the lock
+  private volatile boolean closed;
 
   // the only counter incremented outside a critical section the caller
   // already holds, so it is atomic rather than taking the pool monitor
