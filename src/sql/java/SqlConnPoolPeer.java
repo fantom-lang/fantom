@@ -39,13 +39,13 @@ public class SqlConnPoolPeer
     };
   }
 
-  // Must run after the Fantom it-block, which is where houseKeepingInterval
+  // Must run after the Fantom it-block, which is where houseKeepingFreq
   // is set; the peer itself is constructed before that
   public void startHouseKeeping(final SqlConnPool self)
   {
     this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
 
-    long ms = self.houseKeepingInterval.millis();
+    long ms = self.houseKeepingFreq.millis();
     // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
     this.bookkeeper.scheduleWithFixedDelay(new Runnable()
     {
@@ -172,9 +172,9 @@ public class SqlConnPoolPeer
       // reserve under the lock so a ping cannot race a checkout; the ping
       // itself runs below, outside the lock.  Expiry ran first, so
       // anything already past linger is gone rather than pinged.
-      if (self.keepAliveInterval != null)
+      if (self.keepAliveFreq != null)
       {
-        long keepAlive = self.keepAliveInterval.ticks();
+        long keepAlive = self.keepAliveFreq.ticks();
         for (int i=0; i<entries.size(); ++i)
         {
           Entry entry = entries.get(i);

@@ -24,9 +24,9 @@ class SqlConnPoolTest : Test
       it.uri      = "test"
       it.maxConns = 2
       it.linger   = 200ms
-      it.keepAliveInterval = null
+      it.keepAliveFreq = null
       it.checkoutTimeout  = 300ms
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
     }
 
 
@@ -182,7 +182,7 @@ class SqlConnPoolTest : Test
     cp.close
 
     // auto-commit pool: no rollback on release
-    cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.autoCommit = true }
+    cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.autoCommit = true }
     TestSqlConn? c2 := null
     cp2.execute |c| { c2 = c }
     verifyEq(c2.rollbacks, 0)
@@ -199,7 +199,7 @@ class SqlConnPoolTest : Test
 
   Void testMaxLifetime()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.linger = 1min; it.maxLifetime = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null; it.linger = 1min; it.maxLifetime = 100ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
 
@@ -215,7 +215,7 @@ class SqlConnPoolTest : Test
 
   Void testInUseNotReaped()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.linger = 50ms; it.maxLifetime = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null; it.linger = 50ms; it.maxLifetime = 50ms }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
 
@@ -237,7 +237,7 @@ class SqlConnPoolTest : Test
   Void testHouseKeepingRuns()
   {
     // houseKeeping runs on the pool's own timer
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 50ms; it.keepAliveInterval = null; it.linger = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 50ms; it.keepAliveFreq = null; it.linger = 50ms }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(debugInt(cp.debug, "entries"), 1)
@@ -258,7 +258,7 @@ class SqlConnPoolTest : Test
   {
     // four slow opens must overlap.  Under the pool lock they would
     // serialize and take at least 4 x openDelay.
-    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.maxConns = 4 }
+    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.maxConns = 4 }
     cp.slow.val = true
     ap := ActorPool()
     actors := SqlConnPoolTestActor[,]
@@ -280,7 +280,7 @@ class SqlConnPoolTest : Test
   {
     // the slot is reserved before the open runs, so a failed open must
     // release it
-    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.maxConns = 1 }
+    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.maxConns = 1 }
 
     cp.failNext.val = true
     verifyErr(IOErr#) { cp.execute |c| {} }
@@ -303,8 +303,8 @@ class SqlConnPoolTest : Test
     cp := SlowOpenPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
-      it.keepAliveInterval = null
+      it.houseKeepingFreq = 1hr
+      it.keepAliveFreq = null
       it.maxConns = 3
       it.checkoutTimeout = 10sec
       it.linger = 100ms
@@ -337,7 +337,7 @@ class SqlConnPoolTest : Test
     // a connect in flight when the pool closes must not leave a live
     // connection behind
     before := TestSqlConn.openCount.val
-    cp := SqlConnPool { it.uri = "test:400"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null }
+    cp := SqlConnPool { it.uri = "test:400"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null }
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := a.send(10ms)
@@ -360,9 +360,9 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.linger = 1hr
-      it.keepAliveInterval = 50ms
+      it.keepAliveFreq = 50ms
     }
     cp.execute |c| {}
     Actor.sleep(100ms)
@@ -382,8 +382,8 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
-      it.keepAliveInterval = null
+      it.houseKeepingFreq = 1hr
+      it.keepAliveFreq = null
       it.maxConns = 1
       it.checkoutTimeout = 2sec
       it.leakWarn = 50ms
@@ -416,9 +416,9 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.linger = 1hr
-      it.keepAliveInterval = 50ms
+      it.keepAliveFreq = 50ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
@@ -438,8 +438,8 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
-      it.keepAliveInterval = null
+      it.houseKeepingFreq = 1hr
+      it.keepAliveFreq = null
       it.maxConns = 1
       it.checkoutTimeout = 100ms
       it.linger = 50ms
@@ -501,7 +501,7 @@ class SqlConnPoolTest : Test
     try
     {
       // off: no trace on the warning
-      cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.leakWarn = 50ms }
+      cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.leakWarn = 50ms }
       ap := ActorPool()
       a := SqlConnPoolTestActor(ap, cp, "a")
       f := execute(a, 300ms)
@@ -513,7 +513,7 @@ class SqlConnPoolTest : Test
       cp.close
 
       // on: the warning carries the checkout stack
-      cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.leakWarn = 50ms; it.leakTrace = true }
+      cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.leakWarn = 50ms; it.leakTrace = true }
       a2 := SqlConnPoolTestActor(ap, cp2, "a2")
       f2 := execute(a2, 300ms)
       Actor.sleep(100ms)
@@ -529,14 +529,14 @@ class SqlConnPoolTest : Test
   Void testQueryTimeout()
   {
     // connections inherit the pool's default
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.queryTimeout = 45sec }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.queryTimeout = 45sec }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(c1.queryTimeout, 45sec)
     cp.close
 
     // null leaves statements unbounded
-    cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.queryTimeout = null }
+    cp2 := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.queryTimeout = null }
     TestSqlConn? c2 := null
     cp2.execute |c| { c2 = c }
     verifyNull(c2.queryTimeout)
@@ -549,16 +549,16 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.linger = 1hr
-      it.keepAliveInterval = 50ms
+      it.keepAliveFreq = 50ms
       it.validationTimeout = 250ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyNull(c1.lastValidateTimeout)
 
-    // idle past keepAliveInterval: pinged and kept
+    // idle past keepAliveFreq: pinged and kept
     Actor.sleep(100ms)
     cp.onHouseKeeping
     verifyEq(c1.lastValidateTimeout, 250ms)
@@ -580,9 +580,9 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.linger = 300ms
-      it.keepAliveInterval = 50ms
+      it.keepAliveFreq = 50ms
     }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
@@ -601,7 +601,7 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.validateAfterIdle = 50ms
       it.validationTimeout = 250ms
     }
@@ -623,7 +623,7 @@ class SqlConnPoolTest : Test
   Void testValidateDisabled()
   {
     // null: never ping on checkout, however long the connection sat idle
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.validateAfterIdle = null }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.validateAfterIdle = null }
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     c1.valid = false
@@ -647,7 +647,7 @@ class SqlConnPoolTest : Test
     cp := SqlConnPool
     {
       it.uri = "test:400"
-      it.houseKeepingInterval = 1hr
+      it.houseKeepingFreq = 1hr
       it.maxConns = 1
       it.connectTimeout = 100ms
     }
@@ -668,7 +668,7 @@ class SqlConnPoolTest : Test
   {
     // onOpen throws after a successful connect, so open must close the
     // connection before propagating
-    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingInterval = 1hr }
+    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingFreq = 1hr }
     before := TestSqlConn.openCount.val
     cp.failNext.val = true
     verifyErr(IOErr#) { cp.execute |c| {} }
@@ -678,7 +678,7 @@ class SqlConnPoolTest : Test
 
   Void testLeakWarn()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.leakWarn = 50ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.leakWarn = 50ms }
     count := AtomicInt()
     handler := |LogRec rec| { if (rec.msg.contains("held in-use")) count.increment }
     Log.addHandler(handler)
@@ -708,7 +708,7 @@ class SqlConnPoolTest : Test
 
   Void testCloseFailFast()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.maxConns = 1; it.checkoutTimeout = 5sec }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.maxConns = 1; it.checkoutTimeout = 5sec }
     ap := ActorPool()
     a1 := SqlConnPoolTestActor(ap, cp, "a1")
     a2 := SqlConnPoolTestActor(ap, cp, "a2")
@@ -728,7 +728,7 @@ class SqlConnPoolTest : Test
 
   Void testStress()
   {
-    cp := SqlConnPool { it.uri = "test"; it.houseKeepingInterval = 1hr; it.keepAliveInterval = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null; it.maxConns = 3; it.checkoutTimeout = 10sec; it.linger = 100ms }
     ap := ActorPool { it.maxThreads = 8 }
     actors := SqlConnPoolStressActor[,]
     8.times { actors.add(SqlConnPoolStressActor(ap, cp)) }

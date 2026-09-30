@@ -17,9 +17,9 @@ const class SqlConnPool
   new make(|This|? f)
   {
     if (f != null) f(this)
-    ka := keepAliveInterval
+    ka := keepAliveFreq
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepAliveInterval ($ka) must be less than linger ($linger) to take effect")
+      log.warn("SqlConnPool keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
     startHouseKeeping
   }
 
@@ -70,7 +70,7 @@ const class SqlConnPool
   ** null to never ping idle connections.  A failed ping evicts the
   ** connection.  Must be less than `linger` to have any effect.  A ping
   ** does not count as a use and does not defer `linger`.
-  const Duration? keepAliveInterval := 2min
+  const Duration? keepAliveFreq := 2min
 
   ** Ping a connection on checkout only if it has been idle at least this
   ** long, or null to never ping on checkout.  The ping costs a database
@@ -87,7 +87,7 @@ const class SqlConnPool
   ** `linger`, retire connections older than `maxLifetime`, ping idle
   ** connections due a keepAlive, and warn about connections held past
   ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
-  const Duration houseKeepingInterval := 30sec
+  const Duration houseKeepingFreq := 30sec
 
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
@@ -138,7 +138,7 @@ const class SqlConnPool
   @NoDoc native Str debug()
 
   ** Start the houseKeeping timer.  Must be called after the it-block has
-  ** run, since it reads `houseKeepingInterval`.
+  ** run, since it reads `houseKeepingFreq`.
   @NoDoc native Void startHouseKeeping()
 
   ** Run one houseKeeping pass.  Called on the timer; exposed so tests can
