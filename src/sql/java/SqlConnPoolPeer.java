@@ -66,7 +66,7 @@ public class SqlConnPoolPeer
     throws Throwable
   {
     Entry entry = allocate(self);
-    synchronized (this) { checkouts++; }
+    checkouts.incrementAndGet();
     try
     {
       f.call(entry.conn);
@@ -520,7 +520,7 @@ public class SqlConnPoolPeer
       if (entries.get(i).inUse) active++;
 
     return SqlConnPoolStats.make(total, active, total-active, waiting, self.maxConns,
-      checkouts, checkoutTimeouts, opened, retired, evicted, leakWarnings);
+      checkouts.get(), checkoutTimeouts, opened, retired, evicted, leakWarnings);
   }
 
   public synchronized String debug(SqlConnPool self)
@@ -540,7 +540,7 @@ public class SqlConnPoolPeer
     s.append("  inUse:    ").append(inUse).append("\n");
     s.append("  entries:  ").append(entries.size()).append("\n");
     s.append("  waiting:  ").append(waiting).append("\n");
-    s.append("  checkouts: ").append(checkouts).append("\n");
+    s.append("  checkouts: ").append(checkouts.get()).append("\n");
     s.append("  checkoutTimeouts: ").append(checkoutTimeouts).append("\n");
     s.append("  opened:   ").append(opened).append("\n");
     s.append("  retired:  ").append(retired).append("\n");
@@ -597,10 +597,13 @@ public class SqlConnPoolPeer
   private ScheduledExecutorService bookkeeper;
   private boolean closed;
 
+  // the only counter incremented outside a critical section the caller
+  // already holds, so it is atomic rather than taking the pool monitor
+  private final AtomicLong checkouts = new AtomicLong();
+
   // written and read under the pool lock, so a stats snapshot is
   // consistent without atomics
   private int waiting;
-  private long checkouts;
   private long checkoutTimeouts;
   private long opened;
   private long retired;
