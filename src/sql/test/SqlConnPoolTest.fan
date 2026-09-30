@@ -321,9 +321,10 @@ class SqlConnPoolTest : Test
 
     // maxConns held and everything is back in the pool
     st := cp.stats
-    verify(st.total <= 3, "total=$st.total")
-    verifyEq(st.active, 0)
-    verifyEq(st.waiting, 0)
+    total := (Int)st["total"]
+    verify(total <= 3, "total=$total")
+    verifyEq(st["active"], 0)
+    verifyEq(st["waiting"], 0)
 
     cp.close
     verifyEq(debugInt(cp.debug, "entries"), 0)
@@ -396,17 +397,17 @@ class SqlConnPoolTest : Test
     f := execute(a, 400ms)
     bf := b.send(1ms)
     endTime := Duration.now + 5sec
-    while (cp.stats.waiting == 0 && Duration.now < endTime) Actor.sleep(10ms)
-    verifyEq(cp.stats.waiting, 1)
+    while (cp.stats["waiting"] == 0 && Duration.now < endTime) Actor.sleep(10ms)
+    verifyEq(cp.stats["waiting"], 1)
 
     // held past leakWarn
     Actor.sleep(100ms)
     cp.onHouseKeeping
-    verifyEq(cp.stats.leakWarnings, 1)
+    verifyEq(cp.stats["leakWarnings"], 1)
 
     f.get
     bf.get
-    verifyEq(cp.stats.waiting, 0)
+    verifyEq(cp.stats["waiting"], 0)
     cp.close
   }
 
@@ -427,9 +428,9 @@ class SqlConnPoolTest : Test
     Actor.sleep(100ms)
     cp.onHouseKeeping
     st := cp.stats
-    verifyEq(st.evicted, 1)
-    verifyEq(st.retired, 0)
-    verifyEq(st.total, 0)
+    verifyEq(st["evicted"], 1)
+    verifyEq(st["retired"], 0)
+    verifyEq(st["total"], 0)
     cp.close
   }
 
@@ -445,45 +446,45 @@ class SqlConnPoolTest : Test
       it.linger = 50ms
     }
     st := cp.stats
-    verifyEq(st.total, 0)
-    verifyEq(st.checkouts, 0)
-    verifyEq(st.opened, 0)
-    verifyEq(st.maxConns, 1)
+    verifyEq(st["total"], 0)
+    verifyEq(st["checkouts"], 0)
+    verifyEq(st["opened"], 0)
+    verifyEq(st["maxConns"], 1)
 
     // one checkout opens one connection, left idle
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     st = cp.stats
-    verifyEq(st.checkouts, 1)
-    verifyEq(st.opened, 1)
-    verifyEq(st.total, 1)
-    verifyEq(st.active, 0)
-    verifyEq(st.idle, 1)
+    verifyEq(st["checkouts"], 1)
+    verifyEq(st["opened"], 1)
+    verifyEq(st["total"], 1)
+    verifyEq(st["active"], 0)
+    verifyEq(st["idle"], 1)
 
     // held by an actor, so a second caller times out
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := execute(a, 400ms)
-    verifyEq(cp.stats.active, 1)
+    verifyEq(cp.stats["active"], 1)
     verifyErr(TimeoutErr#) { cp.execute |c| {} }
-    verifyEq(cp.stats.checkoutTimeouts, 1)
+    verifyEq(cp.stats["checkoutTimeouts"], 1)
     f.get
 
     // closed for age counts as retired
     Actor.sleep(60ms)
     cp.onHouseKeeping
     st = cp.stats
-    verifyEq(st.total, 0)
-    verifyEq(st.retired, 1)
-    verifyEq(st.evicted, 0)
+    verifyEq(st["total"], 0)
+    verifyEq(st["retired"], 1)
+    verifyEq(st["evicted"], 0)
 
     // a broken connection counts as evicted
     TestSqlConn? c2 := null
     cp.execute |c| { c2 = c }
     verifyErr(IOErr#) { cp.execute |c| { ((TestSqlConn)c).valid = false; throw IOErr("boom") } }
     st = cp.stats
-    verifyEq(st.evicted, 1)
-    verifyEq(st.retired, 1)
+    verifyEq(st["evicted"], 1)
+    verifyEq(st["retired"], 1)
     cp.close
   }
 

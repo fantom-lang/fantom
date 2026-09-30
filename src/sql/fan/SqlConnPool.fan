@@ -131,8 +131,26 @@ const class SqlConnPool
   ** new executes
   native Void close()
 
-  ** Snapshot of the pool's gauges and cumulative counters
-  native SqlConnPoolStats stats()
+  ** Snapshot of the pool's gauges and cumulative counters:
+  **
+  ** - total: Connections the pool holds, including slots still being opened
+  ** - active: Connections currently checked out.  A slot reserved for a
+  **   connection that is still opening counts here.
+  ** - idle: Connections available for checkout.  A connection held by a keepAlive
+  **   ping counts here.
+  ** - waiting: Threads blocked waiting for a connection
+  ** - maxConns: SqlConnPool.maxConns
+  ** - checkouts: Connections handed to an execute callback
+  ** - checkoutTimeouts: Checkouts that gave up after SqlConnPool.checkoutTimeout
+  ** - opened: Connections opened against the database
+  ** - retired: Connections closed for age: idle past SqlConnPool.linger, or older
+  **   than SqlConnPool.maxLifetime
+  ** - evicted: Connections closed as broken: failed validation on checkout,
+  **   failed after an execute callback raised, or failed a keepAlive ping
+  ** - leakWarnings: Warnings logged for connections held past
+  **   SqlConnPool.leakWarn
+  **
+  native Str:Obj stats()
 
   ** Return debug dump string for current state
   @NoDoc native Str debug()

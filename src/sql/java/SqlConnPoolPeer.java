@@ -43,11 +43,11 @@ public class SqlConnPoolPeer
   // is set; the peer itself is constructed before that
   public void startHouseKeeping(final SqlConnPool self)
   {
-    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
+    this.houseKeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
 
     long ms = self.houseKeepingFreq.millis();
     // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
-    this.bookkeeper.scheduleWithFixedDelay(new Runnable()
+    this.houseKeeper.scheduleWithFixedDelay(new Runnable()
     {
       public void run()
       {
@@ -109,7 +109,7 @@ public class SqlConnPoolPeer
     // outside the lock: a pass blocked on the monitor would deadlock
     // shutdown.  Connects still in flight are closed by openReserved,
     // which discards them once the pool is closed.
-    if (bookkeeper != null) bookkeeper.shutdownNow();
+    if (houseKeeper != null) houseKeeper.shutdownNow();
     connector.shutdownNow();
 
     for (int i=0; i<toClose.size(); ++i)
@@ -512,15 +512,28 @@ public class SqlConnPoolPeer
     conn.close();
   }
 
-  public synchronized SqlConnPoolStats stats(SqlConnPool self)
+  // fan.sys.Map is qualified throughout: java.util is imported too
+  public synchronized fan.sys.Map stats(SqlConnPool self)
   {
     int total = entries.size();
     int active = 0;
     for (int i=0; i<entries.size(); ++i)
       if (entries.get(i).inUse) active++;
 
-    return SqlConnPoolStats.make(total, active, total-active, waiting, self.maxConns,
-      checkouts.get(), checkoutTimeouts, opened, retired, evicted, leakWarnings);
+    fan.sys.Map m = fan.sys.Map.make(Sys.StrType, Sys.ObjType);
+    m.ordered(true);
+    m.set("total",            Long.valueOf(total));
+    m.set("active",           Long.valueOf(active));
+    m.set("idle",             Long.valueOf(total-active));
+    m.set("waiting",          Long.valueOf(waiting));
+    m.set("maxConns",         Long.valueOf(self.maxConns));
+    m.set("checkouts",        Long.valueOf(checkouts.get()));
+    m.set("checkoutTimeouts", Long.valueOf(checkoutTimeouts));
+    m.set("opened",           Long.valueOf(opened));
+    m.set("retired",          Long.valueOf(retired));
+    m.set("evicted",          Long.valueOf(evicted));
+    m.set("leakWarnings",     Long.valueOf(leakWarnings));
+    return (fan.sys.Map)m.toImmutable();
   }
 
   public synchronized String debug(SqlConnPool self)
@@ -594,7 +607,7 @@ public class SqlConnPoolPeer
     Executors.newCachedThreadPool(threadFactory("connect"));
 
   private ArrayList<Entry> entries = new ArrayList<>();
-  private ScheduledExecutorService bookkeeper;
+  private ScheduledExecutorService houseKeeper;
   private boolean closed;
 
   // the only counter incremented outside a critical section the caller
