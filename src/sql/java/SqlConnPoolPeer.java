@@ -479,11 +479,7 @@ public class SqlConnPoolPeer
   {
     fan.sys.Map st = stats(self);
 
-    // copy the entries under a short lock and format outside it; the
-    // per-entry fields are read without the lock, which is benign for a
-    // debug dump
-    ArrayList<Entry> snapshot;
-    synchronized (this) { snapshot = new ArrayList<>(entries); }
+    ArrayList<Entry> snapshot = new ArrayList<>(entries);
 
     StringBuilder s = new StringBuilder();
     s.append("SqlConnPool\n");
