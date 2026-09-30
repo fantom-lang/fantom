@@ -387,9 +387,10 @@ class SqlConnPoolTest : Test
   Void testCloseDuringConnect()
   {
     // a connect in flight when the pool closes must not leave a live
-    // connection behind
+    // connection behind; onOpen holds the open for openDelay
     before := TestSqlConn.openCount.val
-    cp := SqlConnPool { it.uri = "test:400"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null }
+    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.keepAliveFreq = null }
+    cp.slow.val = true
     ap := ActorPool()
     a := SqlConnPoolTestActor(ap, cp, "a")
     f := a.send(10ms)

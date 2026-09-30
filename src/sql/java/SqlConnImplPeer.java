@@ -45,15 +45,6 @@ public class SqlConnImplPeer
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
 
-      // test hook "test:<millis>": a slow connect
-      if (uri.startsWith("test:"))
-      {
-        long end = System.currentTimeMillis() + Long.parseLong(uri.substring(5));
-        while (System.currentTimeMillis() < end)
-          { try { Thread.sleep(10); } catch (InterruptedException e) {} }
-        return TestSqlConn.make();
-      }
-
       // no user is certificate auth
       Properties props = new Properties();
       if (user != null) props.setProperty("user", user);
