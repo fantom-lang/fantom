@@ -53,12 +53,12 @@ mixin SqlConn
   @NoDoc virtual Bool isValid(Duration timeout) { true }
 
   **
-  ** Set the default timeout applied to statements created on this
-  ** connection, or null for no timeout.  Applies per execution, batches
-  ** included.  JDBC resolves it in whole seconds; anything under a second
-  ** is rounded up to one second.
+  ** Default timeout applied to statements created on this connection, or
+  ** null for no timeout.  Applies per execution, batches included.  JDBC
+  ** resolves it in whole seconds; anything under a second is rounded up
+  ** to one second.
   **
-  @NoDoc virtual Void setQueryTimeout(Duration? t) {}
+  @NoDoc abstract Duration? queryTimeout
 
 //////////////////////////////////////////////////////////////////////////
 // Data

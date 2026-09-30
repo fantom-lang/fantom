@@ -570,20 +570,20 @@ abstract class SqlTest : Test
   Void testQueryTimeout()
   {
     // a query past the connection's timeout is aborted
-    db.setQueryTimeout(1sec)
+    db.queryTimeout = 1sec
     t1 := Duration.now
     verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
     verify(Duration.now - t1 < 15sec, "did not abort")
 
     // sub-second timeouts round up to one second; truncating would give
     // JDBC a 0, which means no timeout
-    db.setQueryTimeout(100ms)
+    db.queryTimeout = 100ms
     t2 := Duration.now
     verifyErr(SqlErr#) { db.sql(dialect.sleepSql(30sec)).query }
     verify(Duration.now - t2 < 15sec, "sub-second timeout did not apply")
 
     // null leaves statements unbounded
-    db.setQueryTimeout(null)
+    db.queryTimeout = null
     db.sql(dialect.sleepSql(1sec)).query
   }
 

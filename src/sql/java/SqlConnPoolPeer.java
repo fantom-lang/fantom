@@ -424,7 +424,7 @@ public class SqlConnPoolPeer
       c.autoCommit(self.autoCommit());
 
       // statements created on this connection inherit the pool's timeout
-      c.setQueryTimeout(self.queryTimeout);
+      c.queryTimeout(self.queryTimeout);
 
       self.onOpen(c);
     }
