@@ -182,12 +182,15 @@ public class SqlConnPoolPeer
       boolean ok = validate(self, entry);
       synchronized (this)
       {
+        // notify either way: a waiter may be blocked on this entry
+        // becoming available, or on its slot freeing up
         entry.pinging = false;
+        notifyAll();
 
         // pool closed during the ping; close already took this connection
         if (closed) continue;
 
-        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; notifyAll(); }
+        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; }
       }
     }
 
