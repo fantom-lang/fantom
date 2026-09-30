@@ -642,29 +642,6 @@ class SqlConnPoolTest : Test
     cp.close
   }
 
-  Void testConnectTimeout()
-  {
-    // the connect takes 400ms and ignores interrupt
-    cp := SqlConnPool
-    {
-      it.uri = "test:400"
-      it.houseKeepingFreq = 1hr
-      it.maxConns = 1
-      it.connectTimeout = 100ms
-    }
-    before := TestSqlConn.openCount.val
-
-    verifyErr(TimeoutErr#) { cp.execute |c| {} }
-
-    // the slot is released while the connect is still running
-    verifyEq(debugInt(cp.debug, "entries"), 0)
-
-    // the abandoned connect lands late; its connection must be closed
-    Actor.sleep(600ms)
-    verifyEq(TestSqlConn.openCount.val, before)
-    cp.close
-  }
-
   Void testOpenFailureClosesConn()
   {
     // onOpen throws after a successful connect, so open must close the

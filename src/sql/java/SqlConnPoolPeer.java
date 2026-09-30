@@ -110,7 +110,6 @@ public class SqlConnPoolPeer
     // shutdown.  Connects still in flight are closed by openReserved,
     // which discards them once the pool is closed.
     if (houseKeeper != null) houseKeeper.shutdownNow();
-    connector.shutdownNow();
 
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
@@ -425,7 +424,7 @@ public class SqlConnPoolPeer
 
   private SqlConn open(SqlConnPool self)
   {
-    SqlConn c = connect(self);
+    SqlConn c = SqlConnImplPeer.open(self.uri, self.username, self.password, self.connectTimeout);
     try
     {
       // set auto-commit based on connection pool property
@@ -441,65 +440,6 @@ public class SqlConnPoolPeer
     catch (RuntimeException e) { closeQuietly(c); throw e; }
     catch (Error e)            { closeQuietly(c); throw e; }
     return c;
-  }
-
-  // Open the JDBC connection on the connect executor so connectTimeout
-  // can bound it without driver support
-  private SqlConn connect(final SqlConnPool self)
-  {
-    final AtomicReference<Object> holder = new AtomicReference<Object>();
-    Future<?> future = connector.submit(new Runnable()
-    {
-      public void run()
-      {
-        SqlConn c = SqlConnImpl.openDefault(self.uri, self.username, self.password);
-
-        // the caller may have given up while we were connecting
-        if (!holder.compareAndSet(null, c)) closeQuietly(c);
-      }
-    });
-
-    try
-    {
-      if (self.connectTimeout == null) future.get();
-      else future.get(self.connectTimeout.millis(), TimeUnit.MILLISECONDS);
-    }
-    catch (TimeoutException e)
-    {
-      // best effort only: a driver blocked in a socket connect does not
-      // answer an interrupt, so abandon must handle a late arrival
-      future.cancel(true);
-      abandon(holder);
-      throw TimeoutErr.make("SqlConn open exceeded connectTimeout (" + self.connectTimeout + ")");
-    }
-    catch (ExecutionException e)
-    {
-      Throwable cause = e.getCause();
-      if (cause instanceof RuntimeException) throw (RuntimeException)cause;
-      if (cause instanceof Error) throw (Error)cause;
-      throw Err.make(cause);
-    }
-    catch (InterruptedException e)
-    {
-      future.cancel(true);
-      abandon(holder);
-      Thread.currentThread().interrupt();
-      throw Err.make(e);
-    }
-
-    Object v = holder.get();
-    if (v instanceof SqlConn) return (SqlConn)v;
-    throw Err.make("SqlConn open produced no connection");
-  }
-
-  // Give up on an in flight connect.  Exactly one of the two parties
-  // claims the holder: if this call wins, the connect task closes the
-  // connection when it lands; if the task won, close it here.
-  private void abandon(AtomicReference<Object> holder)
-  {
-    if (holder.compareAndSet(null, ABANDONED)) return;
-    Object v = holder.get();
-    if (v instanceof SqlConn) closeQuietly((SqlConn)v);
   }
 
   private static void closeQuietly(SqlConn c)
@@ -606,16 +546,7 @@ public class SqlConnPoolPeer
   // names the threads of each pool in this JVM
   private static final AtomicInteger poolCounter = new AtomicInteger();
 
-  // holder sentinel: the caller stopped waiting for an in flight connect
-  private static final Object ABANDONED = new Object();
-
-
   private final int poolNum = poolCounter.incrementAndGet();
-
-  // cached, not single threaded: opens run concurrently up to maxConns,
-  // and a single thread would re-serialize them
-  private final ExecutorService connector =
-    Executors.newCachedThreadPool(threadFactory("connect"));
 
   private ArrayList<Entry> entries = new ArrayList<>();
   private ScheduledExecutorService houseKeeper;
