@@ -39,21 +39,21 @@ public class SqlConnPoolPeer
     };
   }
 
-  // Must run after the Fantom it-block, which is where bookkeepingInterval
+  // Must run after the Fantom it-block, which is where houseKeepingFreq
   // is set; the peer itself is constructed before that
-  public void startBookkeeping(final SqlConnPool self)
+  public void startHouseKeeping(final SqlConnPool self)
   {
-    this.bookkeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("bookkeeping"));
+    this.houseKeeper = Executors.newSingleThreadScheduledExecutor(threadFactory("houseKeeping"));
 
-    long ms = self.bookkeepingInterval.millis();
+    long ms = self.houseKeepingFreq.millis();
     // fixed delay, not fixed rate, so a slow pass cannot let passes pile up
-    this.bookkeeper.scheduleWithFixedDelay(new Runnable()
+    this.houseKeeper.scheduleWithFixedDelay(new Runnable()
     {
       public void run()
       {
         // an uncaught throwable would cancel the schedule
-        try { onBookkeeping(self); }
-        catch (Throwable e) { self.log.err("SqlConnPool bookkeeping failed", Err.make(e)); }
+        try { onHouseKeeping(self); }
+        catch (Throwable e) { self.log.err("SqlConnPool houseKeeping failed", Err.make(e)); }
       }
     }, ms, ms, TimeUnit.MILLISECONDS);
   }
@@ -66,7 +66,7 @@ public class SqlConnPoolPeer
     throws Throwable
   {
     Entry entry = allocate(self);
-    synchronized (this) { checkouts++; }
+    checkouts.incrementAndGet();
     try
     {
       f.call(entry.conn);
@@ -109,19 +109,20 @@ public class SqlConnPoolPeer
     // outside the lock: a pass blocked on the monitor would deadlock
     // shutdown.  Connects still in flight are closed by openReserved,
     // which discards them once the pool is closed.
-    if (bookkeeper != null) bookkeeper.shutdownNow();
+    if (houseKeeper != null) houseKeeper.shutdownNow();
     connector.shutdownNow();
 
     for (int i=0; i<toClose.size(); ++i)
       close(self, toClose.get(i));
   }
 
-  public void onBookkeeping(SqlConnPool self)
+  public void onHouseKeeping(SqlConnPool self)
   {
     // remove expired entries under the lock, then close them
     // outside the lock since closing may block on network I/O
     ArrayList<Entry> expired = new ArrayList<>();
     ArrayList<Entry> toPing = new ArrayList<>();
+    ArrayList<Entry> leaked = new ArrayList<>();
     synchronized (this)
     {
       // close has already taken the entries
@@ -142,9 +143,7 @@ public class SqlConnPoolPeer
         {
           entry.leakWarned = true;
           leakWarnings++;
-          String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
-          if (entry.checkoutTrace == null) self.log.warn(msg);
-          else self.log.warn(msg, Err.make(entry.checkoutTrace));
+          leaked.add(entry);
         }
       }
 
@@ -172,30 +171,39 @@ public class SqlConnPoolPeer
       // reserve under the lock so a ping cannot race a checkout; the ping
       // itself runs below, outside the lock.  Expiry ran first, so
       // anything already past linger is gone rather than pinged.
-      if (self.keepaliveInterval != null)
+      if (self.keepAliveFreq != null)
       {
-        long keepalive = self.keepaliveInterval.ticks();
+        long keepAlive = self.keepAliveFreq.ticks();
         for (int i=0; i<entries.size(); ++i)
         {
           Entry entry = entries.get(i);
           if (entry.inUse || entry.opening || entry.pinging) continue;
-          if ((now - entry.lastUse) < keepalive) continue;
+          if ((now - entry.lastUse) < keepAlive) continue;
           entry.pinging = true;
           toPing.add(entry);
         }
       }
     }
 
+    // log outside the lock: a log handler is arbitrary code and does I/O
+    for (int i=0; i<leaked.size(); ++i)
+    {
+      Entry entry = leaked.get(i);
+      String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
+      if (entry.checkoutTrace == null) self.log.warn(msg);
+      else self.log.warn(msg, Err.make(entry.checkoutTrace));
+    }
+
     for (int i=0; i<expired.size(); ++i)
       close(self, expired.get(i));
 
-    if (!toPing.isEmpty()) keepalive(self, toPing);
+    if (!toPing.isEmpty()) keepAlive(self, toPing);
   }
 
   // Ping reserved idle connections, outside the pool lock.  Must not
   // touch lastUse: a ping is not a use, and counting it as one would hold
   // connections open past linger indefinitely.
-  private void keepalive(SqlConnPool self, ArrayList<Entry> toPing)
+  private void keepAlive(SqlConnPool self, ArrayList<Entry> toPing)
   {
     ArrayList<Entry> dead = new ArrayList<>();
     for (int i=0; i<toPing.size(); ++i)
@@ -216,7 +224,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<dead.size(); ++i)
     {
       Entry entry = dead.get(i);
-      self.log.warn("SqlConnPool keepalive evicting dead connection: " + entry.conn);
+      self.log.warn("SqlConnPool keepAlive evicting dead connection: " + entry.conn);
       close(self, entry);
     }
   }
@@ -424,7 +432,7 @@ public class SqlConnPoolPeer
       c.autoCommit(self.autoCommit());
 
       // statements created on this connection inherit the pool's timeout
-      c.setQueryTimeout(self.queryTimeout);
+      c.queryTimeout(self.queryTimeout);
 
       self.onOpen(c);
     }
@@ -512,23 +520,39 @@ public class SqlConnPoolPeer
     conn.close();
   }
 
-  public synchronized SqlConnPoolStats stats(SqlConnPool self)
+  // fan.sys.Map is qualified throughout: java.util is imported too
+  public synchronized fan.sys.Map stats(SqlConnPool self)
   {
     int total = entries.size();
     int active = 0;
     for (int i=0; i<entries.size(); ++i)
       if (entries.get(i).inUse) active++;
 
-    return SqlConnPoolStats.make(total, active, total-active, waiting, self.maxConns,
-      checkouts, checkoutTimeouts, opened, retired, evicted, leakWarnings);
+    fan.sys.Map m = fan.sys.Map.make(Sys.StrType, Sys.ObjType);
+    m.ordered(true);
+    m.set("total",            Long.valueOf(total));
+    m.set("active",           Long.valueOf(active));
+    m.set("idle",             Long.valueOf(total-active));
+    m.set("waiting",          Long.valueOf(waiting));
+    m.set("maxConns",         Long.valueOf(self.maxConns));
+    m.set("checkouts",        Long.valueOf(checkouts.get()));
+    m.set("checkoutTimeouts", Long.valueOf(checkoutTimeouts));
+    m.set("opened",           Long.valueOf(opened));
+    m.set("retired",          Long.valueOf(retired));
+    m.set("evicted",          Long.valueOf(evicted));
+    m.set("leakWarnings",     Long.valueOf(leakWarnings));
+    return (fan.sys.Map)m.toImmutable();
   }
 
-  public synchronized String debug(SqlConnPool self)
+  public String debug(SqlConnPool self)
   {
-    int idle = 0;
-    int inUse = 0;
-    for (int i=0; i<entries.size(); ++i)
-      if (entries.get(i).inUse) inUse++; else idle++;
+    fan.sys.Map st = stats(self);
+
+    // copy the entries under a short lock and format outside it; the
+    // per-entry fields are read without the lock, which is benign for a
+    // debug dump
+    ArrayList<Entry> snapshot;
+    synchronized (this) { snapshot = new ArrayList<>(entries); }
 
     StringBuilder s = new StringBuilder();
     s.append("SqlConnPool\n");
@@ -536,18 +560,18 @@ public class SqlConnPoolPeer
     s.append("  maxConns: ").append(self.maxConns).append("\n");
     s.append("  linger:   ").append(self.linger).append("\n");
     s.append("  maxLifetime: ").append(self.maxLifetime).append("\n");
-    s.append("  idle:     ").append(idle).append("\n");
-    s.append("  inUse:    ").append(inUse).append("\n");
-    s.append("  entries:  ").append(entries.size()).append("\n");
-    s.append("  waiting:  ").append(waiting).append("\n");
-    s.append("  checkouts: ").append(checkouts).append("\n");
-    s.append("  checkoutTimeouts: ").append(checkoutTimeouts).append("\n");
-    s.append("  opened:   ").append(opened).append("\n");
-    s.append("  retired:  ").append(retired).append("\n");
-    s.append("  evicted:  ").append(evicted).append("\n");
-    s.append("  leakWarnings: ").append(leakWarnings).append("\n");
-    for (int i=0; i<entries.size(); ++i)
-      s.append("    ").append(entries.get(i)).append("\n");
+    s.append("  idle:     ").append(st.get("idle")).append("\n");
+    s.append("  inUse:    ").append(st.get("active")).append("\n");
+    s.append("  entries:  ").append(st.get("total")).append("\n");
+    s.append("  waiting:  ").append(st.get("waiting")).append("\n");
+    s.append("  checkouts: ").append(st.get("checkouts")).append("\n");
+    s.append("  checkoutTimeouts: ").append(st.get("checkoutTimeouts")).append("\n");
+    s.append("  opened:   ").append(st.get("opened")).append("\n");
+    s.append("  retired:  ").append(st.get("retired")).append("\n");
+    s.append("  evicted:  ").append(st.get("evicted")).append("\n");
+    s.append("  leakWarnings: ").append(st.get("leakWarnings")).append("\n");
+    for (int i=0; i<snapshot.size(); ++i)
+      s.append("    ").append(snapshot.get(i)).append("\n");
     return s.toString();
   }
 
@@ -561,7 +585,7 @@ public class SqlConnPoolPeer
     long created;         // Duration.ticks when the slot was reserved
     boolean inUse;        // is this entry currently being used
     boolean opening;      // slot reserved, connection not yet opened
-    boolean pinging;      // held by a keepalive ping; not available
+    boolean pinging;      // held by a keepAlive ping; not available
     long lastUse;         // Duration.ticks of last execute
     long useStart;        // Duration.ticks when current use began
     boolean leakWarned;   // have we warned about current use being stuck
@@ -594,13 +618,16 @@ public class SqlConnPoolPeer
     Executors.newCachedThreadPool(threadFactory("connect"));
 
   private ArrayList<Entry> entries = new ArrayList<>();
-  private ScheduledExecutorService bookkeeper;
+  private ScheduledExecutorService houseKeeper;
   private boolean closed;
+
+  // the only counter incremented outside a critical section the caller
+  // already holds, so it is atomic rather than taking the pool monitor
+  private final AtomicLong checkouts = new AtomicLong();
 
   // written and read under the pool lock, so a stats snapshot is
   // consistent without atomics
   private int waiting;
-  private long checkouts;
   private long checkoutTimeouts;
   private long opened;
   private long retired;

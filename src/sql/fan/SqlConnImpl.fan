@@ -68,9 +68,7 @@ class SqlConnImpl : SqlConn
   ** Default statement timeout applied as each JDBC statement is created,
   ** or null for no timeout.
   **
-  @NoDoc Duration? queryTimeout
-
-  @NoDoc override Void setQueryTimeout(Duration? t) { queryTimeout = t }
+  @NoDoc override Duration? queryTimeout
 
 //////////////////////////////////////////////////////////////////////////
 // Transactions
@@ -131,12 +129,11 @@ internal class TestSqlConn: SqlConn
   override Str toStr() { "TestSqlConn-$id" }
   private Bool closed
 
-  override Void setQueryTimeout(Duration? t) { queryTimeout = t }
+  override Duration? queryTimeout
 
   // test hooks to simulate failures and record pool behavior
   Bool valid := true
   Duration? lastValidateTimeout
-  Duration? queryTimeout
   Int commits
   Int rollbacks
   Str[] ops := [,]

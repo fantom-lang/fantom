@@ -17,10 +17,10 @@ const class SqlConnPool
   new make(|This|? f)
   {
     if (f != null) f(this)
-    ka := keepaliveInterval
+    ka := keepAliveFreq
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepaliveInterval ($ka) must be less than linger ($linger) to take effect")
-    startBookkeeping
+      log.warn("SqlConnPool keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
+    startHouseKeeping
   }
 
   ** Connection URI
@@ -66,11 +66,11 @@ const class SqlConnPool
   ** under a second is rounded up to one second.
   const Duration? queryTimeout := 60sec
 
-  ** How long an idle connection may sit before bookkeeping pings it, or
+  ** How long an idle connection may sit before houseKeeping pings it, or
   ** null to never ping idle connections.  A failed ping evicts the
   ** connection.  Must be less than `linger` to have any effect.  A ping
   ** does not count as a use and does not defer `linger`.
-  const Duration? keepaliveInterval := 2min
+  const Duration? keepAliveFreq := 2min
 
   ** Ping a connection on checkout only if it has been idle at least this
   ** long, or null to never ping on checkout.  The ping costs a database
@@ -83,11 +83,11 @@ const class SqlConnPool
   ** is rounded up to one second.
   const Duration validationTimeout := 3sec
 
-  ** How often the pool runs bookkeeping: close connections idle past
+  ** How often the pool runs houseKeeping: close connections idle past
   ** `linger`, retire connections older than `maxLifetime`, ping idle
-  ** connections due a keepalive, and warn about connections held past
+  ** connections due a keepAlive, and warn about connections held past
   ** `leakWarn`.  Scheduled by the pool; callers do not drive it.
-  const Duration bookkeepingInterval := 30sec
+  const Duration houseKeepingFreq := 30sec
 
   ** onOpen is invoked just after a connection is opened by the pool.
   protected virtual Void onOpen(SqlConn c) {}
@@ -127,22 +127,40 @@ const class SqlConnPool
   ** Return if [close] has been called.
   native Bool isClosed()
 
-  ** Close all connections, stop bookkeeping, and raise exception on any
+  ** Close all connections, stop houseKeeping, and raise exception on any
   ** new executes
   native Void close()
 
-  ** Snapshot of the pool's gauges and cumulative counters
-  native SqlConnPoolStats stats()
+  ** Snapshot of the pool's gauges and cumulative counters:
+  **
+  ** - total: Connections the pool holds, including slots still being opened
+  ** - active: Connections currently checked out.  A slot reserved for a
+  **   connection that is still opening counts here.
+  ** - idle: Connections available for checkout.  A connection held by a keepAlive
+  **   ping counts here.
+  ** - waiting: Threads blocked waiting for a connection
+  ** - maxConns: SqlConnPool.maxConns
+  ** - checkouts: Connections handed to an execute callback
+  ** - checkoutTimeouts: Checkouts that gave up after SqlConnPool.checkoutTimeout
+  ** - opened: Connections opened against the database
+  ** - retired: Connections closed for age: idle past SqlConnPool.linger, or older
+  **   than SqlConnPool.maxLifetime
+  ** - evicted: Connections closed as broken: failed validation on checkout,
+  **   failed after an execute callback raised, or failed a keepAlive ping
+  ** - leakWarnings: Warnings logged for connections held past
+  **   SqlConnPool.leakWarn
+  **
+  native Str:Obj stats()
 
   ** Return debug dump string for current state
   @NoDoc native Str debug()
 
-  ** Start the bookkeeping timer.  Must be called after the it-block has
-  ** run, since it reads `bookkeepingInterval`.
-  @NoDoc native Void startBookkeeping()
+  ** Start the houseKeeping timer.  Must be called after the it-block has
+  ** run, since it reads `houseKeepingFreq`.
+  @NoDoc native Void startHouseKeeping()
 
-  ** Run one bookkeeping pass.  Called on the timer; exposed so tests can
+  ** Run one houseKeeping pass.  Called on the timer; exposed so tests can
   ** drive it directly.
-  @NoDoc native Void onBookkeeping()
+  @NoDoc native Void onHouseKeeping()
 }
 
