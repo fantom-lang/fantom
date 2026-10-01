@@ -41,10 +41,11 @@ public class SqlConnPoolPeer
     {
       // if the error left the connection broken then evict it
       // from the pool instead of releasing it back for reuse
-      if (validate(self, entry)) release(self, entry);
+      Throwable invalid = checkValid(self, entry);
+      if (invalid == null) release(self, entry);
       else
       {
-        self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+        self.log.warn(self.id + ": evicting connection broken by callback error: " + entry.conn, Err.make(invalid));
         evict(self, entry);
       }
       throw e;
@@ -157,7 +158,7 @@ public class SqlConnPoolPeer
     for (int i=0; i<leaked.size(); ++i)
     {
       Entry entry = leaked.get(i);
-      String msg = "SqlConnPool connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
+      String msg = self.id + ": connection held in-use longer than " + self.leakWarn + ": " + entry.conn;
       if (entry.checkoutTrace == null) self.log.warn(msg);
       else self.log.warn(msg, Err.make(entry.checkoutTrace));
     }
@@ -174,10 +175,11 @@ public class SqlConnPoolPeer
   private void keepAlive(SqlConnPool self, ArrayList<Entry> toPing)
   {
     ArrayList<Entry> dead = new ArrayList<>();
+    ArrayList<Throwable> reasons = new ArrayList<>();
     for (int i=0; i<toPing.size(); ++i)
     {
       Entry entry = toPing.get(i);
-      boolean ok = validate(self, entry);
+      Throwable invalid = checkValid(self, entry);
       synchronized (this)
       {
         // notify either way: a waiter may be blocked on this entry
@@ -188,14 +190,14 @@ public class SqlConnPoolPeer
         // pool closed during the ping; close already took this connection
         if (closed) continue;
 
-        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; }
+        if (invalid != null) { entries.remove(entry); dead.add(entry); reasons.add(invalid); evicted++; }
       }
     }
 
     for (int i=0; i<dead.size(); ++i)
     {
       Entry entry = dead.get(i);
-      self.log.warn("SqlConnPool keepAlive evicting dead connection: " + entry.conn);
+      self.log.warn(self.id + ": keepAlive evicting dead connection: " + entry.conn, Err.make(reasons.get(i)));
       close(self, entry);
     }
   }
@@ -221,7 +223,7 @@ public class SqlConnPoolPeer
       if (entry.opening)
       {
         try { openReserved(self, entry); }
-        catch (Throwable e) { releaseReserved(self, entry); throw e; }
+        catch (Throwable e) { releaseReserved(self, entry, e); throw e; }
         return entry;
       }
 
@@ -233,8 +235,9 @@ public class SqlConnPoolPeer
 
       // ping connection to verify it is still alive; if not then
       // close it, discard it from the pool, and allocate again
-      if (validate(self, entry)) return entry;
-      self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+      Throwable invalid = checkValid(self, entry);
+      if (invalid == null) return entry;
+      self.log.warn(self.id + ": evicting connection that failed validation on checkout: " + entry.conn, Err.make(invalid));
       evict(self, entry);
     }
   }
@@ -245,7 +248,7 @@ public class SqlConnPoolPeer
     while (true)
     {
       // check that we aren't closed
-      if (closed) throw Err.make("SqlConnPool is closed");
+      if (closed) throw Err.make(self.id + ": SqlConnPool is closed");
 
       // try to find an available entry or open a new one
       Entry entry = doAllocate(self);
@@ -256,7 +259,7 @@ public class SqlConnPoolPeer
       if (toSleep <= 0)
       {
         checkoutTimeouts++;
-        throw TimeoutErr.make("SqlConn cannot be acquired (" + self.checkoutTimeout + ")");
+        throw TimeoutErr.make(self.id + ": SqlConn cannot be acquired (" + self.checkoutTimeout + "); " + gauges(self), lastOpenErr);
       }
 
       // sleep until we get a notify
@@ -266,16 +269,28 @@ public class SqlConnPoolPeer
     }
   }
 
-  private boolean validate(SqlConnPool self, Entry entry)
+  // Ping the connection; return null if it is alive, else why not
+  private Throwable checkValid(SqlConnPool self, Entry entry)
   {
     try
     {
-      return entry.conn.isValid(self.validationTimeout);
+      if (entry.conn.isValid(self.validationTimeout)) return null;
+      return Err.make("isValid returned false within " + self.validationTimeout);
     }
     catch (Throwable e)
     {
-      return false;
+      return e;
     }
+  }
+
+  // Current gauges for an error message; caller holds the lock
+  private String gauges(SqlConnPool self)
+  {
+    int active = 0;
+    for (int i=0; i<entries.size(); ++i)
+      if (entries.get(i).inUse) active++;
+    return "total=" + entries.size() + " active=" + active + " idle=" + (entries.size()-active) +
+           " waiting=" + waiting + " maxConns=" + self.maxConns;
   }
 
   private void evict(SqlConnPool self, Entry entry)
@@ -351,21 +366,28 @@ public class SqlConnPoolPeer
         entry.conn = conn;
         entry.opening = false;
         opened++;
+        lastOpenErr = null;
       }
     }
 
     if (stale)
     {
       close(self, conn);
-      throw Err.make("SqlConnPool is closed");
+      throw Err.make(self.id + ": SqlConnPool is closed");
     }
   }
 
-  // Release a reserved slot whose open failed
-  private void releaseReserved(SqlConnPool self, Entry entry)
+  // Release a reserved slot whose open failed, remembering why so a
+  // later checkout timeout can report it
+  private void releaseReserved(SqlConnPool self, Entry entry, Throwable cause)
   {
     // notify: the slot a waiter was blocked on is free again
-    synchronized (this) { entries.remove(entry); notifyAll(); }
+    synchronized (this)
+    {
+      entries.remove(entry);
+      if (!closed) lastOpenErr = Err.make(cause);
+      notifyAll();
+    }
   }
 
   private void release(SqlConnPool self, Entry entry)
@@ -388,7 +410,7 @@ public class SqlConnPoolPeer
     }
     catch (Throwable e)
     {
-      self.log.warn("SqlConnPool evicting broken connection: " + entry.conn);
+      self.log.warn(self.id + ": evicting connection that failed reset on release: " + entry.conn, Err.make(e));
       evict(self, entry);
       return;
     }
@@ -459,7 +481,7 @@ public class SqlConnPoolPeer
   private void onClose(SqlConnPool self, SqlConn conn)
   {
     try { self.onClose(conn); }
-    catch (Throwable e) { self.log.err("SqlConnPool onClose failed: " + conn, Err.make(e)); }
+    catch (Throwable e) { self.log.err(self.id + ": onClose failed: " + conn, Err.make(e)); }
   }
 
   // fan.sys.Map is qualified throughout: java.util is imported too
@@ -493,8 +515,8 @@ public class SqlConnPoolPeer
     ArrayList<Entry> snapshot = new ArrayList<>(entries);
 
     StringBuilder s = new StringBuilder();
-    s.append("SqlConnPool\n");
-    s.append("  uri:      ").append(self.uri).append("\n");
+    s.append("SqlConnPool ").append(self.id).append("\n");
+    s.append("  uri:      ").append(maskUri(self.uri)).append("\n");
     s.append("  maxConns: ").append(self.maxConns).append("\n");
     s.append("  linger:   ").append(self.linger).append("\n");
     s.append("  maxLifetime: ").append(self.maxLifetime).append("\n");
@@ -511,6 +533,14 @@ public class SqlConnPoolPeer
     for (int i=0; i<snapshot.size(); ++i)
       s.append("    ").append(snapshot.get(i)).append("\n");
     return s.toString();
+  }
+
+  // Hide passwords a JDBC uri may carry: password/pwd properties and
+  // user:password@host userinfo
+  static String maskUri(String uri)
+  {
+    String s = uri.replaceAll("(?i)((?:password|pwd)=)[^&;]*", "$1***");
+    return s.replaceAll("//([^/:@]*):[^/@]*@", "//$1:***@");
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -558,5 +588,8 @@ public class SqlConnPoolPeer
   private long retired;
   private long evicted;
   private long leakWarnings;
+
+  // most recent open failure, cleared by a successful open
+  private Err lastOpenErr;
 }
 

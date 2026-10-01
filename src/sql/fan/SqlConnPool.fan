@@ -19,12 +19,12 @@ const class SqlConnPool
     if (f != null) f(this)
     ka := keepAliveFreq
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
+      log.warn("$id: keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
 
     // Create the houseKeeper ActorPool
     houseKeepingActorPool = ActorPool
     {
-      it.name = "sqlConnPool-${counter.getAndIncrement}";
+      it.name = this.id;
       it.maxThreads = 1
     }
 
@@ -32,7 +32,7 @@ const class SqlConnPool
     houseKeeper = Actor(houseKeepingActorPool) |msg|
     {
       try { onHouseKeeping }
-      catch (Err e) { log.err("SqlConnPool houseKeeping failed", e) }
+      catch (Err e) { log.err("$id: houseKeeping failed", e) }
 
       if (!isClosed)
       {
@@ -189,6 +189,9 @@ const class SqlConnPool
   ** Run one houseKeeping pass.  Called by the houseKeeper actor; exposed
   ** so tests can drive it directly.
   @NoDoc native Void onHouseKeeping()
+
+  ** Identifies this pool in log messages, errors, and thread names
+  internal const Str id := "sqlConnPool-${counter.getAndIncrement}"
 
   ** Runs houseKeeping; killed by [close]
   internal const ActorPool houseKeepingActorPool

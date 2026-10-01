@@ -327,6 +327,77 @@ class SqlConnPoolTest : Test
     }
   }
 
+  Void testCheckoutTimeoutReport()
+  {
+    // a checkout timeout reports the pool's gauges and the most recent
+    // open failure; a successful open clears the failure
+    cp := SlowOpenPool { it.uri = "test"; it.houseKeepingFreq = 1hr; it.maxConns = 1; it.checkoutTimeout = 100ms }
+    cp.failNext.val = true
+    verifyErr(IOErr#) { cp.execute |c| {} }
+
+    // a slow open holds the only slot; time out behind it
+    cp.slow.val = true
+    a := SqlConnPoolTestActor(ActorPool(), cp, "a")
+    f := a.send(10ms)
+    Actor.sleep(50ms)
+    TimeoutErr? err := null
+    try { cp.execute |c| {} }
+    catch (TimeoutErr e) { err = e }
+    verify(err.msg.startsWith(cp.id), err.msg)
+    verify(err.msg.contains("total=1 active=1 idle=0"), err.msg)
+    verifyEq(err.cause?.msg, "open failed")
+    f.get
+
+    // that open succeeded, so a later timeout has no cause
+    cp.slow.val = false
+    f = execute(a, 300ms)
+    err = null
+    try { cp.execute |c| {} }
+    catch (TimeoutErr e) { err = e }
+    verifyNotNull(err)
+    verifyNull(err.cause)
+    f.get
+    cp.close
+  }
+
+  Void testEvictReason()
+  {
+    // an eviction warning names the pool and carries why the connection
+    // was judged broken
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 1hr }
+    msg := AtomicRef()
+    reason := AtomicRef()
+    handler := |LogRec rec| { if (rec.msg.contains("evicting")) { msg.val = rec.msg; reason.val = rec.err?.msg } }
+    Log.addHandler(handler)
+    try
+    {
+      verifyErr(IOErr#) { cp.execute |c| { ((TestSqlConn)c).valid = false; throw IOErr("boom") } }
+      verify(((Str)msg.val).startsWith(cp.id), msg.val)
+      verifyEq(reason.val, "isValid returned false within $cp.validationTimeout")
+    }
+    finally
+    {
+      Log.removeHandler(handler)
+      cp.close
+    }
+  }
+
+  Void testDebugMasksPassword()
+  {
+    cp := SqlConnPool
+    {
+      it.uri = "jdbc:postgresql://u:secret@host/db?user=u&password=secret;pwd=secret"
+      it.houseKeepingFreq = 1hr
+    }
+    d := cp.debug
+    verifyFalse(d.contains("secret"), d)
+    verify(d.contains("//u:***@host"), d)
+    verify(d.contains("password=***"), d)
+    verify(d.contains("pwd=***"), d)
+    verify(d.contains(cp.id), d)
+    cp.close
+  }
+
   Void testOpenOutsideLock()
   {
     // four slow opens must overlap.  Under the pool lock they would
