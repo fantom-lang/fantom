@@ -277,31 +277,53 @@ class SqlConnPoolTest : Test
 
   Void testHouseKeepingSurvivesErr()
   {
-    // a pass that raises is logged, and the next pass still runs
-    cp := CloseErrPool { it.uri = "test"; it.houseKeepingFreq = 50ms; it.keepAliveFreq = null; it.linger = 50ms }
+    // a pass that raises is logged, and the next pass still runs; the
+    // pool's log raises from the first leak warning
+    tlog := ThrowLog()
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 50ms; it.keepAliveFreq = null; it.leakWarn = 50ms; it.log = tlog }
+    ap := ActorPool()
+    a := SqlConnPoolTestActor(ap, cp, "a")
+
+    execute(a, 300ms).get
+    verifyEq(tlog.errs.val, 1)
+    verifyEq(tlog.warns.val, 1)
+
+    // a later pass warns about the next long checkout
+    execute(a, 300ms).get
+    verifyEq(tlog.errs.val, 1)
+    verifyEq(tlog.warns.val, 2)
+    cp.close
+  }
+
+  Void testOnCloseErr()
+  {
+    // a raising onClose is logged; it neither masks the error that led
+    // to an eviction nor stops close from closing the rest
+    before := TestSqlConn.openCount.val
     errs := AtomicInt()
-    handler := |LogRec rec| { if (rec.msg.contains("houseKeeping failed")) errs.increment }
+    handler := |LogRec rec| { if (rec.msg.contains("onClose failed")) errs.increment }
     Log.addHandler(handler)
     try
     {
-      TestSqlConn? c1 := null
-      cp.execute |c| { c1 = c }
-      waitReaped(cp)
+      cp := CloseErrPool { it.uri = "test"; it.houseKeepingFreq = 1hr }
+      verifyErrMsg(IOErr#, "boom")
+      {
+        cp.execute |c| { ((TestSqlConn)c).valid = false; throw IOErr("boom") }
+      }
       verifyEq(errs.val, 1)
+      verifyEq(TestSqlConn.openCount.val, before)
+      cp.close
 
-      // onClose raised, but the connection is still closed
-      verifyEq(c1.isClosed, true)
-
-      TestSqlConn? c2 := null
-      cp.execute |c| { c2 = c }
-      waitReaped(cp)
-      verifyEq(c2.isClosed, true)
-      verifyEq(errs.val, 1)
+      cp2 := CloseErrPool { it.uri = "test"; it.houseKeepingFreq = 1hr }
+      cp2.execute |x| { cp2.execute |y| {} }
+      verifyEq(debugInt(cp2.debug, "entries"), 2)
+      cp2.close
+      verifyEq(errs.val, 2)
+      verifyEq(TestSqlConn.openCount.val, before)
     }
     finally
     {
       Log.removeHandler(handler)
-      cp.close
     }
   }
 
@@ -935,6 +957,31 @@ internal const class CloseCountPool : SqlConnPool
   const AtomicInt closes := AtomicInt()
 
   protected override Void onClose(SqlConn c) { closes.increment }
+}
+
+**************************************************************************
+** ThrowLog
+**************************************************************************
+
+** Raises from the first leak warning, and counts leak warnings and
+** houseKeeping failures
+internal const class ThrowLog : Log
+{
+  new make() : super("sqlPoolTest.throwLog", false) {}
+
+  const AtomicBool throwNext := AtomicBool(true)
+  const AtomicInt warns := AtomicInt()
+  const AtomicInt errs := AtomicInt()
+
+  override Void log(LogRec rec)
+  {
+    if (rec.msg.contains("houseKeeping failed")) errs.increment
+    if (rec.msg.contains("held in-use"))
+    {
+      warns.increment
+      if (throwNext.compareAndSet(true, false)) throw IOErr("log failed")
+    }
+  }
 }
 
 **************************************************************************

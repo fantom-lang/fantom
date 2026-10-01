@@ -437,9 +437,8 @@ public class SqlConnPoolPeer
 
   private void close(SqlConnPool self, SqlConn conn)
   {
-    // a raising onClose must not leak the connection
-    try { self.onClose(conn); }
-    finally { conn.close(); }
+    onClose(self, conn);
+    conn.close();
   }
 
   // Close an entry another thread may be using
@@ -447,8 +446,17 @@ public class SqlConnPoolPeer
   {
     // a reserved slot whose open never completed
     if (entry.conn == null) return;
-    try { self.onClose(entry.conn); }
-    finally { SqlConnImplPeer.abort(entry.conn); }
+    onClose(self, entry.conn);
+    SqlConnImplPeer.abort(entry.conn);
+  }
+
+  // Log rather than raise: a raising onClose must not leak the
+  // connection, stop a caller closing the rest, or mask the error
+  // that led to the close
+  private void onClose(SqlConnPool self, SqlConn conn)
+  {
+    try { self.onClose(conn); }
+    catch (Throwable e) { self.log.err("SqlConnPool onClose failed: " + conn, Err.make(e)); }
   }
 
   // fan.sys.Map is qualified throughout: java.util is imported too
