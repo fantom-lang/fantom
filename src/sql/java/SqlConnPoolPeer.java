@@ -382,6 +382,9 @@ public class SqlConnPoolPeer
       // restore pool's auto-commit mode in case callback changed it
       boolean poolMode = self.autoCommit();
       if (entry.conn.autoCommit() != poolMode) entry.conn.autoCommit(poolMode);
+
+      // restore pool's query timeout in case callback changed it
+      entry.conn.queryTimeout(self.queryTimeout);
     }
     catch (Throwable e)
     {

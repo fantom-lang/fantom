@@ -84,8 +84,10 @@ const class SqlConnPool
   const Duration leakWarn := 2min
 
   ** Default timeout applied to every statement created on connections from
-  ** this pool, or null for no timeout.  Applies per execution, so a batch
-  ** must complete within it.  JDBC resolves it in whole seconds; anything
+  ** this pool, or null for no timeout.  Restored when a connection is
+  ** released, so a callback that changes the connection's timeout cannot
+  ** leave it changed for the next borrower.  Applies per execution, so a
+  ** batch must complete within it.  JDBC resolves it in whole seconds; anything
   ** under a second is rounded up to one second.
   const Duration? queryTimeout := 60sec
 

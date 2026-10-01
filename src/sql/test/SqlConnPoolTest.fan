@@ -608,6 +608,10 @@ class SqlConnPoolTest : Test
     TestSqlConn? c1 := null
     cp.execute |c| { c1 = c }
     verifyEq(c1.queryTimeout, 45sec)
+
+    // a callback's change does not reach the next borrower
+    cp.execute |c| { verifySame(c, c1); c.queryTimeout = 5min }
+    verifyEq(c1.queryTimeout, 45sec)
     cp.close
 
     // null leaves statements unbounded
