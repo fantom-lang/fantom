@@ -62,11 +62,12 @@ const class SqlConnPool
   const Duration checkoutTimeout := 30sec
 
   ** Max time to wait when opening a new connection before raising
-  ** TimeoutErr, or null to wait as long as the driver allows.  Enforced
+  ** TimeoutErr, or null to wait as long as the driver allows, which may
+  ** be forever if the server stalls the handshake.  Enforced
   ** by the driver via the 'connectTimeout' and 'socketTimeout' connection
   ** properties.  JDBC resolves it in whole seconds; anything under a
   ** second is rounded up to one second.
-  const Duration? connectTimeout := null
+  const Duration? connectTimeout := 10sec
 
   ** Time to linger an idle connection before closing it.
   const Duration linger := 5min
