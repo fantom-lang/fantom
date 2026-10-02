@@ -125,6 +125,14 @@ class Statement
   **
   native Int? limit
 
+  **
+  ** Whether an insert requests auto-generated keys from the driver.
+  ** Turning this off skips the cost of returning keys, and inserts
+  ** return update counts instead.  Must be set before `prepare`,
+  ** otherwise throw SqlErr.  Defaults to true.
+  **
+  native Bool generateKeys
+
 }
 
 **************************************************************************
