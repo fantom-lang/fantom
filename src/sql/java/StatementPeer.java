@@ -25,10 +25,7 @@ public class StatementPeer
     // at this point the conn and sql fields are configured,
     // figure out our auto-generated key mode
     this.isInsert = FanStr.indexIgnoreCase(self.sql, "insert ") != null;
-    this.isAutoKeys = this.isInsert && self.conn.peer.supportsGetGenKeys;
-    this.autoKeyMode = this.isAutoKeys ?
-                       java.sql.Statement.RETURN_GENERATED_KEYS :
-                       java.sql.Statement.NO_GENERATED_KEYS;
+    updateAutoKeys(self);
 
     // are we using the old deprecated escape "@@foo"
     String depEsc = self.typeof().pod().config("deprecatedEscape");
@@ -526,6 +523,28 @@ public class StatementPeer
     }
   }
 
+  public boolean generateKeys(Statement self)
+  {
+    return generateKeys;
+  }
+
+  public void generateKeys(Statement self, boolean generateKeys)
+  {
+    // autoKeyMode is fixed once the PreparedStatement is created
+    if (prepared)
+      throw SqlErr.make("Cannot set generateKeys after prepare");
+    this.generateKeys = generateKeys;
+    updateAutoKeys(self);
+  }
+
+  private void updateAutoKeys(Statement self)
+  {
+    this.isAutoKeys = isInsert && generateKeys && self.conn.peer.supportsGetGenKeys;
+    this.autoKeyMode = isAutoKeys ?
+                       java.sql.Statement.RETURN_GENERATED_KEYS :
+                       java.sql.Statement.NO_GENERATED_KEYS;
+  }
+
   private void createStatement(Statement self)
     throws SQLException
   {
@@ -545,11 +564,14 @@ public class StatementPeer
   private java.sql.Statement stmt;
   private Map paramMap;
   private int limit = 0;              // limit field value
+  private boolean generateKeys = true; // generateKeys field value
 
   // These are set during init():
   private boolean isInsert;           // does sql contain insert keyword
-  private boolean isAutoKeys;         // isInsert and connector supports auto-gen keys
-  private int autoKeyMode;            // JDBC constant for auto-gen keys
   private boolean isDeprecatedEscape; // are we using the old deprecated escape "@@foo"
+
+  // These are set by updateAutoKeys():
+  private boolean isAutoKeys;         // isInsert, generateKeys, and connector supports auto-gen keys
+  private int autoKeyMode;            // JDBC constant for auto-gen keys
 }
 

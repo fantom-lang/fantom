@@ -542,6 +542,56 @@ abstract class SqlTest : Test
     verifyKeys(res.keys, ["s0", "s1", "s2", "s3", "s4"])
   }
 
+  Void testGenerateKeysOff()
+  {
+    createTable(batchAutoTable, Dialect.batchAutoCols)
+    sql := "insert into $batchAutoTable (v_str) values (@v_str)"
+
+    // batch returns one null key per command
+    stmt := db.sql(sql)
+    verifyEq(stmt.generateKeys, true)
+    stmt.generateKeys = false
+    stmt.prepare
+    res := stmt.executeBatch([Str:Obj["v_str": "a"], Str:Obj["v_str": "b"]])
+    verifyEq(res.updateCounts, Int?[1, 1])
+    verifyEq(res.keys, Obj?[null, null])
+
+    // cannot change once prepared
+    verifyErr(SqlErr#) { stmt.generateKeys = true }
+    verifyEq(stmt.generateKeys, false)
+    stmt.close
+
+    // unprepared execute returns the update count
+    stmt = db.sql("insert into $batchAutoTable (v_str) values ('c')")
+    stmt.generateKeys = false
+    verifyEq(stmt.execute, 1)
+    stmt.close
+
+    // BatchExecutor collates the nulls across chunks
+    stmt = db.sql(sql)
+    stmt.generateKeys = false
+    stmt.prepare
+    batch := BatchExecutor(stmt, 2)
+    ["d", "e", "f"].each |s| { batch.add(Str:Obj["v_str": s]) }
+    res = batch.finish
+    stmt.close
+    verifyEq(res.updateCounts, Int?[1, 1, 1])
+    verifyEq(res.keys, Obj?[null, null, null])
+
+    // the rows still landed
+    strs := db.sql("select v_str from $batchAutoTable order by id").query.map |r->Str| { r->v_str }
+    verifyEq(strs, Str["a", "b", "c", "d", "e", "f"])
+
+    // turning keys back on before prepare restores them
+    stmt = db.sql(sql)
+    stmt.generateKeys = false
+    stmt.generateKeys = true
+    stmt.prepare
+    res = stmt.executeBatch([Str:Obj["v_str": "g"], Str:Obj["v_str": "h"]])
+    stmt.close
+    verifyKeys(res.keys, ["g", "h"])
+  }
+
   ** Verify each generated key selects the row that was inserted for it,
   ** which checks both that the keys are real and that they came back in
   ** the order the commands were added.
