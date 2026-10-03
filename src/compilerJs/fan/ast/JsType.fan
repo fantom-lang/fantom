@@ -458,10 +458,9 @@ class JsType : JsNode
     js.wl("if (${valsField} == null) {").indent
 
     js.wl("${valsField} = sys.List.make(${enumName}.type\$, [").indent
-    enumFields.each |FieldDef f, Int i| {
-      def := f.enumDef
-      js.w("${enumName}.make(${def.ordinal}, ${def.name.toCode}, ")
-      def.ctorArgs.each |Expr arg, Int j| {
+    enumFields.each |FieldDef f| {
+      js.w("${enumName}.make(")
+      ((CallExpr)f.init).args.each |Expr arg, Int j| {
         if (j > 0) js.w(", ")
         writeExpr(arg)
       }
