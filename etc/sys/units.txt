@@ -10,6 +10,7 @@
 //
 
 -- dimensionless (null)
+unitless
 percent, %; ; 0.01
 percent_relative_humidity, %RH; ; 0.01
 pixel, px
