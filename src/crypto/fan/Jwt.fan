@@ -346,20 +346,15 @@ const class Jwt
     return "${encodedHeader}.${encodedClaims}.${signature}"
   }
 
-  ** Convenience function to check the value of a claim
+  ** Convenience function to check the value of a claim.
   **
-  ** If value of JWT claim is a List, this function checks that the expectedValue
-  ** is contained in the List.
+  ** If expectedValue is null, just checks that the claim exists.  Otherwise
+  ** the claim value and expectedValue are each treated as a set of values
+  ** (a non-List is a one-item set) and at least one of the claim values must
+  ** be contained in the expectedValue values.  An empty expectedValue List
+  ** never matches.
   **
-  ** If expectedValue is a List, it is treated as a set of acceptable values:
-  ** the claim value (or, if the claim is itself a List, at least one of its
-  ** values) must be contained in the expectedValue List.  An empty
-  ** expectedValue List never matches.
-  **
-  ** If expectedValue is null, just checks if the claim exists
-  **
-  ** Throws Err if claim does not exist or expectedValue does not match (or is not
-  ** contained in the List)
+  ** Throws Err if the claim does not exist or does not match.
   **
   **     jwt := Jwt.decode("1111.2222.3333", pubKey)
   **               .verifyClaim("iss", "https://fantom.accounts.dev")
@@ -367,37 +362,14 @@ const class Jwt
   **
   This verifyClaim(Str claim, Obj? expectedValue := null)
   {
-    if(!claims.containsKey(claim)) { throw Err("JWT (${claim}) claim is not present") }
+    if (!claims.containsKey(claim)) throw Err("JWT (${claim}) claim is not present")
+    if (expectedValue == null) return this
 
-    if (expectedValue is List)
-    {
-      accepted := (List)expectedValue
-      claimValue := claims[claim]
-      Obj?[] values := claimValue is List ? (List)claimValue : [claimValue]
-      if (!values.any |v| { accepted.contains(v) })
-      {
-        throw Err("JWT (${claim}) claim ${claimValue} does not match any expected value: ${accepted}")
-      }
-    }
-    else if (expectedValue != null)
-    {
-      claimValue := claims[claim]
-
-      if (claimValue is List)
-      {
-        if (!((List)claimValue).contains(expectedValue))
-        {
-          throw Err("JWT (${claim}) claim ${claimValue} does not contain expected value: ${expectedValue}")
-        }
-      }
-      else
-      {
-        if (claimValue != expectedValue)
-        {
-          throw Err("JWT (${claim}) claim ${claimValue} is not equal to expected value: ${expectedValue}")
-        }
-      }
-    }
+    claimValue := claims[claim]
+    Obj?[] actual   := claimValue as List ?: [claimValue]
+    Obj?[] accepted := expectedValue as List ?: [expectedValue]
+    if (!actual.any |v| { accepted.contains(v) })
+      throw Err("JWT (${claim}) claim ${claimValue} does not match expected value: ${expectedValue}")
 
     return this
   }
