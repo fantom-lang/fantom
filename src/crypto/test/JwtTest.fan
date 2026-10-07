@@ -372,6 +372,34 @@ class JwtTest : CryptoTest
          .verifyClaim("aud", "audience4")
     }
 
+    // List expectedValue: claim List must intersect the accepted values
+    Jwt.decode(jwtStr, pub2).verifyClaim("aud", ["audience4", "audience2"])
+
+    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not match any expected value: [audience4, audience5]")
+    {
+      Jwt.decode(jwtStr, pub2)
+         .verifyClaim("aud", ["audience4", "audience5"])
+    }
+
+    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not match any expected value: [,]")
+    {
+      Jwt.decode(jwtStr, pub2)
+         .verifyClaim("aud", Str[,])
+    }
+
+    // List expectedValue against a scalar claim
+    scalarStr := Jwt {
+                   it.alg = "ES384"
+                   it.claims = ["iss": "https://fantom.accounts.dev"]
+                 }.encode(priv2)
+    Jwt.decode(scalarStr, pub2).verifyClaim("iss", ["x", "https://fantom.accounts.dev"])
+
+    verifyErrMsg(Err#, "JWT (iss) claim https://fantom.accounts.dev does not match any expected value: [x, y]")
+    {
+      Jwt.decode(scalarStr, pub2)
+         .verifyClaim("iss", ["x", "y"])
+    }
+
     jwtStr =  Jwt {
                 it.alg = "ES512"
                 it.claims = ["sub": "user6@fantom.org"]

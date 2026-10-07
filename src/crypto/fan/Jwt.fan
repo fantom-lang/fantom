@@ -351,6 +351,11 @@ const class Jwt
   ** If value of JWT claim is a List, this function checks that the expectedValue
   ** is contained in the List.
   **
+  ** If expectedValue is a List, it is treated as a set of acceptable values:
+  ** the claim value (or, if the claim is itself a List, at least one of its
+  ** values) must be contained in the expectedValue List.  An empty
+  ** expectedValue List never matches.
+  **
   ** If expectedValue is null, just checks if the claim exists
   **
   ** Throws Err if claim does not exist or expectedValue does not match (or is not
@@ -358,12 +363,23 @@ const class Jwt
   **
   **     jwt := Jwt.decode("1111.2222.3333", pubKey)
   **               .verifyClaim("iss", "https://fantom.accounts.dev")
+  **               .verifyClaim("aud", ["client1", "client2"])
   **
   This verifyClaim(Str claim, Obj? expectedValue := null)
   {
     if(!claims.containsKey(claim)) { throw Err("JWT (${claim}) claim is not present") }
 
-    if (expectedValue != null && expectedValue isnot List)
+    if (expectedValue is List)
+    {
+      accepted := (List)expectedValue
+      claimValue := claims[claim]
+      Obj?[] values := claimValue is List ? (List)claimValue : [claimValue]
+      if (!values.any |v| { accepted.contains(v) })
+      {
+        throw Err("JWT (${claim}) claim ${claimValue} does not match any expected value: ${accepted}")
+      }
+    }
+    else if (expectedValue != null)
     {
       claimValue := claims[claim]
 
