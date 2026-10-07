@@ -172,7 +172,7 @@ class JwtTest : CryptoTest
   	authorized := "https://jwt.fantom.local:8443"
     wrongIssuer := "https://not.the.issuer.com"
 
-    verifyErrMsg(Err#, "JWT (iss) claim ${issuer} is not equal to expected value: ${wrongIssuer}") 
+    verifyErrMsg(Err#, "JWT (iss) claim ${issuer} does not match expected value: ${wrongIssuer}")
     { 
       Jwt.decode(jwtStr, rsaJwk.key, 7300day)
          .verifyClaim("iss", wrongIssuer)
@@ -366,10 +366,38 @@ class JwtTest : CryptoTest
     verifyEq(jwt.claims["testClaim2"], "important")
     verify(((List)jwt.claims["aud"]).containsAll(["audience1", "audience2", "audience3"]))
 
-    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not contain expected value: audience4")
+    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not match expected value: audience4")
     {
       Jwt.decode(jwtStr, pub2)
          .verifyClaim("aud", "audience4")
+    }
+
+    // List expectedValue: claim List must intersect the accepted values
+    Jwt.decode(jwtStr, pub2).verifyClaim("aud", ["audience4", "audience2"])
+
+    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not match expected value: [audience4, audience5]")
+    {
+      Jwt.decode(jwtStr, pub2)
+         .verifyClaim("aud", ["audience4", "audience5"])
+    }
+
+    verifyErrMsg(Err#, "JWT (aud) claim [audience1, audience2, audience3] does not match expected value: [,]")
+    {
+      Jwt.decode(jwtStr, pub2)
+         .verifyClaim("aud", Str[,])
+    }
+
+    // List expectedValue against a scalar claim
+    scalarStr := Jwt {
+                   it.alg = "ES384"
+                   it.claims = ["iss": "https://fantom.accounts.dev"]
+                 }.encode(priv2)
+    Jwt.decode(scalarStr, pub2).verifyClaim("iss", ["x", "https://fantom.accounts.dev"])
+
+    verifyErrMsg(Err#, "JWT (iss) claim https://fantom.accounts.dev does not match expected value: [x, y]")
+    {
+      Jwt.decode(scalarStr, pub2)
+         .verifyClaim("iss", ["x", "y"])
     }
 
     jwtStr =  Jwt {
