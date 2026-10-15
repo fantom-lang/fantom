@@ -92,6 +92,7 @@ class ObjUtil {
       return obj;
     }
     const t = ObjUtil.typeof(obj);
+    if (t === type) return obj;
     if (t.is(Func.type$)) return t.as(obj, type);
     if (t.is(List.type$)) return t.as(obj, type);
     if (t.is(Map.type$))  return t.as(obj, type);

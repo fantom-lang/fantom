@@ -333,6 +333,18 @@ class Type extends Obj {
     if (that instanceof NullableType)
       that = that.root;
 
+    if (this === that) return true;
+
+    // generic types are created on demand, so only cache simple types
+    if (that instanceof GenericType) return this.#doIs(that);
+    let r = this.#isCache.get(that);
+    if (r === undefined) this.#isCache.set(that, r = this.#doIs(that));
+    return r;
+  }
+
+  #isCache = new js.Map();
+
+  #doIs(that) {
     if (this.equals(that)) return true;
 
     // check for void
