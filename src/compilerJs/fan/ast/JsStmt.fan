@@ -212,6 +212,10 @@ class JsStmt : JsNode
     var := uniqName
     js.w("let ${var} = "); writeExpr(ss.condition); js.wl(";")
 
+    // non-null Int, Str, and enums are JS primitives or singletons
+    t := ss.condition.ctype
+    strict := !t.isNullable && (t.isInt || t.isStr || t.isEnum)
+
     ss.cases.each |c, i|
     {
       if (i > 0) js.w("else ")
@@ -219,7 +223,8 @@ class JsStmt : JsNode
       c.cases.each |e, j|
       {
         if (j > 0) js.w(" || ")
-        js.w("sys.ObjUtil.equals(${var}, "); writeExpr(e); js.w(")")
+        if (strict) { js.w("${var} === ("); writeExpr(e); js.w(")") }
+        else { js.w("sys.ObjUtil.equals(${var}, "); writeExpr(e); js.w(")") }
       }
       js.wl(") {").indent
       writeBlock(c.block)
