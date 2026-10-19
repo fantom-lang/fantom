@@ -252,6 +252,57 @@ class SqlConnPoolTest : Test
     // and the timer stops with the pool
     cp.close
     verifyEq(cp.isClosed, true)
+    verifyEq(cp.houseKeepingActorPool.isStopped, true)
+    cp.houseKeepingActorPool.join(5sec)
+    verifyEq(cp.houseKeepingActorPool.isDone, true)
+  }
+
+  Void testHouseKeepingReschedules()
+  {
+    // each pass schedules the next, so a second idle connection is
+    // reaped by a later pass
+    cp := SqlConnPool { it.uri = "test"; it.houseKeepingFreq = 50ms; it.keepAliveFreq = null; it.linger = 50ms }
+    TestSqlConn? c1 := null
+    cp.execute |c| { c1 = c }
+    waitReaped(cp)
+    verifyEq(c1.isClosed, true)
+
+    TestSqlConn? c2 := null
+    cp.execute |c| { c2 = c }
+    verifyNotSame(c1, c2)
+    waitReaped(cp)
+    verifyEq(c2.isClosed, true)
+    cp.close
+  }
+
+  Void testHouseKeepingSurvivesErr()
+  {
+    // a pass that raises is logged, and the next pass still runs
+    cp := CloseErrPool { it.uri = "test"; it.houseKeepingFreq = 50ms; it.keepAliveFreq = null; it.linger = 50ms }
+    errs := AtomicInt()
+    handler := |LogRec rec| { if (rec.msg.contains("houseKeeping failed")) errs.increment }
+    Log.addHandler(handler)
+    try
+    {
+      TestSqlConn? c1 := null
+      cp.execute |c| { c1 = c }
+      waitReaped(cp)
+      verifyEq(errs.val, 1)
+
+      // onClose raised, but the connection is still closed
+      verifyEq(c1.isClosed, true)
+
+      TestSqlConn? c2 := null
+      cp.execute |c| { c2 = c }
+      waitReaped(cp)
+      verifyEq(c2.isClosed, true)
+      verifyEq(errs.val, 1)
+    }
+    finally
+    {
+      Log.removeHandler(handler)
+      cp.close
+    }
   }
 
   Void testOpenOutsideLock()
@@ -752,6 +803,15 @@ class SqlConnPoolTest : Test
     }
   }
 
+  ** Wait for houseKeeping to reap every connection
+  private Void waitReaped(SqlConnPool cp)
+  {
+    endTime := Duration.now + 5sec
+    while (debugInt(cp.debug, "entries") > 0 && Duration.now < endTime)
+      Actor.sleep(20ms)
+    verifyEq(debugInt(cp.debug, "entries"), 0)
+  }
+
   Int debugInt(Str d, Str key)
   {
     line := d.splitLines.find { it.trimStart.startsWith("${key}:") } ?: throw Err(key)
@@ -832,6 +892,23 @@ internal const class SlowOpenPool : SqlConnPool
     opens.increment
     if (failNext.compareAndSet(true, false)) throw IOErr("open failed")
     if (slow.val) Actor.sleep(openDelay)
+  }
+}
+
+**************************************************************************
+** CloseErrPool
+**************************************************************************
+
+** Raises from the first onClose
+internal const class CloseErrPool : SqlConnPool
+{
+  new make(|This| f) : super(f) {}
+
+  const AtomicBool failNext := AtomicBool(true)
+
+  protected override Void onClose(SqlConn c)
+  {
+    if (failNext.compareAndSet(true, false)) throw IOErr("onClose failed")
   }
 }
 

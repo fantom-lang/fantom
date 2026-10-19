@@ -20,7 +20,28 @@ const class SqlConnPool
     ka := keepAliveFreq
     if (ka != null && ka >= linger)
       log.warn("SqlConnPool keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
-    startHouseKeeping
+
+    // Create the houseKeeper ActorPool
+    houseKeepingActorPool = ActorPool
+    {
+      it.name = "sqlConnPool-${counter.getAndIncrement}";
+      it.maxThreads = 1
+    }
+
+    // Create the houseKeeper Actor and start it
+    houseKeeper = Actor(houseKeepingActorPool) |msg|
+    {
+      try { onHouseKeeping }
+      catch (Err e) { log.err("SqlConnPool houseKeeping failed", e) }
+
+      if (!isClosed)
+      {
+        try { houseKeeper.sendLater(houseKeepingFreq, msg) }
+        catch (Err e) {}
+      }
+      return null
+    }
+    houseKeeper.sendLater(houseKeepingFreq, null)
   }
 
   ** Connection URI
@@ -156,12 +177,16 @@ const class SqlConnPool
   ** Return debug dump string for current state
   @NoDoc native Str debug()
 
-  ** Start the houseKeeping timer.  Must be called after the it-block has
-  ** run, since it reads `houseKeepingFreq`.
-  @NoDoc native Void startHouseKeeping()
-
-  ** Run one houseKeeping pass.  Called on the timer; exposed so tests can
-  ** drive it directly.
+  ** Run one houseKeeping pass.  Called by the houseKeeper actor; exposed
+  ** so tests can drive it directly.
   @NoDoc native Void onHouseKeeping()
+
+  ** Runs houseKeeping; killed by [close]
+  internal const ActorPool houseKeepingActorPool
+
+  ** Runs one houseKeeping pass per message, then schedules the next pass
+  private const Actor houseKeeper
+
+  private static const AtomicInt counter := AtomicInt()
 }
 
