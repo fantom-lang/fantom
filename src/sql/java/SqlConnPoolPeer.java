@@ -57,7 +57,7 @@ public class SqlConnPoolPeer
     return closed;
   }
 
-  public void close(SqlConnPool self)
+  public void closeNative(SqlConnPool self)
   {
     // remove all entries under the lock, then close them outside
     // the lock since closing may block on network I/O; wake any
@@ -73,11 +73,15 @@ public class SqlConnPoolPeer
     }
 
     // connects still in flight are closed by openReserved, which
-    // discards them once the pool is closed
-    self.houseKeepingActorPool.kill();
-
+    // discards them once the pool is closed.  Checked out and pinging
+    // entries are in use on another thread; their release, evict, and
+    // keepAlive find the pool closed and leave them
     for (int i=0; i<toClose.size(); ++i)
-      close(self, toClose.get(i));
+    {
+      Entry entry = toClose.get(i);
+      if (entry.inUse || entry.pinging) abort(self, entry);
+      else close(self, entry);
+    }
   }
 
   public void onHouseKeeping(SqlConnPool self)
@@ -176,12 +180,15 @@ public class SqlConnPoolPeer
       boolean ok = validate(self, entry);
       synchronized (this)
       {
+        // notify either way: a waiter may be blocked on this entry
+        // becoming available, or on its slot freeing up
         entry.pinging = false;
+        notifyAll();
 
         // pool closed during the ping; close already took this connection
         if (closed) continue;
 
-        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; notifyAll(); }
+        if (!ok) { entries.remove(entry); dead.add(entry); evicted++; }
       }
     }
 
@@ -274,9 +281,15 @@ public class SqlConnPoolPeer
   private void evict(SqlConnPool self, Entry entry)
   {
     // remove from pool under lock, but close outside the
-    // lock since closing may block on network I/O
-    synchronized (this) { entries.remove(entry); evicted++; notifyAll(); }
-    close(self, entry);
+    // lock since closing may block on network I/O; close
+    // already took and aborted an entry that is gone
+    boolean removed;
+    synchronized (this)
+    {
+      removed = entries.remove(entry);
+      if (removed) { evicted++; notifyAll(); }
+    }
+    if (removed) close(self, entry);
   }
 
   private Entry doAllocate(SqlConnPool self)
@@ -379,6 +392,9 @@ public class SqlConnPoolPeer
 
     synchronized (this)
     {
+      // close already took and aborted the entry
+      if (closed) return;
+
       entry.inUse = false;
       entry.leakWarned = false;
       entry.checkoutTrace = null;
@@ -424,6 +440,15 @@ public class SqlConnPoolPeer
     // a raising onClose must not leak the connection
     try { self.onClose(conn); }
     finally { conn.close(); }
+  }
+
+  // Close an entry another thread may be using
+  private void abort(SqlConnPool self, Entry entry)
+  {
+    // a reserved slot whose open never completed
+    if (entry.conn == null) return;
+    try { self.onClose(entry.conn); }
+    finally { SqlConnImplPeer.abort(entry.conn); }
   }
 
   // fan.sys.Map is qualified throughout: java.util is imported too

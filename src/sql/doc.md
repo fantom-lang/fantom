@@ -24,39 +24,47 @@ A pool of Connections is managed by the [sql::SqlConnPool] class.  To use a
 connection created by this pool, use the
 [SqlConnPool.execute](sql::SqlConnPool.execute) method.
 
-The pool runs bookkeeping on a background thread, with nothing to drive from
-the outside.  Each pass closes connections idle past `linger`, retires
-connections older than `maxLifetime`, pings idle connections due a
-`keepaliveInterval`, and warns about connections held past `leakWarn`.
+The pool runs houseKeeping every `houseKeepingFreq` on an actor it owns,
+with nothing to drive from the outside.  The constructor starts it and
+[SqlConnPool.close](sql::SqlConnPool.close) stops it.  Each pass closes
+connections idle past `linger`, retires connections older than
+`maxLifetime`, pings idle connections due a `keepAliveFreq` ping, and warns
+about connections held past `leakWarn`.
+
+Closing the pool closes idle connections, aborts connections still checked
+out by an execute callback, and raises on any new execute.
 
 Four separate timeouts apply:
 
   - `checkoutTimeout`: waiting for a connection to become available
-  - `connectTimeout`: opening a new connection
+  - `connectTimeout`: opening a new connection; enforced by the JDBC
+    driver via its 'connectTimeout' and 'socketTimeout' properties
   - `queryTimeout`: running a statement, batches included
   - `validationTimeout`: a liveness ping
 
+JDBC resolves `connectTimeout`, `queryTimeout` and `validationTimeout` in
+whole seconds; anything under a second is rounded up to one second.
+
 [SqlConnPool.stats](sql::SqlConnPool.stats) returns a snapshot of the gauges
-plus cumulative counters for checkouts, timeouts, opens, retirements and
-evictions.  `retired` counts connections closed for age; `evicted` counts
-connections closed as broken.
+plus cumulative counters for checkouts, checkout timeouts, opens,
+retirements, evictions and leak warnings.  `retired` counts connections
+closed for age; `evicted` counts connections closed as broken.
 
 ## Connections in Java
 When running in a Java VM, Fantom uses JDBC under the covers.  Using
 MySQL as an example, follow these steps to open a connection in
 the JVM:
 
-1. Ensure your JDBC driver is installed and available via
-the system class path.  The best place to stick it is in
-the "jre/lib/ext" directory.  You can use 'fan -version' to
-locate your JRE directory.  The driver is packaged
-up as something like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
+1. Ensure your JDBC driver is installed and available to Fantom.
+The best place to stick it is in the "lib/java/ext" directory of
+your Fantom installation.  The driver is packaged up as something
+like "mysql-connector-j-9.0.0.jar" or "postgresql-42.7.3.jar".
 
 2. Ensure the JDBC class is loaded into memory.  The simplest way
 to preload the class is to ensure the classname is defined in
 "etc/sql/config.props" :
 
-        java.drivers=java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
+        java.drivers=com.mysql.cj.jdbc.Driver,org.postgresql.Driver
 
 3. Open a SqlConn instance using the JDBC URL:
 
