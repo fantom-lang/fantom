@@ -9,6 +9,7 @@ package fan.sql;
 
 import java.sql.*;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import fan.sys.*;
 
@@ -30,13 +31,21 @@ public class SqlConnImplPeer
 
   public static SqlConn openDefault(String uri, String user, String pass)
   {
+    return open(uri, user, pass, null);
+  }
+
+  // Open with an optional timeout enforced by the driver on its own
+  // socket: connectTimeout bounds the TCP connect, socketTimeout bounds
+  // the handshake and is then cleared so it cannot cut off a query.  Not
+  // loginTimeout: pgjdbc runs that on a thread it abandons on timeout.
+  static SqlConn open(String uri, String user, String pass, Duration timeout)
+  {
     try
     {
       SqlConnImpl self = SqlConnImpl.make();
       if (uri.equals("test")) return TestSqlConn.make();
 
-      // test hook "test:<millis>": a slow connect that does not answer an
-      // interrupt, as a driver blocked in a socket connect does not
+      // test hook "test:<millis>": a slow connect
       if (uri.startsWith("test:"))
       {
         long end = System.currentTimeMillis() + Long.parseLong(uri.substring(5));
@@ -44,15 +53,37 @@ public class SqlConnImplPeer
           { try { Thread.sleep(10); } catch (InterruptedException e) {} }
         return TestSqlConn.make();
       }
-      if (user == null)
+
+      // no user is certificate auth
+      Properties props = new Properties();
+      if (user != null) props.setProperty("user", user);
+      if (pass != null) props.setProperty("password", pass);
+      if (timeout != null)
       {
-        //support for certificate auth
-        self.peer.jconn = DriverManager.getConnection(uri);
+        // whole seconds, rounded up; 0 would mean no timeout
+        String secs = String.valueOf(Math.max(1L, (timeout.millis() + 999L) / 1000L));
+        props.setProperty("connectTimeout", secs);
+        props.setProperty("socketTimeout", secs);
       }
-      else
+
+      try
       {
-        self.peer.jconn = DriverManager.getConnection(uri, user, pass);
+        self.peer.jconn = DriverManager.getConnection(uri, props);
       }
+      catch (SQLException e)
+      {
+        if (timeout != null && isTimeout(e))
+          throw TimeoutErr.make("SqlConn open exceeded connectTimeout (" + timeout + ")");
+        throw e;
+      }
+
+      try
+      {
+        if (timeout != null) self.peer.jconn.setNetworkTimeout(DIRECT, 0);
+      }
+      catch (SQLFeatureNotSupportedException e) {}
+      catch (SQLException e) { self.peer.jconn.close(); throw e; }
+
       self.peer.supportsGetGenKeys = self.peer.jconn.getMetaData().supportsGetGeneratedKeys();
       return self;
     }
@@ -60,6 +91,19 @@ public class SqlConnImplPeer
     {
       throw err(e);
     }
+  }
+
+  // setNetworkTimeout requires an executor; clearing the timeout needs none
+  private static final java.util.concurrent.Executor DIRECT = new java.util.concurrent.Executor()
+  {
+    public void execute(Runnable r) { r.run(); }
+  };
+
+  private static boolean isTimeout(Throwable e)
+  {
+    for (; e != null; e = e.getCause())
+      if (e instanceof java.net.SocketTimeoutException) return true;
+    return false;
   }
 
   public static SqlConn wrapConnection(java.sql.Connection jconn)
