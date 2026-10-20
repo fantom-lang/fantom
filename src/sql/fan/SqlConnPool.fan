@@ -19,12 +19,12 @@ const class SqlConnPool
     if (f != null) f(this)
     ka := keepAliveFreq
     if (ka != null && ka >= linger)
-      log.warn("SqlConnPool keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
+      log.warn("$id: keepAliveFreq ($ka) must be less than linger ($linger) to take effect")
 
     // Create the houseKeeper ActorPool
     houseKeepingActorPool = ActorPool
     {
-      it.name = "sqlConnPool-${counter.getAndIncrement}";
+      it.name = this.id;
       it.maxThreads = 1
     }
 
@@ -32,7 +32,7 @@ const class SqlConnPool
     houseKeeper = Actor(houseKeepingActorPool) |msg|
     {
       try { onHouseKeeping }
-      catch (Err e) { log.err("SqlConnPool houseKeeping failed", e) }
+      catch (Err e) { log.err("$id: houseKeeping failed", e) }
 
       if (!isClosed)
       {
@@ -62,11 +62,12 @@ const class SqlConnPool
   const Duration checkoutTimeout := 30sec
 
   ** Max time to wait when opening a new connection before raising
-  ** TimeoutErr, or null to wait as long as the driver allows.  Enforced
+  ** TimeoutErr, or null to wait as long as the driver allows, which may
+  ** be forever if the server stalls the handshake.  Enforced
   ** by the driver via the 'connectTimeout' and 'socketTimeout' connection
   ** properties.  JDBC resolves it in whole seconds; anything under a
   ** second is rounded up to one second.
-  const Duration? connectTimeout := null
+  const Duration? connectTimeout := 10sec
 
   ** Time to linger an idle connection before closing it.
   const Duration linger := 5min
@@ -83,8 +84,10 @@ const class SqlConnPool
   const Duration leakWarn := 2min
 
   ** Default timeout applied to every statement created on connections from
-  ** this pool, or null for no timeout.  Applies per execution, so a batch
-  ** must complete within it.  JDBC resolves it in whole seconds; anything
+  ** this pool, or null for no timeout.  Restored when a connection is
+  ** released, so a callback that changes the connection's timeout cannot
+  ** leave it changed for the next borrower.  Applies per execution, so a
+  ** batch must complete within it.  JDBC resolves it in whole seconds; anything
   ** under a second is rounded up to one second.
   const Duration? queryTimeout := 60sec
 
@@ -186,6 +189,9 @@ const class SqlConnPool
   ** Run one houseKeeping pass.  Called by the houseKeeper actor; exposed
   ** so tests can drive it directly.
   @NoDoc native Void onHouseKeeping()
+
+  ** Identifies this pool in log messages, errors, and thread names
+  internal const Str id := "sqlConnPool-${counter.getAndIncrement}"
 
   ** Runs houseKeeping; killed by [close]
   internal const ActorPool houseKeepingActorPool
