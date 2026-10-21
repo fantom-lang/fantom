@@ -117,30 +117,33 @@ class WebSocket
 
   **
   ** Receive a message which is returned as either a Str or Buf.
-  ** Raise IOErr if socket has error or is closed.
+  ** Raise IOErr if socket has error or is closed.  The max parameter
+  ** specifies the maximum payload size in bytes; if a frame declares
+  ** a larger payload then the socket is closed and IOErr raised before
+  ** the payload is read.  If max is null, then no limit is enforced.
   **
-  Obj? receive()
+  Obj? receive(Int? max := null)
   {
-    receiveBuf(null)
+    receiveBuf(null, max)
   }
 
   **
   ** Receive Buf message into given buffer.
   ** Raise IOErr if socket has error or is closed.
   **
-  @NoDoc Obj? receiveBuf(Buf? buf)
+  @NoDoc Obj? receiveBuf(Buf? buf, Int? max := null)
   {
     loop := true
     while (loop)
     {
-      msg := doReceive(buf)
+      msg := doReceive(buf, max)
       if (msg === receiveAgain) continue
       return msg
     }
     throw Err()
   }
 
-  private Obj? doReceive(Buf? payload)
+  private Obj? doReceive(Buf? payload, Int? max)
   {
     // check if we have a frame or at end of stream
     in := socket.in
@@ -159,6 +162,13 @@ class WebSocket
     // if len is 126 or 127, it len is next 2 or 8 bytes
     if (len == 126) len = in.readU2
     else if (len == 127) len = in.readS8
+
+    // check size before we allocate; stream is unusable after this
+    if (len < 0 || (max != null && len > max))
+    {
+      close
+      throw IOErr("WebSocket payload exceeds max size: $len > $max")
+    }
 
     // if payload is masked, get 32-bit masking key
     maskKey := masked ? in.readBufFully(null, 4) : null
