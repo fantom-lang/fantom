@@ -39,6 +39,13 @@ class LineReaderTest : Test
 
     verifyLines(Str?["", "\n", "", "\r", "", "\r\n", "", "\n"])
     verifyLines(Str?["what", "\r", "are", "\r", "", "\r", "you", "\r\n", "", "\r\n", "even", "\n", "doing", null])
+
+    // chars outside the BMP are two UTF-16 chars
+    emoji := "\u{1F3E2}"
+    verifyLines(Str?["${emoji} building", null])
+    verifyLines(Str?["${emoji}", "\n", "${emoji}x", "\n", "trash ${emoji}", null])
+    verifyLines(Str?["a".mult(sz-1) + emoji + "b", "\n", "c", null])
+    verifyLines(Str?[emoji.mult(sz) + "b", "\n", "c", null])
   }
 
   private Void verifyLines(Str?[] parts)

@@ -54,7 +54,7 @@ internal final class Esc
       byte := buf.read
       while (byte != null)
       {
-        sb.addChar('%').add(byte.toHex.upper)
+        sb.addChar('%').add(byte.toHex(2).upper)
         byte = buf.read
       }
     }

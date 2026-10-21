@@ -133,7 +133,7 @@ internal class LineReader
     }
     if (read > 0)
     {
-      this.limit = read
+      this.limit = cbuf.size
       this.pos = 0
     }
   }

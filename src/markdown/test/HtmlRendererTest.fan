@@ -124,11 +124,14 @@ class HtmlRendererTest : Test
     // Other characters are percent-encoded (LATIN SMALL LETTER A WITH DIAERESIS)
     verifyEq("<p><a href=\"%C3%A4\">a</a></p>\n",
       percentEnc.render(parse("[a](ä)")));
+    // Bytes below 0x10 are zero padded
+    verifyEq("<p><a href=\"a%01b\">a</a></p>\n",
+      percentEnc.render(parse("[a](<a\u0001b>)")));
 
     // TODO:FIXIT - utf-8 string issues in fantom
     // Other characters are percent-encoded (MUSICAL SYMBOL G CLEF, surrogate pair in UTF-16)
     // verifyEq("<p><a href=\"%F0%9D%84%9E\">a</a></p>\n",
-    //   percentEnc.render(parse("[a](\uD834\uDD1E)")));
+    //   percentEnc.render(parse("[a](𝄞)")));
   }
 
   // TODO:FIXIT - custom overrides
