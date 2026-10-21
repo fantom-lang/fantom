@@ -41,7 +41,7 @@ In the example above `id` and `name` are instance fields on the
 class `Thing`.  We use the `:=` operator to provide an initial value
 for the field which is automatically assigned before the constructor
 is executed.  If an initial value is not provided, then all fields default
-to `null` with the exception of [value-types](TypeSystem#valuetypes).
+to `null` with the exception of [value-types](TypeSystem#value-types).
 
 We access fields using the `.` operator:
 
@@ -127,7 +127,7 @@ let them default to null), but you can't assign to them outside of the
 construction process.
 
 Fantom also allows const instance fields to be set during the construction
-process via an [it-block](Closures#itblocks):
+process via an [it-block](Closures#it-blocks):
 
     class Thing
     {

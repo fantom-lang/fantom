@@ -58,7 +58,7 @@ Any type or slot can be annotated with facets using the `@` symbol:
     class Employee {}
 
 Struct facets assign their field values inside curly braces similiar to
-an [it-block](Closures#itblocks).  Only simple literal expressions may
+an [it-block](Closures#it-blocks).  Only simple literal expressions may
 be used in facet annotations which the compiler can determine how to
 serialize.
 

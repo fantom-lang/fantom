@@ -218,7 +218,7 @@ An example of a serializable class and an serialized instance:
       children = ["Bart", "Lisa", "Maggie"]
     }
 
-You may use this syntax directly in source code via [it-blocks](Expressions#itblocks).
+You may use this syntax directly in source code via [it-blocks](Expressions#it-blocks).
 
 ## Collection
 Collections are serialized just like a complex - all the fields are serialized
@@ -246,7 +246,7 @@ We can rewrite the `Person` example above as a collection:
     }
 
 This syntax is also supported directly in source code via
-[with-blocks](Closures#withblocks).
+[with-blocks](Closures#with-blocks).
 
 ## Grammar
 The formal grammar of the Fantom serialization formats:

@@ -272,7 +272,7 @@ The signature of a closure function can be
 
     10.times |i| { echo(i) }
 
-[It-blocks](docLang::Closures#itblocks) are a special form of closure
+[It-blocks](docLang::Closures#it-blocks) are a special form of closure
 with an implied parameter of `it`:
 
     10.times { echo(it) }

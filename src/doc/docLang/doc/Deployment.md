@@ -38,7 +38,7 @@ underlying platform with native methods.
 When you build a pod with native methods, it generates a normal pod file
 which is necessary for all the reflective metadata.  But it also generates
 additional native targets:
-  - Java: classfiles are compiled and added to the pod zip (see [JavaFFI](JavaFFI#class-path--runtime))
+  - Java: classfiles are compiled and added to the pod zip (see [JavaFFI](JavaFFI#class-path---runtime))
   - JavaScript: JavaScript source file is added to pod (see [JavaScript](JavaScript#deployment))
   - DotNet: DLL is added to lib/dotnet for the pod
 

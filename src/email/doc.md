@@ -55,7 +55,7 @@ If you run into trouble, you can turn on tracing:
 
 # Email
 The [Email](email::Email) class is used to model a MIME message.  Typical
-use is to construct a Email instance using [it-blocks](docLang::Closures#itblocks):
+use is to construct a Email instance using [it-blocks](docLang::Closures#it-blocks):
 
     email := Email
     {

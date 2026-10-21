@@ -329,7 +329,7 @@ if you want to serialize it).  Simple expressions are a subset of
 [construction calls](Methods#construction-calls).
 
 ## It-Blocks
-[It-blocks](Closures#itblocks) enable you write compound expressions - they are
+[It-blocks](Closures#it-blocks) enable you write compound expressions - they are
 typically used to initialize an instance.  This feature is a clean a superset
 of how [complex](Serialization#complex) types are serialized.  An example
 it-block expression:

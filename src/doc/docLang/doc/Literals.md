@@ -22,7 +22,7 @@ The following types have a literal syntax:
   - [sys::List](#list)
   - [sys::Map](#map)
 
-The three types `Bool`, `Int`, and `Float` are [value-types](TypeSystem#valuetypes).
+The three types `Bool`, `Int`, and `Float` are [value-types](TypeSystem#value-types).
 These types are not necessarily passed as object references, but rather
 passed by value on the call stack.  When value types are coerced
 to/from reference types like `Obj` and `Num`, the compiler will

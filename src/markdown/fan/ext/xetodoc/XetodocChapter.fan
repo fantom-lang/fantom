@@ -40,6 +40,7 @@ class XetodocChapter
     }
 
     // lazily parse just heading lines
+    parser := Parser()
     proc := HeadingProcessor()
     l := XetodocHeading[,]
     lines.each |line|
@@ -50,9 +51,11 @@ class XetodocChapter
       level := 0
       while (level+1 < line.size && line[level] == '#') level++
 
-      // create heading instance
+      // anchor is generated from the heading content with markup removed
+      // so it matches the id the parser generates for the heading
       text := line[level..-1].trim
-      anchor := proc.toAnchor(text)
+      heading := parser.parse(line).firstChild as Heading
+      anchor := proc.toAnchor(heading == null ? text : HeadingProcessor.text(heading))
       h :=  XetodocHeading(level, text, anchor)
 
       // add to accumulator collections

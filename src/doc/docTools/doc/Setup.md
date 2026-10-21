@@ -133,7 +133,7 @@ You can verify your platform running "fan -version".
 The preferred mechanism to add Java JARs into your Fantom environment
 is to convert them into a pod.
 
-Also see [JavaFFI](docLang::JavaFFI#class-path--runtime).
+Also see [JavaFFI](docLang::JavaFFI#class-path---runtime).
 
 # JLine
 Running command line applications such as [fansh](Fansh) in the Java VM can

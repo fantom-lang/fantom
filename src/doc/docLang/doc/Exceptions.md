@@ -25,7 +25,7 @@ subsystems are integrated.
 All exceptions in Fantom subclass from [sys::Err].  Many APIs declare
 their own `Err` classes for modeling specific error conditions.  The
 type hierarchy is the primary mechanism used to classify exceptions
-and is used to match exceptions to [exception handlers](#trycatch-statement).
+and is used to match exceptions to [exception handlers](#try-catch-statement).
 
 All `Errs` also have a *message* and a *cause*.  Message is a human
 readable `Str` to describe the error condition.  Cause is another
