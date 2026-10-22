@@ -99,20 +99,10 @@ public class TcpSocketPeer
       }
       else
       {
-        // upgrade an existing socket
-        String javaAddr;
-        int javaPort;
-
-        if (addr == null)
-        {
-          javaAddr = wrap.peer.socket.getInetAddress().getHostAddress();
-          javaPort = wrap.peer.socket.getPort();
-        }
-        else //TLS handshake through tunnel
-        {
-          javaAddr = addr.hostname();
-          javaPort = port.intValue();
-        }
+        // upgrade an existing socket; a non-null addr is the
+        // destination of a TLS handshake through a tunnel
+        final String javaAddr = wrap.peer.peerHost(addr);
+        final int javaPort = (addr == null) ? wrap.peer.socket.getPort() : port.intValue();
 
         socket = (SSLSocket)factory.createSocket(
                    wrap.peer.socket,
@@ -128,6 +118,19 @@ public class TcpSocketPeer
       return tlsSocket;
     }
     catch (Exception e) { throw IOErr.make(e); }
+  }
+
+  // Host name used for SNI and server identity when upgrading a connected
+  // socket: the caller's string for the tunnel destination or the address
+  // passed to connect, except IPv6 literals whose brackets JSSE would treat
+  // as a DNS name
+  private String peerHost(IpAddr addr)
+  {
+    if (addr == null) addr = connectAddr;
+    if (addr == null) return socket.getInetAddress().getHostAddress();
+    final String s = addr.peer.str;
+    if (s.startsWith("[") || s.indexOf(':') >= 0) return addr.peer.java.getHostAddress();
+    return s;
   }
 
   private void configureSslSocket(SSLSocket socket, final boolean clientMode)
@@ -234,6 +237,7 @@ public class TcpSocketPeer
       // connect
       int javaTimeout = (timeout == null) ? 0 : (int)timeout.millis();
       socket.connect(new InetSocketAddress(addr.peer.java, (int)port), javaTimeout);
+      this.connectAddr = addr;
       connected(fan);
       return fan;
     }
@@ -636,6 +640,9 @@ public class TcpSocketPeer
   boolean isServer = false;
   private int inBufSize = 4096;
   private int outBufSize = 4096;
+  // Address passed to connect, keeps caller's host string for TLS upgrades
+  private IpAddr connectAddr;
+  // Address of the connected peer in numeric form, set for client and server sockets
   private IpAddr remoteAddr;
   private int remotePort;
   private SysInStream in;
