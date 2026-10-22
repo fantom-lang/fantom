@@ -74,19 +74,20 @@ public class SocketConfigPeer
           keyManagers = kmf.getKeyManagers();
         }
 
-        // create trust manager
-        TrustManager[] trustManagers = null;
+        // create trust manager; a null keystore uses the JVM default trust
+        // store, and either way the trust managers verify server host names
+        java.security.KeyStore javaTrust = null;
         if (fanTrust != null)
         {
           Buf buf = Buf.make();
           fanTrust.save(buf.out(), fanOpts);
           buf.flip();
-          java.security.KeyStore javaKeys = java.security.KeyStore.getInstance(fanTrust.format());
-          javaKeys.load(Interop.toJava(buf.in()), pwd.toCharArray());
-          TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
-          tmf.init(javaKeys);
-          trustManagers = tmf.getTrustManagers();
+          javaTrust = java.security.KeyStore.getInstance(fanTrust.format());
+          javaTrust.load(Interop.toJava(buf.in()), pwd.toCharArray());
         }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
+        tmf.init(javaTrust);
+        TrustManager[] trustManagers = HostTrustManager.wrap(tmf.getTrustManagers());
 
         // create the SSLContext for this socket config
         java.util.List<String> supported = Arrays.asList(SSLContext.getDefault().getSupportedSSLParameters().getProtocols());

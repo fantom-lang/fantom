@@ -147,6 +147,11 @@ public class TcpSocketPeer
       if (clientAuth.equals("need")) params.setNeedClientAuth(true);
       else if (clientAuth.equals("want")) params.setWantClientAuth(true);
     }
+    else
+    {
+      // verify the server certificate matches the host name connected to
+      params.setEndpointIdentificationAlgorithm("HTTPS");
+    }
 
     // application protocols
     final List protocols = (List)this.config.tlsParams.get("appProtocols");
