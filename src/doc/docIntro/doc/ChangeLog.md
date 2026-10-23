@@ -6,7 +6,7 @@ copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
 license:    Licensed under the Academic Free License version 3.0
 -->
 
-*Build 1.0.84 (working)*
+*Build 1.0.84 (23 Oct 2026)*
 - Fandoc fully converted to markdown
 - Replace legacy JS compiler with new ES compiler
 - Directory mime type x-directory/normal -> application/x-directory
@@ -19,6 +19,8 @@ license:    Licensed under the Academic Free License version 3.0
 - ConcurrentMap.removeIfEq
 - Doc.isHidden
 - WebClient strips auth headers on redirect to different origin
+- Inet fix for TLS host verification
+- SqlConnPool improvements
 - SQL executeBatch now returns BatchResult (breaking change)
 
 *Build 1.0.83 (12 Mar 2026)*

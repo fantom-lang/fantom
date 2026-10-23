@@ -178,11 +178,10 @@ class Build : BuildGroup
   @Target { help = "Generate readme.html file" }
   Void readme()
   {
-    src := scriptDir + `doc/docIntro/doc/Readme.fandoc`
-    doc := Type.find("fandoc::FandocParser").make->parse(src.name, src.in)
+    src := scriptDir + `doc/docIntro/doc/Readme.md`
+    doc := Type.find("markdown::Parser").make->parseFile(src)
     out := (scriptDir + `../readme.html`).out
-    writer := Type.find("fandoc::HtmlDocWriter").make([out])
-    doc->write(writer)
+    Type.find("markdown::HtmlRenderer").make->renderTo(out, doc)
     out.close
   }
 
