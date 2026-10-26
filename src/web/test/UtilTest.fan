@@ -87,6 +87,42 @@ class UtilTest : Test
        ])
   }
 
+  Void testParseHeadersLimits()
+  {
+    max  := WebUtil.maxHeaders
+    big  := "x".mult(WebUtil.maxTokenSize - 2)
+    fold := " " + "y".mult(4000) + "\r\n"
+
+    // header count
+    verifyHeaders((1..max).toList.join("") |i| { "X-$i: v\r\n" }, max)
+    verifyHeadersErr((1..max+1).toList.join("") |i| { "X-$i: v\r\n" })
+
+    // duplicates count as lines
+    verifyHeaders("X: v\r\n".mult(max), 1)
+    verifyHeadersErr("X: v\r\n".mult(max+1))
+
+    // total size
+    verifyHeaders((1..3).toList.join("") |i| { "X-$i: $big\r\n" }, 3)
+    verifyHeadersErr((1..5).toList.join("") |i| { "X-$i: $big\r\n" })
+
+    // folds count toward size
+    verifyHeaders("X: v\r\n" + fold.mult(10), 1)
+    verifyHeadersErr("X: v\r\n" + fold.mult(20))
+
+    // single line limit
+    verifyErr(IOErr#) { WebUtil.readLine(("z".mult(WebUtil.maxLineSize) + "\r\n").toBuf.in) }
+  }
+
+  Void verifyHeaders(Str s, Int size)
+  {
+    verifyEq(WebUtil.parseHeaders((s + "\r\n").toBuf.in).size, size)
+  }
+
+  Void verifyHeadersErr(Str s)
+  {
+    verifyErr(ParseErr#) { WebUtil.parseHeaders((s + "\r\n").toBuf.in) }
+  }
+
   Void testChunkInStream()
   {
     str := "3\r\nxyz\r\nB\r\nhello there\r\n0\r\n\r\n"

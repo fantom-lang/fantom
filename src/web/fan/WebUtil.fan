@@ -116,6 +116,8 @@ class WebUtil
     headers := Str:Str[:]
     headers.caseInsensitive = true
     Str? last := null
+    size := 0
+    count := 0
 
     // read headers into map
     while (true)
@@ -125,17 +127,23 @@ class WebUtil
       // CRLF is end of headers
       if (peek == CR) break
 
+      // bound total bytes and number of lines (folds and dups included)
+      if (size > maxHeadersSize || ++count > maxHeaders) throw ParseErr("Headers too big")
+
       // if line starts with space it is
       // continuation of last header field
       if (peek.isSpace && last != null)
       {
-        headers[last] += " " + WebUtil.readLine(in).trim
+        fold := WebUtil.readLine(in).trim
+        size += fold.size
+        headers[last] += " " + fold
         continue
       }
 
       // key/value pair
       key := token(in, ':').trim
       val := token(in, CR).trim
+      size += key.size + val.size
       if (in.read != LF)
         throw ParseErr("Invalid CRLF line ending")
 
@@ -379,10 +387,9 @@ class WebUtil
   **
   @NoDoc static Str readLine(InStream in)
   {
-    max := 65536 // 64KB
-    line := in.readLine(max)
+    line := in.readLine(maxLineSize)
     if (line == null) throw IOErr("Unexpected end of stream")
-    if (line.size == max) throw IOErr("Max request line")
+    if (line.size >= maxLineSize) throw IOErr("Max request line")
     return line
   }
 
@@ -484,7 +491,10 @@ class WebUtil
   internal const static Int LF  := '\n'
   internal const static Int HT  := '\t'
   internal const static Int SP  := ' '
-  internal const static Int maxTokenSize := 16384
+  internal const static Int maxTokenSize   := 16384
+  internal const static Int maxLineSize    := 65536
+  internal const static Int maxHeadersSize := 65536
+  internal const static Int maxHeaders     := 100
 
 }
 
