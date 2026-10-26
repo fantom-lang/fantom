@@ -523,8 +523,14 @@ class IntTest : Test
     verifyEq(97.toChar, "a")
     verifyEq(32.toChar, " ")
     verifyEq(0x1234.toChar, "\u1234")
+    verifyEq(0xffff.toChar, "\uffff")
+    verifyEq(0x10000.toChar, "\u{10000}")
+    verifyEq(0x1f601.toChar, "\ud83d\ude01")
+    verifyEq(0x10ffff.toChar, "\u{10ffff}")
+    verifyEq(0x10ffff.toChar.size, 2)
 
     verifyErr(Err#) { (-1).toChar }
+    verifyErr(Err#) { (1_114_112).toChar }
     verifyErr(Err#) { (1_114_112+1).toChar }
   }
 

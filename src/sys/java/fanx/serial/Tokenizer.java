@@ -358,7 +358,7 @@ public class Tokenizer
         case '$':   throw err("Interpolated strings unsupported");
         case '\\':  s.append(escape()); break;
         case '\r':  s.append('\n'); consume(); break;
-        default:    s.append((char)cur); consume(); break;
+        default:    s.appendCodePoint(cur); consume(); break;
       }
     }
     this.val = s.toString();
@@ -378,14 +378,14 @@ public class Tokenizer
     consume();
 
     // if \ then process as escape
-    char c;
+    int c;
     if (cur == '\\')
     {
       c = escape();
     }
     else
     {
-      c = (char)cur;
+      c = cur;
       consume();
     }
 
@@ -462,7 +462,7 @@ public class Tokenizer
       else
       {
         if (cur == '`') { consume(); break; }
-        s.append((char)cur);
+        s.appendCodePoint(cur);
         consume();
       }
     }

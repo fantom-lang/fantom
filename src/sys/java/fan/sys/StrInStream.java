@@ -64,7 +64,7 @@ public class StrInStream
     if (pos >= size) return -1;
 
     final char c = str.charAt(pos++);
-    if (Character.isHighSurrogate(c) && pos<size)
+    if (Character.isHighSurrogate(c) && pos<size && Character.isLowSurrogate(str.charAt(pos)))
     {
       final char low = str.charAt(pos++);
       return Character.toCodePoint(c, low);
@@ -79,7 +79,7 @@ public class StrInStream
     if (pos >= size) return null;
 
     final char c = str.charAt(pos++);
-    if (Character.isHighSurrogate(c) && pos<size)
+    if (Character.isHighSurrogate(c) && pos<size && Character.isLowSurrogate(str.charAt(pos)))
     {
       final char low = str.charAt(pos++);
       return (long)Character.toCodePoint(c, low);

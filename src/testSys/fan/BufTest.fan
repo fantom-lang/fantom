@@ -581,6 +581,7 @@ class BufTest : AbstractBufTest
     buf.clear; buf.writeChar('a'); verifyEq(buf.size, 1)
     buf.clear; buf.writeChar('\u00fe'); verifyEq(buf.size, 2)
     buf.clear; buf.writeChar('\uabcd'); verifyEq(buf.size, 3)
+    buf.clear; buf.writeChar('\u{1f601}'); verifyEq(buf.size, 4)
 
     buf.charset = Charset.utf16BE
     buf.clear; buf.writeChar('a'); verifyEq(buf.size, 2)

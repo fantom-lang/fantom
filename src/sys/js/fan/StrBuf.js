@@ -38,7 +38,7 @@ class StrBuf extends Obj {
   }
 
   addChar(ch) {
-    this.#str += String.fromCharCode(ch);
+    this.#str += ch < 0x10000 ? String.fromCharCode(ch) : String.fromCodePoint(ch);
     return this;
   }
 

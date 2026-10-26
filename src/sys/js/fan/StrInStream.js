@@ -44,7 +44,14 @@ class StrInStream extends InStream {
     if (this.#pushback != null && this.#pushback.length > 0)
       return this.#pushback.pop();
     if (this.#pos >= this.#size) return -1;
-    return this.#str.charCodeAt(this.#pos++);
+
+    // a surrogate pair is read as a single code point
+    const c = this.#str.charCodeAt(this.#pos++);
+    if (c >= 0xD800 && c <= 0xDBFF && this.#pos < this.#size) {
+      const lo = this.#str.charCodeAt(this.#pos);
+      if (lo >= 0xDC00 && lo <= 0xDFFF) { this.#pos++; return ((c - 0xD800) << 10) + (lo - 0xDC00) + 0x10000; }
+    }
+    return c;
   }
 
   readChar() {

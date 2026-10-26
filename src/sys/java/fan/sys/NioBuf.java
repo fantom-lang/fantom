@@ -253,7 +253,7 @@ public class NioBuf
 
     public OutStream writeChar(long c)
     {
-      charsetEncoder.encode((char)c, this);
+      charsetEncoder.encode((int)c, this);
       return this;
     }
 

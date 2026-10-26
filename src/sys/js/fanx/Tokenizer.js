@@ -351,7 +351,7 @@ fanx_Tokenizer.prototype.str = function()
       case 36/*'$'*/:   throw this.err("Interpolated strings unsupported");
       case 92/*'\\'*/:  s += this.escape(); break;
       case 13/*'\r'*/:  s += '\n'; this.consume(); break;
-      default:          s += String.fromCharCode(this.cur); this.consume(); break;
+      default:          s += this.cur < 0x10000 ? String.fromCharCode(this.cur) : String.fromCodePoint(this.cur); this.consume(); break;
     }
   }
   this.val = s;
@@ -455,7 +455,7 @@ fanx_Tokenizer.prototype.uri = function()
     else
     {
       if (this.cur == 96/*'`'*/) { this.consume(); break; }
-      s += String.fromCharCode(this.cur);
+      s += this.cur < 0x10000 ? String.fromCharCode(this.cur) : String.fromCodePoint(this.cur);
       this.consume();
     }
   }

@@ -518,13 +518,34 @@ class Str extends Obj {
 
   static chars(self) {
     const ch = List.make(Int.type$, []);
-    for (let i=0; i<self.length; i++) ch.add(self.charCodeAt(i));
+    const len = self.length;
+    for (let i=0; i<len; i++) {
+      // a surrogate pair is a single code point
+      const c = self.charCodeAt(i);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        const cp = Str.__pair(self, i, len);
+        if (cp >= 0) { ch.add(cp); ++i; continue; }
+      }
+      ch.add(c);
+    }
     return ch;
+  }
+
+  // if s[i] is a high surrogate followed by a low surrogate before end then
+  // return the code point of the pair, otherwise return -1
+  static __pair(s, i, end) {
+    if (i+1 >= end) return -1;
+    const lo = s.charCodeAt(i+1);
+    if (lo < 0xDC00 || lo > 0xDFFF) return -1;
+    return ((s.charCodeAt(i) - 0xD800) << 10) + (lo - 0xDC00) + 0x10000;
   }
 
   static fromChars(ch) {
     let s = '';
-    for (let i=0; i<ch.size(); i++) s += String.fromCharCode(ch.get(i));
+    for (let i=0; i<ch.size(); i++) {
+      const c = ch.get(i);
+      s += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
+    }
     return s;
   }
 

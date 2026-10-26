@@ -313,7 +313,7 @@ class InStream extends Obj {
     for (let i=n; i>0; --i) {
       const ch = this.__rChar();
       if (ch < 0) throw IOErr.make("Unexpected end of stream");
-      buf += String.fromCharCode(ch);
+      buf += ch < 0x10000 ? String.fromCharCode(ch) : String.fromCodePoint(ch);
     }
     return buf;
   }
@@ -340,7 +340,7 @@ class InStream extends Obj {
       }
 
       // append to working buffer
-      buf += String.fromCharCode(c);
+      buf += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
       if (buf.length >= maxChars) break;
 
       // read next char
@@ -365,7 +365,7 @@ class InStream extends Obj {
       if (c == 0) break;
 
       // append to working buffer
-      buf += String.fromCharCode(c);
+      buf += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
       if (buf.length >= maxChars) break;
 
       // read next char
@@ -401,7 +401,7 @@ class InStream extends Obj {
       }
 
       // append to working buffer
-      buf += String.fromCharCode(c);
+      buf += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
       if (buf.length >= maxChars) break;
 
       // read next char
@@ -450,11 +450,11 @@ class InStream extends Obj {
         if (normalize) {
           if (c == 13) s += String.fromCharCode(10);
           else if (last == 13 && c == 10) {}
-          else s += String.fromCharCode(c);
+          else s += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
           last = c;
         }
         else {
-          s += String.fromCharCode(c);
+          s += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
         }
       }
       return s;
@@ -576,9 +576,9 @@ class InStream extends Obj {
 
         // normal character
         if (v === null)
-          name += String.fromCharCode(c);
+          name += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
         else
-          v += String.fromCharCode(c);
+          v += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
       }
 
       const n = Str.trim(name);

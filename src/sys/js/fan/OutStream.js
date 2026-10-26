@@ -207,8 +207,15 @@ class OutStream extends Obj {
 
   writeChars(s, off=0, len=s.length-off) {
     const end = off+len;
-    for (let i=off; i<end; i++)
-      this.writeChar(s.charCodeAt(i));
+    for (let i=off; i<end; i++) {
+      // if we find a surrogate pair within range we write its code point
+      const c = s.charCodeAt(i);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        const cp = Str.__pair(s, i, end);
+        if (cp >= 0) { this.writeChar(cp); ++i; continue; }
+      }
+      this.writeChar(c);
+    }
     return this;
   }
 

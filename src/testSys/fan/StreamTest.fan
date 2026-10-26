@@ -481,6 +481,120 @@ class StreamTest : Test
   }
 
 //////////////////////////////////////////////////////////////////////////
+// Char Supplementary
+//////////////////////////////////////////////////////////////////////////
+
+  Void testCharSupplementary()
+  {
+    // chars outside the BMP are one code point but two UTF-16 chars
+    e := "\u{1f601}"
+    verifyEq(e.size, 2)
+    verifyEq(e.chars, [0x1f601])
+
+    // UTF-8 encoding at each byte length boundary
+    verifyUtf8Char(0x7f,     "7f")
+    verifyUtf8Char(0x80,     "c280")
+    verifyUtf8Char(0x7ff,    "dfbf")
+    verifyUtf8Char(0x800,    "e0a080")
+    verifyUtf8Char(0xffff,   "efbfbf")
+    verifyUtf8Char(0x10000,  "f0908080")
+    verifyUtf8Char(0x1f601,  "f09f9881")
+    verifyUtf8Char(0x10ffff, "f48fbfbf")
+
+    // strings encode surrogate pairs as a single 4 byte char
+    verifyEq(e.toBuf.toHex, "f09f9881")
+    verifyEq("a${e}b".toBuf.toHex, "61f09f988162")
+    verifyEq(Buf().print("a${e}b").toHex, "61f09f988162")
+    verifyEq(Buf().printLine(e).toHex, "f09f98810a")
+    verifyEq(Buf().writeChars("${e}${e}").toHex, "f09f9881f09f9881")
+    verifyEq("a${e}b".toBuf.readAllStr, "a${e}b")
+
+    // writeChars range that splits a surrogate pair writes the lone surrogate
+    verifyEq(Buf().writeChars("x${e}", 0, 2).toHex, "78eda0bd")
+    verifyEq(Buf().writeChars("x${e}", 2).toHex, "edb881")
+    verifyEq(Buf().writeChars("x${e}y", 1, 2).toHex, "f09f9881")
+
+    // lone high surrogate does not consume the char after it
+    lone := Str.fromChars([0xd83d, 'x'])
+    verifyEq(lone.size, 2)
+    verifyEq(lone.toBuf.toHex, "eda0bd78")
+    in := lone.in
+    verifyEq(in.readChar, 0xd83d)
+    verifyEq(in.readChar, 'x')
+    verifyEq(in.readChar, null)
+    verifyEq(lone.in.readChars(2), lone)
+    verifyEq(lone.in.readLine, lone)
+
+    // truncated 4 byte sequence
+    verifyErr(IOErr#) { Buf.fromHex("f09f98").readChar }
+
+    // every char reader on both Str.in and a UTF-8 encoded Buf
+    verifySupplementaryIn |s| { s.in }
+    verifySupplementaryIn |s| { s.toBuf.in }
+  }
+
+  private Void verifyUtf8Char(Int ch, Str hex)
+  {
+    buf := Buf().writeChar(ch)
+    verifyEq(buf.toHex, hex)
+    verifyEq(ch.toChar.toBuf.toHex, hex)
+
+    // read back, then unread and read again
+    in := buf.flip.in
+    verifyEq(in.peekChar, ch)
+    verifyEq(in.readChar, ch)
+    verifyEq(in.readChar, null)
+    in.unreadChar(ch)
+    verifyEq(in.readChar, ch)
+    verifyEq(in.readChar, null)
+  }
+
+  private Void verifySupplementaryIn(|Str->InStream| f)
+  {
+    e := "\u{1f601}"
+
+    // readChar, peekChar, unreadChar
+    in := f("a${e}b")
+    verifyEq(in.readChar, 'a')
+    verifyEq(in.peekChar, 0x1f601)
+    verifyEq(in.readChar, 0x1f601)
+    in.unreadChar(0x1f601)
+    verifyEq(in.readChar, 0x1f601)
+    verifyEq(in.readChar, 'b')
+    verifyEq(in.readChar, null)
+
+    // readChars counts code points
+    verifyEq(f("a${e}b").readChars(3), "a${e}b")
+    verifyEq(f("${e}${e}x").readChars(2), "${e}${e}")
+
+    // readLine, readStrToken, readNullTerminatedStr
+    in = f("a${e}\n${e}b\r\n${e}")
+    verifyEq(in.readLine, "a${e}")
+    verifyEq(in.readLine, "${e}b")
+    verifyEq(in.readLine, e)
+    verifyEq(in.readLine, null)
+    in = f("${e}x ${e}")
+    verifyEq(in.readStrToken, "${e}x")
+    verifyEq(in.readChar, ' ')
+    verifyEq(in.readStrToken, e)
+    verifyEq(f("x${e}\u0000y").readNullTerminatedStr, "x${e}")
+
+    // readAllStr, readAllLines
+    verifyEq(f("a${e}\r\nb${e}").readAllStr, "a${e}\nb${e}")
+    verifyEq(f("a${e}\r\nb${e}").readAllStr(false), "a${e}\r\nb${e}")
+    verifyEq(f("a${e}\n${e}").readAllLines, ["a${e}", e])
+
+    // readProps
+    verifyEq(f("k${e}=v${e}\nx=${e}").readProps, ["k${e}":"v${e}", "x":e])
+
+    // readObj: str, uri, char literals
+    verifyEq(f("\"a${e}b\"").readObj, "a${e}b")
+    verifyEq(f("`/a${e}b`").readObj, `/a${e}b`)
+    verifyEq(f("'${e}'").readObj, 0x1f601)
+    verifyEq(f("[\"${e}\", '${e}']").readObj, Obj["${e}", 0x1f601])
+  }
+
+//////////////////////////////////////////////////////////////////////////
 // Char UTF-16BE
 //////////////////////////////////////////////////////////////////////////
 

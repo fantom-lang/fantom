@@ -459,7 +459,7 @@ public class InStream
     {
       int ch = rChar();
       if (ch < 0) throw IOErr.make("Unexpected end of stream");
-      buf.append((char)ch);
+      buf.appendCodePoint(ch);
     }
     return buf.toString();
   }
@@ -766,9 +766,9 @@ public class InStream
 
         // normal character
         if (val == null)
-          name.append((char)c);
+          name.appendCodePoint(c);
         else
-          val.append((char)c);
+          val.appendCodePoint(c);
       }
 
       String n = FanStr.makeTrim(name);

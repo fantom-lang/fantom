@@ -676,6 +676,14 @@ class FileTest : Test
     fb.readBuf(b, 7000)
     verifyRegion(b, 200, fb, 100, 7000)
 
+    // char outside the BMP
+    b.seek(19_000)
+    b.writeChar('\u{1f601}')
+    verifyEq(b.pos, 19_004)
+    verifyEq(b[19_000..19_003].toHex, "f09f9881")
+    b.seek(19_000)
+    verifyEq(b.readChar, 0x1f601)
+
     b.close
     fb.close
 

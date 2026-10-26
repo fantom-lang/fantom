@@ -309,6 +309,10 @@ class Utf8Encoder extends CharsetEncoder {
     if (c <= 0x007F) {
       outStream.write(c);
     }
+    else if (c > 0xFFFF) {
+      // kept out of line so the common cases stay small and fast
+      this.#encodeOut4(c, outStream);
+    }
     else if (c > 0x07FF) {
       outStream.write(0xE0 | ((c >>> 12) & 0x0F))
         .write(0x80 | ((c >>>  6) & 0x3F))
@@ -320,18 +324,31 @@ class Utf8Encoder extends CharsetEncoder {
     }
   }
 
+  #encodeOut4(c, outStream) {
+    outStream.write(0xF0 | ((c >>> 18) & 0x07))
+      .write(0x80 | ((c >>> 12) & 0x3F))
+      .write(0x80 | ((c >>>  6) & 0x3F))
+      .write(0x80 | ((c >>>  0) & 0x3F));
+  }
+
   encodeIn(c, inStream) {
     if (c <= 0x007F) {
       inStream.unread(c);
     }
-    else if (c > 0x07FF) {
+    else if (c <= 0x07FF) {
+      inStream.unread(0x80 | ((c >>  0) & 0x3F))
+              .unread(0xC0 | ((c >>  6) & 0x1F));
+    }
+    else if (c <= 0xFFFF) {
       inStream.unread(0x80 | ((c >>  0) & 0x3F))
         .unread(0x80 | ((c >>  6) & 0x3F))
         .unread(0xE0 | ((c >> 12) & 0x0F));
     }
     else {
       inStream.unread(0x80 | ((c >>  0) & 0x3F))
-              .unread(0xC0 | ((c >>  6) & 0x1F));
+        .unread(0x80 | ((c >>  6) & 0x3F))
+        .unread(0x80 | ((c >> 12) & 0x3F))
+        .unread(0xF0 | ((c >> 18) & 0x07));
     }
   }
 
@@ -363,10 +380,7 @@ class Utf8Encoder extends CharsetEncoder {
         c4 = inStream.read();
         if (((c2 & 0xC0) != 0x80) || ((c3 & 0xC0) != 0x80) || ((c4 & 0xC0) != 0x80))
           throw IOErr.make("Invalid UTF-8 encoding");
-        // Java can't handle chars in this upper / extended range
-        // so return a replacement character instead
-        // see https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character
-        return 0xFFFD;
+        return (((c & 0x07) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | ((c4 & 0x3F) << 0));
 
     default:
         throw IOErr.make("Invalid UTF-8 encoding");

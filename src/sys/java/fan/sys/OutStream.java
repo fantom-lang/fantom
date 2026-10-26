@@ -292,9 +292,9 @@ public class OutStream
     for (int i=off; i<end; ++i)
     {
       final char c = s.charAt(i);
-      // if we find a high surrogate and there is at least one more char
-      // we write the encoded code point for this surrogate pair
-      if (Character.isHighSurrogate(c) && i+1<end)
+      // if we find a surrogate pair within range we write the encoded
+      // code point for this surrogate pair
+      if (Character.isHighSurrogate(c) && i+1<end && Character.isLowSurrogate(s.charAt(i+1)))
       {
         ++i;
         final char low = s.charAt(i);

@@ -275,8 +275,8 @@ static shifta(a, b) { let x = a >> b; return x; }
   static toDecimal(val) { return Decimal.make(val); }
 
   static toChar(self) {
-    if (self < 0 || self > 0xFFFF) throw Err.make("Invalid unicode char: " + self);
-    return String.fromCharCode(self);
+    if (self < 0 || self > 0x10FFFF) throw Err.make("Invalid unicode char: " + self);
+    return self < 0x10000 ? String.fromCharCode(self) : String.fromCodePoint(self);
   }
 
   static toHex(self, width=null) {

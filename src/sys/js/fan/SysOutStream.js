@@ -113,7 +113,7 @@ class ConsoleOutStream extends OutStream {
   #buf = "";
   writeChar(c) {
     if (c == 10) this.flush();
-    else this.#buf += String.fromCharCode(c);
+    else this.#buf += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
   }
   write(v) {
     if (v == 10) this.flush();
