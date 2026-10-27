@@ -288,8 +288,14 @@ class OutStream extends Obj {
         continue;
       }
 
-      // normal character
-      this.writeChar(ch);
+      // normal character, a surrogate pair is written as a single code point
+      if (ch >= 0xD800 && ch <= 0xDBFF && peek >= 0xDC00 && peek <= 0xDFFF) {
+        this.writeChar(((ch - 0xD800) << 10) + (peek - 0xDC00) + 0x10000);
+        ++i;
+      }
+      else {
+        this.writeChar(ch);
+      }
     }
   }
 
@@ -394,6 +400,15 @@ class OutStream extends Obj {
 
         // default
         default:
+          // a surrogate pair is written as a single code point
+          if (ch >= 0xD800 && ch <= 0xDBFF) {
+            const cp = Str.__pair(s, i, s.length);
+            if (cp >= 0) {
+              if (!escUnicode) this.writeChar(cp); else this.#writeXmlEsc(cp);
+              ++i;
+              break;
+            }
+          }
           if (ch <= 0xf7 || !escUnicode)
             this.writeChar(ch);
           else
@@ -410,6 +425,10 @@ class OutStream extends Obj {
     this.writeChar(38);
     this.writeChar(35);
     this.writeChar(120);
+    if (ch > 0xffff) {
+      if (ch > 0xfffff) this.writeChar(hex.charCodeAt((ch >>> 20) & 0xf));
+      this.writeChar(hex.charCodeAt((ch >>> 16) & 0xf));
+    }
     if (ch > 0xff) {
       this.writeChar(hex.charCodeAt((ch >>> 12) & 0xf));
       this.writeChar(hex.charCodeAt((ch >>> 8)  & 0xf));

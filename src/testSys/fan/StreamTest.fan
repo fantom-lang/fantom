@@ -509,6 +509,21 @@ class StreamTest : Test
     verifyEq(Buf().writeChars("${e}${e}").toHex, "f09f9881f09f9881")
     verifyEq("a${e}b".toBuf.readAllStr, "a${e}b")
 
+    // serialization, props, and xml encode surrogate pairs as a single 4 byte char
+    verifyEq(Buf().writeObj("a${e}b").toHex, "2261f09f98816222")
+    verifyEq(Buf().writeObj(`/a${e}`).toHex, "602f61f09f988160")
+    verifyEq(Buf().writeObj(Str.fromChars([0xd83d, 'x'])).toHex, "22eda0bd7822")
+    verifyEq(Buf().writeProps(["k":"a${e}b"]).toHex, "6b3d61f09f9881620a")
+    verifyEq(Buf().writeXml("a${e}b").toHex, "61f09f988162")
+    verifyEq(Buf().writeXml("a${e}b", OutStream.xmlEscUnicode).flip.readAllStr, "a&#x1f601;b")
+    verifyEq(Buf().writeXml("\u{10ffff}", OutStream.xmlEscUnicode).flip.readAllStr, "&#x10ffff;")
+    sb := StrBuf()
+    sb.out.writeObj("a${e}b")
+    sb.out.writeXml(e, OutStream.xmlEscUnicode)
+    verifyEq(sb.toStr, "\"a${e}b\"&#x1f601;")
+    verifyEq(Buf().writeObj("a${e}b").flip.readObj, "a${e}b")
+    verifyEq(Buf().writeProps(["k":"a${e}b"]).flip.readProps, ["k":"a${e}b"])
+
     // writeChars range that splits a surrogate pair writes the lone surrogate
     verifyEq(Buf().writeChars("x${e}", 0, 2).toHex, "78eda0bd")
     verifyEq(Buf().writeChars("x${e}", 2).toHex, "edb881")

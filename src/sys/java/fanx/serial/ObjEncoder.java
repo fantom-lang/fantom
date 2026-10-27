@@ -304,7 +304,12 @@ public class ObjEncoder
         case '"':  if (quote == '"') w('\\').w('"'); else w(c); break;
         case '`':  if (quote == '`') w('\\').w('`'); else w(c); break;
         case '$':  w('\\').w('$'); break;
-        default:   w(c);
+        default:
+          // a surrogate pair is written as a single code point
+          if (Character.isHighSurrogate(c) && i+1<len && Character.isLowSurrogate(s.charAt(i+1)))
+            w(Character.toCodePoint(c, s.charAt(++i)));
+          else
+            w(c);
       }
     }
     return w(quote);
@@ -321,7 +326,14 @@ public class ObjEncoder
   {
     int len = s.length();
     for (int i=0; i<len; ++i)
-      out.writeChar((int)s.charAt(i));
+    {
+      // a surrogate pair is written as a single code point
+      final char c = s.charAt(i);
+      if (Character.isHighSurrogate(c) && i+1<len && Character.isLowSurrogate(s.charAt(i+1)))
+        out.writeChar(Character.toCodePoint(c, s.charAt(++i)));
+      else
+        out.writeChar((int)c);
+    }
     return this;
   }
 

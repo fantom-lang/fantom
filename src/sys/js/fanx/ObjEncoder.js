@@ -303,7 +303,15 @@ fanx_ObjEncoder.prototype.wStrLiteral = function(s, quote)
       case '"':  if (quote == '"') this.w('\\').w('"'); else this.w(c); break;
       case '`':  if (quote == '`') this.w('\\').w('`'); else this.w(c); break;
       case '$':  this.w('\\').w('$'); break;
-      default:   this.w(c);
+      default: {
+        // a surrogate pair is written as a single code point
+        var code = s.charCodeAt(i);
+        if (code >= 0xD800 && code <= 0xDBFF && i+1 < len) {
+          var lo = s.charCodeAt(i+1);
+          if (lo >= 0xDC00 && lo <= 0xDFFF) { code = ((code - 0xD800) << 10) + (lo - 0xDC00) + 0x10000; ++i; }
+        }
+        this.out.writeChar(code);
+      }
     }
   }
   return this.w(quote);
@@ -320,7 +328,16 @@ fanx_ObjEncoder.prototype.w = function(s)
 {
   var len = s.length;
   for (var i=0; i<len; ++i)
-    this.out.writeChar(s.charCodeAt(i));
+  {
+    // a surrogate pair is written as a single code point
+    var c = s.charCodeAt(i);
+    if (c >= 0xD800 && c <= 0xDBFF)
+    {
+      var cp = Str.__pair(s, i, len);
+      if (cp >= 0) { this.out.writeChar(cp); ++i; continue; }
+    }
+    this.out.writeChar(c);
+  }
   return this;
 }
 

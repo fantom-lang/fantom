@@ -211,7 +211,7 @@ class Buf extends Obj {
 
   writeXml(s, flags) { this.__out.writeXml(s, flags); return this; }
 
-  writeProps(props, close) { return this.__out.writeProps(props, close); }
+  writeProps(props, close) { this.__out.writeProps(props, close); return this; }
 
 //////////////////////////////////////////////////////////////////////////
 // InStream

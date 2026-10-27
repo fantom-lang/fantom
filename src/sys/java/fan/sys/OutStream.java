@@ -385,8 +385,16 @@ public class OutStream
         continue;
       }
 
-      // normal character
-      writeChar(ch);
+      // normal character, a surrogate pair is written as a single code point
+      if (Character.isHighSurrogate((char)ch) && peek >= 0 && Character.isLowSurrogate((char)peek))
+      {
+        writeChar(Character.toCodePoint((char)ch, (char)peek));
+        ++i;
+      }
+      else
+      {
+        writeChar(ch);
+      }
     }
   }
 
@@ -463,10 +471,16 @@ public class OutStream
 
         // default
         default:
-          if (ch <= 0xf7 || !escUnicode)
-            writeChar(ch);
+        {
+          // a surrogate pair is written as a single code point
+          int cp = ch;
+          if (Character.isHighSurrogate(ch) && i+1<len && Character.isLowSurrogate(s.charAt(i+1)))
+            cp = Character.toCodePoint(ch, s.charAt(++i));
+          if (cp <= 0xf7 || !escUnicode)
+            writeChar(cp);
           else
-            writeXmlEsc(ch);
+            writeXmlEsc(cp);
+        }
       }
     }
     return this;
@@ -480,6 +494,11 @@ public class OutStream
     enc.encode('&', this);
     enc.encode('#', this);
     enc.encode('x', this);
+    if (ch > 0xffff)
+    {
+      if (ch > 0xfffff) enc.encode(hex.charAt((ch >> 20) & 0xf), this);
+      enc.encode(hex.charAt((ch >> 16) & 0xf), this);
+    }
     if (ch > 0xff)
     {
       enc.encode(hex.charAt((ch >> 12) & 0xf), this);
