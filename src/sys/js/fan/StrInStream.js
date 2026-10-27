@@ -65,6 +65,26 @@ class StrInStream extends InStream {
     return this;
   }
 
+  readAllStr(normalizeNewlines=true) {
+    try {
+      // pushback chars followed by the rest of the string
+      let s = "";
+      while (this.#pushback != null && this.#pushback.length > 0) {
+        const c = this.#pushback.pop();
+        s += c < 0x10000 ? String.fromCharCode(c) : String.fromCodePoint(c);
+      }
+      s += this.#str.substring(this.#pos);
+      this.#pos = this.#size;
+
+      // normalize CR LF and lone CR to LF
+      if (normalizeNewlines && s.indexOf("\r") >= 0) s = s.replace(/\r\n?/g, "\n");
+      return s;
+    }
+    finally {
+      try { this.close(); } catch (err) { Err.make(err).trace(); }
+    }
+  }
+
   close() { return true; }
 
 }

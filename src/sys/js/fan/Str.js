@@ -568,7 +568,7 @@ class Str extends Obj {
     // NOTE: these escape sequences are duplicated in ObjEncoder
     const len = self.length;
     for (let i=0; i<len; ++i) {
-      const c = self.charAt(i);
+      let c = self.charAt(i);
       switch (c)
       {
         case '\n': s += '\\' + 'n'; break;
@@ -580,19 +580,21 @@ class Str extends Obj {
         case '`':  if (q == '`')  s += '\\' + '`';  else s += c; break;
         case '\'': if (q == '\'') s += '\\' + '\''; else s += c; break;
         case '$':  s += '\\' + '$'; break;
-        default:
-          var hex  = function(x) { return "0123456789abcdef".charAt(x); }
-          var code = c.charCodeAt(0);
+        default: {
+          // a surrogate pair is encoded as a single code point
+          let code = c.charCodeAt(0);
+          if (code >= 0xD800 && code <= 0xDBFF) {
+            const cp = Str.__pair(self, i, len);
+            if (cp >= 0) { code = cp; c = self.substring(i, i+2); ++i; }
+          }
           if (code < 32 || (escapeUnicode && code > 127)) {
-            s += '\\' + 'u'
-              + hex((code>>12)&0xf)
-              + hex((code>>8)&0xf)
-              + hex((code>>4)&0xf)
-              + hex(code & 0xf);
+            // always encode using \u{X} encoding
+            s += '\\' + 'u' + '{' + code.toString(16) + '}';
           }
           else {
             s += c;
           }
+        }
       }
     }
 

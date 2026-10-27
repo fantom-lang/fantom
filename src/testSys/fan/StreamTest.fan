@@ -1010,6 +1010,33 @@ class StreamTest : Test
     in.close
   }
 
+  Void testReadAllStrStrIn()
+  {
+    // Str.in has its own readAllStr, verify it matches the generic InStream version
+    strs := ["", "abc", "\r", "\n", "\r\n", "a\rb", "a\r\nb", "\r\r\n\n\r", "end\r", "\u{1f601}\r\n\u{1f601}", ReadLinesOut.join]
+    strs.each |s|
+    {
+      verifyEq(s.in.readAllStr, s.toBuf.in.readAllStr, s.toCode)
+      verifyEq(s.in.readAllStr(false), s, s.toCode)
+    }
+
+    // pushback chars come first and newlines normalize across the boundary
+    in := "\nx".in
+    in.unreadChar('\r')
+    verifyEq(in.readAllStr, "\nx")
+    in = "abc".in
+    verifyEq(in.readChar, 'a')
+    in.unreadChar('\u{1f601}')
+    in.unreadChar('z')
+    verifyEq(in.readAllStr(false), "z\u{1f601}bc")
+
+    // stream is consumed
+    in = "abc".in
+    verifyEq(in.readAllStr, "abc")
+    verifyEq(in.readChar, null)
+    verifyEq(in.readAllStr, "")
+  }
+
   const static Str[] ReadLinesOut := [ "Line 1\n", "Line 2\n", "Line 3 \r",
     "  Line 4  \r\n", "Line 5\r", "\r", "\r\n", "\n", "Line 9" ]
 
