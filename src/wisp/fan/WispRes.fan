@@ -60,7 +60,7 @@ internal class WispRes : WebRes
     set
     {
       checkUncommitted
-      &statusPhrase = it
+      &statusPhrase = it?.replace("\r", " ")?.replace("\n", " ") // prevent response splitting
     }
   }
 
