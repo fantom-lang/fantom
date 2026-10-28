@@ -364,12 +364,6 @@ class ItBlockTest : CompilerTest
   // try with non-final (reassigned) catch variable
   Void testCatchNonFinal()
   {
-    // this test was broken with a fix to the local def fix in ClosureVars
-    //
-    // // replace original initialization with wrapper construction
-    // stmt.init  = initWrapper(stmt.loc, stmt.var, init)
-    // stmt.ctype = stmt.init.ctype  <--- broke this test
-
     compile(
      "class Acme
       {

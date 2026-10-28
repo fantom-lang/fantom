@@ -198,6 +198,9 @@ class ClosureVars : CompilerStep
   **
   private Stmt[]? fixLocalDef(LocalDefStmt stmt)
   {
+    // catch vars keep err type; CodeAsm generates the wrapper
+    if (stmt.isCatchVar) return null
+
     // get the initial value to pass to wrapper constructor
     Expr? init
     if (stmt.init == null)
