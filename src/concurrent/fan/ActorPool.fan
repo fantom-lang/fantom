@@ -110,6 +110,7 @@ native const class ActorPool
   ** NOTE: this method is marked as NoDoc, it is provided for low level
   ** access to tune the actor pool, but it is subject to change.
   **
-  @NoDoc const Duration maxTimeBeforeYield := 5sec
+  @NoDoc const Duration maxTimeBeforeYield := 1sec
 
 }
+

@@ -254,7 +254,7 @@ public class Actor
       // then check if its time to yield our thread
       if (pool.hasPending())
       {
-        long curTicks = Duration.nowTicks();
+        long curTicks = Duration.nowFast().ticks;
         if (curTicks - startTicks >= maxTicks) break;
       }
     }
