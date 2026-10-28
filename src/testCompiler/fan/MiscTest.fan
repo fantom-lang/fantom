@@ -1189,7 +1189,7 @@ class MiscTest : CompilerTest
 
     obj := pod.types[1].make
     m := obj.typeof.method("test")
-    verifyEq(m.callOn(obj, null), ["a":"Alpha", "b":"Beta"])
+    verifyEq(m.callOn(obj, null), ["a":"alpha", "b":"beta"])
   }
 }
 

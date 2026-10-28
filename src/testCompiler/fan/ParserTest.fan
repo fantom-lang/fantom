@@ -759,9 +759,7 @@ class ParserTest : CompilerTest
 
     // index
     expr = verifyShortcut("x[y]",  ShortcutOp.get,   Token.lbracket, ["x", "y"])
-    expr = verifyExpr("x[y] = z",  ExprId.assign)
-      verifyEq(expr->lhs->id, ExprId.shortcut);
-      verifyEq(expr->lhs->op, ShortcutOp.get);
+    expr = verifyShortcut("x[y] = z",  ShortcutOp.set,   Token.lbracket, ["x", "y", "z"])
 
     // cast
     expr = verifyExpr("(Int)x", ExprId.coerce);

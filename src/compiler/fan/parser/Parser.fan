@@ -1212,11 +1212,28 @@ public class Parser : CompilerSupport
     if (curt.isAssign)
     {
       if (curt === Token.assign)
-        return BinaryExpr(expr, consume.kind, assignExpr)
+        return indexedSet(expr, consume.kind, assignExpr)
       else
         return ShortcutExpr.makeBinary(expr, consume.kind, assignExpr)
     }
     return expr
+  }
+
+  **
+  ** If lhs is the [] shortcut then "a[b] = c" is "a.set(b, c)",
+  ** otherwise return normal assignment expression.  We must map
+  ** to set before ResolveExpr since type might not define get.
+  **
+  private Expr indexedSet(Expr lhs, Token assign, Expr rhs)
+  {
+    shortcut := lhs as ShortcutExpr
+    if (shortcut == null || shortcut.op !== ShortcutOp.get)
+      return BinaryExpr(lhs, assign, rhs)
+
+    shortcut.op = ShortcutOp.set
+    shortcut.name = "set"
+    shortcut.args.add(rhs)
+    return shortcut
   }
 
   **

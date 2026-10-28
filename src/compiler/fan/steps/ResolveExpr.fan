@@ -359,17 +359,6 @@ class ResolveExpr : CompilerStep
         throw Err("Unexpected LHS synthetic expr: $expr [$expr.loc.toLocStr]")
     }
 
-    // check for left hand side the [] shortcut, because []= is set
-    shortcut := expr.lhs as ShortcutExpr
-    if (shortcut != null && shortcut.op == ShortcutOp.get)
-    {
-      shortcut.op = ShortcutOp.set
-      shortcut.name = "set"
-      shortcut.args.add(expr.rhs)
-      shortcut.method = null
-      return resolveCall(shortcut)
-    }
-
     // check for left hand side the -> shortcut, because a->x=b is trap.a("x", [b])
     call := expr.lhs as CallExpr
     if (call != null && call.isDynamic)
