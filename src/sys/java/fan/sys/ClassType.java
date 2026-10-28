@@ -458,7 +458,8 @@ class ClassType
 // Emit
 //////////////////////////////////////////////////////////////////////////
 
-  public Class toClass() { return emit(); }
+  // fast path without lock once emitted; Class refs are safely published
+  public Class toClass() { Class c = cls; return c != null ? c : emit(); }
 
   /**
    * Emit to a Java class.
