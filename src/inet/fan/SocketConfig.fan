@@ -51,6 +51,7 @@ const class SocketConfig
   new make(|This|? f := null)
   {
     f?.call(this)
+    checkTlsParams
   }
 
   @NoDoc protected new makeCopy(SocketConfig? orig, |This| f)
@@ -76,6 +77,7 @@ const class SocketConfig
       this.broadcast         = orig.broadcast
     }
     f(this)
+    checkTlsParams
   }
 
   ** Create a copy of this configuration and then apply any overrides from the it-block.
@@ -87,6 +89,12 @@ const class SocketConfig
   This setTimeouts(Duration? connectTimeout, Duration? receiveTimeout := connectTimeout)
   {
     copy { it.connectTimeout = connectTimeout; it.receiveTimeout = receiveTimeout }
+  }
+
+  private Void checkTlsParams()
+  {
+    clientAuth := tlsParams["clientAuth"]
+    if (clientAuth != null && !["none", "want", "need"].contains(clientAuth)) throw ArgErr("Invalid clientAuth: ${clientAuth}")
   }
 
   private native Void force_peer()
@@ -108,7 +116,7 @@ const class SocketConfig
   ** - `appProtocols`: (`Str[]`) prioritized array of application-layer protocol
   ** names that can be negotiated over the TLS protocol
   ** - `clientAuth`: (`Str`) determine client certificate authentication configuration
-  ** of socket.  Supported values:
+  ** of socket. Any other value raises ArgErr. Supported values:
   **   - `want`: Configure socket to request client authentication
   **   - `need`: Configure socket to require client authentication
   **   - `none`: (Default) socket does not request or require client authentication

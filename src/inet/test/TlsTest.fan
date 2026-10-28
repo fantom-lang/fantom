@@ -10,7 +10,7 @@ using concurrent
 using crypto
 
 **
-** Test TLS client verification of the server host name
+** Test TLS server host name verification and client authentication
 **
 class TlsTest : Test
 {
@@ -94,12 +94,38 @@ class TlsTest : Test
     cert := sign(certKeys, "CN=localhost", [San.ipAddr("::1")], caKeys.priv, caCert)
     keys  := keyStore(certKeys, [cert, caCert])
     trust := trustStore(caCert)
-    res := serve(keys) |port|
+    res := serve(SocketConfig { it.keystore = keys }) |port|
     {
       s := TcpSocket(clientConfig(trust)).connect(IpAddr("::1"), port)
       return talk(s.upgradeTls(IpAddr("[::1]"), port))
     }
-    verifyEq(res, "hello")
+    verifyEq(res.first, "hello")
+  }
+
+  Void testClientAuth()
+  {
+    keys  := keyStore(srvKeys, [srvCert, caCert])
+    trust := trustStore(caCert)
+
+    // client cert signed by the test CA
+    cliKeys := crypto.genKeyPair("RSA", 2048)
+    cliCert := sign(cliKeys, "CN=client", San[,], caKeys.priv, caCert)
+    withCert := clientConfig(trust).copy { it.keystore = keyStore(cliKeys, [cliCert, caCert]) }
+    noCert   := clientConfig(trust)
+
+    // only exact values are accepted
+    verifyErr(ArgErr#) { x := SocketConfig { it.tlsParams = ["clientAuth":"bogus"] } }
+    verifyErr(ArgErr#) { x := SocketConfig { it.tlsParams = ["clientAuth":"NEED"] } }
+    verifyErr(ArgErr#) { x := SocketConfig().copy { it.tlsParams = ["clientAuth":"required"] } }
+
+    // none and want accept a client without a cert
+    verifyEq(clientAuth(keys, trust, "none", noCert), "none")
+    verifyEq(clientAuth(keys, trust, "want", noCert), "want")
+    verifyEq(clientAuth(keys, trust, "want", withCert), "want")
+
+    // need requires a trusted client cert
+    verifyEq(clientAuth(keys, trust, "need", withCert), "need")
+    verifyEq(clientAuth(keys, trust, "need", noCert), null)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,9 +155,24 @@ class TlsTest : Test
     }
   }
 
+  ** Connect to a server with the given clientAuth mode and return the mode
+  ** the server socket reports, or null if the handshake failed
+  private Str? clientAuth(KeyStore keys, KeyStore trust, Str mode, SocketConfig client)
+  {
+    config := SocketConfig { it.keystore = keys; it.truststore = trust; it.tlsParams = ["clientAuth":mode] }
+    res := serve(config) |port|
+    {
+      try
+        return talk(TcpSocket(client).upgradeTls.connect(IpAddr("localhost"), port))
+      catch (IOErr e)
+        return null
+    }
+    return res.last
+  }
+
   private Str? connect(KeyStore keys, KeyStore trust, Str host, Bool layered := false)
   {
-    serve(keys) |port|
+    serve(SocketConfig { it.keystore = keys }) |port|
     {
       s := TcpSocket(clientConfig(trust))
       if (layered)
@@ -145,21 +186,25 @@ class TlsTest : Test
         s.connect(IpAddr(host), port)
       }
       return talk(s)
-    }
+    }.first
   }
 
   ** Run a TLS server for one connection while the client callback runs
-  private Str? serve(KeyStore keys, |Int port->Str?| client)
+  ** and return the client and server results
+  private Str?[] serve(SocketConfig config, |Int port->Str?| client)
   {
-    listener := TcpListener(SocketConfig { it.keystore = keys }).bind(null, null)
+    listener := TcpListener(config).bind(null, null)
     future := Actor(ActorPool()) |msg| { runServer(((Unsafe)msg).val) }.send(Unsafe(listener))
+    Str? res := null
+    Str? srvRes := null
     try
-      return client(listener.localPort)
+      res = client(listener.localPort)
     finally
     {
-      try { future.get(10sec) } catch (Err e) {}
+      try { srvRes = future.get(10sec) } catch (Err e) {}
       listener.close
     }
+    return [res, srvRes]
   }
 
   private static Obj? runServer(TcpListener listener)
@@ -169,7 +214,7 @@ class TlsTest : Test
     {
       t := s.upgradeTls
       t.out.printLine("hello").flush
-      return t.in.readLine
+      return t.in.readLine == null ? null : t.clientAuth
     }
     catch (Err e) return null
     finally s.close
