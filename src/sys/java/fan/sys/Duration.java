@@ -110,21 +110,21 @@ public final class Duration
   private static synchronized Duration initFast()
   {
     if (fast != null) return fast;
-    fast = now();
+    Duration init = now();
     Thread t = new Thread("Duration.nowFast")
     {
       public void run()
       {
         while (true)
         {
-          try { Thread.sleep(10); } catch (InterruptedException e) {}
-          fast = new Duration(System.nanoTime());
+          try { Thread.sleep(10); fast = new Duration(System.nanoTime()); }
+          catch (Throwable e) {}
         }
       }
     };
     t.setDaemon(true);
-    t.start();
-    return fast;
+    t.start();  // if start fails, fast stays null so next call retries
+    return fast = init;
   }
 
   private static volatile Duration fast;

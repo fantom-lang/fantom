@@ -74,6 +74,8 @@ public class FanUtil
    */
   public static boolean isJavaImmutable(Class cls)
   {
+    // fast path for most common types
+    if (cls == String.class || cls == Long.class || cls == Double.class || cls == Boolean.class) return true;
     return javaImmutables.get(cls.getName()) != null;
   }
 
