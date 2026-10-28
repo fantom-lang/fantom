@@ -753,7 +753,9 @@ class ActorTest : Test
     a := Actor(pool) |msg| { Actor.sleep(50ms); return msg }
     verifyEq(a.threadState, "idle")
     5.times |i| { a.send(null) }
+    while (a.threadState != "running") Actor.sleep(1ms)
 
+    // without yield b waits for a's remaining 4 msgs (200ms+)
     b := Actor(pool) |msg| { "ret: $msg" }
     t1 := Duration.now
     f := b.send("x")
@@ -761,7 +763,7 @@ class ActorTest : Test
     verifyEq(b.threadState, "pending")
     verifyEq(f.get, "ret: x")
     t2 := Duration.now
-    verify(t2 - t1 < 120ms)
+    verify(t2 - t1 < 180ms, (t2 - t1).toLocale)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -770,17 +772,30 @@ class ActorTest : Test
 
   Void testBalance()
   {
+    // actors block in receive on gate until we unlock it,
+    // so queue sizes are stable while we verify
     pool := ActorPool {}
-    a := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
-    b := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
-    c := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
-    d := Actor(pool) |msg| { if (msg != "start") Actor.sleep(100ms); return msg }
+    gate := Lock.makeReentrant
+    blocked := AtomicInt()
+    gate.lock
+    f := |Obj? msg->Obj?|
+    {
+      if (msg == "block") { blocked.increment; gate.lock; gate.unlock }
+      return msg
+    }
+    a := Actor(pool, f)
+    b := Actor(pool, f)
+    c := Actor(pool, f)
+    d := Actor(pool, f)
     e := Actor(pool) |msg| { return msg }
 
-    a.send("start").get; 4.times |x| { a.send(x) }
-    b.send("start").get; 3.times |x| { b.send(x) }
-    c.send("start").get; 5.times |x| { c.send(x) }
-    d.send("start").get; 3.times |x| { d.send(x) }
+    [a, b, c, d].each |x| { x.send("block") }
+    while (blocked.val < 4) Actor.sleep(1ms)
+
+    3.times |x| { a.send(x) }
+    2.times |x| { b.send(x) }
+    4.times |x| { c.send(x) }
+    2.times |x| { d.send(x) }
 
     verifyEq(a.queueSize, 3)
     verifyEq(b.queueSize, 2)
@@ -801,6 +816,7 @@ class ActorTest : Test
     verifySame(pool.balance([a, b, e, c, d]), e)
 
     verifyErr(IndexErr#) { pool.balance(Actor[,]) }
+    gate.unlock
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -29,12 +29,15 @@ class LockTest : Test
     actual := buf.toStr
     verify(actual == "A0 A1 A2 B0 B1 B2" || actual == "B0 B1 B2 A0 A1 A2")
 
-    // tryLock
-    fa = a.send("tryLock and sleep")
+    // tryLock; A holds lock until we release it
+    fa = a.send("tryLock and hold")
+    while (!a.held.val) Actor.sleep(1ms)
     fb = b.send(null)
-    verify(fb.get < 1ms)
+    verify(fb.get < 100ms)
     fb = b.send(10ms)
-    verify(fb.get > 10ms && fb.get < 20ms)
+    verify(fb.get >= 10ms && fb.get < 1sec)
+    a.release.val = true
+    fa.get
   }
 }
 
@@ -50,6 +53,8 @@ internal const class LockTestActor : Actor
   const Str name
   const Lock lock
   const Bool toggle
+  const AtomicBool held := AtomicBool()
+  const AtomicBool release := AtomicBool()
 
   override Obj? receive(Obj? msg)
   {
@@ -84,10 +89,11 @@ internal const class LockTestActor : Actor
     }
 
     // tryLock for A
-    if (msg == "tryLock and sleep")
+    if (msg == "tryLock and hold")
     {
       if (lock.tryLock != true) throw Err("boom!")
-      Actor.sleep(100ms)
+      held.val = true
+      while (!release.val) Actor.sleep(1ms)
       lock.unlock
       return null
     }
