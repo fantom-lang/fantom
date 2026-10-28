@@ -112,9 +112,8 @@ class FFacetEmit
     // parse value into name/value elements
     Elem[] elems = parseElems(val);
 
-    // annotation type
-    int cls = emit.cls(type.jname());
-    info.u2(cls);
+    // annotation type as field descriptor (JVMS 4.7.16)
+    info.u2(emit.utf(type.jsig()));
     info.u2(elems.length);
     for (int i=0; i<elems.length; ++i)
     {
@@ -201,7 +200,7 @@ class FFacetEmit
   {
     Enum e = (Enum)elem.val;
     info.u1('e');
-    info.u2(emit.utf(e.getClass().getName()));
+    info.u2(emit.utf(FanUtil.toJavaMemberSig(FanUtil.toFanType(e.getDeclaringClass(), true))));
     info.u2(emit.utf(e.toString()));
   }
 
