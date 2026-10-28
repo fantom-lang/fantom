@@ -118,6 +118,22 @@ public abstract class FTypeEmit
     code.op(ARETURN);
     code.emitLineNumber(lineNum);
 
+    // const classes generate isImmutable() and toImmutable() overrides
+    if ((type.flags & FConst.Const) != 0 && funcType == null)
+    {
+      code = emitMethod("isImmutable", "()Z", EmitConst.PUBLIC).emitCode();
+      code.maxLocals = 1;
+      code.maxStack  = 1;
+      code.op(ICONST_1);
+      code.op(IRETURN);
+
+      code = emitMethod("toImmutable", "()Ljava/lang/Object;", EmitConst.PUBLIC).emitCode();
+      code.maxLocals = 1;
+      code.maxStack  = 1;
+      code.op(ALOAD_0);
+      code.op(ARETURN);
+    }
+
     // if native generate peer field and peer() override
     if (isNative)
       peerField = emitField("peer", "L" + className + "Peer;", EmitConst.PUBLIC);
