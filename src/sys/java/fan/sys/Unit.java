@@ -9,6 +9,7 @@ package fan.sys;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Unit models a unit of measurement.
@@ -387,17 +388,14 @@ public final class Unit
 
   public final Unit mult(Unit b)
   {
-    synchronized (combos)
+    Combo key = new Combo(this, "*", b);
+    Unit r = (Unit)combos.get(key);
+    if (r == null)
     {
-      Combo key = new Combo(this, "*", b);
-      Unit r = (Unit)combos.get(key);
-      if (r == null)
-      {
-        r = findMult(this, b);
-        combos.put(key, r);
-      }
-      return r;
+      r = findMult(this, b);
+      combos.put(key, r);
     }
+    return r;
   }
 
   private static Unit findMult(Unit a, Unit b)
@@ -426,17 +424,14 @@ public final class Unit
 
   public final Unit div(Unit b)
   {
-    synchronized (combos)
+    Combo key = new Combo(this, "/", b);
+    Unit r = (Unit)combos.get(key);
+    if (r == null)
     {
-      Combo key = new Combo(this, "/", b);
-      Unit r = (Unit)combos.get(key);
-      if (r == null)
-      {
-        r = findDiv(this, b);
-        combos.put(key, r);
-      }
-      return r;
+      r = findDiv(this, b);
+      combos.put(key, r);
     }
+    return r;
   }
 
   public final Unit findDiv(Unit a, Unit b)
@@ -515,7 +510,7 @@ public final class Unit
   private static final HashMap byId = new HashMap(); // String id-> Unit
   private static final HashMap dims = new HashMap(); // Dimension -> Dimension
   private static final HashMap quantities = new HashMap(); // String -> List
-  private static final HashMap combos = new HashMap();  // Combo -> Unit
+  private static final ConcurrentHashMap combos = new ConcurrentHashMap();  // Combo -> Unit
   private static final List quantityNames;
   private static final Dimension dimensionless = new Dimension();
   static
