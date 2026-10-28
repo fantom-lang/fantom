@@ -33,6 +33,14 @@ const final class Duration
   static Int nowTicks()
 
   **
+  ** Coarse value of `now` which is updated every 10ms by a background
+  ** thread.  This is cheaper than `now` with no allocation or contention
+  ** between threads, but only suitable for coarse checks such as timeouts.
+  ** Never use it to measure elapsed time.
+  **
+  static Duration nowFast()
+
+  **
   ** Create a Duration which represents the specified number of nanosecond ticks.
   **
   static new make(Int ticks)
@@ -270,3 +278,4 @@ const final class Duration
   static Duration fromIso(Str s, Bool checked := true)
 
 }
+

@@ -101,6 +101,34 @@ public final class Duration
     return System.nanoTime();
   }
 
+  public static Duration nowFast()
+  {
+    Duration d = fast;
+    return d != null ? d : initFast();
+  }
+
+  private static synchronized Duration initFast()
+  {
+    if (fast != null) return fast;
+    fast = now();
+    Thread t = new Thread("Duration.nowFast")
+    {
+      public void run()
+      {
+        while (true)
+        {
+          try { Thread.sleep(10); } catch (InterruptedException e) {}
+          fast = new Duration(System.nanoTime());
+        }
+      }
+    };
+    t.setDaemon(true);
+    t.start();
+    return fast;
+  }
+
+  private static volatile Duration fast;
+
   public static long nowMillis()
   {
     return System.nanoTime() / 1000000L;

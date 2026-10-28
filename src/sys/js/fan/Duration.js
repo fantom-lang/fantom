@@ -113,6 +113,8 @@ class Duration extends Obj {
 
   static nowTicks() { return Duration.now().ticks(); }
 
+  static nowFast() { return Duration.now(); }
+
   static boot() { return Duration.__boot; }
 
   static uptime() { return Duration.now().minus(Duration.boot()); }

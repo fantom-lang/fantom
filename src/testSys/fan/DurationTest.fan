@@ -83,6 +83,19 @@ class DurationTest : Test
     verify(y <= z.ticks)
   }
 
+  Void testNowFast()
+  {
+    // within tick period of now (allow slop for slow test machines)
+    a := Duration.nowFast
+    verify(Duration.now - a < 1sec)
+
+    // spin until background thread updates it
+    b := a
+    deadline := Duration.nowTicks + 1sec.ticks
+    while (b == a && Duration.nowTicks < deadline) b = Duration.nowFast
+    verify(b > a)
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Boot/Uptime
 //////////////////////////////////////////////////////////////////////////
