@@ -6,6 +6,8 @@
 //   04 Sep 26  Mike Jarmy  Creation
 //
 
+using concurrent
+
 **************************************************************************
 ** DialectType
 **************************************************************************
@@ -204,6 +206,31 @@ internal const class Dialect
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////
+
+  ** Can we connect to this database?  Probed once per process; if not
+  ** we log a single warning and SqlTest skips every test for it.
+  Bool isAvailable()
+  {
+    ok := availability.get(name)
+    if (ok == null) availability[name] = ok = probe
+    return ok
+  }
+
+  private Bool probe()
+  {
+    try
+    {
+      SqlConn.open(uri, username, password).close
+      return true
+    }
+    catch (Err e)
+    {
+      Log.get("sqlTest").warn("$name not available, skipping tests: $e.msg")
+      return false
+    }
+  }
+
+  private static const ConcurrentMap availability := ConcurrentMap()
 
   ** Lookup a logical type, or raise ArgErr if not defined
   DialectType typeDef(Str logical)

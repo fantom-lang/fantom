@@ -47,7 +47,9 @@ abstract class SqlTest : Test
 
   override Void setup()
   {
+    // db stays null if not installed; each test returns early
     d := dialect
+    if (!d.isAvailable) return
     db = SqlConn.open(d.uri, d.username, d.password)
     db.autoCommit = true
 
@@ -87,6 +89,7 @@ abstract class SqlTest : Test
   ** insert, select, and verify both metadata and values.
   Void testSmoke()
   {
+    if (db == null) return
     verifyFalse(db.isClosed)
     verify(db.isValid(3sec))
 
@@ -115,6 +118,7 @@ abstract class SqlTest : Test
 
   Void testMeta()
   {
+    if (db == null) return
     meta := db.meta
 
     // productName is asserted during setup
@@ -147,6 +151,7 @@ abstract class SqlTest : Test
 
   Void testInsertAndSelect()
   {
+    if (db == null) return
     createVals
 
     a := insertVals(["v_str": "alpha", "v_i32": 1, "v_bool": true])
@@ -214,6 +219,7 @@ abstract class SqlTest : Test
 
   Void testQueryEach()
   {
+    if (db == null) return
     createVals
     3.times |i| { insertVals(["v_str": "s$i", "v_i32": i]) }
 
@@ -272,6 +278,7 @@ abstract class SqlTest : Test
 
   Void testTransactions()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "keep"])
 
@@ -305,6 +312,7 @@ abstract class SqlTest : Test
 
   Void testPrepared()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "alpha", "v_i32": 1])
     insertVals(["v_str": "beta",  "v_i32": 2])
@@ -379,6 +387,7 @@ abstract class SqlTest : Test
   ** Statement.execute returns one of three shapes depending on the sql
   Void testExecute()
   {
+    if (db == null) return
     createVals
 
     // an insert returns the auto-generated keys
@@ -411,6 +420,7 @@ abstract class SqlTest : Test
 
   Void testLimit()
   {
+    if (db == null) return
     createVals
     5.times |i| { insertVals(["v_str": "s$i"]) }
 
@@ -461,6 +471,7 @@ abstract class SqlTest : Test
 
   Void testBatchUpdate()
   {
+    if (db == null) return
     createVals
     5.times |i| { insertVals(["v_str": "s$i", "v_i32": 0]) }
     ids := ints("select id from $valsTable order by id")
@@ -492,6 +503,7 @@ abstract class SqlTest : Test
   ** driver, so this pins down all four corners of that.
   Void testBatchKeys()
   {
+    if (db == null) return
     // a table whose key is not auto-generated
     createTable(batchTable, Dialect.batchCols)
     stmt := db.sql("insert into $batchTable (n, v_str) values (@n, @v_str)").prepare
@@ -525,6 +537,7 @@ abstract class SqlTest : Test
 
   Void testBatchExecutor()
   {
+    if (db == null) return
     createTable(batchAutoTable, Dialect.batchAutoCols)
     stmt := db.sql("insert into $batchAutoTable (v_str) values (@v_str)").prepare
 
@@ -544,6 +557,7 @@ abstract class SqlTest : Test
 
   Void testGenerateKeysOff()
   {
+    if (db == null) return
     createTable(batchAutoTable, Dialect.batchAutoCols)
     sql := "insert into $batchAutoTable (v_str) values (@v_str)"
 
@@ -619,6 +633,7 @@ abstract class SqlTest : Test
 
   Void testQueryTimeout()
   {
+    if (db == null) return
     // a query past the connection's timeout is aborted
     db.queryTimeout = 1sec
     t1 := Duration.now
@@ -639,6 +654,7 @@ abstract class SqlTest : Test
 
   Void testQueryTimeoutFromPool()
   {
+    if (db == null) return
     // the pool stamps its default onto every connection it opens
     d := dialect
     pool := SqlConnPool
@@ -665,6 +681,7 @@ abstract class SqlTest : Test
   ** raw SQLException or a null
   Void testErrors()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "alpha", "v_i32": 1])
 
@@ -740,6 +757,7 @@ abstract class SqlTest : Test
   ** behavior; it is not necessarily the behavior we want.
   Void testMissingParam()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "alpha", "v_i32": 1])
 
@@ -761,6 +779,7 @@ abstract class SqlTest : Test
 
   Void testNulls()
   {
+    if (db == null) return
     createVals
 
     // a column left out of the insert defaults to null
@@ -792,6 +811,7 @@ abstract class SqlTest : Test
 
   Void testEmptyResult()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "alpha", "v_i32": 1])
 
@@ -844,6 +864,7 @@ abstract class SqlTest : Test
   ** store and hand back unchanged.
   Void testTypeRoundTrip()
   {
+    if (db == null) return
     createVals
     cases := typeCases
 
@@ -874,6 +895,7 @@ abstract class SqlTest : Test
   ** Binary round-trips through the setBinaryStream path in setParameters
   Void testBuf()
   {
+    if (db == null) return
     createVals
 
     mem := Buf()
@@ -918,6 +940,7 @@ abstract class SqlTest : Test
   ** covers this at the unit level; here we prove the sql actually runs.
   Void testEscapes()
   {
+    if (db == null) return
     createVals
     insertVals(["v_str": "a@b",   "v_i32": 1])
     insertVals(["v_str": "plain", "v_i32": 2])
@@ -937,6 +960,7 @@ abstract class SqlTest : Test
   ** A mysql session variable must be escaped inside a prepared statement
   Void testUserVars()
   {
+    if (db == null) return
     if (!dialect.hasUserVars) { logSkip; return }
 
     createVals
@@ -962,6 +986,7 @@ abstract class SqlTest : Test
   ** Sequences".  No table is needed, so the sql can be a raw dsl literal.
   Void testJsonbOperator()
   {
+    if (db == null) return
     if (!dialect.hasJsonb) { logSkip; return }
 
     hit := db.sql(
@@ -987,6 +1012,7 @@ abstract class SqlTest : Test
   ** and SqlUtil.ToFanList.
   Void testArrays()
   {
+    if (db == null) return
     if (!dialect.hasArrays) { logSkip; return }
 
     createRawTable(arrayTable,

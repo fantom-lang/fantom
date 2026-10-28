@@ -223,7 +223,8 @@ message when they do not apply.
 
 To run these tests, both DBMS systems must be installed locally and running
 on the default port, and they each must have the following one-time
-configuration applied.
+configuration applied.  If a database cannot be reached, a single warning
+is logged and every test for that database is skipped.
 
 For mysql, setup the fantest database and user account via:
 

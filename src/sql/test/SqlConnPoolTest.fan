@@ -13,6 +13,26 @@ using concurrent
 **
 class SqlConnPoolTest : Test
 {
+  ** Tests provoke pool warnings on purpose, so keep sqlPool records
+  ** off the console; handlers installed by tests still see them
+  override Void setup()
+  {
+    console := Log.handlers.toImmutable
+    console.each |h| { Log.removeHandler(h) }
+    quiet = |LogRec rec| { if (rec.logName != "sqlPool") console.each |h| { h(rec) } }.toImmutable
+    Log.addHandler(quiet)
+    this.console = console
+  }
+
+  override Void teardown()
+  {
+    Log.removeHandler(quiet)
+    console.each |h| { Log.addHandler(h) }
+  }
+
+  private |LogRec|? quiet
+  private |LogRec|[] console := [,]
+
   Void test()
   {
     // this test verifies connection ids by name, so reset the id
