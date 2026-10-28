@@ -125,8 +125,6 @@ class WebClientTest : Test
       `/doc/docLib/Dom.html`:      `/doc/dom/index`,
       `/doc/docLib/Email.html`:    `/doc/email/index`,
       `/doc/docLib/Fandoc.html`:   `/doc/fandoc/index`,
-      `/doc/docLib/Flux.html`:     `/doc/flux/index`,
-      `/doc/docLib/Fwt.html`:      `/doc/fwt/index`,
       `/doc/docLib/Json.html`:     `/doc/util/index#json`,
       `/doc/docLib/Sql.html` :     `/doc/sql/index`,
       `/doc/docLib/Web.html`:      `/doc/web/index`,
