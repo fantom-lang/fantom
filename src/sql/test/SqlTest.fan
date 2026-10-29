@@ -14,7 +14,7 @@ using util
 
 ** SqlTest is the base for the tests that run against a live database.
 ** It is abstract, so fant skips it; the concrete subclasses at the bottom
-** of this file bind it to a `Dialect`.
+** of this file bind it to a `SqlTestDialect`.
 **
 ** Each test method gets a fresh instance, a fresh connection, and drops
 ** whatever tables it created.  No test may depend on another's state.
@@ -26,15 +26,15 @@ abstract class SqlTest : Test
 //////////////////////////////////////////////////////////////////////////
 
   ** The database this test runs against
-  internal abstract Dialect dialect()
+  internal abstract SqlTestDialect dialect()
 
-  ** The main test table; see Dialect.valsCols
+  ** The main test table; see SqlTestDialect.valsCols
   const Str valsTable := "test_vals"
 
   ** A table that is never created
   const Str missingTable := "no_such_table_xyz"
 
-  ** Batch tables; see Dialect.batchCols and Dialect.batchAutoCols
+  ** Batch tables; see SqlTestDialect.batchCols and SqlTestDialect.batchAutoCols
   const Str batchTable     := "test_batch"
   const Str batchAutoTable := "test_batch_auto"
 
@@ -97,7 +97,7 @@ abstract class SqlTest : Test
     verify(db.meta.tableExists(valsTable))
 
     // the declared schema round-trips through getColumns
-    verifyColDefs(db.meta.tableRow(valsTable), Dialect.valsCols)
+    verifyColDefs(db.meta.tableRow(valsTable), SqlTestDialect.valsCols)
 
     vals := sampleVals
     id := insertVals(vals)
@@ -107,7 +107,7 @@ abstract class SqlTest : Test
     row := rows[0]
 
     // and through the result set
-    verifyColDefs(row, Dialect.valsCols)
+    verifyColDefs(row, SqlTestDialect.valsCols)
     verifyRow(row, vals)
     verifyEq(row->id, id)
   }
@@ -142,7 +142,7 @@ abstract class SqlTest : Test
     createVals
     verify(meta.tableExists(valsTable))
     verify(meta.tables.contains(valsTable))
-    verifyColDefs(meta.tableRow(valsTable), Dialect.valsCols)
+    verifyColDefs(meta.tableRow(valsTable), SqlTestDialect.valsCols)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -505,7 +505,7 @@ abstract class SqlTest : Test
   {
     if (db == null) return
     // a table whose key is not auto-generated
-    createTable(batchTable, Dialect.batchCols)
+    createTable(batchTable, SqlTestDialect.batchCols)
     stmt := db.sql("insert into $batchTable (n, v_str) values (@n, @v_str)").prepare
     params := [Str:Obj][,]
     4.times |i| { params.add(Str:Obj["n": i, "v_str": "s$i"]) }
@@ -524,7 +524,7 @@ abstract class SqlTest : Test
     verifyEq(ints("select n from $batchTable order by n"), Int[0, 1, 2, 3])
 
     // a table whose key really is auto-generated
-    createTable(batchAutoTable, Dialect.batchAutoCols)
+    createTable(batchAutoTable, SqlTestDialect.batchAutoCols)
     stmt = db.sql("insert into $batchAutoTable (v_str) values (@v_str)").prepare
     params = [Str:Obj][,]
     4.times |i| { params.add(Str:Obj["v_str": "s$i"]) }
@@ -538,7 +538,7 @@ abstract class SqlTest : Test
   Void testBatchExecutor()
   {
     if (db == null) return
-    createTable(batchAutoTable, Dialect.batchAutoCols)
+    createTable(batchAutoTable, SqlTestDialect.batchAutoCols)
     stmt := db.sql("insert into $batchAutoTable (v_str) values (@v_str)").prepare
 
     // a chunk size well under the command count, so the queue flushes
@@ -558,7 +558,7 @@ abstract class SqlTest : Test
   Void testGenerateKeysOff()
   {
     if (db == null) return
-    createTable(batchAutoTable, Dialect.batchAutoCols)
+    createTable(batchAutoTable, SqlTestDialect.batchAutoCols)
     sql := "insert into $batchAutoTable (v_str) values (@v_str)"
 
     // batch returns one null key per command
@@ -729,7 +729,7 @@ abstract class SqlTest : Test
     verifyErr(SqlErr#) { stmt.query }
 
     // one bad command fails the whole batch
-    createTable(batchAutoTable, Dialect.batchAutoCols)
+    createTable(batchAutoTable, SqlTestDialect.batchAutoCols)
     batch := db.sql("insert into $batchAutoTable (v_str) values (@v_str)").prepare
     try
     {
@@ -791,7 +791,7 @@ abstract class SqlTest : Test
     // and so does binding null explicitly, which exercises setObject
     // with a null for every one of our column types
     nulls := Str:Obj?[:]
-    Dialect.valsCols.each |def|
+    SqlTestDialect.valsCols.each |def|
     {
       if (def.name == "id") return
       nulls[def.name] = (def.name == "v_str") ? "explicit" : null
@@ -802,7 +802,7 @@ abstract class SqlTest : Test
 
     // column metadata comes from the schema rather than the values, so
     // an all-null row still reports its declared types
-    verifyColDefs(explicit, Dialect.valsCols)
+    verifyColDefs(explicit, SqlTestDialect.valsCols)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -868,7 +868,7 @@ abstract class SqlTest : Test
     createVals
     cases := typeCases
 
-    Dialect.valsCols.each |def|
+    SqlTestDialect.valsCols.each |def|
     {
       if (def.name == "id") return
 
@@ -1198,7 +1198,7 @@ abstract class SqlTest : Test
   ** Create the main test table
   Void createVals()
   {
-    createTable(valsTable, Dialect.valsCols)
+    createTable(valsTable, SqlTestDialect.valsCols)
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1365,7 +1365,7 @@ abstract class SqlTest : Test
 
 class MySqlTest : SqlTest
 {
-  internal override Dialect dialect() { Dialect.mysql }
+  internal override SqlTestDialect dialect() { SqlTestDialect.mysql }
 }
 
 **************************************************************************
@@ -1374,5 +1374,5 @@ class MySqlTest : SqlTest
 
 class PostgresTest : SqlTest
 {
-  internal override Dialect dialect() { Dialect.postgres }
+  internal override SqlTestDialect dialect() { SqlTestDialect.postgres }
 }

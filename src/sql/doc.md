@@ -208,17 +208,18 @@ The following type specifies the mapping of SQL types to Fantom types:
 # Test Setup
 The unit tests `sql::MySqlTest` and `sql::PostgresTest` run against a live
 database. Both are bound to the abstract `sql::SqlTest` base class by a
-Dialect, which supplies the connection uri along with the ddl and metadata
-that differ between the two databases. Each test method gets its own
-connection and drops whatever tables it created, so tests may be run
-individually and in any order:
+SqlTestDialect, which supplies the connection uri along with the ddl and
+metadata that differ between the two databases.  Other pods such as hxSql
+reuse the same dialects to test against the same servers.  Each test method
+gets its own connection and drops whatever tables it created, so tests may
+be run individually and in any order:
 
     fant sql                                  // everything
     fant sql::PostgresTest                    // one database
     fant sql::PostgresTest.testTypeRoundTrip  // one test
 
 Tests that only apply to one database, such as postgres arrays or mysql
-session variables, are gated on a Dialect feature flag and log a skip
+session variables, are gated on a dialect feature flag and log a skip
 message when they do not apply.
 
 To run these tests, both DBMS systems must be installed locally and running

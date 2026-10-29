@@ -40,7 +40,7 @@ internal const class DialectType
 **************************************************************************
 
 ** ColDef is one column in a test table: its name, and the logical type
-** key that each Dialect maps to real DDL.
+** key that each SqlTestDialect maps to real DDL.
 internal const class ColDef
 {
   new make(Str name, Str type, Bool notNull := false)
@@ -58,16 +58,17 @@ internal const class ColDef
 }
 
 **************************************************************************
-** Dialect
+** SqlTestDialect
 **************************************************************************
 
-** Dialect models the DDL and metadata differences between the databases
-** that SqlTest runs against.
+** SqlTestDialect models the DDL and metadata differences between the
+** databases that SqlTest runs against.  It is public so that other pods
+** (hxSql) can run their own tests against the same local servers.
 **
-** Dialect is test-only.  The sql pod itself has no notion of database
+** SqlTestDialect is test-only.  The sql pod itself has no notion of database
 ** identity beyond `SqlMeta.productName`, and should not grow one: what
 ** differs here is mostly DDL, which is outside the pod's remit.
-internal const class Dialect
+@NoDoc const class SqlTestDialect
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ internal const class Dialect
 //////////////////////////////////////////////////////////////////////////
 
   ** See pod-doc "Test Setup" for the one-time local server config.
-  static const Dialect mysql := Dialect
+  static const SqlTestDialect mysql := SqlTestDialect
   {
     it.name        = "mysql"
     it.productName = "MySQL"
@@ -112,7 +113,7 @@ internal const class Dialect
   }
 
   ** See pod-doc "Test Setup" for the one-time local server config.
-  static const Dialect postgres := Dialect
+  static const SqlTestDialect postgres := SqlTestDialect
   {
     it.name        = "postgres"
     it.productName = "PostgreSQL"
@@ -151,7 +152,7 @@ internal const class Dialect
   }
 
   ** All dialects SqlTest runs against
-  static const Dialect[] all := [mysql, postgres]
+  static const SqlTestDialect[] all := [mysql, postgres]
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -184,7 +185,7 @@ internal const class Dialect
   const Str? autoKeySuffix
 
   ** Logical type name to how this database spells it
-  const Str:DialectType types
+  internal const Str:DialectType types
 
 //////////////////////////////////////////////////////////////////////////
 // Features
@@ -233,14 +234,17 @@ internal const class Dialect
   private static const ConcurrentMap availability := ConcurrentMap()
 
   ** Lookup a logical type, or raise ArgErr if not defined
-  DialectType typeDef(Str logical)
+  internal DialectType typeDef(Str logical)
   {
     types[logical] ?: throw ArgErr("$name has no logical type '$logical'")
   }
 
+  ** DDL fragment for a logical type, or raise ArgErr if not defined
+  Str ddl(Str logical) { typeDef(logical).ddl }
+
   ** Generate a "create table" statement for the given columns.  If any
   ** column uses the "id" logical type then autoKeySuffix is appended.
-  Str createTable(Str table, ColDef[] cols)
+  internal Str createTable(Str table, ColDef[] cols)
   {
     buf := StrBuf()
     buf.add("create table ").add(table).add(" (\n")
@@ -266,7 +270,7 @@ internal const class Dialect
   ** type so that a failure message identifies what broke.  "v_str" is
   ** the one not-null column, so it doubles as the constraint-violation
   ** target for the error tests.
-  static const ColDef[] valsCols :=
+  internal static const ColDef[] valsCols :=
   [
     ColDef("id",     "id"),
     ColDef("v_str",  "str", true),
@@ -287,14 +291,14 @@ internal const class Dialect
 
   ** A table with no auto-generated key, so that the batch tests can
   ** distinguish drivers that return keys anyway; see keysOnNonAutoInsert.
-  static const ColDef[] batchCols :=
+  internal static const ColDef[] batchCols :=
   [
     ColDef("n",     "i32", true),
     ColDef("v_str", "str", true),
   ]
 
   ** A table whose key really is auto-generated
-  static const ColDef[] batchAutoCols :=
+  internal static const ColDef[] batchAutoCols :=
   [
     ColDef("id",    "id"),
     ColDef("v_str", "str", true),
