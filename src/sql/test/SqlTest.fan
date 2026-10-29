@@ -49,7 +49,7 @@ abstract class SqlTest : Test
   {
     // db stays null if not installed; each test returns early
     d := dialect
-    if (!d.isAvailable) return
+    if (!d.isAvailable(this)) return
     db = SqlConn.open(d.uri, d.username, d.password)
     db.autoCommit = true
 

@@ -147,6 +147,14 @@ abstract class Test
   **
   Void fail(Str? msg := null)
 
+  **
+  ** Report a warning for the current test method such as a test
+  ** being skipped because its environment is not configured.  The
+  ** test continues to run; warnings are collected by the test runner
+  ** and reported in its final summary.
+  **
+  Void warn(Str msg)
+
 //////////////////////////////////////////////////////////////////////////
 // Utils
 //////////////////////////////////////////////////////////////////////////

@@ -231,6 +231,12 @@ public class Test
     throw err(msg);
   }
 
+  public void warn(String msg)
+  {
+    if (warnings == null) warnings = new List(Sys.StrType, 4);
+    warnings.add(msg);
+  }
+
   private RuntimeException err(String msg)
   {
     if (msg == null)
@@ -254,6 +260,7 @@ public class Test
   public Object trap(String name, List args)
   {
     if (name.equals("verifyCount")) return Long.valueOf(verifyCount);
+    if (name.equals("warnings")) return warnings != null ? warnings : new List(Sys.StrType);
     if (name.equals("verbose"))
     {
       if (args != null && args.sz() == 1)
@@ -285,6 +292,7 @@ public class Test
 //////////////////////////////////////////////////////////////////////////
 
   public int verifyCount;
+  List warnings;
   public static boolean verbose;
   public Method curTestMethod;
   File tempDir;

@@ -6,6 +6,12 @@ copyright:  Copyright (c) 2007, Brian Frank and Andy Frank
 license:    Licensed under the Academic Free License version 3.0
 -->
 
+*Build 1.0.85 (working)*
+- Runtime optimizations
+- More unicode codepoint fixes
+- Test.warn
+- Duration.nowFast
+
 *Build 1.0.84 (23 Oct 2026)*
 - Fandoc fully converted to markdown
 - Replace legacy JS compiler with new ES compiler

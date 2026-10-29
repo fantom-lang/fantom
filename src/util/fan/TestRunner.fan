@@ -23,6 +23,7 @@ class TestRunner
     targets := Str[,]
     runner  := TestRunner()
     isAll   := false
+    isWork  := false
     isJs    := false
 
     // parse args
@@ -49,6 +50,11 @@ class TestRunner
         isAll = true
         continue
       }
+      if (arg == "-work")
+      {
+        isWork = true
+        continue
+      }
       if (arg == "-js")
       {
         isJs = true
@@ -69,6 +75,10 @@ class TestRunner
     if (isAll)
     {
       runner.runAll
+    }
+    else if (isWork)
+    {
+      runner.runWork
     }
     else
     {
@@ -102,6 +112,7 @@ class TestRunner
           -version       print version
           -v             verbose mode
           -all           test all pods
+          -work          test all pods in Env.workDir
           -js            test JavaScript environment
         """)
   }
@@ -170,9 +181,22 @@ class TestRunner
   }
 
   ** Run on every installed pod
-  virtual This runAll()
+  virtual This runAll() { runPods(Pod.list) }
+
+  ** Run on every pod installed under the env working directory;
+  ** for a PathEnv this is the first directory in the path
+  virtual This runWork()
   {
-    Pod.list.each |pod| { doRunPod(pod, true) }
+    dir := Env.cur.workDir.normalize.uri.toStr
+    return runPods(Pod.list.findAll |pod|
+    {
+      Env.cur.findPodFile(pod.name)?.normalize?.uri?.toStr?.startsWith(dir) ?: false
+    })
+  }
+
+  private This runPods(Pod[] pods)
+  {
+    pods.each |pod| { doRunPod(pod, true) }
     return this
   }
 
@@ -234,10 +258,21 @@ class TestRunner
         if (test != null) onTeardown(test)
       }
       catch (Err e)  e.trace
+      if (test != null) addWarnings(type, method, test->warnings)
     }
     numMethods += 1
     numVerifies += verifies
     return this
+  }
+
+  ** Record and report warnings raised by a test method
+  private Void addWarnings(Type type, Method method, Str[] msgs)
+  {
+    msgs.each |msg|
+    {
+      reportWarning(type, method, msg)
+      warnings.getOrAdd(msg) { Str[,] }.add(qname(type, method))
+    }
   }
 
   ** Callback to invoke setup
@@ -270,6 +305,12 @@ class TestRunner
     err.trace(out)
   }
 
+  ** Report a warning raised by a test method
+  virtual Void reportWarning(Type type, Method method, Str msg)
+  {
+    out.printLine("   Warn: ${qname(type, method)}: $msg")
+  }
+
   ** Report summary of tests
   virtual Void reportSummary()
   {
@@ -279,6 +320,25 @@ class TestRunner
     out.printLine
     out.printLine("Time: $elapsedStr")
     out.printLine
+
+    if (!warnings.isEmpty)
+    {
+      // one line per test; methods of same type with same msg collapse
+      lines := Str[,]
+      warnings.each |qnames, msg|
+      {
+        byType := Str:Str[][:]
+        qnames.each |qname| { byType.getOrAdd(qname[0..<qname.indexr(".")]) { Str[,] }.add(qname) }
+        byType.each |methods, type|
+        {
+          test := methods.size == 1 ? methods.first : "$type [$methods.size methods]"
+          lines.add("  $test: $msg")
+        }
+      }
+      out.printLine("Warnings:")
+      lines.sort.each |line| { out.printLine(line) }
+      out.printLine
+    }
 
     summary := "All tests passed!"
     if (!failures.isEmpty)
@@ -290,7 +350,8 @@ class TestRunner
     }
 
     out.printLine("***")
-    out.printLine("*** $summary [$numTypes types, $numMethods methods, $numVerifies verifies]")
+    numWarnings := warnings.vals.reduce(0) |Int acc, qnames| { acc + qnames.size }
+    out.printLine("*** $summary [$numTypes types, $numMethods methods, $numVerifies verifies, $numWarnings warnings]")
     out.printLine("***")
   }
 
@@ -311,6 +372,7 @@ class TestRunner
   Bool isVerbose
 
   private Str[] failures := [,]
+  private Str:Str[] warnings := [:]
   private Int numFailures() { failures.size }
   private Duration startTicks := Duration.now
   private Int numTypes

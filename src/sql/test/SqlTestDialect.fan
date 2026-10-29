@@ -209,26 +209,25 @@ internal const class ColDef
 //////////////////////////////////////////////////////////////////////////
 
   ** Can we connect to this database?  Probed once per process; if not
-  ** we log a single warning and SqlTest skips every test for it.
-  Bool isAvailable()
+  ** then report a warning to the given test which should be skipped.
+  Bool isAvailable(Test test)
   {
-    ok := availability.get(name)
-    if (ok == null) availability[name] = ok = probe
-    return ok
+    err := availability.get(name)
+    if (err == null) availability[name] = err = probe
+    if (err == "") return true
+    test.warn("$name not available, skipping tests: $err")
+    return false
   }
 
-  private Bool probe()
+  ** Return empty string if we can connect, otherwise error message
+  private Str probe()
   {
     try
     {
       SqlConn.open(uri, username, password).close
-      return true
+      return ""
     }
-    catch (Err e)
-    {
-      Log.get("sqlTest").warn("$name not available, skipping tests: $e.msg")
-      return false
-    }
+    catch (Err e) return e.msg
   }
 
   private static const ConcurrentMap availability := ConcurrentMap()

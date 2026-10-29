@@ -26,6 +26,7 @@ class Test extends Obj {
   #curTestMethod;
   #verbose;
   #verifyCount;
+  #warnings;
   #tempDir;
 
   static make$(self) { }
@@ -157,6 +158,11 @@ class Test extends Obj {
     throw this.#err(msg);
   }
 
+  warn(msg) {
+    if (this.#warnings == null) this.#warnings = List.make(Str.type$, []);
+    this.#warnings.add(msg);
+  }
+
   #err(msg=null) {
     if (msg == null)
       return Err.make("Test failed");
@@ -178,6 +184,8 @@ class Test extends Obj {
     {
       case "verifyCount":
         return this.#verifyCount;
+      case "warnings":
+        return this.#warnings != null ? this.#warnings : List.make(Str.type$, []);
       case "verbose":
         if (args != null && args.size() == 1) this.#verbose = args.get(0);
         return this.#verbose
