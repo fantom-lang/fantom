@@ -221,7 +221,22 @@ class TestRunner
   virtual This runType(Type type)
   {
     numTypes++
-    type.methods.each |method|
+    Method[]? methods := null
+    try
+    {
+      methods = type.methods
+    }
+    catch (Err e)
+    {
+      // type cannot be loaded (such as pod rebuilt mid-run);
+      // report as a failure, but keep running the other types
+      failures.add(type.qname)
+      out.printLine
+      out.printLine("TEST FAILED")
+      e.trace(out)
+      return this
+    }
+    methods.each |method|
     {
       if (method.name.startsWith("test") && !method.isAbstract)
         runMethod(type, method)
