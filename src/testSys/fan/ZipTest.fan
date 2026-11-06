@@ -70,12 +70,14 @@ class ZipTest : Test
     z = Zip.read(f.in)
     read(z)
     z.close
+    verifyCrcs(f.readAllBuf)
 
     // write to Buf
     buf := Buf.make
     z = Zip.write(buf.out)
     write(z)
     z.finish
+    verifyCrcs(buf)
     buf.printLine("end")
     verifyEq(buf[-4], 'e')
     verifyEq(buf[-3], 'n')
@@ -125,6 +127,29 @@ class ZipTest : Test
     verifyEq(unzipDir.plus(`foo.txt`).modified, fooModified)
     verifyEq(unzipDir.plus(`foo.txt`).readAllStr, "hello zip!\n")
     verifyEq(unzipDir.plus(`path/bar.hex`).readAllBuf.in.readU4, 0xabcd_0123)
+  }
+
+  ** Verify CRCs stored in central directory match the entry contents
+  Void verifyCrcs(Buf zip)
+  {
+    expected := [
+      "foo.txt":      "hello zip!\n".toBuf.crc("CRC-32"),
+      "path/bar.hex": Buf().writeI4(0xabcd_0123).crc("CRC-32"),
+    ]
+    actual := Str:Int[:]
+    for (i := 0; i + 46 <= zip.size; ++i)
+    {
+      if (u4(zip, i) != 0x0201_4b50) continue
+      nameLen := zip[i+28].or(zip[i+29].shiftl(8))
+      name := zip.getRange(i+46..<i+46+nameLen).readAllStr
+      actual[name] = u4(zip, i+16)
+    }
+    verifyEq(actual, expected)
+  }
+
+  private static Int u4(Buf b, Int i)
+  {
+    b[i].or(b[i+1].shiftl(8)).or(b[i+2].shiftl(16)).or(b[i+3].shiftl(24))
   }
 
   Void write(Zip z)

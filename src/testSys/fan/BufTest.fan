@@ -933,6 +933,12 @@ class BufTest : AbstractBufTest
     verifyEq(buf.crc("CRC-16"), 0xFD10)
     verifyEq(buf.crc("CRC-32"), 0x15f9_d197)
     verifyEq(buf.crc("CRC-32-Adler"), 0x071b_0169)
+
+    // capacity > size and large enough to wrap Adler sums
+    buf = Buf()
+    10000.times |i| { buf.write(i * 7) }
+    verifyEq(buf.crc("CRC-32"), 0xa0b7_0144)
+    verifyEq(buf.crc("CRC-32-Adler"), 0x96e2_70e6)
   }
 
 //////////////////////////////////////////////////////////////////////////

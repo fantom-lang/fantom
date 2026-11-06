@@ -30,6 +30,7 @@ class Build : BuildPod
     srcDirs = [`fan/`,
                `fan/ast/`,
                `fan/util/`,
+               `test/`,
               ]
     docSrc  = true
   }
