@@ -65,39 +65,23 @@ class BootEnv extends Env {
   out() { return this.#out; }
 
   prompt(msg="") {
-    if (this.os() == "win32") return this.#win32prompt(msg);
-    else return this.#unixprompt(msg);
-  }
-
-  #win32prompt(msg) {
-    // https://github.com/nodejs/node/issues/28243
+    // node has no sync readline, so read stdin a byte at a time until LF
     const fs = Env.__node()?.fs;
-    fs.writeSync(1, String(msg));
-    let s = '', buf = Buffer.alloc(1);
-    while(buf[0] != 10 && buf[0] != 13) {
-      s += buf;
-      fs.readSync(0, buf, 0, 1, 0);
+    const win = this.os() == "win32";
+    const fd = win ? 0 : fs.openSync("/dev/stdin", "rs");
+    try {
+      fs.writeSync(1, String(msg));
+      const bytes = [], buf = Buffer.alloc(1);
+      let n;
+      while ((n = fs.readSync(fd, buf, 0, 1, win ? 0 : null)) > 0 && buf[0] != 10) {
+        if (buf[0] != 13) bytes.push(buf[0]);
+      }
+      if (n == 0 && bytes.length == 0) return null;
+      return Buffer.from(bytes).toString();
     }
-    if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
-    return s.slice(1);
-  }
-
-  #unixprompt(msg) {
-    // https://stackoverflow.com/questions/61394928/get-user-input-through-node-js-console/74250003?noredirect=1#answer-75008198
-    const fs = Env.__node()?.fs;
-    const stdin = fs.openSync("/dev/stdin","rs");
-
-    fs.writeSync(process.stdout.fd, msg);
-    let s = '';
-    let buf = Buffer.alloc(1);
-    fs.readSync(stdin,buf,0,1,null);
-    while((buf[0] != 10) && (buf[0] != 13)) {
-      s += buf;
-      fs.readSync(stdin,buf,0,1,null);
+    finally {
+      if (!win) fs.closeSync(fd);
     }
-    // Not sure if we need this on unix?
-    // if (buf[0] == 13) { fs.readSync(0, buf, 0, 1, 0); }
-    return s;
   }
 
   homeDir() { return this.__homeDir; }
