@@ -120,6 +120,8 @@ class DecimalTest : Test
     verifyEq(1d / 3,  0.3333333333d)
     verifyEq(1d / 3f, 0.3333333333d)
     x = 20d / 2d; x /= -5d; verifyEq(x, -2d)
+    if (Env.cur.runtime == "java") verifyDivPrecision
+
 
     verifyEq(21d%-6d, 3d)
     verifyEq(16d%5d, 1d)
@@ -137,6 +139,24 @@ class DecimalTest : Test
     verifyEq(7d - 3d,  4d)
     verifyEq(7.0d - 2f,  5.0d)
     x=5d - 2d; x-=-3d; verifyEq(x, 6d)
+  }
+
+  ** Non-terminating division uses extra precision and min scale of 10
+  Void verifyDivPrecision()
+  {
+    verifyDiv(2d, 3d, "0.6666666667")
+    verifyDiv(1d, 7d, "0.1428571429")
+    verifyDiv(-1d, 3d, "-0.3333333333")
+    verifyDiv(10d, 4d, "2.5")
+    verifyDiv(1d, 0.0003d, "3333.3333333")
+    verifyDiv(1.123456789012345d, 3d, "0.374485596337448")
+    verifyDiv(12345678901234567890d, 7d, "1763668414462081127.1428571429")
+    verifyDiv(2d, 3.00000000000000000001d, "0.66666666666666666666")
+  }
+
+  Void verifyDiv(Decimal a, Decimal b, Str expected)
+  {
+    verifyEq((a / b).toStr, expected)
   }
 
 //////////////////////////////////////////////////////////////////////////

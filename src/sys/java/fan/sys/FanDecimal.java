@@ -80,21 +80,14 @@ public final class FanDecimal extends FanNum
 
   public static BigDecimal div(BigDecimal self, BigDecimal x)
   {
-    // From https://github.com/groovy/groovy-core/blob/master/src/main/org/codehaus/groovy/runtime/typehandling/BigDecimalMath.java
-    // as suggested by 'saltnlight5' in "Decimal operation failure?" discussion https://fantom.org/sidewalk/topic/1743
-    try
-    {
-      return self.divide(x);
-    }
-    catch (ArithmeticException e)
-    {
-      // set a DEFAULT precision if otherwise non-terminating
-      int precision = Math.max(self.precision(), x.precision()) + DIVISION_EXTRA_PRECISION;
-      BigDecimal result = self.divide(x, new MathContext(precision));
-      int scale = Math.max(Math.max(self.scale(), x.scale()), DIVISION_MIN_SCALE);
-      if (result.scale() > scale) result = result.setScale(scale, BigDecimal.ROUND_HALF_UP);
-      return result;
-    }
+    // exact quotient if it terminates
+    try { return self.divide(x); } catch (ArithmeticException e) {}
+
+    // otherwise round to operands' precision plus extra digits, and
+    // trim fraction to larger of operands' scale or the min scale
+    BigDecimal q = self.divide(x, new MathContext(Math.max(self.precision(), x.precision()) + divDigits));
+    int scale = Math.max(divDigits, Math.max(self.scale(), x.scale()));
+    return q.scale() > scale ? q.setScale(scale, RoundingMode.HALF_UP) : q;
   }
   public static BigDecimal divInt(BigDecimal self, long x) { return div(self, BigDecimal.valueOf(x)); }
   public static BigDecimal divFloat(BigDecimal self, double x) { return div(self, BigDecimal.valueOf(x)); }
@@ -178,13 +171,8 @@ public final class FanDecimal extends FanNum
 
   public static BigDecimal defVal = BigDecimal.ZERO;
 
-  // This is an arbitrary value, picked as a reasonable choice for a precision
-  // for typical user math when a non-terminating result would otherwise occur.
-  private static final int DIVISION_EXTRA_PRECISION = 10;
-
-  // This is an arbitrary value, picked as a reasonable choice for a rounding point
-  // for typical user math.
-  private static final int DIVISION_MIN_SCALE = 10;
+  // extra precision and min scale for non-terminating division
+  private static final int divDigits = 10;
 
 }
 
