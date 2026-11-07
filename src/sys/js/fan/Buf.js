@@ -436,42 +436,14 @@ class Buf extends Obj {
   toDigest(algorithm) {
     // trim buf to content
     const buf = this.__unsafeArray().slice(0, this.size());
-
-    let digest = null;
-    switch (algorithm)
-    {
-      case "MD5":
-        digest = buf_md5(buf); break;
-      case "SHA1":
-      case "SHA-1":
-        // fall-through
-        digest = buf_sha1.digest(buf); break;
-      case "SHA-256":
-        digest = buf_sha256.digest(buf); break;
-      default: throw ArgErr.make("Unknown digest algorithm " + algorithm);
-    }
-    return MemBuf.__makeBytes(digest);
+    return MemBuf.__makeBytes(buf_digest.digest(algorithm, buf));
   }
 
   hmac(algorithm, keyBuf) {
     // trim buf to content
     const buf = this.__unsafeArray().slice(0, this.size());
     const key = keyBuf.__unsafeArray().slice(0, keyBuf.size());
-
-    let digest = null;
-    switch (algorithm)
-    {
-      case "MD5":
-        digest = buf_md5(buf, key); break;
-      case "SHA1":
-      case "SHA-1":
-        // fall thru
-        digest = buf_sha1.digest(buf, key); break;
-      case "SHA-256":
-        digest = buf_sha256.digest(buf, key); break;
-      default: throw ArgErr.make("Unknown digest algorithm " + algorithm);
-    }
-    return MemBuf.__makeBytes(digest);
+    return MemBuf.__makeBytes(buf_digest.hmac(algorithm, buf, key));
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -532,22 +504,19 @@ class Buf extends Obj {
 //////////////////////////////////////////////////////////////////////////
 
   static pbk(algorithm, password, salt, iterations, keyLen) {
-    let digest = null;
     const passBuf = Str.toBuf(password);
 
     // trim buf to content
     const passBytes = passBuf.__unsafeArray().slice(0, passBuf.size());
     const saltBytes = salt.__unsafeArray().slice(0, salt.size());
 
+    let hash = null;
     switch(algorithm) {
-      case "PBKDF2WithHmacSHA1":
-        digest = buf_sha1.pbkdf2(passBytes, saltBytes, iterations, keyLen); break;
-      case "PBKDF2WithHmacSHA256":
-        digest = buf_sha256.pbkdf2(passBytes, saltBytes, iterations, keyLen); break;
+      case "PBKDF2WithHmacSHA1":   hash = "SHA-1"; break;
+      case "PBKDF2WithHmacSHA256": hash = "SHA-256"; break;
       default: throw Err.make("Unsupported algorithm: " + algorithm);
-
     }
-    return MemBuf.__makeBytes(digest);
+    return MemBuf.__makeBytes(buf_digest.pbkdf2(hash, passBytes, saltBytes, iterations, keyLen));
   }
 }
 

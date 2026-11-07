@@ -261,12 +261,9 @@ class Build : BuildScript
   {
     log.debug("fan/ [support]")
     append(sys + `FConst.js`, out)
-    append(sys + `Crypto.js`, out)
+    append(sys + `Digest.js`, out)
     append(sys + `MemBufStream.js`, out)
-    append(sys + `Md5.js`, out)
     append(sys + `ObjUtil.js`, out)
-    append(sys + `Sha1.js`, out)
-    append(sys + `Sha256.js`, out)
     append(sys + `StrInStream.js`, out)
     append(sys + `StrBufOutStream.js`, out)
     append(sys + `DateTimeStr.js`, out)

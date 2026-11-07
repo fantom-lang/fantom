@@ -107,6 +107,42 @@ class BufCryptoTest : AbstractBufTest
     }
   }
 
+  ** Message sizes around 64 byte block padding boundaries
+  ** and HMAC with key larger than block size
+  Void testDigestBoundaries()
+  {
+    verifyBoundary(0, "d41d8cd98f00b204e9800998ecf8427e", "da39a3ee5e6b4b0d3255bfef95601890afd80709", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "a885741107653e621bae86e72142c2dd", "93cf3b66c85469f193265f4c5867f51cb72c521a", "b33d74937c1e36b168994495205b2b77977aaa7b34129abe3000868328540dc9")
+    verifyBoundary(55, "8c3eb046bcdb1f0ffe75fdbaf890cf13", "04bb34aef4880b625e6b1564a014abd25fc02bfe", "16fa57a0a3423a715d594516339f36189d6b5f93754a9714fef202616a9fabfe",
+      "65174a59ee5d614e9eb317e7bef977ab", "9f72041caa3f6be95cf196c6353cdea336b78e59", "b9f7f23239c6ec59baa1b9e191be81d41f8694719c58fbe6e27b89b38983d863")
+    verifyBoundary(56, "d5e0fa3122448ddd3d843a9c5ed9e839", "83b9fcb6d3e3b20f376ab989a1b6353bcc6c0f44", "c37b44e5f1b18554b36966f4f8e08bfbf3164c4b6c10374d12d89850892073c5",
+      "e86af74686310a570b240d7d1a01c1e0", "aa036b89518cb1ff8888675b5e124e14a21f6dd1", "72cc5d3fa4a7f5cd7bdc0ad15165480d5b6e09c68d127e933e215d0ee398895e")
+    verifyBoundary(63, "1dd0d6ddeb881b118518c2881555f34b", "ab15090e8dbe512f3733350f9623ab11f9b5165b", "bbba992d2c85af960fb2987a1fd05e0aa82a3db3c740dd8982a9e273b75e36a3",
+      "b9921e5d27e2a4a495480b1dc3d75096", "faa233b96765171b6cad73c75357a7d97a536932", "edb50ae844c094649a6304918691666882818867ca666b2a870a39986cfd78c5")
+    verifyBoundary(64, "7b412e00d38c31b0845a4f502d39d5e3", "54305ee7e4c7bc5a96afc6d1994fc52d9bcb665f", "66bd4633ed6f71c4ecfa4763bf7ba1c8ec7612de9aa6c0578a7b675207c71e0b",
+      "27279a97fd602aaf13d0177c1d2b50d6", "fbe3f1bc3f686d58e889e47bbd5552eef61bdf2b", "4bbbb30870ddf22e5cf64d0283c3982803eb9f8b1ffd82037586297b8f7541e5")
+    verifyBoundary(65, "ba03b626aceb7b09c86c2d544afe1dce", "5985422a25357371ebd2a7f6ecd7eebed43db42c", "9f7dc47107b750a1f3d35db5d9547f24ef40da5b731b9540d4f43710a154f6c9",
+      "92b2fe1d5e44d5ac882f9626f9909d6f", "32d5108a3bb25c71db300399e50618e099eab877", "fc37b66abde54eb757d2e67375194e2270bd227bb9b3258f2406131724b3f427")
+    verifyBoundary(119, "dac58560b386c3d5b29ebbdec5197e10", "6839d6c27f22ed884ac43ae6bd3bfcee9e04b938", "a3ed307b730fa77c07531300c6e4a282330011d4d4caf6bb7b63ae05950f4b66",
+      "b8b8639d0df2fbeb7f531dc873f5e77c", "81f6271887a07a83575ddfd2b7babf93a535286b", "86dae5fd3397e1409a8f521cf01d9be1529bd664de260b355837e1de3606c2a3")
+    verifyBoundary(120, "6818845a0494b5fade3155f6a8e47b15", "8c40517a14ab8b78fd4b8958f4e31254a34c3fb0", "8e3b15d9fea7472655aa069620b7f8c2e55ee1499f763200a7515fe826e99d20",
+      "71cbf72898cffd1128c119fe63ae7888", "82a57e2a1aece1fffb596b86e42380a207ae8507", "e10431d18c6795c420835e88b6389bc2498c382dcaefa789b38a8ac6dc7d96ee")
+    verifyBoundary(1000, "7874d3c13d4ed33f057def947e0621ef", "f50d11c8ae2b20fe2598e99a6a2cb859e302615c", "095ecb62e30793ab4b954cd6a0586d0cc91f7ea5b1332694d8da780e98676d78",
+      "8f81a859c35063c8c7ab902a01a11f7c", "c7cbce1ac70232752f402c401a1b3b0b49b38c3b", "e723d04aadfdaff88d2d6da93c6c9996c711af6cfb946ecc91a30800a9d0ed20")
+  }
+
+  Void verifyBoundary(Int size, Str md5, Str sha1, Str sha256, Str hmacMd5, Str hmacSha1, Str hmacSha256)
+  {
+    buf := Buf(); size.times |i| { buf.write(i * 7 + 1) }
+    key := Buf(); 100.times |i| { key.write(i * 3) }
+    verifyEq(buf.toDigest("MD5").toHex, md5)
+    verifyEq(buf.toDigest("SHA-1").toHex, sha1)
+    verifyEq(buf.toDigest("SHA-256").toHex, sha256)
+    verifyEq(buf.hmac("MD5", key).toHex, hmacMd5)
+    verifyEq(buf.hmac("SHA-1", key).toHex, hmacSha1)
+    verifyEq(buf.hmac("SHA-256", key).toHex, hmacSha256)
+  }
+
   Void testBadDigest()
   {
     verifyErr(ArgErr#) { ascii("foo").toDigest("Foo Digest!") }
