@@ -53,6 +53,11 @@ The following are the standardized user defined keys:
   - `doc.format`: format used for the pod's documentation; set to "markdown"
     to author type/slot doc comments and chapter files in markdown.  See
     [Documentation](#documentation)
+  - `sbom.purl`: comma separated list of third party libraries the pod
+    packages unmodified, such as Java jars or JavaScript files; used to
+    generate a software bill of materials.  Each entry is a
+    [Package URL](https://github.com/package-url/purl-spec) optionally
+    followed by its SPDX license id: "pkg:maven/org.slf4j/slf4j-api@1.7.25 MIT"
 
 The following are the standardized keys automatically defined by compiler:
 
