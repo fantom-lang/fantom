@@ -30,7 +30,7 @@ class MutationObserverPeer extends sys.Obj {
       characterDataOldValue: opts.get("charDataOldVal") == true,
     };
     const filter = opts.get("attrFilter")
-    if (filter != null) config.attributeFilter = filter.values();
+    if (filter != null) config.attributeFilter = filter.__values();
     this.observer.observe(target.peer.elem, config);
     return self;
   }
