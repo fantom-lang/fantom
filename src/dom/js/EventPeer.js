@@ -22,6 +22,17 @@ class EventPeer extends sys.Obj {
     return EventPeer.make(new js.Event("mock"));
   }
 
+  static makeCustom(type, init)
+  {
+    const get = (n) => init == null ? null : init.get(n);
+    return EventPeer.make(new CustomEvent(type, {
+      bubbles:    get("bubbles") == true,
+      cancelable: get("cancelable") == true,
+      composed:   get("composed") == true,
+      detail:     get("detail"),
+    }));
+  }
+
   static fromNative(obj)
   {
     // short-circut if peer already exists
@@ -99,6 +110,8 @@ class EventPeer extends sys.Obj {
     if (this.#err == null) this.#err = sys.Err.make(this.event.error);
     return this.#err;
   }
+
+  preventDefault(self) { this.event.preventDefault(); }
 
   stop(self)
   {

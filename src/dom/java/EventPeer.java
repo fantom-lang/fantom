@@ -17,6 +17,8 @@ public class EventPeer
     return DomPeerFactory.factory().makeEvent(fan);
   }
 
+  static public Event makeCustom(String type, Map init) { throw err(); }
+
   static public Event fromNative(Object event)
   {
     return DomPeerFactory.factory().eventFromNative(event);
@@ -33,6 +35,7 @@ public class EventPeer
   public Key          key         (Event self)                          { throw err(); }
   public Err          err         (Event self)                          { throw err(); }
   public void         stop        (Event self)                          { throw err(); }
+  public void         preventDefault(Event self)                        { throw err(); }
   public Object       get         (Event self, String name, Object def) { throw err(); }
   public void         set         (Event self, String name, Object val) { throw err(); }
   public Object       data        (Event self)                          { throw err(); }

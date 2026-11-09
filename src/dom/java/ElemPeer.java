@@ -333,6 +333,8 @@ public class ElemPeer
 
   public void removeEvent(Elem self, String type, boolean useCapture, Func handler) { throw err(); }
 
+  public boolean dispatchEvent(Elem self, Event event) { throw err(); }
+
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////

@@ -129,6 +129,14 @@ class Event
   ** Create a mock [Event] manullay.
   @NoDoc static native Event makeMock()
 
+  ** Create a DOM CustomEvent of the given type.  Init options match
+  ** the DOM and default to false/null:
+  **   - "bubbles": Bool
+  **   - "cancelable": Bool
+  **   - "composed": Bool
+  **   - "detail": value available as `event->detail`
+  static native Event makeCustom(Str type, [Str:Obj?]? init := null)
+
   ** Create an [Event] instance from a native JavaScript Event object.
   @Js static native Event fromNative(Obj event)
 
@@ -191,6 +199,10 @@ class Event
 
   ** Stop further propagation of this event.
   native Void stop()
+
+  ** Cancel the default action, without stopping propagation like
+  ** `stop`.  A cancelable `Elem.dispatchEvent` then returns false.
+  native Void preventDefault()
 
   ** Get an attribute by name.  If not found return
   ** the specified default value.

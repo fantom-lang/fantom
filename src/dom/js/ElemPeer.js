@@ -483,6 +483,11 @@ class ElemPeer extends sys.Obj {
       this.elem.removeEventListener(type, handler.$func, useCapture);
   }
 
+  dispatchEvent(self, event)
+  {
+    return this.elem.dispatchEvent(event.peer.event);
+  }
+
   toStr(self)
   {
     const name = this.elem.nodeName;

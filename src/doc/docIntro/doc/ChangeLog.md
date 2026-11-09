@@ -11,6 +11,7 @@ license:    Licensed under the Academic Free License version 3.0
 - More unicode codepoint fixes
 - Test.warn
 - Duration.nowFast
+- Elem.dispachEvent, Event.makeCustom
 
 *Build 1.0.84 (23 Oct 2026)*
 - Fandoc fully converted to markdown

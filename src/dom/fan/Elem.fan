@@ -340,6 +340,11 @@ class Elem
   ** handler was not registered, this method does nothing.
   native Void removeEvent(Str type, Bool useCapture, Func handler)
 
+  ** Dispatch an event such as one from `Event.makeCustom` to this
+  ** element.  Return false if the event is cancelable and a handler
+  ** called `Event.preventDefault`, otherwise true.
+  native Bool dispatchEvent(Event event)
+
 //////////////////////////////////////////////////////////////////////////
 // Animation
 //////////////////////////////////////////////////////////////////////////
