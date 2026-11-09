@@ -111,8 +111,10 @@ class Elem
   ** Returns `null` if property does not exist.
   native Obj? prop(Str name)
 
-  ** Set the given DOM properity value for this element.
-  native This setProp(Str name, Obj? val)
+  ** Set the given DOM properity value for this element.  Virtual so a
+  ** subclass can react to its own properties; the `trap` operator
+  ** routes thru it.
+  virtual native This setProp(Str name, Obj? val)
 
 //////////////////////////////////////////////////////////////////////////
 // FFI

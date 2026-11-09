@@ -210,7 +210,7 @@ class ElemPeer extends sys.Obj {
     if (this.#svg) return Svg.doTrap(self, name, args);
 
     if (args == null || args.isEmpty()) return this.prop(self, name);
-    this.setProp(self, name, args.first());
+    self.setProp(name, args.first());
     return null;
   }
 
