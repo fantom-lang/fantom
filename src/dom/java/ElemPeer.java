@@ -246,7 +246,7 @@ public class ElemPeer extends DomNodePeer
     QuerySelector q = QuerySelector.parse(selectors);
     ArrayList matches = new ArrayList();
     matchQuerySelector(self, q, matches);
-    return Interop.toFan(matches, self.typeof());
+    return Interop.toFan(matches, Type.find("dom::Elem"));
   }
 
   private void matchQuerySelector(Elem parent, QuerySelector q, ArrayList matches)

@@ -336,7 +336,7 @@ class ElemPeer extends DomNodePeer {
 
   hasFocus(self)
   {
-    return this.elem === document.activeElement;
+    return this.elem === this.elem.ownerDocument.activeElement;
   }
 
   focus(self)

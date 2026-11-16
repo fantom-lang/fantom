@@ -90,10 +90,9 @@ class DomNodePeer extends sys.Obj {
 
   childNodes(self)
   {
-    const list = new Array();
     const kids = this.node.childNodes;
-    for (let i=0; i<kids.length; i++)
-      list.push(DomNodePeer.wrap(kids[i]));
+    const list = new Array(kids.length);
+    for (let i=0; i<kids.length; i++) list[i] = DomNodePeer.wrap(kids[i]);
     return sys.List.make(DomNode.type$, list);
   }
 
