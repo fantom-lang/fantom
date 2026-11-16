@@ -93,6 +93,7 @@ class JsType : JsNode
     js.indent
 
     writeCtor
+    writePeerFactory
     if (!def.isSynthetic) js.wl("typeof() { return ${name}.type\$; }", loc).nl
     mixins.each |m| { copyMixin(m) }
 
@@ -144,7 +145,7 @@ class JsType : JsNode
     js.wl("constructor() {", loc)
     js.indent
     if (!def.isMixin) js.wl("super();")
-    if (peer != null) js.wl("this.peer = new ${qnameToJs(peer)}Peer(this);", loc)
+    if (isPeerRoot) js.wl("this.peer = new.target.peer\$(this);", loc)
     js.wl("const this\$ = this;", loc)
     if (instanceInit != null)
     {
@@ -154,6 +155,20 @@ class JsType : JsNode
     }
     js.unindent
     js.wl("}").nl
+  }
+
+  ** Only the topmost type with natives creates the peer, using the
+  ** factory of the type being constructed so each instance gets one peer
+  private Bool isPeerRoot()
+  {
+    hasNatives && (def.base == null || findPeer(plugin, def.base) == null)
+  }
+
+  ** Each type with natives defines its peer factory; subclasses without
+  ** natives inherit it as a JS static
+  private Void writePeerFactory()
+  {
+    if (hasNatives) js.wl("static peer\$(self) { return new ${qnameToJs(def)}Peer(self); }", loc).nl
   }
 
 //////////////////////////////////////////////////////////////////////////

@@ -23,9 +23,6 @@ class DomNodePeer extends sys.Obj {
 
   constructor(self) { super(); }
 
-  /* Native DOM node */
-  node;
-
   /*
    * Native only method to wrap an existing DOM node.  If this node
    * has already been wrapped, return the existing instance.  If
