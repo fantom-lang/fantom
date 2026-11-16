@@ -64,19 +64,12 @@ class DocPeer extends DomNodePeer {
     return ElemPeer.wrap(elem);
   }
 
-  elemsFromPos(self, p)
-  {
-    const list  = sys.List.make(Elem.type$);
-    const elems = this.doc.elementsFromPoint(p.x(), p.y());
-    for (let i=0; i<elems.length; i++)
-      list.add(ElemPeer.wrap(elems[i]));
-    return list;
-  }
+  elemsFromPos(self, p) { return ElemPeer.wrapAll(this.doc.elementsFromPoint(p.x(), p.y())); }
 
   createElem(self, tagName, attribs, ns)
   {
     const elem = ns
-      ? this.doc.createElementNS(ns.toStr, tagName)
+      ? this.doc.createElementNS(ns.toStr(), tagName)
       : this.doc.createElement(tagName);
     const wrap = ElemPeer.wrap(elem);
     if (attribs != null)
@@ -100,22 +93,15 @@ class DocPeer extends DomNodePeer {
     return ElemPeer.wrap(elem);
   }
 
-  querySelectorAll(self, selectors)
-  {
-    const list  = sys.List.make(Elem.type$);
-    const elems = this.doc.querySelectorAll(selectors);
-    for (let i=0; i<elems.length; i++)
-      list.add(ElemPeer.wrap(elems[i]));
-    return list;
-  }
+  querySelectorAll(self, selectors) { return ElemPeer.wrapAll(this.doc.querySelectorAll(selectors)); }
 
   querySelectorAllType(self, selectors, type)
   {
-    const list  = sys.List.make(Elem.type$);
     const elems = this.doc.querySelectorAll(selectors);
+    const list  = new Array(elems.length);
     for (let i=0; i<elems.length; i++)
-      list.add(ElemPeer.wrap(elems[i], type.make()));
-    return list;
+      list[i] = elems[i]._fanNode ?? ElemPeer.wrap(elems[i], type.make());
+    return sys.List.make(Elem.type$, list);
   }
 
   exportPng(self, img)

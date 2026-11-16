@@ -60,6 +60,14 @@ class ElemPeer extends DomNodePeer {
     return DomNodePeer.wrap(elem, fanElem);
   }
 
+  /* Wrap a native element collection as an Elem[] */
+  static wrapAll(elems)
+  {
+    const list = new Array(elems.length);
+    for (let i=0; i<elems.length; i++) list[i] = ElemPeer.wrap(elems[i]);
+    return sys.List.make(Elem.type$, list);
+  }
+
   /* Native DOM element */
   get elem() { return this.node; }
   set elem(it) { this.node = it; }
@@ -300,51 +308,15 @@ class ElemPeer extends DomNodePeer {
     return this.elem.childElementCount > 0;
   }
 
-  children(self)
-  {
-    const list = new Array();
-    const kids = this.elem.childNodes;
-    for (let i=0; i<kids.length; i++)
-      if (kids[i].nodeType == 1)
-        list.push(ElemPeer.wrap(kids[i]));
-    return sys.List.make(Elem.type$, list);
-  }
+  children(self) { return ElemPeer.wrapAll(this.elem.children); }
 
-  firstChild(self)
-  {
-    const kids = this.elem.childNodes;
-    for (let i=0; i<kids.length; i++)
-      if (kids[i].nodeType == 1)
-        return ElemPeer.wrap(kids[i]);
-    return null;
-  }
+  firstChild(self) { return DomNodePeer.wrapOrNull(this.elem.firstElementChild); }
 
-  lastChild(self)
-  {
-    const kids = this.elem.childNodes;
-    for (let i=kids.length-1; i>=0; i--)
-      if (kids[i].nodeType == 1)
-        return ElemPeer.wrap(kids[i]);
-    return null;
-  }
+  lastChild(self) { return DomNodePeer.wrapOrNull(this.elem.lastElementChild); }
 
-  prevSibling(self)
-  {
-    let sib = this.elem.previousSibling;
-    while (sib != null && sib.nodeType != 1)
-      sib = sib.previousSibling;
-    if (sib == null) return null;
-    return ElemPeer.wrap(sib);
-  }
+  prevSibling(self) { return DomNodePeer.wrapOrNull(this.elem.previousElementSibling); }
 
-  nextSibling(self)
-  {
-    let sib = this.elem.nextSibling;
-    while (sib != null && sib.nodeType != 1)
-      sib = sib.nextSibling;
-    if (sib == null) return null;
-    return ElemPeer.wrap(sib);
-  }
+  nextSibling(self) { return DomNodePeer.wrapOrNull(this.elem.nextElementSibling); }
 
   querySelector(self, selectors)
   {
@@ -353,14 +325,7 @@ class ElemPeer extends DomNodePeer {
     return ElemPeer.wrap(elem);
   }
 
-  querySelectorAll(self, selectors)
-  {
-    const list  = sys.List.make(Elem.type$);
-    const elems = this.elem.querySelectorAll(selectors);
-    for (let i=0; i<elems.length; i++)
-      list.add(ElemPeer.wrap(elems[i]));
-    return list;
-  }
+  querySelectorAll(self, selectors) { return ElemPeer.wrapAll(this.elem.querySelectorAll(selectors)); }
 
   closest(self, selectors)
   {
@@ -385,32 +350,6 @@ class ElemPeer extends DomNodePeer {
   blur(self)
   {
     this.elem.blur();
-  }
-
-  find(self, f)
-  {
-    const kids = this.children(self);
-    for (let i=0; i<kids.size(); i++)
-    {
-      let kid = kids[i];
-      if (f(kid)) return kid;
-      kid = kid.find(f);
-      if (kid != null) return kid;
-    }
-    return null;
-  }
-
-  findAll(self, f, acc)
-  {
-    if (acc == null) acc = new Array();
-    const kids = this.children(self);
-    for (let i=0; i<kids.size(); i++)
-    {
-      const kid = kids[i];
-      if (f(kid)) acc.push(kid);
-      kid.findAll(f, acc);
-    }
-    return acc;
   }
 
   toStr(self)
