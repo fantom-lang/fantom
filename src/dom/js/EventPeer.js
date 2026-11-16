@@ -40,6 +40,18 @@ class EventPeer extends sys.Obj {
     return EventPeer.make(obj);
   }
 
+  /*
+   * Targets are typed as Elem; a document or window target gets an
+   * uncached Elem wrapper so it never displaces its real wrapper
+   */
+  static #toElem(t)
+  {
+    if (t.nodeType == 1) return ElemPeer.wrap(t);
+    const x = new Elem();
+    x.peer.node = t;
+    return x;
+  }
+
   type(self) { return this.event.type; }
 
   toNative(self) { return this.event; }
@@ -55,9 +67,15 @@ class EventPeer extends sys.Obj {
       // Fantom DOM pod only handles ELEMENT_NODE; walk up to the parent
       let t = this.event.target;
       if (t.nodeType == 3) t = t.parentNode;
-      this.#target = ElemPeer.wrap(t);
+      this.#target = EventPeer.#toElem(t);
     }
     return this.#target;
+  }
+
+  targetNode(self)
+  {
+    const t = this.event.target;
+    return t != null && t.nodeType ? DomNodePeer.wrap(t) : null;
   }
 
   #relatedTarget;
@@ -66,7 +84,7 @@ class EventPeer extends sys.Obj {
     if (this.#relatedTarget === undefined)
     {
       const rt = this.event.relatedTarget;
-      this.#relatedTarget = rt == null ? null : ElemPeer.wrap(rt);
+      this.#relatedTarget = rt == null ? null : EventPeer.#toElem(rt);
     }
     return this.#relatedTarget;
   }

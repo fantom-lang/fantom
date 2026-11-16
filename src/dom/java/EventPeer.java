@@ -27,6 +27,7 @@ public class EventPeer
   public Object       toNative    (Event self)                          { throw err(); }
   public String       type        (Event self)                          { throw err(); }
   public Elem         target      (Event self)                          { throw err(); }
+  public DomNode      targetNode  (Event self)                          { throw err(); }
   public boolean      alt         (Event self)                          { throw err(); }
   public boolean      ctrl        (Event self)                          { throw err(); }
   public boolean      shift       (Event self)                          { throw err(); }

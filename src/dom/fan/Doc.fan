@@ -16,7 +16,7 @@ using web
 ** See [pod doc](pod-doc#doc) for details.
 **
 @Js
-class Doc
+class Doc : DomNode
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ class Doc
   native Elem createElem(Str tagName, [Str:Str]? attrib := null, Uri? ns := null)
 
   ** Create a document fragment.
-  @NoDoc native Elem createFrag()
+  @NoDoc native DomFrag createFrag()
 
   **
   ** Returns the first element within the document (using depth-first
@@ -121,14 +121,6 @@ class Doc
 //////////////////////////////////////////////////////////////////////////
 // Events
 //////////////////////////////////////////////////////////////////////////
-
-  ** Attach an event handler for the given event on this document.
-  ** Returns callback function instance.
-  native Func onEvent(Str type, Bool useCapture, |Event e| handler)
-
-  ** Remove the given event handler from this document.  If this
-  ** handler was not registered, this method does nothing.
-  native Void removeEvent(Str type, Bool useCapture, Func handler)
 
   ** When a HTML document has been switched to `designMode`, the document
   ** object exposes the `exec` method which allows one to run commands to

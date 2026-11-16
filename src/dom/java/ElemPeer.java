@@ -16,7 +16,7 @@ import java.util.Iterator;
 import fan.sys.*;
 import fanx.interop.*;
 
-public class ElemPeer
+public class ElemPeer extends DomNodePeer
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,9 @@ public class ElemPeer
 
   public static ElemPeer make(Elem fan)
   {
-    return DomPeerFactory.factory().makeElem(fan);
+    ElemPeer peer = DomPeerFactory.factory().makeElem(fan);
+    ((DomNode)fan).peer = peer; // override base class's peer field
+    return peer;
   }
 
   public static Elem fromNative(Object elem, Type type)
@@ -58,9 +60,6 @@ public class ElemPeer
     if (style == null) style = new Style();
     return style;
   }
-
-  public String text(Elem self) { return this.text; }
-  public void text(Elem self, String text) { this.text = text; }
 
   // TODO: need to serialize all children into <html> format?
   public String html(Elem self) { throw err(); }
@@ -199,83 +198,42 @@ public class ElemPeer
 // Tree
 //////////////////////////////////////////////////////////////////////////
 
-  public Elem parent(Elem self)
-  {
-    return this.parent;
-  }
-
   public boolean hasChildren(Elem self)
   {
-    return kids.size() > 0;
+    return elemKids().size() > 0;
   }
 
   public List children(Elem self)
   {
-    return Interop.toFan(kids, self.typeof());
+    return Interop.toFan(elemKids(), Type.find("dom::Elem"));
   }
 
   public Elem firstChild(Elem self)
   {
-    if (kids.size() == 0) return null;
-    return (Elem)kids.get(0);
+    ArrayList elems = elemKids();
+    return elems.size() == 0 ? null : (Elem)elems.get(0);
   }
 
   public Elem lastChild(Elem self)
   {
-    if (kids.size() == 0) return null;
-    return (Elem)kids.get(kids.size()-1);
+    ArrayList elems = elemKids();
+    return elems.size() == 0 ? null : (Elem)elems.get(elems.size()-1);
   }
 
   public Elem prevSibling(Elem self)
   {
-    if (parent == null) return null;
-    int i = parent.peer.kids.indexOf(self);
-    return i == 0 ? null : (Elem)parent.peer.kids.get(i-1);
+    if (parentNode == null) return null;
+    ArrayList sibs = parentNode.peer.elemKids();
+    int i = sibs.indexOf(self);
+    return i == 0 ? null : (Elem)sibs.get(i-1);
   }
 
   public Elem nextSibling(Elem self)
   {
-    if (parent == null) return null;
-    int i = parent.peer.kids.indexOf(self);
-    return i == parent.peer.kids.size()-1 ? null : (Elem)parent.peer.kids.get(i+1);
-  }
-
-  public boolean containsChild(Elem self, Elem elem)
-  {
-    return kids.contains(elem);
-  }
-
-  public void addChild(Elem self, Elem child)
-  {
-    if (child.parent() != null) throw new RuntimeException("child already parented");
-    child.peer.parent = self;
-    kids.add(child);
-  }
-
-  public void insertChildBefore(Elem self, Elem child, Elem ref)
-  {
-    if (child.parent() != null) throw new RuntimeException("child already parented");
-    int i = kids.indexOf(ref);
-    if (i < 0) throw new RuntimeException("ref not a child of this element");
-    child.peer.parent = self;
-    kids.add(i, child);
-  }
-
-  public void replaceChild(Elem self, Elem oldChild, Elem newChild)
-  {
-    if (oldChild == newChild) return;
-    if (newChild.parent() != null) throw new RuntimeException("child already parented");
-    int i = kids.indexOf(oldChild);
-    if (i < 0) throw new RuntimeException("oldChild not a child of this element");
-    oldChild.peer.parent = null;
-    newChild.peer.parent = self;
-    kids.set(i, newChild);
-  }
-
-  public void removeChild(Elem self, Elem child)
-  {
-    child.peer.parent = null;
-    kids.remove(child);
+    if (parentNode == null) return null;
+    ArrayList sibs = parentNode.peer.elemKids();
+    int i = sibs.indexOf(self);
+    return i == sibs.size()-1 ? null : (Elem)sibs.get(i+1);
   }
 
   public Elem querySelector(Elem self, String selectors)
@@ -290,8 +248,6 @@ public class ElemPeer
     matchQuerySelector(self, q, matches);
     return Interop.toFan(matches, self.typeof());
   }
-
-  public Elem clone(Elem self, boolean deep) { throw err(); }
 
   private void matchQuerySelector(Elem parent, QuerySelector q, ArrayList matches)
   {
@@ -325,16 +281,6 @@ public class ElemPeer
   public void    focus   (Elem self) { throw err(); }
   public void    blur    (Elem self) { throw err(); }
 
-  public Func onEvent(Elem self, String type, boolean useCapture, Func handler)
-  {
-    // ignore
-    return handler;
-  }
-
-  public void removeEvent(Elem self, String type, boolean useCapture, Func handler) { throw err(); }
-
-  public boolean dispatchEvent(Elem self, Event event) { throw err(); }
-
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
@@ -345,12 +291,9 @@ public class ElemPeer
 
   private Uri ns;                             // non-null
   private String tagName;                     // non-null
-  private String text = "";                   // non-null
   private Style style;                        // null
   private boolean enabled = true;
   private HashMap props = new HashMap();      // Str:Obj
-  private Elem parent;                        // null
-  private ArrayList kids = new ArrayList();
 
   private static Err err() { return UnsupportedErr.make(); }
 }

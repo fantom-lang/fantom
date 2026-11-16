@@ -82,15 +82,15 @@ one-to-one:
     elem.style.setAll(["color":"#f00", "background:"#eee"])  // set list of style properties
     elem.style.setCss("color: #f00; background: #eee")       // set style with CSS grammar
 
-    // tree
+    // tree of elements
     elem.parent             // parent element
-    elem.prevSibling        // prev sibling
-    elem.nextSibling        // next sibling
+    elem.prevSibling        // prev sibling element
+    elem.nextSibling        // next sibling element
     elem.children           // List of child elements
-    elem.firstChild         // first child, or null if no children
-    elem.lastChild          // last child, or null if no children
-    elem.add(child)         // add a new child element
-    elem.remove(child)      // remove a child element
+    elem.firstChild         // first child element, or null if none
+    elem.lastChild          // last child element, or null if none
+    elem.add(child)         // add a new child node
+    elem.remove(child)      // remove a child node
 
     // forms
     elem->name              // the 'name' attribute
@@ -116,6 +116,26 @@ one-to-one:
     elem.querySelector("input[name='email']")  // find the <input> where name is "email"
 
     // animation
+
+# DomNode
+
+DomNode is the base class of Elem, DomText, and Doc and models the
+DOM's own node tree, where text nodes are siblings of elements.  Use
+the `*Node` methods to navigate all nodes, and the Elem methods such
+as `children` and `nextSibling` to navigate just elements:
+
+    // text nodes
+    text := DomText("Saved 3 times")  // create new unattached text node
+    elem.add(text)                    // add text node as child
+    text.text = "Saved 4 times"       // replace just this node's text
+
+    // tree of nodes
+    node.parentNode         // parent element, document, or fragment
+    node.prevNode           // prev sibling node
+    node.nextNode           // next sibling node
+    node.childNodes         // List of child nodes
+    node.firstNode          // first child node, or null if none
+    node.lastNode           // last child node, or null if none
 
 # XmlHttpRequest
 

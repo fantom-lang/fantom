@@ -9,11 +9,13 @@
 //   10 Jun 2023  Kiera O'Flynn  Refactor to ES
 //
 
-class DocPeer extends sys.Obj {
+class DocPeer extends DomNodePeer {
 
-  constructor(self) { super(); }
+  constructor(self) { super(self); }
 
-  doc;
+  /* Native DOM document */
+  get doc() { return this.node; }
+  set doc(it) { this.node = it; }
 
   title(self, it)
   {
@@ -88,8 +90,7 @@ class DocPeer extends sys.Obj {
 
   createFrag(self)
   {
-    const frag = this.doc.createDocumentFragment();
-    return ElemPeer.wrap(frag);
+    return DomNodePeer.wrap(this.doc.createDocumentFragment());
   }
 
   querySelector(self, selectors)
@@ -146,19 +147,6 @@ class DocPeer extends sys.Obj {
     cx.scale(ratio, ratio);
     cx.drawImage(elem, 0, 0);
     return canvas.toDataURL(mimeType, quality);
-  }
-
-  onEvent(self, type, useCapture, handler)
-  {
-    handler.$func = function(e) { handler(EventPeer.make(e)); }
-    this.doc.addEventListener(type, handler.$func, useCapture);
-    return handler;
-  }
-
-  removeEvent(self, type, useCapture, handler)
-  {
-    if (handler.$func)
-      this.doc.removeEventListener(type, handler.$func, useCapture);
   }
 
   exec(self, name, defUi, val)

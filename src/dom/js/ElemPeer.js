@@ -10,7 +10,7 @@
 //   10 Jun 2023  Kiera O'Flynn  Refactor to ES
 //
 
-class ElemPeer extends sys.Obj {
+class ElemPeer extends DomNodePeer {
 
 //////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -18,7 +18,7 @@ class ElemPeer extends sys.Obj {
 
   constructor(self)
   {
-    super();
+    super(self);
     this.#pos  = graphics.Point.defVal();
     this.#size = graphics.Size.defVal();
   }
@@ -32,15 +32,8 @@ class ElemPeer extends sys.Obj {
 
   _make(self, tagName, ns)
   {
-    // short-circut for wrap()
-    if (tagName === undefined) return;
-
-    const doc  = Win.cur().doc().peer.doc;
-    const elem = ns
-      ? doc.createElementNS(ns.toStr(), tagName)
-      : doc.createElement(tagName);
-    this.elem = elem;
-    this.elem._fanElem = self;
+    const doc = DomNodePeer.doc();
+    this.bind(self, ns ? doc.createElementNS(ns.toStr(), tagName) : doc.createElement(tagName));
 
     // optimziation hooks for non-html namespaces
     if (ns)
@@ -52,29 +45,24 @@ class ElemPeer extends sys.Obj {
   static fromNative = function(obj, type)
   {
     if (obj instanceof Elem) return obj;
+    if (obj.nodeType != 1) throw sys.ArgErr.make("Not an element: " + obj.nodeName);
     return ElemPeer.wrap(obj, type.make());
   }
 
   /*
-   * Native only method to wrap an existing DOM node.  If this node
-   * has already been wrapped by an Elem instance, return the
-   * existing instance.
+   * Native only method to wrap an existing DOM element.  If
+   * fanElem is specified it must be an Elem instance.
    */
   static wrap = function(elem, fanElem)
   {
-    if (!elem) throw sys.ArgErr.make("elem is null")
-
-    if (elem._fanElem != undefined)
-      return elem._fanElem;
-
     if (fanElem && !(fanElem instanceof Elem))
       throw sys.ArgErr.make("Type does not subclass Elem: " + fanElem);
-
-    const x = fanElem || Elem.make();
-    x.peer.elem = elem;
-    elem._fanElem = x;
-    return x;
+    return DomNodePeer.wrap(elem, fanElem);
   }
+
+  /* Native DOM element */
+  get elem() { return this.node; }
+  set elem(it) { this.node = it; }
 
 //////////////////////////////////////////////////////////////////////////
 // Accessors
@@ -102,12 +90,6 @@ class ElemPeer extends sys.Obj {
     }
 
     return this.#style;
-  }
-
-  text(self, it)
-  {
-    if (it === undefined) return this.elem.textContent;
-    else this.elem.textContent = it;
   }
 
   html(self, it)
@@ -313,14 +295,6 @@ class ElemPeer extends sys.Obj {
 // Tree
 //////////////////////////////////////////////////////////////////////////
 
-  parent(self)
-  {
-    if (this.elem.nodeName == "BODY") return null;
-    const parent = this.elem.parentNode;
-    if (parent == null) return null;
-    return ElemPeer.wrap(parent);
-  }
-
   hasChildren(self)
   {
     return this.elem.childElementCount > 0;
@@ -372,11 +346,6 @@ class ElemPeer extends sys.Obj {
     return ElemPeer.wrap(sib);
   }
 
-  containsChild(self, test)
-  {
-    return this.elem.contains(test.peer.elem);
-  }
-
   querySelector(self, selectors)
   {
     const elem = this.elem.querySelector(selectors);
@@ -398,32 +367,6 @@ class ElemPeer extends sys.Obj {
     const elem = this.elem.closest(selectors);
     if (elem == null) return null;
     return ElemPeer.wrap(elem);
-  }
-
-  clone(self, deep)
-  {
-    const clone = this.elem.cloneNode(deep);
-    return ElemPeer.wrap(clone);
-  }
-
-  addChild(self, child)
-  {
-    this.elem.appendChild(child.peer.elem);
-  }
-
-  insertChildBefore(self, child, ref)
-  {
-    this.elem.insertBefore(child.peer.elem, ref.peer.elem);
-  }
-
-  replaceChild(self, oldChild, newChild)
-  {
-    this.elem.replaceChild(newChild.peer.elem, oldChild.peer.elem);
-  }
-
-  removeChild(self, child)
-  {
-    this.elem.removeChild(child.peer.elem);
   }
 
   hasFocus(self)
@@ -468,24 +411,6 @@ class ElemPeer extends sys.Obj {
       kid.findAll(f, acc);
     }
     return acc;
-  }
-
-  onEvent(self, type, useCapture, handler)
-  {
-    handler.$func = function(e) { handler(EventPeer.make(e)); }
-    this.elem.addEventListener(type, handler.$func, useCapture);
-    return handler;
-  }
-
-  removeEvent(self, type, useCapture, handler)
-  {
-    if (handler.$func)
-      this.elem.removeEventListener(type, handler.$func, useCapture);
-  }
-
-  dispatchEvent(self, event)
-  {
-    return this.elem.dispatchEvent(event.peer.event);
   }
 
   toStr(self)

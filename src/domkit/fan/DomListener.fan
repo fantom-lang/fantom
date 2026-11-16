@@ -84,7 +84,7 @@ using graphics
       checkMutations.each |r,i|
       {
         checkState.clear
-        r.added.each |e| { findRegNodes(e, checkState) }
+        r.added.each |n| { if (n is Elem) findRegNodes(n, checkState) }
         checkState.each |e|
         {
           DomState s := map[e]
@@ -93,7 +93,7 @@ using graphics
         }
 
         checkState.clear
-        r.removed.each |e| { findRegNodes(e, checkState) }
+        r.removed.each |n| { if (n is Elem) findRegNodes(n, checkState) }
         checkState.each |e|
         {
           DomState s := map[e]

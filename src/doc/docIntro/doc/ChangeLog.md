@@ -11,6 +11,8 @@ license:    Licensed under the Academic Free License version 3.0
 - More unicode codepoint fixes
 - Test.warn
 - Duration.nowFast
+- DomNode and DomText
+- MutationRec breaking change to use DomNode instead of Elem
 - Elem.dispachEvent, Event.makeCustom
 
 *Build 1.0.84 (23 Oct 2026)*

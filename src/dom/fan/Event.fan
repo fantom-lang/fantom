@@ -150,8 +150,15 @@ class Event
   ** The type of this event.
   native Str type()
 
-  ** The target to which the event was dispatched.
+  ** The element to which the event was dispatched.  A text node
+  ** target maps to its parent element; use [targetNode] for the
+  ** exact node.
   native Elem target()
+
+  ** The node to which the event was dispatched including text
+  ** nodes and [Doc], or null if the target is not a node such
+  ** as the window.
+  native DomNode? targetNode()
 
   **
   ** Optional secondary target depending on event type:

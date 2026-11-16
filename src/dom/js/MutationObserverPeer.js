@@ -31,7 +31,7 @@ class MutationObserverPeer extends sys.Obj {
     };
     const filter = opts.get("attrFilter")
     if (filter != null) config.attributeFilter = filter.__values();
-    this.observer.observe(target.peer.elem, config);
+    this.observer.observe(target.peer.node, config);
     return self;
   }
 
@@ -54,23 +54,23 @@ class MutationObserverPeer extends sys.Obj {
     else if (rec.type == "characterData") fanRec.type ("charData");
     else                                  fanRec.type (rec.type);
 
-    fanRec.target (ElemPeer.wrap(rec.target));
+    fanRec.target (DomNodePeer.wrap(rec.target));
     fanRec.attr   (rec.attributeName);
     fanRec.attrNs (rec.attributeNamespace);
     fanRec.oldVal (rec.oldValue);
 
-    if (rec.previousSibling) fanRec.prevSibling (ElemPeer.wrap(rec.previousSibling));
-    if (rec.nextSibling)     fanRec.nextSibling (ElemPeer.wrap(rec.nextSibling));
+    if (rec.previousSibling) fanRec.prevSibling (DomNodePeer.wrap(rec.previousSibling));
+    if (rec.nextSibling)     fanRec.nextSibling (DomNodePeer.wrap(rec.nextSibling));
 
     const added = new Array();
     for (let i=0; i<rec.addedNodes.length; i++)
-      added.push(ElemPeer.wrap(rec.addedNodes[i]));
-    fanRec.added (sys.List.make(Elem.type$, added));
+      added.push(DomNodePeer.wrap(rec.addedNodes[i]));
+    fanRec.added (sys.List.make(DomNode.type$, added));
 
     const removed = new Array();
     for (let i=0; i<rec.removedNodes.length; i++)
-      removed.push(ElemPeer.wrap(rec.removedNodes[i]));
-    fanRec.removed (sys.List.make(Elem.type$, removed));
+      removed.push(DomNodePeer.wrap(rec.removedNodes[i]));
+    fanRec.removed (sys.List.make(DomNode.type$, removed));
 
     return fanRec;
   }

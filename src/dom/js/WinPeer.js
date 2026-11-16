@@ -81,11 +81,7 @@ class WinPeer extends sys.Obj {
   #doc;
   doc(self)
   {
-    if (!this.#doc)
-    {
-      this.#doc = Doc.make();
-      this.#doc.peer.doc = this.win.document;
-    }
+    if (!this.#doc) this.#doc = DomNodePeer.wrap(this.win.document);
     return this.#doc;
   }
 

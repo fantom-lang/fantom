@@ -31,7 +31,7 @@ class MutationObserver
   **  - "attrOldVal": `true` to capture attribute value before mutation (requires "attrs":'true')
   **  - "charDataOldVal": `true` to capture target's data before mutation (requires "charData":'true')
   **  - "attrFilter": Str[] whitelist of attribute names to observe (requires "attrs":'true')
-  native This observe(Elem target, Str:Obj opts)
+  native This observe(DomNode target, Str:Obj opts)
 
   ** Empties this observers's record queue and returns what was in there.
   native MutationRec[] takeRecs()
@@ -64,21 +64,21 @@ class MutationRec
   **  - For "attrs", it is the element whose attribute changed
   **  - For "charData", it is the CharacterData node
   **  - For "childList", it is the node whose children changed
-  Elem target
+  DomNode target
 
   ** List of nodes added, or empyt list if no nodes added.
-  Elem[] added
+  DomNode[] added
 
   ** List of nodes removed, or empty list if no nodes removed.
-  Elem[] removed
+  DomNode[] removed
 
   ** Previous sibling of the added or removed nodes, or null
   ** if not nodes added or removed.
-  Elem? prevSibling
+  DomNode? prevSibling
 
   ** Next sibling of the added or removed nodes, or null if
   ** no nodes added or removed.
-  Elem? nextSibling
+  DomNode? nextSibling
 
   ** Name of the changed attribute, or null if no attribute was changed.
   Str? attr

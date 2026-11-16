@@ -33,6 +33,21 @@ public class DomPeerFactory
     return new DomFilePeer();
   }
 
+  public DomNodePeer makeDomNode(DomNode fan)
+  {
+    return new DomNodePeer();
+  }
+
+  public DomFragPeer makeDomFrag(DomFrag fan)
+  {
+    return new DomFragPeer();
+  }
+
+  public DomTextPeer makeDomText(DomText fan)
+  {
+    return new DomTextPeer();
+  }
+
   public ElemPeer makeElem(Elem fan)
   {
     return new ElemPeer();

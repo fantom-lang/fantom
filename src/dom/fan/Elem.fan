@@ -15,7 +15,7 @@ using graphics
 ** See [pod doc](pod-doc#elem) for details.
 **
 @Js
-class Elem
+class Elem : DomNode
 {
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,11 +29,12 @@ class Elem
   private native Void _make(Str tagName, Uri? ns)
 
   **
-  ** Create an [Elem] instance from a native JavaScript DOM object.
+  ** Create an [Elem] instance from a native JavaScript DOM element.
   ** The `type` may be specified to create a subclass instance of
   ** Elem.  Note if the native instance has already been mapped
   ** to Fantom, the existing instance is returned and `type` will
-  ** have no effect.
+  ** have no effect.  Throw ArgErr if the native object is a text
+  ** or other non-element node.
   **
   @Js static native Elem fromNative(Obj elem, Type type := Elem#)
 
@@ -66,9 +67,6 @@ class Elem
 
   ** Get the Style instance for this element.
   native Style style()
-
-  ** Text content contained in this element.
-  native Str text
 
   ** The HTML markup contained in this element.
   native Str html
@@ -195,35 +193,28 @@ class Elem
 // Tree
 //////////////////////////////////////////////////////////////////////////
 
-  ** Get the parent Elem of this element, or null if
-  ** this element has no parent.
-  native Elem? parent()
-
   ** Return `true` if [children] is non-zero, `false` otherwise.
   native Bool hasChildren()
 
-  ** Get the child nodes of this element.
+  ** Get the child elements of this element.  Text and other
+  ** non-element nodes are excluded; see [childNodes].
   native Elem[] children()
 
-  ** Get the first child node of this element, or null
-  ** if this element has no children.
+  ** Get the first child element of this element, or null
+  ** if this element has no child elements.
   native Elem? firstChild()
 
-  ** Get the last child node of this element, or null
-  ** if this element has no children.
+  ** Get the last child element of this element, or null
+  ** if this element has no child elements.
   native Elem? lastChild()
 
-  ** Get the previous sibling to this element, or null
+  ** Get the previous sibling element to this element, or null
   ** if this is the first element under its parent.
   native Elem? prevSibling()
 
-  ** Get the next sibling to this element, or null if
+  ** Get the next sibling element to this element, or null if
   ** this is the last element under its parent.
   native Elem? nextSibling()
-
-  ** Return `true` if given element is a descendant of this
-  ** node, or `false` if not.
-  native Bool containsChild(Elem elem)
 
   ** Returns the first element that is a descendant of this
   ** element on which it is invoked that matches the specified
@@ -240,79 +231,13 @@ class Elem
   ** specified CSS selector.  Returns `null` if none found.
   native Elem? closest(Str selectors)
 
-  ** Return a duplicate of this node.
-  native Elem clone(Bool deep := true)
+  ** Return a duplicate of this element.
+  override Elem clone(Bool deep := true) { super.clone(deep) }
 
-  ** Add a new element as a child to this element. Return this.
-  @Operator virtual This add(Elem child)
-  {
-    addChild(child)
-    onAdd(child)
-    child.onParent(this)
-    return this
-  }
-
-  ** Insert a new element as a child to this element before the
-  ** specified reference element.  The reference element must
-  ** be a child of this element. Returns this.
-  virtual This insertBefore(Elem child, Elem ref)
-  {
-    insertChildBefore(child, ref)
-    onAdd(child)
-    child.onParent(this)
-    return this
-  }
-
-  ** Replace existing child node with a new child.  Returns this.
-  virtual This replace(Elem oldChild, Elem newChild)
-  {
-    replaceChild(oldChild, newChild)
-    oldChild.onUnparent(this)
-    onRemove(oldChild)
-    onAdd(newChild)
-    newChild.onParent(this)
-    return this
-  }
-
-  ** Remove a child element from this element. Return this.
-  virtual This remove(Elem child)
-  {
-    removeChild(child)
-    child.onUnparent(this)
-    onRemove(child)
-    return this
-  }
-
-  ** Add all elements to this element.  Returns this.
-  This addAll(Elem[] elems)
-  {
-    elems.each |e| { add(e) }
-    return this
-  }
-
-  ** Remove all children from this element. Returns this.
-  This removeAll()
-  {
-    children.each |kid| { remove(kid) }
-    return this
-  }
-
-  ** Add a new element as a child to this element.
-  @NoDoc protected native Void addChild(Elem child)
-
-  ** Insert a new element as a child to this element before given node.
-  @NoDoc protected native Void insertChildBefore(Elem child, Elem ref)
-
-  ** Replace an existing child element with new element.
-  @NoDoc protected native Void replaceChild(Elem oldChild, Elem newChild)
-
-  ** Remove a child element from this element.
-  @NoDoc protected native Void removeChild(Elem child)
-
-  ** Callback when this element is added to a parent.
+  ** Callback when this element is added to a parent element.
   @NoDoc protected virtual Void onParent(Elem parent) {}
 
-  ** Callback when this element is removed from a parent.
+  ** Callback when this element is removed from a parent element.
   @NoDoc protected virtual Void onUnparent(Elem parent) {}
 
   ** Callback when a child element is added.
@@ -333,19 +258,6 @@ class Elem
 
   ** Remove focus from this elem.
   virtual native Void blur()
-
-  ** Attach an event handler for the given event on this element.
-  ** Returns callback function instance.
-  native Func onEvent(Str type, Bool useCapture, |Event e| handler)
-
-  ** Remove the given event handler from this element.  If this
-  ** handler was not registered, this method does nothing.
-  native Void removeEvent(Str type, Bool useCapture, Func handler)
-
-  ** Dispatch an event such as one from `Event.makeCustom` to this
-  ** element.  Return false if the event is cancelable and a handler
-  ** called `Event.preventDefault`, otherwise true.
-  native Bool dispatchEvent(Event event)
 
 //////////////////////////////////////////////////////////////////////////
 // Animation
