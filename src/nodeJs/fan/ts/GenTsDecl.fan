@@ -269,7 +269,8 @@ class GenTsDecl
 
   private Str toMethodReturn(CType type, CMethod method)
   {
-    output := method.isCtor ? type.name : toMethodSigType(method, method.returns, pmap.containsKey(type.signature) ? type : null)
+    // TS does not allow this type on statics, so use the declaring type
+    output := method.isCtor ? type.name : toMethodSigType(method, method.returns, method.isStatic || pmap.containsKey(type.signature) ? type : null)
     if (method.qname == "sys::Obj.toImmutable" ||
         method.qname == "sys::List.ro" ||
         method.qname == "sys::Map.ro")

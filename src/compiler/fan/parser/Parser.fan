@@ -663,7 +663,7 @@ public class Parser : CompilerSupport
 
     // if This is returned, then we configure inheritedRet
     // right off the bat (this is actual signature we will use)
-    if (ret.isThis) method.inheritedRet = parent
+    if (ret.isThis) method.inheritedRet = ret.isNullable ? parent.toNullable : parent
 
     // enter scope
     curSlot = method

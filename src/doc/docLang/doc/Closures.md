@@ -262,7 +262,7 @@ which exists on both `this` and `it`, then it is a compile time error:
 
 # This Functions
 As a general rule the `sys::This` type is reserved for use only as
-the [return type](Methods#this-returns) of instance methods.  There is
+the [return type](Methods#this-returns) of methods.  There is
 one exception - you are allowed to declare a method parameter typed
 as `|This|` to indicate that an it-block function is expected:
 

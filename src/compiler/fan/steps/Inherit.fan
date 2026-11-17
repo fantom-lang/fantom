@@ -267,11 +267,11 @@ class Inherit : CompilerStep
     defRet := def.returns
     baseRet := base.returns
 
-    // if the base is defined as This, then all overrides must be This
+    // if the base is defined as This/This?, then all overrides must match
     if (baseRet.isThis)
     {
-      if (!defRet.isThis)
-        throw err("Return in override of '$base.qname' must be This", loc)
+      if (!defRet.isThis || defRet.isNullable != baseRet.isNullable)
+        throw err("Return in override of '$base.qname' must be This" + (baseRet.isNullable ? "?" : ""), loc)
     }
     else
     {

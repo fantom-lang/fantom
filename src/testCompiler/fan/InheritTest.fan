@@ -800,6 +800,139 @@ class InheritTest : CompilerTest
     verifyEq(c->testC5, 'X')
   }
 
+  Void testNullableThisReturn()
+  {
+    compile(
+     "class A
+      {
+        A? parentRef
+        virtual This? parent() { parentRef }
+        This? find(Bool b) { b ? this : null }
+        Int a() { 'A' }
+      }
+
+      class B : A
+      {
+        override This? parent() { parentRef }
+        Int testB1() { parent.b }
+        Int? testB2() { find(false)?.b }
+        Int testB3() { find(true).b }
+        B? testB4() { parent }
+        Int testB5() { find(true) { it.parentRef = null }.b }
+        Int b() { 'B' }
+      }
+
+      class C
+      {
+        static Int testC1(B x) { x.parent.b }
+        static Int? testC2(B x) { x.find(false)?.b }
+        static Int testC3(A x) { x.find(true).a }
+      }")
+
+    a := pod.type("A")
+    b := pod.type("B")
+    c := pod.type("C")
+
+    // reflection
+    verifyEq(a.method("parent").returns, This?#)
+    verifyEq(b.method("parent").returns, This?#)
+    verifyEq(a.method("find").returns, This?#)
+
+    // call site type
+    bp := b.make; bp->parentRef = b.make
+    verifyEq(bp->testB1, 'B')
+    verifyEq(bp->testB2, null)
+    verifyEq(bp->testB3, 'B')
+    verifySame(bp->testB4, bp->parentRef)
+    verifyEq(bp->testB5, 'B')
+    verifyEq(bp->parentRef, null)
+    verifyEq(c.method("testC2").call(bp), null)
+    verifyEq(c.method("testC3").call(a.make), 'A')
+
+    // parent null and wrong type
+    verifyEq(b.make->testB4, null)
+    ba := b.make; ba->parentRef = a.make
+    verifyErr(CastErr#) { ba->testB1 }
+    verifyErr(CastErr#) { c.method("testC1").call(ba) }
+  }
+
+  Void testStaticThisReturn()
+  {
+    compile(
+     "class A
+      {
+        static This make1(Obj x) { x }
+        static This? cur(Obj? x, Bool checked := true)
+        {
+          if (x == null && checked) throw ArgErr()
+          return x
+        }
+        static Int testA1() { cur(A()).a }
+        Int a() { 'A' }
+      }
+
+      class B : A
+      {
+        static Int testB1(Obj x) { cur(x).b }
+        static Int testB2(Obj? x) { B.cur(x).b }
+        static Int testB3(Obj x) { A.cur(x).a }
+        static Int testB4(Obj x) { f := |->Int| { cur(x).b }; return f() }
+        static Int testB5(Obj x) { B.make1(x).b }
+        static B? testB6(Obj? x) { B.cur(x, false) }
+        Int b() { 'B' }
+      }
+
+      class C
+      {
+        static Int testC1(Obj x) { B.cur(x).b }
+        static Int testC2(Obj x) { A.make1(x).a }
+      }")
+
+    a := pod.type("A")
+    b := pod.type("B")
+    c := pod.type("C")
+
+    // reflection
+    verifyEq(a.method("cur").returns, This?#)
+    verifyEq(a.method("make1").returns, This#)
+    verifySame(b.method("cur"), a.method("cur"))
+
+    // call site type
+    verifyEq(a.method("testA1").call, 'A')
+    verifyEq(b.method("testB1").call(b.make), 'B')
+    verifyEq(b.method("testB2").call(b.make), 'B')
+    verifyEq(b.method("testB3").call(a.make), 'A')
+    verifyEq(b.method("testB4").call(b.make), 'B')
+    verifyEq(b.method("testB5").call(b.make), 'B')
+    verifyEq(b.method("testB6").call(null), null)
+    verifyEq(c.method("testC1").call(b.make), 'B')
+    verifyEq(c.method("testC2").call(b.make), 'A')
+
+    // cast at call site
+    verifyErr(CastErr#) { b.method("testB2").call(a.make) }
+    verifyErr(CastErr#) { b.method("testB5").call(a.make) }
+    verifyErr(CastErr#) { c.method("testC1").call("foo") }
+    verifyErr(ArgErr#) { b.method("testB2").call(null) }
+
+    // call site in another pod resolves via reflection
+    podA := pod.name
+    compile(
+     "using $podA
+      class D : B
+      {
+        static Int testD1(Obj x) { cur(x).d }
+        static Int testD2(Obj x) { B.cur(x).b }
+        static D? testD3(Obj? x) { D.cur(x, false) }
+        Int d() { 'D' }
+      }")
+
+    d := pod.type("D")
+    verifyEq(d.method("testD1").call(d.make), 'D')
+    verifyEq(d.method("testD2").call(d.make), 'B')
+    verifyEq(d.method("testD3").call(null), null)
+    verifyErr(CastErr#) { d.method("testD1").call(b.make) }
+  }
+
   Void testThisReturnErrors()
   {
     // normalize
@@ -827,6 +960,24 @@ class InheritTest : CompilerTest
         8, 3, "Return in override of '$podName::A.x' must be This",
       ])
 
+    // inherit step nullable mismatch
+    verifyErrors(
+     "class A
+      {
+        virtual This? x() { return this }
+        virtual This y() { return this }
+      }
+
+      class B : A
+      {
+        override This x() { return this }
+        override This? y() { return this }
+      }",
+      [
+        9, 3, "Return in override of '$podName::A.x' must be This?",
+        10, 3, "Return in override of '$podName::A.y' must be This",
+      ])
+
     // check errors
     verifyErrors(
      "class Foo
@@ -835,9 +986,9 @@ class InheritTest : CompilerTest
         Void m01(Void x) {}
         Void m02() { This? x := null }
         Void m03() { Void? x := null }
-        static This m04() { return Foo.make }
+        static This m04() { return 3 }
         This m05() { return 3 }
-        This? m06() { return this }
+        This? m06() { return 3 }
         This m07() { return null }
       }",
       [
@@ -846,9 +997,9 @@ class InheritTest : CompilerTest
         5, 16, "Cannot use This as local variable type",
         6, 27, "'null' is not assignable to 'sys::Void?'",
         6, 16, "Cannot use Void as local variable type",
-        7, 3,  "Cannot return This from static method",
+        7, 30, "Cannot return 'sys::Int' as $podName::Foo This",
         8, 23, "Cannot return 'sys::Int' as $podName::Foo This",
-        9, 3, "This type cannot be nullable",
+        9, 24, "Cannot return 'sys::Int' as $podName::Foo This",
         10, 23, "Cannot return 'null' as $podName::Foo This",
       ])
   }

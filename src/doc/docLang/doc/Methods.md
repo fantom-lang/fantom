@@ -389,14 +389,43 @@ type as `This`:
     }
 
 The `This` type is a special marker type like `Void`.  It indicates
-that a method is guaranteed to always return an instance of the
-target type.  In our example above, the expression `x.open` will
-always evaluate to an instance of `Type.of(x)`.
+that a method returns an instance of the target type.  In our example
+above, the expression `x.open` evaluates to an instance of `Type.of(x)`.
 
-Use of `This` is restricted to the return type of non-static
-methods.  You can't use it for static methods, parameter types,
-local variable types, or for fields.  Overrides of a methods
-which return `This` must also return `This`.
+The compiler types each call to a `This` method as the call site's
+target type, and inserts an implicit cast if that differs from the
+declaring type.  Methods which return `this` always pass the cast;
+methods which return some other instance of the declaring type throw
+`CastErr` at the call site if it doesn't fit the target type.
+
+Use `This?` for methods which may return null:
+
+    class Node
+    {
+      virtual This? parent() { ... }
+    }
+
+    class FileNode : Node {}
+
+    fileNode.parent    // typed as FileNode?
+
+Use of `This` is restricted to method return types.  You can't use
+it for parameter types, local variable types, or for fields.  Overrides
+of methods which return `This` must also return `This`, and overrides
+of methods which return `This?` must also return `This?`.
+
+Static methods may also return `This` or `This?`.  Since there is no
+instance, the type is the type named at the call site:
+
+    class Session
+    {
+      static This? cur(Bool checked := true) { ... }
+    }
+
+    class AdminSession : Session {}
+
+    Session.cur        // typed as Session
+    AdminSession.cur   // typed as AdminSession via (AdminSession)Session.cur
 
 # Dynamic Invoke
 As any dynamic language proponent can tell you - sometimes static

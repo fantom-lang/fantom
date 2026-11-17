@@ -469,15 +469,6 @@ class CheckErrors : CompilerStep
 
   private Void checkMethodReturn(MethodDef m)
   {
-    if (m.returns.isThis)
-    {
-      if (m.isStatic)
-        err("Cannot return This from static method", m.loc)
-
-      if (m.returns.isNullable)
-        err("This type cannot be nullable", m.loc)
-    }
-
     if (!m.returns.isThis && !m.returns.isVoid)
       checkValidType(m.loc, m.returns)
   }
@@ -771,7 +762,7 @@ class CheckErrors : CompilerStep
     }
     else if (ret.isThis)
     {
-      stmt.expr = coerce(stmt.expr, curType) |->|
+      stmt.expr = coerce(stmt.expr, ret.isNullable ? curType.toNullable : curType) |->|
       {
         err("Cannot return '$stmt.expr.toTypeStr' as $curType This", stmt.expr.loc)
       }

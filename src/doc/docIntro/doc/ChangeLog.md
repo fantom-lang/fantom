@@ -14,6 +14,9 @@ license:    Licensed under the Academic Free License version 3.0
 - DomNode and DomText
 - MutationRec breaking change to use DomNode instead of Elem
 - Elem.dispachEvent, Event.makeCustom
+- Methods may return This?
+- Static methods may return This
+- ActorContext.curx renamed to cur returning This?
 
 *Build 1.0.84 (23 Oct 2026)*
 - Fandoc fully converted to markdown

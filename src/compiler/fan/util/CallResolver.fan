@@ -403,7 +403,7 @@ class CallResolver : CompilerSupport
     if (c.isItBlock)
     {
       // if call is This, switch it to base (passes thru to toWith)
-      if (call.ctype.isThis) call.ctype = base
+      if (call.ctype.isThis) call.ctype = call.ctype.isNullable ? base.toNullable : base
 
       // can't chain it-block if call returns Void
       if (call.ctype.isVoid)
@@ -481,6 +481,7 @@ class CallResolver : CompilerSupport
     // calling against the original declaring type
     // then we also need an implicit cast operation
     base := foundOnIt ? this.baseIt : this.base
+    if (method.returns.isNullable) base = base.toNullable
     result.ctype = base
     if (method.inheritedReturns != base)
       result = TypeCheckExpr.coerce(result, base) { from = method.inheritedReturns }
