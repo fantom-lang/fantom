@@ -466,6 +466,77 @@ class JwtTest : CryptoTest
     }    
   }
 
+  Void testEcCurves()
+  {
+    // sign and verify on every curve; 30 runs covers R or S with the high bit set and leading zeros
+    ["ES256":256, "ES384":384, "ES512":521].each |bits, a|
+    {
+      kp := crypto.genKeyPair("EC", bits)
+      30.times
+      {
+        tok := Jwt { it.alg = a; it.sub = "x" }.encode(kp.priv)
+        verifyEq(Buf.fromBase64(tok.split('.')[2]).size, JwsAlgorithm.fromAlg(a).ecSigSize)
+        verifyEq(Jwt.decode(tok, kp.pub).sub, "x")
+      }
+    }
+  }
+
+  Void testEcTranscode()
+  {
+    r := "80" + "11" * 31
+    s := "00" * 31 + "01"
+    verifyTranscode(r + s, "3026" + "022100" + r + "020101")
+
+    // zero is a single 00 byte
+    verifyTranscode("00" * 64, "3006" + "020100" + "020100")
+
+    // P-521 needs the long form length
+    r = "01" + "ff" * 65
+    verifyTranscode(r + r, "308188" + "0242" + r + "0242" + r)
+
+    // malformed DER
+    toConcat := Jwt#.method("transcodeDerToConcat")
+    ["3006020100020100ff", "3106020100020100", "3007020100020300ff", "3006020100030100"].each |hex|
+    {
+      verifyErr(ArgErr#) { toConcat.call(Buf.fromHex(hex), 64) }
+    }
+    // integer larger than the curve
+    verifyErr(ArgErr#) { toConcat.call(Buf.fromHex("3026" + "022101" + "00" * 32 + "020100"), 64) }
+  }
+
+  Void testEcRfc7515()
+  {
+    // A.3 ES256: S has the high bit set so the DER needs the 0x00 pad
+    a3Key := crypto.loadJwk(["kty":"EC", "alg":"ES256", "crv":"P-256",
+      "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+      "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0"]).key
+    a3 := "eyJhbGciOiJFUzI1NiJ9" +
+          ".eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ" +
+          ".DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q"
+    // example expired in 2011
+    drift := DateTime.nowUtc - DateTime.fromJava(1300819380000) + 1day
+    verifyEq(Jwt.decode(a3, a3Key, drift).iss, "joe")
+
+    // A.4 ES512: payload is not JSON so verify the transcoded signature directly
+    a4Key := (PubKey)crypto.loadJwk(["kty":"EC", "alg":"ES512", "crv":"P-521",
+      "x":"AekpBQ8ST8a8VcfVOTNl353vSrDCLLJXmPk06wTjxrrjcBpXp5EOnYG_NjFZ6OvLFV1jSfS9tsz4qUxcWceqwQGk",
+      "y":"ADSmRA43Z1DSNx_RvcLI87cdL07l6jQyyBXMoxVg_l2Th-x3S1WDhjDly79ajL4Kkd0AZMaZmh9ubmf63e3kyMj2"]).key
+    a4Sig := Buf.fromBase64("AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZq" +
+                            "wqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8Kp" +
+                            "EHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn")
+    verifyEq(a4Sig.size, 132)
+    der := (Buf)Jwt#.method("transcodeConcatToDer").call(a4Sig)
+    verify(a4Key.verify("eyJhbGciOiJFUzUxMiJ9.UGF5bG9hZA".toBuf, "SHA512", der))
+  }
+
+  private Void verifyTranscode(Str concat, Str der)
+  {
+    toDer    := Jwt#.method("transcodeConcatToDer")
+    toConcat := Jwt#.method("transcodeDerToConcat")
+    verifyEq(((Buf)toDer.call(Buf.fromHex(concat))).toHex, der)
+    verifyEq(((Buf)toConcat.call(Buf.fromHex(der), concat.size / 2)).toHex, concat)
+  }
+
   Void testUnsignedJwt()
   {
     myJwtStr := Jwt {

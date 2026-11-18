@@ -467,7 +467,7 @@ const class Jwt
         throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
       if (jwsAlg.keyType == "EC") jwsAlg.checkEcKey(key)
       sigBuf := ((PrivKey)key).sign(signingContent, jwsAlg.digest)
-      if (key.algorithm == "EC") signature = transcodeDerToConcat(sigBuf, 64).toBase64Uri
+      if (key.algorithm == "EC") signature = transcodeDerToConcat(sigBuf, jwsAlg.ecSigSize).toBase64Uri
       else signature = sigBuf.toBase64Uri
     }
     else if (key is MacKey)
@@ -485,116 +485,63 @@ const class Jwt
     return signature
   }
 
-  // The ECDSA signature must be converted to ASN.1 DER bytes for verification
-  //
-  // JWS ECDSA signatures are formatted as the EC point R and S unsigned integers converted to byte arrays and
-  // concatenated as defined in [RFC7515]`https://datatracker.ietf.org/doc/html/rfc7515#page-45`
+  // JWS ECDSA signatures are R||S as fixed size unsigned big-endian integers
+  // (RFC 7515 A.3), but Java signs and verifies ASN.1 DER SEQUENCE {r INTEGER, s INTEGER}
   private static Buf transcodeConcatToDer(Buf sig)
   {
-    rawLen := sig.size / 2
-
-    i := rawLen
-    while (i > 1 && sig[rawLen - i] == 0) {--i}
-
-    j := i
-    if (sig[rawLen - i] < 0) j++
-    k := rawLen
-    while (k > 1 && sig[rawLen*2 - k] == 0) {--k}
-
-    l := k
-    if (sig[rawLen*2 - k] < 0) l++
-    len := 2 + j + 2 + l
-
-    if (len > 255) throw ArgErr("Invalid JWT ECDSA signature format")
-
-    offset := 0
-    derLen := 0
-    setByte := false
-
-    if (len < 128)
-    {
-      derLen = 2 + 2 + j + 2 + l
-      offset = 1
-    }
-    else
-    {
-      derLen = 3 + 2 + j + 2 + l
-      setByte = true
-      offset = 2
-    }
-
-    der := Buf(derLen).fill(0, derLen)
-
-    der.seek(0)
-    der.write(48)
-
-    if (setByte) der.write(0x81)
-
-    der.write(len)
-    der.write(2)
-    der.write(j)
-    offset += 3
-
-    idx := rawLen - i
-    der.seek((offset + j) - i)
-    i.times { der.write(sig[idx]); ++idx }
-
-    offset += j
-
-    der.seek(offset)
-    der.write(2)
-    der.write(l)
-    offset += 2
-
-    idx = 2*rawLen - k
-    der.seek((offset + l) - k)
-    k.times { der.write(sig[idx]); ++idx }
-
-    return der.seek(0)
+    half := sig.size / 2
+    body := Buf()
+    writeDerInt(body, sig[0..<half])
+    writeDerInt(body, sig[half..<sig.size])
+    der := Buf().write(0x30)
+    writeDerLen(der, body.size)
+    return der.writeBuf(body.flip).flip
   }
 
-  //Format ECDSA signatures as defined in [RFC7515]`https://datatracker.ietf.org/doc/html/rfc7515#page-45`
-  private Buf transcodeDerToConcat(Buf sig, Int outLen)
+  // DER INTEGER is signed and minimal: strip leading zeros, add 0x00 if the high bit is set
+  private static Void writeDerInt(Buf out, Buf mag)
   {
-    if (sig.size < 8 || sig[0] != 48)
-      throw ArgErr("Invalid JWT ECDSA signature format")
+    i := 0
+    while (i < mag.size - 1 && mag[i] == 0) ++i
+    pad := mag[i] >= 0x80 ? 1 : 0
+    out.write(0x02)
+    writeDerLen(out, mag.size - i + pad)
+    if (pad == 1) out.write(0)
+    out.writeBuf(mag[i..<mag.size])
+  }
 
-    offset := 0
-    if (sig[1] > 0)
-      offset = 2
-    else if (sig[1] == 0x81)
-      offset = 3
-    else
-      throw ArgErr("Invalid JWT ECDSA signature format")
+  // P-521 is the largest curve so the SEQUENCE never exceeds 255 bytes
+  private static Void writeDerLen(Buf out, Int len)
+  {
+    if (len >= 0x80) out.write(0x81)
+    out.write(len)
+  }
 
-    rLen := sig[offset + 1]
-    i := rLen
-    while ((i > 0) && (sig[(offset + 2 + rLen) - i] == 0)) { --i }
+  private static Buf transcodeDerToConcat(Buf der, Int outLen)
+  {
+    err  := ArgErr("Invalid JWT ECDSA signature format")
+    half := outLen / 2
+    if (der.size < 8 || der[0] != 0x30) throw err
+    pos := 2
+    seqLen := der[1]
+    if (seqLen == 0x81) { seqLen = der[2]; pos = 3 }
+    else if (seqLen >= 0x80) throw err
+    if (pos + seqLen != der.size) throw err
 
-    sLen := sig[offset + 2 + rLen + 1]
-    j := sLen
-    while ((j > 0) && sig[(offset + 2 + rLen + 2 + sLen) - j] == 0) { --j }
-
-    rawLen := i.max(j)
-    rawLen = rawLen.max(outLen / 2)
-
-    if (sig[offset - 1].and(0xff) != sig.size - offset) throw ArgErr("Invalid JWT ECDSA signature format")
-    if (sig[offset - 1].and(0xff) != 2 + rLen + 2 + sLen) throw ArgErr("Invalid JWT ECDSA signature format")
-    if (sig[offset] != 2) throw ArgErr("Invalid JWT ECDSA signature format")
-    if (sig[offset + 2 + rLen] != 2) throw ArgErr("Invalid JWT ECDSA signature format")
-
-    concatLen := 2 * rawLen
-    concat := Buf(concatLen).fill(0, concatLen)
-
-    idx := (offset + 2 + rLen) - i
-    concat.seek(rawLen - i)
-    i.times { concat.write(sig[idx]); ++idx }
-
-    idx = (offset + 2 + rLen + 2 + sLen) - j
-    concat.seek(2 * rawLen - j)
-    j.times { concat.write(sig[idx]); ++idx }
-
-    return concat.seek(0)
+    out := Buf()
+    for (n := 0; n < 2; ++n)
+    {
+      if (pos + 2 > der.size || der[pos] != 0x02) throw err
+      end := pos + 2 + der[pos + 1]
+      if (der[pos + 1] >= 0x80 || end > der.size) throw err
+      i := pos + 2
+      while (i < end && der[i] == 0) ++i
+      if (end - i > half) throw err
+      out.fill(0, half - (end - i)).writeBuf(der[i..<end])
+      pos = end
+    }
+    if (pos != der.size) throw err
+    return out.flip
   }
 }
 
