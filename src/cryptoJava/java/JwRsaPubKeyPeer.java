@@ -15,7 +15,6 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.interfaces.RSAPublicKey;
 import java.math.BigInteger;
-import java.util.Base64;
 
 import java.security.spec.InvalidKeySpecException;
 import java.security.NoSuchAlgorithmException;
@@ -28,8 +27,8 @@ public class JwRsaPubKeyPeer
   {
     try
     {
-      byte[] modBytes = Base64.getUrlDecoder().decode(modBase64);
-      byte[] expBytes = Base64.getUrlDecoder().decode(expBase64);
+      byte[] modBytes = Buf.fromBase64(modBase64).safeArray();
+      byte[] expBytes = Buf.fromBase64(expBase64).safeArray();
       RSAPublicKeySpec spec = new RSAPublicKeySpec(new BigInteger(1, modBytes), new BigInteger(1, expBytes));
       return new MemBuf(KeyFactory.getInstance("RSA").generatePublic(spec).getEncoded());
     }
@@ -51,8 +50,8 @@ public class JwRsaPubKeyPeer
       byte[] expBytes = rsaPub.getPublicExponent().toByteArray();
 
       Map jwk = Map.make(Sys.StrType, Sys.ObjType);
-      jwk.set("n", Base64.getUrlEncoder().encodeToString(modBytes));
-      jwk.set("e", Base64.getUrlEncoder().encodeToString(expBytes));
+      jwk.set("n", new MemBuf(modBytes).toBase64Uri());
+      jwk.set("e", new MemBuf(expBytes).toBase64Uri());
       return jwk;
     }
     catch (Exception e)

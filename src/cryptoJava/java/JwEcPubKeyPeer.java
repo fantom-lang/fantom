@@ -22,7 +22,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.interfaces.ECPublicKey;
 
 import java.math.BigInteger;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,8 +118,8 @@ public class JwEcPubKeyPeer
   {
     try
     {
-      byte[] xBytes = Base64.getUrlDecoder().decode(xBase64);
-      byte[] yBytes = Base64.getUrlDecoder().decode(yBase64);
+      byte[] xBytes = Buf.fromBase64(xBase64).safeArray();
+      byte[] yBytes = Buf.fromBase64(yBase64).safeArray();
 
       ECParameterSpec spec = getSpec(curve);
       if (spec == null)
@@ -157,8 +156,8 @@ public class JwEcPubKeyPeer
       byte[] yBytes = y.toByteArray();
 
       fan.sys.Map jwk = fan.sys.Map.make(Sys.StrType, Sys.ObjType);
-      jwk.set("x", Base64.getUrlEncoder().encodeToString(xBytes));
-      jwk.set("y", Base64.getUrlEncoder().encodeToString(yBytes));
+      jwk.set("x", new MemBuf(xBytes).toBase64Uri());
+      jwk.set("y", new MemBuf(yBytes).toBase64Uri());
       jwk.set("crv", getName(curve));
 
       return jwk;
