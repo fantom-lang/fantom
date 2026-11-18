@@ -366,7 +366,31 @@ class JwtTest : CryptoTest
       err := Jwt.decode(jwtStr, ecJwk2.key)
     }
 
-    pair2   := crypto.genKeyPair("EC", 256)
+    // ES256/384/512 are bound to P-256/384/521 (RFC 7518 3.4)
+    p384 := crypto.genKeyPair("EC", 384)
+    verifyErrMsg(Err#, "JWT (alg) header parameter \"ES384\" requires curve P-384, key is 256 bits")
+    {
+      x := Jwt { it.alg = "ES384"; it.sub = "x" }.encode(myPrivKey)
+    }
+    verifyErrMsg(Err#, "JWT (alg) header parameter \"ES512\" requires curve P-521, key is 384 bits")
+    {
+      x := Jwt { it.alg = "ES512"; it.sub = "x" }.encode(p384.priv)
+    }
+    verifyErrMsg(Err#, "JWT (alg) header parameter \"ES256\" requires curve P-256, key is 384 bits")
+    {
+      x := Jwt.decode(jwtStr, p384.pub)
+    }
+
+    // R and S must each be exactly the curve size
+    parts := jwtStr.split('.')
+    sig   := Buf.fromBase64(parts[2]).toHex
+    verifyEq(sig.size, 128)
+    [sig + "00", sig[0..<-2], sig[0..<64] + "00" + sig[64..-1]].each |bad|
+    {
+      verifyErrMsg(Err#, "Invalid JWT signature") { x := Jwt.decode("${parts[0]}.${parts[1]}.${Buf.fromHex(bad).toBase64Uri}", myPubKey) }
+    }
+
+    pair2   := p384
     pub2    := pair2.pub
     priv2   := pair2.priv
 
@@ -420,7 +444,7 @@ class JwtTest : CryptoTest
     }
 
     jwtStr =  Jwt {
-                it.alg = "ES512"
+                it.alg = "ES384"
                 it.claims = ["sub": "user6@fantom.org"]
                 it.nbf = DateTime.nowUtc + 5min
               }.encode(priv2)
@@ -431,7 +455,7 @@ class JwtTest : CryptoTest
     }
 
     jwtStr =  Jwt { 
-                it.alg = "ES256"
+                it.alg = "ES384"
                 it.claims = ["sub": "user7@fantom.org"]
                 it.exp = DateTime.nowUtc - 10min
               }.encode(priv2)
@@ -518,12 +542,8 @@ class JwtTest : CryptoTest
     verifyEq(jwt.sub, "user@fantom.org")
     verifyEq(jwt.claims["myClaim"], "hello")
 
-    jwtStr  = Jwt {
-                it.alg = "ES384"
-                it.kid = "wxyz"
-                it.claims = ["myClaim":"hello"]
-                it.sub = "user@fantom.org"
-              }.encode(myPrivKey)
+    // a P-256 key cannot sign ES384, so swap the header; alg is checked before the signature
+    jwtStr = Str<|{"alg":"ES384","kid":"wxyz"}|>.toBuf.toBase64Uri + jwtStr[jwtStr.index(".")..-1]
 
     //mismatched alg parameters
     verifyErrMsg(Err#, "JWT (alg) header parameter ES384 != JWK alg ES256")
@@ -603,6 +623,13 @@ class JwtTest : CryptoTest
     verifyErrMsg(Err#, "Invalid JWT signature")
     {
       err := Jwt.decode(psychic, pub)
+    }
+
+    // r = s = 0 at the correct R||S size
+    zeros := psychic[0..psychic.indexr(".")] + Buf().fill(0, 64).toBase64Uri
+    verifyErrMsg(Err#, "Invalid JWT signature")
+    {
+      err := Jwt.decode(zeros, pub)
     }
   }
 

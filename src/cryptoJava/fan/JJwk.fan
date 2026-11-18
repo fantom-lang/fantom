@@ -57,7 +57,9 @@ const class JJwk : Jwk
     // RFC 7517 4.4: alg is optional, but oct keys need it to pick the HMAC digest
     if(meta.containsKey(JwkConst.AlgorithmHeader))
     {
-      if(JwsAlgorithm.fromParameters(meta).keyType != kty.toStr) throw Err("JWK Algorithm (${JwkConst.AlgorithmHeader}) does not match key type: ${kty}")
+      jwsAlg := JwsAlgorithm.fromParameters(meta)
+      if(jwsAlg.keyType != kty.toStr) throw Err("JWK Algorithm (${JwkConst.AlgorithmHeader}) does not match key type: ${kty}")
+      if(kty == JwsKeyType.ec && jwsAlg.crv != meta[JwaConst.CurveParameter]) throw Err("JWK Algorithm (${JwkConst.AlgorithmHeader}) ${jwsAlg} requires curve ${jwsAlg.crv}")
     }
     else if (kty == JwsKeyType.oct) throw Err("JWK missing Algorithm (${JwkConst.AlgorithmHeader}) Parameter")
 
@@ -130,7 +132,10 @@ const class JJwk : Jwk
       {
         keyParams := JwEcPubKey.bufToJwk(pubKey.encoded)
         jwk = jwk.addAll(keyParams)
-        jwk[JwkConst.AlgorithmHeader] = JwsAlgorithm.fromKeyAndDigest("EC", digest).toStr
+        // RFC 7518 3.4: the curve picks the ES algorithm
+        jwsAlg := JwsAlgorithm.vals.find { it.curveBits == pubKey.keySize } ?: throw Err("Unsupported EC curve: ${keyParams[JwaConst.CurveParameter]}")
+        if (jwsAlg.digest != digest) throw Err("EC curve ${jwsAlg.crv} requires digest ${jwsAlg.digest}: ${digest}")
+        jwk[JwkConst.AlgorithmHeader] = jwsAlg.toStr
         jwk[JwkConst.KeyTypeHeader] = "EC"
       }
       else if (pubKey.algorithm == "RSA")

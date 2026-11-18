@@ -30,8 +30,8 @@
 **   - RS384 - RSASSA-PKCS1-v1_5 using SHA-384
 **   - RS512 - RSASSA-PKCS1-v1_5 using SHA-512
 **   - ES256 - ECDSA using P-256 and SHA-256
-**   - ES384 - ECDSA using P-256 and SHA-384
-**   - ES512 - ECDSA using P-256 and SHA-512
+**   - ES384 - ECDSA using P-384 and SHA-384
+**   - ES512 - ECDSA using P-521 and SHA-512
 **   - none  - No digital signature or MAC performed
 **
 const class Jwt
@@ -257,7 +257,6 @@ const class Jwt
       claims = readJson(parts[1])
       jwsSigningInput = (parts[0] + "." + parts[1]).toBuf
       signature = Buf.fromBase64(parts[2])
-      if (jwsAlg.keyType == "EC") signature = transcodeConcatToDer(signature)
     }
     catch (Err e) {throw Err("Error parsing JWT parts", e)}
 
@@ -271,6 +270,12 @@ const class Jwt
       {
         if (jwsAlg.keyType != key.algorithm)
           throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
+        if (jwsAlg.keyType == "EC")
+        {
+          jwsAlg.checkEcKey(key)
+          if (signature.size != jwsAlg.ecSigSize) throw Err("Invalid JWT signature")
+          signature = transcodeConcatToDer(signature)
+        }
         if (!((PubKey)key).verify(jwsSigningInput, digestAlgorithm, signature))
           throw Err("Invalid JWT signature")
       }
@@ -317,8 +322,8 @@ const class Jwt
   **   - RS384 - RSASSA-PKCS1-v1_5 using SHA-384
   **   - RS512 - RSASSA-PKCS1-v1_5 using SHA-512
   **   - ES256 - ECDSA using P-256 and SHA-256
-  **   - ES384 - ECDSA using P-256 and SHA-384
-  **   - ES512 - ECDSA using P-256 and SHA-512
+  **   - ES384 - ECDSA using P-384 and SHA-384
+  **   - ES512 - ECDSA using P-521 and SHA-512
   **   - none  - No digital signature or MAC performed
   **
   ** ```fantom
@@ -460,6 +465,7 @@ const class Jwt
     {
       if (jwsAlg.keyType != key.algorithm)
         throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
+      if (jwsAlg.keyType == "EC") jwsAlg.checkEcKey(key)
       sigBuf := ((PrivKey)key).sign(signingContent, jwsAlg.digest)
       if (key.algorithm == "EC") signature = transcodeDerToConcat(sigBuf, 64).toBase64Uri
       else signature = sigBuf.toBase64Uri
@@ -653,6 +659,31 @@ enum class JwsAlgorithm
       else { return v.keyType == keyType }
     }
     return algorithm ?: throw Err("Unsupported or Invalid JWS Key/Digest: ${keyType}/${digest}")
+  }
+
+  ** Curve size in bits an ES algorithm is bound to (RFC 7518 3.4), or null
+  Int? curveBits()
+  {
+    switch (this)
+    {
+      case es256: return 256
+      case es384: return 384
+      case es512: return 521
+      default:    return null
+    }
+  }
+
+  ** JWK curve name an ES algorithm is bound to, or null
+  Str? crv() { curveBits == null ? null : "P-${curveBits}" }
+
+  ** Size in bytes of an ES signature (R and S each padded to the curve size), or null
+  Int? ecSigSize() { curveBits == null ? null : (curveBits + 7) / 8 * 2 }
+
+  ** Check an EC key is on the curve this ES algorithm is bound to
+  Void checkEcKey(AsymKey key)
+  {
+    if (key.keySize != curveBits)
+      throw Err("JWT (alg) header parameter \"${this}\" requires curve ${crv}, key is ${key.keySize} bits")
   }
 
   public Str digest()

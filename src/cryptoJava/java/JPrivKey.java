@@ -13,6 +13,7 @@ import fan.sys.*;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.ECPrivateKey;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
 import javax.crypto.Cipher;
@@ -58,7 +59,9 @@ final public class JPrivKey extends JKey implements fan.crypto.PrivKey
   {
     if (javaKey instanceof RSAPrivateKey)
       return ((RSAPrivateKey)javaKey).getModulus().bitLength();
-    throw Err.make("Not an RSA private key");
+    if (javaKey instanceof ECPrivateKey)
+      return ((ECPrivateKey)javaKey).getParams().getOrder().bitLength();
+    throw Err.make("Not an RSA or EC private key");
   }
 
 //////////////////////////////////////////////////////////////////////////

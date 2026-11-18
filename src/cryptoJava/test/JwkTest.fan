@@ -74,10 +74,13 @@ class JwkTest : Test
                     -----END PUBLIC KEY-----"""
 
     myPubKey  := crypto.loadPem(ecPubPem.in, "EC") as PubKey
-    jwk     = JJwk.toJwk(myPubKey, "SHA384", ["kid": "1234"])
+    jwk     = JJwk.toJwk(myPubKey, "SHA256", ["kid": "1234"])
     verifyEq(jwk.meta[JwkConst.KeyTypeHeader], "EC")
-    verifyEq(jwk.meta[JwkConst.AlgorithmHeader], "ES384")
+    verifyEq(jwk.meta[JwkConst.AlgorithmHeader], "ES256")
     verifyEq(jwk.meta[JwkConst.KeyIdHeader], "1234")
+
+    // the curve picks the ES alg, so a P-256 key cannot be ES384
+    verifyErrMsg(Err#, "EC curve P-256 requires digest SHA256: SHA384") { x := JJwk.toJwk(myPubKey, "SHA384") }
 
     pair2 := crypto.genKeyPair("EC", 256)
     pub2  := pair2.pub
@@ -90,11 +93,14 @@ class JwkTest : Test
     verifyJwkParam(jwk, "y", 32)
 
     // coordinates are always full field size, even with leading zeros
-    [256: 32, 384: 48, 521: 66].each |len, bits|
+    [256: [32, "SHA256", "ES256"], 384: [48, "SHA384", "ES384"], 521: [66, "SHA512", "ES512"]].each |v, bits|
     {
+      Int len := v[0]
       20.times
       {
-        jwk = JJwk.toJwk(crypto.genKeyPair("EC", bits).pub, "SHA256")
+        jwk = JJwk.toJwk(crypto.genKeyPair("EC", bits).pub, v[1])
+        verifyEq(jwk.meta["alg"], v[2])
+        verifyEq(jwk.meta["crv"], "P-${bits}")
         verifyJwkParam(jwk, "x", len)
         verifyJwkParam(jwk, "y", len)
       }
@@ -144,6 +150,25 @@ class JwkTest : Test
     // single key loads still report the problem
     verifyErrMsg(Err#, "JWK Algorithm (alg) does not match key type: RSA") { x := crypto.loadJwk(rsa.dup.set("alg", "ES256")) }
     verifyErrMsg(Err#, "JWK missing Algorithm (alg) Parameter") { x := crypto.loadJwk(["kty":"oct", "k":"YmFkU2VjcmV0"]) }
+  }
+
+  Void testEcAlgBoundToCurve()
+  {
+    crypto := Crypto.cur
+    ec     := JJwk.toJwk(crypto.genKeyPair("EC", 256).pub, "SHA256", ["kid":"p256"]).meta
+    jwks   := JJwk.importJwks(["keys": [
+      ec,
+      ec.dup.set("alg", "ES384").set("kid", "es384"),
+      ec.dup.set("alg", "ES512").set("kid", "es512"),
+    ]])
+    verifyEq(jwks.map { it.meta["kid"] }, Obj?["p256"])
+
+    verifyErrMsg(Err#, "JWK Algorithm (alg) ES384 requires curve P-384") { x := crypto.loadJwk(ec.dup.set("alg", "ES384")) }
+
+    // without alg the key loads and Jwt.decode binds the curve
+    noAlg := ec.dup
+    noAlg.remove("alg")
+    verifyEq(crypto.loadJwk(noAlg).key.algorithm, "EC")
   }
 
   ** Verify param is unpadded base64url of exactly size bytes
