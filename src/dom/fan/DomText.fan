@@ -7,7 +7,7 @@
 //
 
 **
-** DomText models a DOM text node.  Setting its [text] replaces
+** DomText models a DOM text node.  Setting its [DomNode.text] replaces
 ** just this node's text without touching its siblings.
 **
 @Js

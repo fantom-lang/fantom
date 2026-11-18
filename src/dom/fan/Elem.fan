@@ -197,7 +197,7 @@ class Elem : DomNode
   native Bool hasChildren()
 
   ** Get the child elements of this element.  Text and other
-  ** non-element nodes are excluded; see [childNodes].
+  ** non-element nodes are excluded; see [DomNode.childNodes].
   native Elem[] children()
 
   ** Get the first child element of this element, or null

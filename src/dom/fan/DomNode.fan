@@ -8,8 +8,8 @@
 
 **
 ** DomNode models a DOM node object: the base class of [Elem] for
-** elements, [DomText] for text nodes, [Doc] for documents, and
-** [DomFrag] for document fragments.  Other node types such as
+** elements, [DomText] for text nodes, and [Doc] for documents.
+** Other node types such as
 ** comments are modeled directly as DomNode.
 **
 @Js
