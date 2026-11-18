@@ -215,4 +215,94 @@ class JavaTest : Test
     verifyEq(elem.prop(name), val)
     verifyEq(elem.trap(name), val)
   }
+
+//////////////////////////////////////////////////////////////////////////
+// Events
+//////////////////////////////////////////////////////////////////////////
+
+  Void testEvents()
+  {
+    // a > b > c > text
+    a := Elem("div")
+    b := Elem("ul")
+    c := Elem("li")
+    t := DomText("x")
+    a.add(b); b.add(c); c.addChild(t)
+
+    acc := Str[,]
+    a.onEvent("click", true)  |e| { acc.add("a-capture") }
+    a.onEvent("click", false) |e| { acc.add("a") }
+    b.onEvent("click", false) |e| { acc.add("b") }
+    c.onEvent("click", false) |e| { acc.add("c:$e.type:$e.target.tagName") }
+    c.onEvent("keydown", false) |e| { acc.add("c-key") }
+
+    // event which does not bubble: capture, then the target
+    verifyEq(c.dispatchEvent(Event.makeCustom("click")), true)
+    verifyEq(acc, ["a-capture", "c:click:li"])
+
+    // bubbles
+    acc.clear
+    verifyEq(c.dispatchEvent(Event.makeCustom("click", ["bubbles":true])), true)
+    verifyEq(acc, ["a-capture", "c:click:li", "b", "a"])
+
+    // text node target maps to its parent element
+    acc.clear
+    e := Event.makeCustom("click", ["bubbles":true])
+    t.dispatchEvent(e)
+    verifyEq(acc, ["a-capture", "c:click:li", "b", "a"])
+    verifySame(e.target, c)
+    verifySame(e.targetNode, t)
+
+    // only listeners of the type
+    acc.clear
+    c.dispatchEvent(Event.makeCustom("keydown", ["bubbles":true]))
+    verifyEq(acc, ["c-key"])
+
+    // stop ends propagation and cancels
+    acc.clear
+    stopper := b.onEvent("click", false) |x| { acc.add("stop"); x.stop }
+    verifyEq(c.dispatchEvent(Event.makeCustom("click", ["bubbles":true, "cancelable":true])), false)
+    verifyEq(acc, ["a-capture", "c:click:li", "b", "stop"])
+
+    // remove
+    acc.clear
+    b.removeEvent("click", false, stopper)
+    b.removeEvent("click", false, stopper)
+    c.dispatchEvent(Event.makeCustom("click", ["bubbles":true]))
+    verifyEq(acc, ["a-capture", "c:click:li", "b", "a"])
+
+    // preventDefault cancels only a cancelable event, and does not stop
+    acc.clear
+    c.onEvent("submit", false) |x| { x.preventDefault }
+    a.onEvent("submit", false) |x| { acc.add("a-submit") }
+    verifyEq(c.dispatchEvent(Event.makeCustom("submit", ["bubbles":true])), true)
+    verifyEq(c.dispatchEvent(Event.makeCustom("submit", ["bubbles":true, "cancelable":true])), false)
+    verifyEq(acc, ["a-submit", "a-submit"])
+  }
+
+  Void testEventAttrs()
+  {
+    e := Event.makeCustom("keydown", ["keyCode":13, "key":"Enter", "shiftKey":true, "detail":"foo"])
+    verifyEq(e.type, "keydown")
+    verifyEq(e.key, Key.enter)
+    verifyEq(e.keyChar, "Enter")
+    verifyEq(e.shift, true)
+    verifyEq(e.alt, false)
+    verifyEq(e.ctrl, false)
+    verifyEq(e.meta, false)
+    verifyEq(e.button, null)
+    verifyEq(e.targetNode, null)
+    verifyEq(e->detail, "foo")
+    verifyEq(e.get("notFound"), null)
+    verifyEq(e.get("notFound", "def"), "def")
+    e["foo"] = 3
+    verifyEq(e["foo"], 3)
+
+    m := Event.makeCustom("click", ["button":0])
+    verifyEq(m.button, 0)
+    verifyEq(m.key, null)
+    verifyEq(m.keyChar, null)
+
+    verifyEq(Event.makeMock.type, "mock")
+  }
 }

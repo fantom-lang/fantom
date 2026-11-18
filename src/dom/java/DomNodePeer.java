@@ -120,13 +120,57 @@ public class DomNodePeer
 
   public Func onEvent(DomNode self, String type, boolean useCapture, Func handler)
   {
-    // ignore
+    listeners.add(new Listener(type, useCapture, handler));
     return handler;
   }
 
-  public void removeEvent(DomNode self, String type, boolean useCapture, Func handler) { throw UnsupportedErr.make(); }
+  public void removeEvent(DomNode self, String type, boolean useCapture, Func handler)
+  {
+    for (int i=0; i<listeners.size(); i++)
+      if (((Listener)listeners.get(i)).matches(type, useCapture, handler)) { listeners.remove(i); return; }
+  }
 
-  public boolean dispatchEvent(DomNode self, Event event) { throw UnsupportedErr.make(); }
+  // Dispatch as the DOM does: capture down from the root, the
+  // target's own listeners, then bubble back up if the event bubbles
+  public boolean dispatchEvent(DomNode self, Event event)
+  {
+    EventPeer e = event.peer;
+    e.target = self;
+
+    ArrayList path = new ArrayList();
+    for (DomNode p = parentNode; p != null; p = p.peer.parentNode) path.add(p);
+
+    for (int i=path.size()-1; i>=0; i--) ((DomNode)path.get(i)).peer.fire(event, Boolean.TRUE);
+    fire(event, null);
+    if (e.bubbles)
+      for (int i=0; i<path.size(); i++) ((DomNode)path.get(i)).peer.fire(event, Boolean.FALSE);
+
+    return !(e.cancelable && e.defaultPrevented);
+  }
+
+  // Fire the listeners of this node for the phase: capture, bubble,
+  // or null for both at the target
+  private void fire(Event event, Boolean capture)
+  {
+    if (event.peer.stopped) return;
+    Object[] snapshot = listeners.toArray();
+    for (int i=0; i<snapshot.length; i++)
+    {
+      Listener x = (Listener)snapshot[i];
+      if (!x.type.equals(event.peer.type)) continue;
+      if (capture != null && capture.booleanValue() != x.capture) continue;
+      x.handler.call(event);
+    }
+  }
+
+  static class Listener
+  {
+    Listener(String type, boolean capture, Func handler) { this.type = type; this.capture = capture; this.handler = handler; }
+    boolean matches(String t, boolean c, Func h) { return type.equals(t) && capture == c && handler == h; }
+    final String type;
+    final boolean capture;
+    final Func handler;
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -134,5 +178,6 @@ public class DomNodePeer
 
   DomNode parentNode;                 // null
   ArrayList kids = new ArrayList();   // DomNode
+  ArrayList listeners = new ArrayList();  // Listener
   String text = "";                   // non-null
 }
