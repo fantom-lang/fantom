@@ -276,7 +276,7 @@ const class Jwt
       {
         if(key.algorithm != "Hmac" + jwsAlg.digest)
           throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-        if(!((MacKey)key).update(jwsSigningInput).digest.bytesEqual(signature))
+        if(!jwsSigningInput.hmac(key.algorithm, key.encoded).bytesEqual(signature))
           throw Err("Invalid JWT MAC")
       }
       else
@@ -457,8 +457,8 @@ const class Jwt
     {
       if(key.algorithm != "Hmac" + jwsAlg.digest)
         throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-      sigBuf := ((MacKey)key).update(signingContent).digest
-      signature = sigBuf.toBase64Uri
+      // one-shot hmac since MacKey holds shared mutable digest state
+      signature = signingContent.hmac(key.algorithm, key.encoded).toBase64Uri
     }
     else
     {

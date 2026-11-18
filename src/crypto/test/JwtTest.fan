@@ -235,10 +235,18 @@ class JwtTest : CryptoTest
       jwt.verifyClaim("exp")
     }
 
-    verifyErrMsg(Err#, "JWT (nbf) claim is not present") 
-    { 
+    verifyErrMsg(Err#, "JWT (nbf) claim is not present")
+    {
       jwt.verifyClaim("nbf")
     }
+
+    // MAC key is shared, so pending digest state must not leak into encode/decode
+    macKey := (MacKey)octJwk.key
+    macKey.update("junk".toBuf)
+    verifyEq(Jwt.decode(jwtStr, macKey).sub, "user2@fantom.org")
+    macKey.update("junk".toBuf)
+    verifyEq(Jwt { it.alg = "HS384"; it.claims = ["myClaim":"hello2"]; it.sub = "user2@fantom.org" }.encode(macKey), jwtStr)
+    macKey.reset
   }
 
   Void testRsaSignedJwt()
