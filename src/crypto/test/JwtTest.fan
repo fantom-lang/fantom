@@ -537,6 +537,28 @@ class JwtTest : CryptoTest
     verifyEq(((Buf)toConcat.call(Buf.fromHex(der), concat.size / 2)).toHex, concat)
   }
 
+  Void testAlgCaseSensitive()
+  {
+    // RFC 7515 4.1.1: alg values are case-sensitive
+    verifyErrMsg(Err#, "Unknown or Unsupported JWT (alg) parameter: rs256") { x := Jwt { it.alg = "rs256" } }
+    verifyErrMsg(Err#, "Unknown or Unsupported JWT (alg) parameter: NONE") { x := Jwt { it.alg = "NONE" } }
+
+    pair := crypto.genKeyPair("RSA", 2048)
+    tok  := Jwt { it.alg = "RS256"; it.sub = "x" }.encode(pair.priv)
+    body := tok[tok.index(".")..-1]
+    ["rs256", "Rs256", "None", "NONE"].each |alg|
+    {
+      bad := Str<|{"alg":"|> + alg + Str<|"}|>
+      try { x := Jwt.decode(bad.toBuf.toBase64Uri + body, pair.pub); fail }
+      catch (Err e) verifyEq(e.cause?.msg, "Unsupported or Invalid JWS (alg) Parameter: ${alg}")
+    }
+
+    // non-Str alg is rejected cleanly instead of with a CastErr
+    Str:Obj jwk := ["kty":"oct", "k":"YmFkU2VjcmV0"]
+    verifyErrMsg(Err#, "Unsupported or Invalid JWS (alg) Parameter: hs256") { x := crypto.loadJwk(jwk.dup.set("alg", "hs256")) }
+    verifyErrMsg(Err#, "Unsupported or Invalid JWS (alg) Parameter: 256") { x := crypto.loadJwk(jwk.dup.set("alg", 256)) }
+  }
+
   Void testUnsignedJwt()
   {
     myJwtStr := Jwt {

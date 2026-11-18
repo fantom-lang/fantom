@@ -585,18 +585,18 @@ enum class JwsAlgorithm
   static new fromAlg(Str? name)
   {
     if (name == null) throw Err("JWT (alg) header parameter is required")
-    jwsAlg := JwsAlgorithm.fromStr(name.lower, false)
-    if (jwsAlg == null) throw Err("Unknown or Unsupported JWT (alg) parameter: ${name}")
-    return jwsAlg
+    return find(name) ?: throw Err("Unknown or Unsupported JWT (alg) parameter: ${name}")
   }
 
   static new fromParameters(Str:Obj params)
   {
     alg := params[JwtConst.AlgorithmHeader]
     if (alg == null) throw Err("Missing (${JwtConst.AlgorithmHeader}) Parameter: ${params}")
-    algorithm := JwsAlgorithm.vals.find |JwsAlgorithm v->Bool| { return v.name.equalsIgnoreCase(alg) }
-    return algorithm ?: throw Err("Unsupported or Invalid JWS (alg) Parameter: ${alg}")
+    return find(alg) ?: throw Err("Unsupported or Invalid JWS (alg) Parameter: ${alg}")
   }
+
+  // RFC 7515 4.1.1: alg is case-sensitive
+  private static JwsAlgorithm? find(Obj alg) { vals.find { it.toStr == alg } }
 
   static new fromKeyAndDigest(Str keyType, Str digest)
   {
