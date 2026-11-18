@@ -33,7 +33,7 @@ const class JJwk : Jwk
   private Str kty() { meta[JwkConst.KeyTypeHeader] }
 
   ** The Algorithm Parameter
-  private Str alg() { meta[JwkConst.AlgorithmHeader] }
+  private Str? alg() { meta[JwkConst.AlgorithmHeader] }
 
   ** Digest algorithm
   private Str digestAlgorithm() { JwsAlgorithm.fromParameters(meta).digest }
@@ -54,9 +54,12 @@ const class JJwk : Jwk
       if(JwsUse.fromParameters(meta) == null) throw Err("JWK Use (${JwkConst.UseHeader}) Parameter invalid type")
     }
 
-    if(!meta.containsKey(JwkConst.AlgorithmHeader)) throw Err("JWK missing Algorithm (${JwkConst.AlgorithmHeader}) Paramter")
-
-    if(JwsAlgorithm.fromParameters(meta) == null) throw Err("JWK Algorithm (${JwkConst.AlgorithmHeader}) Parameter invalid type")
+    // RFC 7517 4.4: alg is optional, but oct keys need it to pick the HMAC digest
+    if(meta.containsKey(JwkConst.AlgorithmHeader))
+    {
+      if(JwsAlgorithm.fromParameters(meta).keyType != kty.toStr) throw Err("JWK Algorithm (${JwkConst.AlgorithmHeader}) does not match key type: ${kty}")
+    }
+    else if (kty == JwsKeyType.oct) throw Err("JWK missing Algorithm (${JwkConst.AlgorithmHeader}) Parameter")
 
     if(meta.containsKey(JwkConst.KeyIdHeader))
     {
@@ -95,13 +98,20 @@ const class JJwk : Jwk
   **
   ** Import JSON Web Key Set
   **
+  ** Keys that are invalid or use an unsupported kty or alg are
+  ** skipped per RFC 7517 section 5
+  **
   internal static Jwk[] importJwks(Str:Obj jwks, Int? maxJwKeys := 10)
   {
     keysList := jwks["keys"] as List
     if (keysList == null) throw Err("Invalid JSON Web Key Set")
     if (keysList.size > maxJwKeys) { keysList = keysList.getRange(0..maxJwKeys-1) }
     Jwk[] jwkList := Jwk[,]
-    keysList.each |k| { jwkList = jwkList.add(JJwk(k)) }
+    keysList.each |k|
+    {
+      try jwkList.add(JJwk(k))
+      catch (Err e) {}
+    }
     return jwkList
   }
 

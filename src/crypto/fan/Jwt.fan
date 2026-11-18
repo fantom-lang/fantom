@@ -228,8 +228,10 @@ const class Jwt
 
     if (matchingJwk == null) throw Err("Could not find JWK with matching kid: ${kid}")
 
-    if (matchingJwk.meta[JwtConst.AlgorithmHeader] != jwt.alg)
-      throw Err("JWT (alg) header parameter ${jwt.alg} != JWK alg ${matchingJwk.meta[JwtConst.AlgorithmHeader]}")
+    // JWK alg is optional; without it doDecode still requires the JWT alg to match the key type
+    jwkAlg := matchingJwk.meta[JwtConst.AlgorithmHeader]
+    if (jwkAlg != null && jwkAlg != jwt.alg)
+      throw Err("JWT (alg) header parameter ${jwt.alg} != JWK alg ${jwkAlg}")
 
     return doDecode(encoded, matchingJwk.key, clockDrift)
   }

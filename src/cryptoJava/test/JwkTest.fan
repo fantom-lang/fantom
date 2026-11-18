@@ -114,6 +114,38 @@ class JwkTest : Test
     verifyTrue(jwk.key.encoded.bytesEqual(secret))
   }
 
+  Void testJwksSkipsUnsupported()
+  {
+    crypto := Crypto.cur
+    pair   := crypto.genKeyPair("RSA", 2048)
+    rsa    := JJwk.toJwk(pair.pub, "SHA256").meta.dup
+    rsa.remove("alg")
+    rsa["kid"] = "noAlg"
+
+    jwks := JJwk.importJwks(["keys": [
+      "notAMap",
+      ["kty":"OKP", "crv":"Ed25519", "alg":"EdDSA", "kid":"okp", "x":"11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"],
+      rsa.dup.set("alg", "RSA-OAEP").set("use", "enc").set("kid", "enc"),
+      rsa.dup.set("alg", "ES256").set("kid", "mismatch"),
+      ["kty":"oct", "kid":"octNoAlg", "k":"YmFkU2VjcmV0"],
+      rsa,
+    ]])
+    verifyEq(jwks.map { it.meta["kid"] }, Obj?["noAlg"])
+
+    // JWK without alg verifies a JWT whose alg matches the key type
+    tok := Jwt { it.alg = "RS256"; it.kid = "noAlg"; it.claims = ["a":1] }.encode(pair.priv)
+    verifyEq(Jwt.decode(tok, jwks).claims["a"], 1)
+
+    // but not one whose alg is for another key type
+    hk  := JMacKey.load(pair.pub.encoded, "HmacSHA256")
+    tok  = Jwt { it.alg = "HS256"; it.kid = "noAlg"; it.claims = ["a":1] }.encode(hk)
+    verifyErrMsg(Err#, "JWT (alg) header parameter \"HS256\" is not compatible with Key algorithm \"RSA\"") { x := Jwt.decode(tok, jwks) }
+
+    // single key loads still report the problem
+    verifyErrMsg(Err#, "JWK Algorithm (alg) does not match key type: RSA") { x := crypto.loadJwk(rsa.dup.set("alg", "ES256")) }
+    verifyErrMsg(Err#, "JWK missing Algorithm (alg) Parameter") { x := crypto.loadJwk(["kty":"oct", "k":"YmFkU2VjcmV0"]) }
+  }
+
   ** Verify param is unpadded base64url of exactly size bytes
   private Void verifyJwkParam(Jwk jwk, Str name, Int size)
   {
