@@ -247,6 +247,17 @@ class JwtTest : CryptoTest
     macKey.update("junk".toBuf)
     verifyEq(Jwt { it.alg = "HS384"; it.claims = ["myClaim":"hello2"]; it.sub = "user2@fantom.org" }.encode(macKey), jwtStr)
     macKey.reset
+
+    // MAC mismatch in first byte, last byte, or length is rejected
+    parts := jwtStr.split('.')
+    sig := Buf.fromBase64(parts[2])
+    [0, sig.size-1].each |i|
+    {
+      bad := sig.dup
+      bad[i] = bad[i].xor(1)
+      verifyErrMsg(Err#, "Invalid JWT MAC") { x := Jwt.decode("${parts[0]}.${parts[1]}.${bad.toBase64Uri}", octJwk.key) }
+    }
+    verifyErrMsg(Err#, "Invalid JWT MAC") { x := Jwt.decode("${parts[0]}.${parts[1]}.${sig[0..-2].toBase64Uri}", octJwk.key) }
   }
 
   Void testRsaSignedJwt()

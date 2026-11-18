@@ -276,7 +276,7 @@ const class Jwt
       {
         if(key.algorithm != "Hmac" + jwsAlg.digest)
           throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-        if(!jwsSigningInput.hmac(key.algorithm, key.encoded).bytesEqual(signature))
+        if(!macEquals(jwsSigningInput.hmac(key.algorithm, key.encoded), signature))
           throw Err("Invalid JWT MAC")
       }
       else
@@ -428,6 +428,15 @@ const class Jwt
       return unique.findType(Str#)
     }
     else throw ArgErr("JWT (aud) claim must be a Str or Str[]")
+  }
+
+  ** Constant time compare so timing does not leak how many leading MAC bytes match
+  private static Bool macEquals(Buf a, Buf b)
+  {
+    if (a.size != b.size) return false
+    diff := 0
+    for (i := 0; i < a.size; ++i) diff = diff.or(a[i].xor(b[i]))
+    return diff == 0
   }
 
   private DateTime? fromNumericDate(Int? val)
