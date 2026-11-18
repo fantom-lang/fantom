@@ -21,9 +21,12 @@ const class JJwk : Jwk
 
   override const Key key
 
+  ** Pretty printed meta with the oct secret (k) redacted
   override Str toStr()
   {
-    JsonOutStream.prettyPrintToStr(meta)
+    m := meta
+    if (m.containsKey(JwaConst.KeyValueParameter)) m = m.dup.set(JwaConst.KeyValueParameter, "<redacted>")
+    return JsonOutStream.prettyPrintToStr(m)
   }
 
   ** The Key Identifier
@@ -79,35 +82,30 @@ const class JJwk : Jwk
 //////////////////////////////////////////////////////////////////////////
 
   **
-  ** Import JSON Web Key Set
+  ** Import JSON Web Key Set from an https Uri
   **
   static Jwk[] importJwksUri(Uri jwksUri, Int? maxJwKeys := 10)
   {
-    try
-    {
-      c := WebClient(jwksUri)
-      c.reqHeaders["Accept"] = "text/plain; charset=utf-8"
-      buf := c.getBuf
-      return importJwks(JsonInStream(buf.in).readJson, maxJwKeys)
-    }
-    catch (Err err)
-    {
-      err.trace
-      throw err
-    }
+    // keys from a plain http fetch could be swapped in transit
+    if (jwksUri.scheme != "https") throw ArgErr("JWKS uri must be https: ${jwksUri}")
+    c := WebClient(jwksUri)
+    c.reqHeaders["Accept"] = "application/jwk-set+json, application/json"
+    return importJwks(JsonInStream(c.getBuf.in).readJson, maxJwKeys)
   }
 
   **
   ** Import JSON Web Key Set
   **
-  ** Keys that are invalid or use an unsupported kty or alg are
-  ** skipped per RFC 7517 section 5
+  ** Keys that are invalid, use an unsupported kty or alg, or are not for
+  ** signatures (use other than sig) are skipped per RFC 7517 section 5.
+  ** Throws if more than maxJwKeys signature keys remain; null is no limit.
   **
   internal static Jwk[] importJwks(Str:Obj jwks, Int? maxJwKeys := 10)
   {
     keysList := jwks["keys"] as List
     if (keysList == null) throw Err("Invalid JSON Web Key Set")
-    if (keysList.size > maxJwKeys) { keysList = keysList.getRange(0..maxJwKeys-1) }
+    keysList = keysList.findAll |k| { k is Map && ((Map)k).get(JwkConst.UseHeader, "sig") == "sig" }
+    if (maxJwKeys != null && keysList.size > maxJwKeys) throw Err("JWKS has ${keysList.size} signature keys, max is ${maxJwKeys}")
     Jwk[] jwkList := Jwk[,]
     keysList.each |k|
     {

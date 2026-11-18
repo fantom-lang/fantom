@@ -164,7 +164,10 @@ const mixin Crypto
   abstract Jwk? loadJwk(Str:Obj map)
 
   **
-  ** Import JSON Web Key Set from a Uri
+  ** Import JSON Web Key Set from an https Uri
+  **
+  ** Keys that cannot be used to verify signatures are skipped. Throws if
+  ** more than maxKeys signature keys remain.
   **
   **     jwks := Crypto.cur.loadJwksForUri(`https://example.com/jwks.json`)
   **

@@ -138,7 +138,11 @@ class JwtTest : CryptoTest
       "eyJzdWIiOiJ1c2VyQGZhbnRvbS5vcmciLCJuYmYiOjE3MTEwNTQ1ODcsImF6cCI" +
       "6Imh0dHBzOi8vand0LmZhbnRvbS5sb2NhbDo4NDQzIiwiaXNzIjoia.dgtre4"
 
-    verifyErrMsg(Err#, "Error parsing JWT parts") { err := Jwt.decode(invalidJwtStr3, rsaJwk.key) }
+    // payload length is not valid base64url
+    verifyErrMsg(Err#, "Invalid JWT") { err := Jwt.decode(invalidJwtStr3, rsaJwk.key) }
+
+    // well formed base64url but the payload is not JSON
+    verifyErrMsg(Err#, "Error parsing JWT parts") { err := Jwt.decode(invalidJwtStr1 + ".bm90anNvbg.dgtre4", rsaJwk.key) }
 
     invalidJwtStr4 := 
       "eyJraWQiOiIyU2k0VUlFQU1RIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ." +
@@ -202,7 +206,7 @@ class JwtTest : CryptoTest
     Str:Obj key :=  [
                       "kty": "oct",
                       "kid": "abcd",
-                      "k": "YmFkU2VjcmV0",
+                      "k": "nQEGaszGXPu7vrZn1UO-KYKijHxCQ0FPW5hT_nsji3nqnE1kDhEWj4C0kH15T-XVyM8iRqMJaIrYKlQDFSUuxg",
                       "alg": "HS384",
                     ]
 
@@ -222,7 +226,8 @@ class JwtTest : CryptoTest
                 it.sub = "user2@fantom.org" 
               }.encode(octJwk.key)
 
-    verifyEq(jwtStr, "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMkBmYW50b20ub3JnIiwibXlDbGFpbSI6ImhlbGxvMiJ9.6ZoRQ1TimaFnKgGyqlFvs6H7x_Etlt2VQDShjfghK-CtnzxN8ZzlNJQZs4g5OlIA")
+    // expected value computed independently with node crypto.createHmac
+    verifyEq(jwtStr, "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c2VyMkBmYW50b20ub3JnIiwibXlDbGFpbSI6ImhlbGxvMiJ9.nDwZFJ13bLw_eeB42gKwRSf0ZrJ2Qk_Njciegoqt-Y8hl6eqqN0HIaC8Ml232AkE")
 
     jwt := Jwt.decode(jwtStr, octJwk.key)
 
@@ -569,12 +574,85 @@ class JwtTest : CryptoTest
     jwks := Jwk[TestJwk(["kid":"rsa"], pair.pub)]
     verifyErrMsg(Err#, "JWT (crit) header parameter not supported: [b64]") { x := Jwt.decode(tok, jwks) }
 
-    mac := (MacKey)crypto.loadJwk(["kty":"oct", "alg":"HS256", "k":"YmFkU2VjcmV0"]).key
+    mac := (MacKey)crypto.loadJwk(["kty":"oct", "alg":"HS256", "k":"nQEGaszGXPu7vrZn1UO-KYKijHxCQ0FPW5hT_nsji3nqnE1kDhEWj4C0kH15T-XVyM8iRqMJaIrYKlQDFSUuxg"]).key
     tok  = Jwt { it.alg = "HS256"; it.header = ["crit":"bogus"] }.encode(mac)
     verifyErrMsg(Err#, "JWT (crit) header parameter not supported: bogus") { x := Jwt.decode(tok, mac) }
 
     // unsigned decode only parses, so the header is still readable
     verifyEq(Jwt.decodeUnsigned(tok).header["crit"], "bogus")
+  }
+
+  Void testStrictBase64()
+  {
+    key := hmacKey(32)
+    tok := Jwt { it.alg = "HS256"; it.sub = "x" }.encode(key)
+    verifyEq(Jwt.decode(tok, key).sub, "x")
+
+    // Buf.fromBase64 skips junk, so most of these used to verify
+    p := tok.split('.')
+    [tok + "!", tok + "=", tok + "\n", " " + tok, "${p[0]}.${p[1]} .${p[2]}", "${p[0]}.${p[1]}.${p[2][0..<-1]}+",
+     tok + "AA", "${p[0]}.${p[1]}.${p[2]}."].each |bad|
+    {
+      verifyErrMsg(Err#, "Invalid JWT") { x := Jwt.decode(bad, key) }
+    }
+  }
+
+  Void testNumericDate()
+  {
+    // RFC 7519 2: NumericDate may be fractional
+    now := DateTime.nowUtc.toJava / 1000
+    key := hmacKey(32)
+    verifyEq(decodeClaims(key, Str<|{"exp":|> + (now + 3600).toStr + ".5}").exp.toJava, (now + 3600) * 1000 + 500)
+    verifyEq(decodeClaims(key, Str<|{"iat":|> + now.toStr + ".25}").iat.toJava, now * 1000 + 250)
+    verifyErrMsg(Err#, "JWT expired") { x := decodeClaims(key, Str<|{"exp":|> + (now - 3600).toStr + ".5}") }
+    verifyErrMsg(Err#, "JWT not valid yet") { x := decodeClaims(key, Str<|{"nbf":|> + (now + 3600).toStr + ".5}") }
+
+    // epoch 0 is a real date, not a missing claim
+    verifyErrMsg(Err#, "JWT expired") { x := decodeClaims(key, Str<|{"exp":0}|>) }
+
+    // non-numeric and out of range values
+    verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: soon") { x := decodeClaims(key, Str<|{"exp":"soon"}|>) }
+    verifyErrMsg(Err#, "JWT (nbf) claim is not a valid value: true") { x := decodeClaims(key, Str<|{"nbf":true}|>) }
+    verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: 99999999999") { x := decodeClaims(key, Str<|{"exp":99999999999}|>) }
+  }
+
+  Void testKeySizes()
+  {
+    // RFC 7518 3.2: HMAC key at least the hash size
+    ["HS256":32, "HS384":48, "HS512":64].each |bytes, a|
+    {
+      ok  := hmacKey(bytes, "Hmac" + JwsAlgorithm.fromAlg(a).digest)
+      tok := Jwt { it.alg = a; it.sub = "x" }.encode(ok)
+      verifyEq(Jwt.decode(tok, ok).sub, "x")
+
+      short := hmacKey(bytes - 1, ok.algorithm)
+      msg := "JWT (alg) header parameter \"${a}\" requires a key of at least ${bytes * 8} bits, key is ${(bytes - 1) * 8} bits"
+      verifyErrMsg(Err#, msg) { x := Jwt { it.alg = a; it.sub = "x" }.encode(short) }
+      input := tok[0..<tok.indexr(".")]
+      bad := input + "." + input.toBuf.hmac(short.algorithm, short.encoded).toBase64Uri
+      verifyErrMsg(Err#, msg) { x := Jwt.decode(bad, short) }
+    }
+
+    // RFC 7518 3.3: RSA key at least 2048 bits
+    small := crypto.genKeyPair("RSA", 1024)
+    msg   := "JWT (alg) header parameter \"RS256\" requires an RSA key of at least 2048 bits, key is 1024 bits"
+    verifyErrMsg(Err#, msg) { x := Jwt { it.alg = "RS256"; it.sub = "x" }.encode(small.priv) }
+    input := Str<|{"alg":"RS256"}|>.toBuf.toBase64Uri + "." + Str<|{"sub":"x"}|>.toBuf.toBase64Uri
+    tok   := input + "." + small.priv.sign(input.toBuf, "SHA256").toBase64Uri
+    verifyErrMsg(Err#, msg) { x := Jwt.decode(tok, small.pub) }
+  }
+
+  private MacKey hmacKey(Int size, Str alg := "HmacSHA256")
+  {
+    k := Buf()
+    size.times |i| { k.write(i) }
+    return crypto.loadJwk(["kty":"oct", "alg":"HS" + alg[-3..-1], "k":k.toBase64Uri]).key
+  }
+
+  private Jwt decodeClaims(MacKey key, Str claims)
+  {
+    input := Str<|{"alg":"HS256"}|>.toBuf.toBase64Uri + "." + claims.toBuf.toBase64Uri
+    return Jwt.decode(input + "." + input.toBuf.hmac(key.algorithm, key.encoded).toBase64Uri, key)
   }
 
   Void testUnsignedJwt()
@@ -625,7 +703,7 @@ class JwtTest : CryptoTest
     Str:Obj key2 := [
                       "kty": "oct",
                       "kid": "efgh",
-                      "k": "YmFkU2VjcmV0",
+                      "k": "nQEGaszGXPu7vrZn1UO-KYKijHxCQ0FPW5hT_nsji3nqnE1kDhEWj4C0kH15T-XVyM8iRqMJaIrYKlQDFSUuxg",
                       "alg": "HS384",
                     ]
 

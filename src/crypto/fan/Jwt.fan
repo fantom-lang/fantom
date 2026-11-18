@@ -208,9 +208,11 @@ const class Jwt
     throw ArgErr("The key parameter must be a Jwk[] or Key")
   }
 
-  ** Decode an unsigned [Jwt] from an encoded Str
+  ** Decode a [Jwt] from an encoded Str without verifying it
   **
-  ** No claims are verified
+  ** Neither the signature nor any claim is checked, so the result must not
+  ** be trusted; use it only to read the header (such as kid) before picking
+  ** a key for `decode`
   **
   **     jwt := Jwt.decode("1111.2222.")
   **
@@ -240,8 +242,9 @@ const class Jwt
 
   private static new doDecode(Str encoded, Key? key, Duration clockDrift := 60sec)
   {
-    parts := encoded.split('.')
-    if (parts.size != 3) throw Err("Invalid JWT")
+    // RFC 7515 7.1: three unpadded base64url parts; Buf.fromBase64 would skip junk chars
+    parts := encoded.split('.', false)
+    if (parts.size != 3 || parts.any { !isBase64Uri(it) }) throw Err("Invalid JWT")
 
     Str:Obj header := [:]
     Str:Obj claims := [:]
@@ -268,16 +271,19 @@ const class Jwt
       // RFC 7515 4.1.11: we implement no JWS extensions, so any crit must be rejected
       if (header.containsKey(JwtConst.CriticalHeader))
         throw Err("JWT (${JwtConst.CriticalHeader}) header parameter not supported: ${header[JwtConst.CriticalHeader]}")
-      verifyExp(claims[JwtConst.ExpirationClaim], clockDrift)
-      verifyNbf(claims[JwtConst.NotBeforeClaim], clockDrift)
+      // RFC 7519 4.1.4 and 4.1.5
+      exp := toDateTime(JwtConst.ExpirationClaim, claims[JwtConst.ExpirationClaim])
+      nbf := toDateTime(JwtConst.NotBeforeClaim, claims[JwtConst.NotBeforeClaim])
+      if (exp != null && DateTime.nowUtc - clockDrift >= exp) throw Err("JWT expired")
+      if (nbf != null && DateTime.nowUtc + clockDrift < nbf) throw Err("JWT not valid yet")
 
       if (key is PubKey)
       {
         if (jwsAlg.keyType != key.algorithm)
           throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
+        jwsAlg.checkKey(key)
         if (jwsAlg.keyType == "EC")
         {
-          jwsAlg.checkEcKey(key)
           if (signature.size != jwsAlg.ecSigSize) throw Err("Invalid JWT signature")
           signature = transcodeConcatToDer(signature)
         }
@@ -288,6 +294,7 @@ const class Jwt
       {
         if(key.algorithm != "Hmac" + jwsAlg.digest)
           throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
+        jwsAlg.checkKey(key)
         if(!macEquals(jwsSigningInput.hmac(key.algorithm, key.encoded), signature))
           throw Err("Invalid JWT MAC")
       }
@@ -305,9 +312,9 @@ const class Jwt
       it.iss = claims[JwtConst.IssuerClaim]
       it.sub = claims[JwtConst.SubjectClaim]
       it.aud = toAudienceClaim(claims[JwtConst.AudienceClaim])
-      it.exp = fromNumericDate(claims[JwtConst.ExpirationClaim])
-      it.nbf = fromNumericDate(claims[JwtConst.NotBeforeClaim])
-      it.iat = fromNumericDate(claims[JwtConst.IssuedAtClaim])
+      it.exp = toDateTime(JwtConst.ExpirationClaim, claims[JwtConst.ExpirationClaim])
+      it.nbf = toDateTime(JwtConst.NotBeforeClaim, claims[JwtConst.NotBeforeClaim])
+      it.iat = toDateTime(JwtConst.IssuedAtClaim, claims[JwtConst.IssuedAtClaim])
       it.jti = claims[JwtConst.JwtIdClaim]
     }
   }
@@ -401,26 +408,6 @@ const class Jwt
 
   private static Obj? readJson(Str encoded) { Type.find("util::JsonInStream").make([Buf.fromBase64(encoded).in])->readJson }
 
-  private static Void verifyExp(Int? exp, Duration clockDrift)
-  {
-    if(exp == null) return
-
-    if(!(exp is Int)) throw Err("JWT (${JwtConst.ExpirationClaim}) claim is not a valid value: ${exp}")
-
-    nowDrift := DateTime.nowUtc - clockDrift
-    if(nowDrift > DateTime.fromJava(exp * 1000)) throw Err("JWT expired")
-  }
-
-  private static Void verifyNbf(Int? nbf, Duration clockDrift)
-  {
-    if(nbf == null) return
-
-    if(!(nbf is Int)) throw Err("JWT (${JwtConst.NotBeforeClaim}) claim is not a valid value: ${nbf}")
-
-    nowDrift := DateTime.nowUtc + clockDrift
-    if(nowDrift < DateTime.fromJava(nbf*1000, TimeZone.utc)) throw Err("JWT not valid yet")
-  }
-
   private Str:Obj formatRegisteredClaims()
   {
     claimsSet := [:].addAll(claims)
@@ -451,10 +438,17 @@ const class Jwt
     return diff == 0
   }
 
-  private DateTime? fromNumericDate(Int? val)
+  // RFC 7519 2: NumericDate is seconds since the epoch and may be fractional
+  private static DateTime? toDateTime(Str claim, Obj? val)
   {
-    if (val != null) return DateTime.fromJava(val * 1000).toUtc
-    return null
+    if (val == null) return null
+    try return DateTime.fromJava((((Num)val).toFloat * 1000f).toInt, TimeZone.utc, false)
+    catch (Err e) throw Err("JWT (${claim}) claim is not a valid value: ${val}")
+  }
+
+  private static Bool isBase64Uri(Str s)
+  {
+    s.size % 4 != 1 && s.all |c| { c.isAlphaNum || c == '-' || c == '_' }
   }
 
   private Int toNumericDate(DateTime dt)
@@ -470,7 +464,7 @@ const class Jwt
     {
       if (jwsAlg.keyType != key.algorithm)
         throw Err("JWT (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
-      if (jwsAlg.keyType == "EC") jwsAlg.checkEcKey(key)
+      jwsAlg.checkKey(key)
       sigBuf := ((PrivKey)key).sign(signingContent, jwsAlg.digest)
       if (key.algorithm == "EC") signature = transcodeDerToConcat(sigBuf, jwsAlg.ecSigSize).toBase64Uri
       else signature = sigBuf.toBase64Uri
@@ -479,6 +473,7 @@ const class Jwt
     {
       if(key.algorithm != "Hmac" + jwsAlg.digest)
         throw Err("JWS (alg) header parameter \"${jwsAlg.toStr}\" is not compatible with Key algorithm \"${key.algorithm}\"")
+      jwsAlg.checkKey(key)
       // one-shot hmac since MacKey holds shared mutable digest state
       signature = signingContent.hmac(key.algorithm, key.encoded).toBase64Uri
     }
@@ -632,12 +627,20 @@ enum class JwsAlgorithm
   ** Size in bytes of an ES signature (R and S each padded to the curve size), or null
   Int? ecSigSize() { curveBits == null ? null : (curveBits + 7) / 8 * 2 }
 
-  ** Check an EC key is on the curve this ES algorithm is bound to
-  Void checkEcKey(AsymKey key)
+  ** Check key strength for this algorithm (RFC 7518 3.2, 3.3, 3.4):
+  ** HMAC key at least the hash size, RSA at least 2048 bits, EC on the bound curve
+  Void checkKey(Key key)
   {
-    if (key.keySize != curveBits)
-      throw Err("JWT (alg) header parameter \"${this}\" requires curve ${crv}, key is ${key.keySize} bits")
+    if (keyType == "oct" && key.encoded.size * 8 < hashBits)
+      throw Err("JWT (alg) header parameter \"${this}\" requires a key of at least ${hashBits} bits, key is ${key.encoded.size * 8} bits")
+    if (keyType == "RSA" && ((AsymKey)key).keySize < 2048)
+      throw Err("JWT (alg) header parameter \"${this}\" requires an RSA key of at least 2048 bits, key is ${((AsymKey)key).keySize} bits")
+    if (keyType == "EC" && ((AsymKey)key).keySize != curveBits)
+      throw Err("JWT (alg) header parameter \"${this}\" requires curve ${crv}, key is ${((AsymKey)key).keySize} bits")
   }
+
+  ** Hash output size in bits
+  Int hashBits() { name[-3..-1].toInt }
 
   public Str digest()
   {

@@ -171,6 +171,37 @@ class JwkTest : Test
     verifyEq(crypto.loadJwk(noAlg).key.algorithm, "EC")
   }
 
+  Void testJwkToStrRedactsSecret()
+  {
+    secret := Buf.fromHex("fbff00fe")
+    jwk := JJwk.toJwk(JMacKey.load(secret, "HmacSHA256"), "SHA256")
+    verifyEq(jwk.meta["k"], "-_8A_g")
+    verifyFalse(jwk.toStr.contains("-_8A_g"))
+    verify(jwk.toStr.contains("<redacted>"))
+
+    // public keys print in full
+    rsa := JJwk.toJwk(Crypto.cur.genKeyPair("RSA", 2048).pub, "SHA256")
+    verify(rsa.toStr.contains(rsa.meta["n"]))
+  }
+
+  Void testJwksUseAndMax()
+  {
+    sig := |Str kid->Str:Obj| { JJwk.toJwk(Crypto.cur.genKeyPair("EC", 256).pub, "SHA256", ["kid":kid]).meta }
+    enc := sig("enc1").dup.set("use", "enc")
+    jwks := ["keys": [sig("a"), sig("b").dup.set("use", "sig"), enc, enc.dup.set("kid", "enc2"), sig("c")]]
+
+    // enc keys are skipped and do not count toward the max
+    verifyEq(JJwk.importJwks(jwks, 3).map { it.meta["kid"] }, Obj?["a", "b", "c"])
+    verifyEq(JJwk.importJwks(jwks, null).size, 3)
+    verifyErrMsg(Err#, "JWKS has 3 signature keys, max is 2") { x := JJwk.importJwks(jwks, 2) }
+  }
+
+  Void testJwksUriRequiresHttps()
+  {
+    verifyErrMsg(ArgErr#, "JWKS uri must be https: http://example.com/jwks.json") { x := JJwk.importJwksUri(`http://example.com/jwks.json`) }
+    verifyErrMsg(ArgErr#, "JWKS uri must be https: file:/jwks.json") { x := Crypto.cur.loadJwksForUri(`file:/jwks.json`) }
+  }
+
   ** Verify param is unpadded base64url of exactly size bytes
   private Void verifyJwkParam(Jwk jwk, Str name, Int size)
   {
