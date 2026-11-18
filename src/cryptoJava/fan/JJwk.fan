@@ -139,7 +139,7 @@ const class JJwk : Jwk
     {
       jwk[JwkConst.AlgorithmHeader] = JwsAlgorithm.fromKeyAndDigest("oct", digest).toStr
       jwk[JwkConst.KeyTypeHeader] = "oct"
-      jwk[JwaConst.KeyValueParameter] = key.encoded.readAllStr
+      jwk[JwaConst.KeyValueParameter] = key.encoded.toBase64Uri
     }
     else
     {
@@ -411,7 +411,7 @@ internal class JwEcPubKey : JwPubKey, JwaConst
 ** {
 **
 **      "kty": "oct",
-**      "k": "secret",
+**      "k": "c2VjcmV0",
 **      "kid": "HMAC Key"
 **
 ** }
@@ -424,7 +424,7 @@ internal class JwEcPubKey : JwPubKey, JwaConst
 **
 **                     family that is used with the key.
 **
-** Shared key (k) - The k parameter contains the shared key.
+** Shared key (k) - The k parameter contains the shared key as base64url.
 **
 
 internal class JwHmacKey : JwaConst
@@ -435,11 +435,12 @@ internal class JwHmacKey : JwaConst
 
     if(!map.containsKey(KeyValueParameter)) throw Err("JWK missing Key Value Parameter (${KeyValueParameter})")
 
-    strKey := map[KeyValueParameter] as Str
+    // RFC 7518 6.4.1: base64url encoded key value
+    k := Buf.fromBase64(map[KeyValueParameter])
 
     algorithmName := "Hmac" + JwsAlgorithm.fromParameters(map).digest
 
-    return JMacKey.load(strKey.toBuf, algorithmName)
+    return JMacKey.load(k, algorithmName)
   }
 }
 

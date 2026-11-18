@@ -43,7 +43,7 @@ class JwkTest : Test
                 [
                   "kty": "oct",
                   "kid": "jwtId",
-                  "k": "badSecret",
+                  "k": "YmFkU2VjcmV0",
                   "alg": "HS384",
                 ]
               ]
@@ -64,6 +64,9 @@ class JwkTest : Test
     verifyEq(jwk.meta[JwkConst.KeyTypeHeader], "RSA")
     verifyEq(jwk.meta[JwkConst.AlgorithmHeader], "RS256")
     verifyEq(jwk.meta["customMeta"], "Hello")
+    verifyEq(jwk.meta["e"], "AQAB")
+    verifyJwkParam(jwk, "n", 256)
+    verifyNotEq(Buf.fromBase64(jwk.meta["n"]).get(0), 0)
 
     ecPubPem  := """-----BEGIN PUBLIC KEY-----
                     MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEI59TOAdnJ7uPgPOdIxj+BhWSQBXK
@@ -83,12 +86,42 @@ class JwkTest : Test
     verifyEq(jwk.meta[JwkConst.KeyTypeHeader], "EC")
     verifyEq(jwk.meta[JwkConst.AlgorithmHeader], "ES256")
     verifyEq(jwk.meta[JwkConst.KeyIdHeader], "efgh")
+    verifyJwkParam(jwk, "x", 32)
+    verifyJwkParam(jwk, "y", 32)
+
+    // coordinates are always full field size, even with leading zeros
+    [256: 32, 384: 48, 521: 66].each |len, bits|
+    {
+      20.times
+      {
+        jwk = JJwk.toJwk(crypto.genKeyPair("EC", bits).pub, "SHA256")
+        verifyJwkParam(jwk, "x", len)
+        verifyJwkParam(jwk, "y", len)
+      }
+    }
 
     jwk     = JJwk.toJwk(jwks[3].key, "SHA256", ["kid": "ijkl"])
     verifyEq(jwk.meta[JwkConst.KeyTypeHeader], "oct")
     verifyEq(jwk.meta[JwkConst.AlgorithmHeader], "HS256")
     verifyEq(jwk.meta[JwkConst.KeyIdHeader], "ijkl")
-    verifyTrue(jwk.key.encoded.bytesEqual("badSecret".toBuf))    
+    verifyTrue(jwk.key.encoded.bytesEqual("badSecret".toBuf))
+    verifyEq(jwk.meta["k"], "YmFkU2VjcmV0")
+
+    // binary key round trips as unpadded base64url
+    secret := Buf.fromHex("fbff00fe")
+    jwk = JJwk.toJwk(JMacKey.load(secret, "HmacSHA256"), "SHA256")
+    verifyEq(jwk.meta["k"], "-_8A_g")
+    verifyTrue(jwk.key.encoded.bytesEqual(secret))
+  }
+
+  ** Verify param is unpadded base64url of exactly size bytes
+  private Void verifyJwkParam(Jwk jwk, Str name, Int size)
+  {
+    Str val := jwk.meta[name]
+    verifyFalse(val.containsChar('='))
+    verifyFalse(val.containsChar('+'))
+    verifyFalse(val.containsChar('/'))
+    verifyEq(Buf.fromBase64(val).size, size)
   }
 
 }

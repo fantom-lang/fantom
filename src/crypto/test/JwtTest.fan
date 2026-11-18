@@ -202,7 +202,7 @@ class JwtTest : CryptoTest
     Str:Obj key :=  [
                       "kty": "oct",
                       "kid": "abcd",
-                      "k": "badSecret",
+                      "k": "YmFkU2VjcmV0",
                       "alg": "HS384",
                     ]
 
@@ -471,7 +471,7 @@ class JwtTest : CryptoTest
     Str:Obj key2 := [
                       "kty": "oct",
                       "kid": "efgh",
-                      "k": "badSecret",
+                      "k": "YmFkU2VjcmV0",
                       "alg": "HS384",
                     ]
 

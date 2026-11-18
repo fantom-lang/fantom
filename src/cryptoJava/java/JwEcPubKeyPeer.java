@@ -150,14 +150,12 @@ public class JwEcPubKeyPeer
       ECParameterSpec spec = ecPub.getParams();
       EllipticCurve curve = spec.getCurve();
 
-      BigInteger x = pt.getAffineX();
-      byte[] xBytes = x.toByteArray();
-      BigInteger y = pt.getAffineY();
-      byte[] yBytes = y.toByteArray();
+      // RFC 7518 6.2.1.2: coordinates are full size of the curve field
+      int len = (curve.getField().getFieldSize() + 7) / 8;
 
       fan.sys.Map jwk = fan.sys.Map.make(Sys.StrType, Sys.ObjType);
-      jwk.set("x", new MemBuf(xBytes).toBase64Uri());
-      jwk.set("y", new MemBuf(yBytes).toBase64Uri());
+      jwk.set("x", toBase64Uri(pt.getAffineX(), len));
+      jwk.set("y", toBase64Uri(pt.getAffineY(), len));
       jwk.set("crv", getName(curve));
 
       return jwk;
@@ -166,6 +164,16 @@ public class JwEcPubKeyPeer
     {
       throw Err.make(e);
     }
+  }
+
+  /** Encode unsigned big-endian value left-padded or trimmed to len bytes as base64url without padding */
+  private static String toBase64Uri(BigInteger v, int len)
+  {
+    byte[] b = v.toByteArray();
+    byte[] r = new byte[len];
+    int n = Math.min(b.length, len);
+    System.arraycopy(b, b.length - n, r, len - n, n);
+    return new MemBuf(r).toBase64Uri();
   }
 
   private static ECParameterSpec getSpec(String curve)

@@ -46,18 +46,29 @@ public class JwRsaPubKeyPeer
       X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key.unsafeArray());
       RSAPublicKey rsaPub = (RSAPublicKey) keyFactory.generatePublic(keySpec);
 
-      byte[] modBytes = rsaPub.getModulus().toByteArray();
-      byte[] expBytes = rsaPub.getPublicExponent().toByteArray();
+      // RFC 7518 6.3.1: minimal unsigned octets (no leading zero sign byte)
+      BigInteger n = rsaPub.getModulus();
+      BigInteger e = rsaPub.getPublicExponent();
 
       Map jwk = Map.make(Sys.StrType, Sys.ObjType);
-      jwk.set("n", new MemBuf(modBytes).toBase64Uri());
-      jwk.set("e", new MemBuf(expBytes).toBase64Uri());
+      jwk.set("n", toBase64Uri(n, (n.bitLength() + 7) / 8));
+      jwk.set("e", toBase64Uri(e, (e.bitLength() + 7) / 8));
       return jwk;
     }
     catch (Exception e)
     {
       throw Err.make(e);
     }
+  }
+
+  /** Encode unsigned big-endian value left-padded or trimmed to len bytes as base64url without padding */
+  private static String toBase64Uri(BigInteger v, int len)
+  {
+    byte[] b = v.toByteArray();
+    byte[] r = new byte[len];
+    int n = Math.min(b.length, len);
+    System.arraycopy(b, b.length - n, r, len - n, n);
+    return new MemBuf(r).toBase64Uri();
   }
 }
 
