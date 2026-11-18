@@ -177,6 +177,8 @@ const class Jwt
   **
   ** If the exp and/or nbf claims exist, those will be verified
   **
+  ** No JWS extensions are supported, so a token with a crit header is rejected
+  **
   **     jwk :=  [
   **               "kty": "EC",
   **               "use": "sig",
@@ -263,6 +265,9 @@ const class Jwt
     //Verify Signature
     if (key != null)
     {
+      // RFC 7515 4.1.11: we implement no JWS extensions, so any crit must be rejected
+      if (header.containsKey(JwtConst.CriticalHeader))
+        throw Err("JWT (${JwtConst.CriticalHeader}) header parameter not supported: ${header[JwtConst.CriticalHeader]}")
       verifyExp(claims[JwtConst.ExpirationClaim], clockDrift)
       verifyNbf(claims[JwtConst.NotBeforeClaim], clockDrift)
 
@@ -554,6 +559,7 @@ internal mixin JwtConst
   // Javascript Object Signing and Encryption (JOSE) Headers
   const static Str AlgorithmHeader := "alg"
   const static Str KeyIdHeader := "kid"
+  const static Str CriticalHeader := "crit"
 
   // Jwt Registered Claim Names
   const static Str ExpirationClaim := "exp"

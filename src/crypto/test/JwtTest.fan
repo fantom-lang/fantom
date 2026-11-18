@@ -559,6 +559,24 @@ class JwtTest : CryptoTest
     verifyErrMsg(Err#, "Unsupported or Invalid JWS (alg) Parameter: 256") { x := crypto.loadJwk(jwk.dup.set("alg", 256)) }
   }
 
+  Void testCritRejected()
+  {
+    // RFC 7515 4.1.11: crit names extensions we must understand; we support none
+    pair := crypto.genKeyPair("RSA", 2048)
+    tok  := Jwt { it.alg = "RS256"; it.kid = "rsa"; it.header = ["crit":["b64"], "b64":false]; it.sub = "x" }.encode(pair.priv)
+    verifyErrMsg(Err#, "JWT (crit) header parameter not supported: [b64]") { x := Jwt.decode(tok, pair.pub) }
+
+    jwks := Jwk[TestJwk(["kid":"rsa"], pair.pub)]
+    verifyErrMsg(Err#, "JWT (crit) header parameter not supported: [b64]") { x := Jwt.decode(tok, jwks) }
+
+    mac := (MacKey)crypto.loadJwk(["kty":"oct", "alg":"HS256", "k":"YmFkU2VjcmV0"]).key
+    tok  = Jwt { it.alg = "HS256"; it.header = ["crit":"bogus"] }.encode(mac)
+    verifyErrMsg(Err#, "JWT (crit) header parameter not supported: bogus") { x := Jwt.decode(tok, mac) }
+
+    // unsigned decode only parses, so the header is still readable
+    verifyEq(Jwt.decodeUnsigned(tok).header["crit"], "bogus")
+  }
+
   Void testUnsignedJwt()
   {
     myJwtStr := Jwt {
@@ -726,4 +744,11 @@ class JwtTest : CryptoTest
     }
   }
 
+}
+
+internal const class TestJwk : Jwk
+{
+  new make(Str:Obj meta, Key key) { this.meta = meta; this.key = key }
+  override const Str:Obj meta
+  override const Key key
 }
