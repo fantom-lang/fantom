@@ -224,9 +224,13 @@ const class Jwt
 
   private static new decodeFromJwks(Str encoded, Jwk[] jwks, Duration clockDrift := 60sec)
   {
-    jwt := decodeUnsigned(encoded)
-    kid := jwt.kid
-    if (kid == null) throw Err("JWT missing (kid) header parameter: ${jwt.header}")
+    // only the header is read to pick the key; claims are not parsed until doDecode verifies
+    parts := splitParts(encoded)
+    Str:Obj header := [:]
+    try header = readJson(parts[0])
+    catch (Err e) throw Err("Error parsing JWT parts", e)
+    kid := header[JwtConst.KeyIdHeader] as Str
+    if (kid == null) throw Err("JWT missing (kid) header parameter: ${header}")
     matchingJwk := jwks.find |Jwk jwk->Bool| { return jwk.meta[JwtConst.KeyIdHeader] != null &&
                                                       (Str)jwk.meta[JwtConst.KeyIdHeader] == kid }
 
@@ -234,17 +238,16 @@ const class Jwt
 
     // JWK alg is optional; without it doDecode still requires the JWT alg to match the key type
     jwkAlg := matchingJwk.meta[JwtConst.AlgorithmHeader]
-    if (jwkAlg != null && jwkAlg != jwt.alg)
-      throw Err("JWT (alg) header parameter ${jwt.alg} != JWK alg ${jwkAlg}")
+    alg := header[JwtConst.AlgorithmHeader]
+    if (jwkAlg != null && jwkAlg != alg)
+      throw Err("JWT (alg) header parameter ${alg} != JWK alg ${jwkAlg}")
 
     return doDecode(encoded, matchingJwk.key, clockDrift)
   }
 
   private static new doDecode(Str encoded, Key? key, Duration clockDrift := 60sec)
   {
-    // RFC 7515 7.1: three unpadded base64url parts; Buf.fromBase64 would skip junk chars
-    parts := encoded.split('.', false)
-    if (parts.size != 3 || parts.any { !isBase64Uri(it) }) throw Err("Invalid JWT")
+    parts := splitParts(encoded)
 
     Str:Obj header := [:]
     Str:Obj claims := [:]
@@ -268,15 +271,6 @@ const class Jwt
     //Verify Signature
     if (key != null)
     {
-      // RFC 7515 4.1.11: we implement no JWS extensions, so any crit must be rejected
-      if (header.containsKey(JwtConst.CriticalHeader))
-        throw Err("JWT (${JwtConst.CriticalHeader}) header parameter not supported: ${header[JwtConst.CriticalHeader]}")
-      // RFC 7519 4.1.4 and 4.1.5
-      exp := toDateTime(JwtConst.ExpirationClaim, claims[JwtConst.ExpirationClaim])
-      nbf := toDateTime(JwtConst.NotBeforeClaim, claims[JwtConst.NotBeforeClaim])
-      if (exp != null && DateTime.nowUtc - clockDrift >= exp) throw Err("JWT expired")
-      if (nbf != null && DateTime.nowUtc + clockDrift < nbf) throw Err("JWT not valid yet")
-
       if (key is PubKey)
       {
         if (jwsAlg.keyType != key.algorithm)
@@ -302,6 +296,16 @@ const class Jwt
       {
         throw ArgErr("Invalid key provided. Unable to verify signature.")
       }
+
+      // header and claims are only checked once the signature is verified
+      // RFC 7515 4.1.11: we implement no JWS extensions, so any crit must be rejected
+      if (header.containsKey(JwtConst.CriticalHeader))
+        throw Err("JWT (${JwtConst.CriticalHeader}) header parameter not supported: ${header[JwtConst.CriticalHeader]}")
+      // RFC 7519 4.1.4 and 4.1.5
+      exp := toDateTime(JwtConst.ExpirationClaim, claims[JwtConst.ExpirationClaim])
+      nbf := toDateTime(JwtConst.NotBeforeClaim, claims[JwtConst.NotBeforeClaim])
+      if (exp != null && DateTime.nowUtc - clockDrift >= exp) throw Err("JWT expired")
+      if (nbf != null && DateTime.nowUtc + clockDrift < nbf) throw Err("JWT not valid yet")
     }
 
     return Jwt {
@@ -442,8 +446,22 @@ const class Jwt
   private static DateTime? toDateTime(Str claim, Obj? val)
   {
     if (val == null) return null
-    try return DateTime.fromJava((((Num)val).toFloat * 1000f).toInt, TimeZone.utc, false)
+    try
+    {
+      // bound the value first so the millis to ticks multiply in DateTime cannot overflow and wrap
+      secs := ((Num)val).toFloat
+      if (!(secs.abs <= 5e9f)) throw ArgErr("out of range")
+      return DateTime.fromJava((secs * 1000f).toInt, TimeZone.utc, false)
+    }
     catch (Err e) throw Err("JWT (${claim}) claim is not a valid value: ${val}")
+  }
+
+  // RFC 7515 7.1: three unpadded base64url parts; Buf.fromBase64 would skip junk chars
+  private static Str[] splitParts(Str encoded)
+  {
+    parts := encoded.split('.', false)
+    if (parts.size != 3 || parts.any { !isBase64Uri(it) }) throw Err("Invalid JWT")
+    return parts
   }
 
   private static Bool isBase64Uri(Str s)

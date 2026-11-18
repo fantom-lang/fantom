@@ -89,6 +89,8 @@ const class JJwk : Jwk
     // keys from a plain http fetch could be swapped in transit
     if (jwksUri.scheme != "https") throw ArgErr("JWKS uri must be https: ${jwksUri}")
     c := WebClient(jwksUri)
+    // a redirect could downgrade to http or move to another host
+    c.followRedirects = false
     c.reqHeaders["Accept"] = "application/jwk-set+json, application/json"
     return importJwks(JsonInStream(c.getBuf.in).readJson, maxJwKeys)
   }

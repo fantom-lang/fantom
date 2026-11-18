@@ -614,6 +614,27 @@ class JwtTest : CryptoTest
     verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: soon") { x := decodeClaims(key, Str<|{"exp":"soon"}|>) }
     verifyErrMsg(Err#, "JWT (nbf) claim is not a valid value: true") { x := decodeClaims(key, Str<|{"nbf":true}|>) }
     verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: 99999999999") { x := decodeClaims(key, Str<|{"exp":99999999999}|>) }
+
+    // values whose ticks would overflow and wrap back into the 1901 to 2099 range
+    verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: 20393428873") { x := decodeClaims(key, Str<|{"exp":20393428873}|>) }
+    verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: -16500000000") { x := decodeClaims(key, Str<|{"exp":-16500000000}|>) }
+    verifyErrMsg(Err#, "JWT (nbf) claim is not a valid value: -17500000000") { x := decodeClaims(key, Str<|{"nbf":-17500000000}|>) }
+
+    // the signature is verified before crit, exp or nbf are looked at
+    other := hmacKey(33)
+    [Str<|{"alg":"HS256"}|>:Str<|{"exp":0}|>, Str<|{"alg":"HS256"}|>:Str<|{"nbf":4000000000}|>,
+     Str<|{"alg":"HS256","crit":["x"]}|>:Str<|{"sub":"x"}|>].each |claims, header|
+    {
+      input := header.toBuf.toBase64Uri + "." + claims.toBuf.toBase64Uri
+      tok   := input + "." + input.toBuf.hmac(other.algorithm, other.encoded).toBase64Uri
+      verifyErrMsg(Err#, "Invalid JWT MAC") { x := Jwt.decode(tok, key) }
+    }
+
+    // through a Jwk[] only the header is read to pick the key, so a bad claim is not reported either
+    jwks  := Jwk[TestJwk(["kid":"k"], key)]
+    input := Str<|{"alg":"HS256","kid":"k"}|>.toBuf.toBase64Uri + "." + Str<|{"exp":"soon"}|>.toBuf.toBase64Uri
+    verifyErrMsg(Err#, "Invalid JWT MAC") { x := Jwt.decode(input + "." + input.toBuf.hmac(other.algorithm, other.encoded).toBase64Uri, jwks) }
+    verifyErrMsg(Err#, "JWT (exp) claim is not a valid value: soon") { x := Jwt.decode(input + "." + input.toBuf.hmac(key.algorithm, key.encoded).toBase64Uri, jwks) }
   }
 
   Void testKeySizes()
