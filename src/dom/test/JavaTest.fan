@@ -62,23 +62,36 @@ class JavaTest : Test
   {
     elem := Elem {}
 
-    // java setAttr will always also set the prop
+    // an attr is reflected by the prop of the same name until the
+    // prop is set
     verifyEq(elem.attrs.size, 0)
     verifyAttrProp(elem, "foo", null)
     elem["foo"] = "bar"
     verifyAttrProp(elem, "foo", "bar")
 
-    // java setProp will always also set the attr
+    // setProp never sets the attr
     elem->bar = false
     elem->zoo = 12
-    verifyAttrProp(elem, "bar", "false", false)
-    verifyAttrProp(elem, "zoo", "12", 12)
+    verifyAttrProp(elem, "bar", null, false)
+    verifyAttrProp(elem, "zoo", null, 12)
+    elem->foo = "prop"
+    verifyAttrProp(elem, "foo", "bar", "prop")
+    verifyEq(elem.attrs, Str:Str["foo":"bar"])
 
-    attrs := elem.attrs
-    verifyEq(attrs.size, 3)
-    verifyAttrProp(elem, "foo", "bar")
-    verifyAttrProp(elem, "bar", "false", false)
-    verifyAttrProp(elem, "zoo", "12", 12)
+    // attrs keep the order they were first set, class included
+    elem.setAttr("title", "t").setAttr("class", "a b").setAttr("href", "#").setAttr("title", "u")
+    verifyEq(elem.attrs.keys, ["foo", "title", "class", "href"])
+    verifyEq(elem.attrs["title"], "u")
+    elem.style.addClass("c")
+    verifyEq(elem.attrs["class"], "a b c")
+    elem.removeAttr("title").setAttr("href", null)
+    verifyEq(elem.attrs.keys, ["foo", "class"])
+    verifyEq(elem.attr("href"), null)
+
+    // class added thru style with no attr set is an attr too
+    x := Elem {}
+    x.style.addClass("z")
+    verifyEq(x.attrs, Str:Str["class":"z"])
 
     // TODO: how do we handle camel case????
     // elem->fooBar = "ok"
@@ -97,6 +110,28 @@ class JavaTest : Test
     // elem->_foo_bazPaw = "5"
     // verifyEq(elem->_foo_bazPaw, "5")
     // verifyEq(elem["_foo_baz-paw"], "5")
+  }
+
+  Void testHtml()
+  {
+    // children are serialized as a browser does for innerHTML
+    root := Elem("div")
+    verifyEq(root.html, "")
+    p := Elem("p") { it.setAttr("title", "a \"b\" <c> & d"); it.setAttr("class", "x y") }
+    p.add(DomText("1 < 2 & \"3\" > 2"))
+    root.add(p)
+    root.add(DomText("tail"))
+    verifyEq(root.html, Str<|<p title="a &quot;b&quot; &lt;c&gt; &amp; d" class="x y">1 &lt; 2 &amp; "3" &gt; 2</p>tail|>)
+
+    // a prop is not an attr; an attr with no value is empty
+    in := Elem("input") { it.setAttr("type", "checkbox"); it.setAttr("disabled", "") }
+    in->checked = true
+    root = Elem("div") { in, Elem("br"), Elem("span"), }
+    verifyEq(root.html, Str<|<input type="checkbox" disabled=""><br><span></span>|>)
+
+    // only an html void element has no end tag
+    svg := Elem("svg", Svg.ns) { Elem("rect", Svg.ns) { it.setAttr("width", "20") }, Elem("g", Svg.ns), }
+    verifyEq(Elem("div").add(svg).html, Str<|<svg><rect width="20"></rect><g></g></svg>|>)
   }
 
   Void testStyleBasics()

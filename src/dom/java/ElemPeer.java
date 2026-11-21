@@ -12,7 +12,9 @@ import java.lang.StringBuffer;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import fan.sys.*;
 import fanx.interop.*;
 
@@ -61,9 +63,58 @@ public class ElemPeer extends DomNodePeer
     return style;
   }
 
-  // TODO: need to serialize all children into <html> format?
-  public String html(Elem self) { throw err(); }
+  public String html(Elem self)
+  {
+    StringBuilder s = new StringBuilder();
+    for (int i=0; i<kids.size(); i++) writeHtml(s, (DomNode)kids.get(i));
+    return s.toString();
+  }
+
   public void html(Elem self, String html) { throw err(); }
+
+  // serialize a node as a browser does for innerHTML: a void element
+  // has no end tag, every other element has one
+  private static void writeHtml(StringBuilder s, DomNode node)
+  {
+    if (!(node instanceof Elem)) { escHtml(s, node.text(), false); return; }
+
+    Elem elem = (Elem)node;
+    ElemPeer peer = (ElemPeer)elem.peer;
+    s.append('<').append(peer.tagName);
+    Map attrs = elem.attrs();
+    List names = attrs.keys();
+    for (int i=0; i<names.sz(); i++)
+    {
+      String name = (String)names.get(i);
+      s.append(' ').append(name).append("=\"");
+      escHtml(s, (String)attrs.get(name), true);
+      s.append('"');
+    }
+    s.append('>');
+    if (!peer.isSvg && voidTags.contains(peer.tagName)) return;
+    for (int i=0; i<peer.kids.size(); i++) writeHtml(s, (DomNode)peer.kids.get(i));
+    s.append("</").append(peer.tagName).append('>');
+  }
+
+  private static void escHtml(StringBuilder s, String val, boolean isAttr)
+  {
+    for (int i=0; i<val.length(); i++)
+    {
+      char c = val.charAt(i);
+      if (c == '&') s.append("&amp;");
+      else if (c == '<') s.append("&lt;");
+      else if (c == '>') s.append("&gt;");
+      else if (c == '"' && isAttr) s.append("&quot;");
+      else s.append(c);
+    }
+  }
+
+  private static final HashSet voidTags = new HashSet();
+  static
+  {
+    String[] tags = { "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr" };
+    for (int i=0; i<tags.length; i++) voidTags.add(tags[i]);
+  }
 
   public Boolean enabled(Elem self) { return enabled; }
   public void enabled(Elem self, Boolean v) { this.enabled = v; }
@@ -72,21 +123,23 @@ public class ElemPeer extends DomNodePeer
 // Attributes
 //////////////////////////////////////////////////////////////////////////
 
+  // attributes in the order they were first set; class is kept by
+  // Style, and takes its place in the order from its key
   public Map attrs(Elem self)
   {
     Map map = Map.make(Sys.StrType, Sys.StrType);
-
-    // collect props
-    Iterator it = props.entrySet().iterator();
+    map.ordered(true);
+    String className = self.attr("class");
+    Iterator it = attrs.entrySet().iterator();
     while (it.hasNext())
     {
       Entry e = (Entry)it.next();
-      map.set(e.getKey(), e.getValue().toString());
+      if (e.getKey().equals("class")) { if (className != null) map.set("class", className); }
+      else map.set(e.getKey(), e.getValue());
     }
 
-    // merge in class if specified
-    String className = self.attr("class");
-    if (className != null) map.set("class", className);
+    // classes added thru Style without the attribute being set
+    if (className != null && !attrs.containsKey("class")) map.set("class", className);
 
     return map;
   }
@@ -100,39 +153,27 @@ public class ElemPeer extends DomNodePeer
       return c.size() == 0 ? null : c.join(" ");
     }
 
-    // do not route to prop to avoid propHooks traps
-    Object val = props.get(name);
-    return val == null ? null : val.toString();
+    return (String)attrs.get(name);
   }
 
   public Elem setAttr(Elem self, String name, String val, Uri ns)
   {
-    if (name.equals("class"))
-    {
-      // delegate to Style for class
-      style(self).peer._setClass(style, val);
-    }
-    else
-    {
-      // TODO: ns?
-      // route to setProp
-      this.setProp(self, name, val==null ? null : val.toString());
-    }
+    // TODO: ns?
+    if (val == null) return removeAttr(self, name);
+
+    // delegate to Style for class
+    if (name.equals("class")) style(self).peer._setClass(style, val);
+
+    attrs.put(name, val);
     return self;
   }
 
   public Elem removeAttr(Elem self, String name)
   {
-    if (name.equals("class"))
-    {
-      // delegate to Style for class
-      style(self).peer._setClass(style, "");
-    }
-    else
-    {
-      // route to setProp
-      this.setProp(self, name, null);
-    }
+    // delegate to Style for class
+    if (name.equals("class")) style(self).peer._setClass(style, "");
+
+    attrs.remove(name);
     return self;
   }
 
@@ -140,15 +181,17 @@ public class ElemPeer extends DomNodePeer
 // Props
 //////////////////////////////////////////////////////////////////////////
 
+  // a property which has not been set reflects the attribute of
+  // the same name; setting a property never writes an attribute
   public Object prop(Elem self, String name)
   {
-    if (propHooks.get(name) != null)
-    {
-      // return "" for null id to match js
-      if (name.equals("id")) { Object v=props.get("id"); return v==null ? "" : v; }
-    }
+    Object v = props.get(name);
+    if (v == null) v = attr(self, name);
 
-    return props.get(name);
+    // return "" for null id to match js
+    if (v == null && propHooks.get(name) != null) return "";
+
+    return v;
   }
 
   public Elem setProp(Elem self, String name, Object val)
@@ -293,6 +336,7 @@ public class ElemPeer extends DomNodePeer
   private String tagName;                     // non-null
   private Style style;                        // null
   private boolean enabled = true;
+  private LinkedHashMap attrs = new LinkedHashMap();  // Str:Str
   private HashMap props = new HashMap();      // Str:Obj
 
   private static Err err() { return UnsupportedErr.make(); }
