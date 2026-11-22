@@ -134,6 +134,47 @@ class JavaTest : Test
     verifyEq(Elem("div").add(svg).html, Str<|<svg><rect width="20"></rect><g></g></svg>|>)
   }
 
+  Void testHtmlSet()
+  {
+    // markup is parsed into the children, replacing what was there
+    root := Elem("div") { Elem("i"), }
+    root.html = Str<|a &lt; b<P Title='x &amp; "y"' hidden data-n=3>one<br>two<b>three</b></p><!-- gone -->tail &#65;&#x42;&nope;|>
+    verifyEq(root.html, Str<|a &lt; b<p title="x &amp; &quot;y&quot;" hidden="" data-n="3">one<br>two<b>three</b></p>tail AB&amp;nope;|>)
+    verifyEq(root.childNodes.size, 3)
+    p := root.children.first
+    verifyEq(p.tagName, "p")
+    verifyEq(p.ns, `http://www.w3.org/1999/xhtml`)
+    verifyEq(p.attr("title"), "x & \"y\"")
+    verifySame(p.parent, root)
+    verifyEq(p.children.map |Elem x->Str| { x.tagName }, ["br", "b"])
+
+    // empty
+    root.html = ""
+    verifyEq(root.childNodes.size, 0)
+
+    // an end tag closes the nearest of its name, and never the root
+    root.html = "<ul><li>a<li>b</ul>c</div>d<span/>e"
+    verifyEq(root.html, "<ul><li>a<li>b</li></li></ul>cd<span>e</span>")
+
+    // svg keeps its names and closes itself, and is html again in a
+    // foreignObject
+    root.html = Str<|<svg viewBox="0 0 4 4"><linearGradient/><path d='M0 0' /><foreignObject><P>x</P></foreignObject></svg><B>y</B>|>
+    verifyEq(root.html, Str<|<svg viewBox="0 0 4 4"><linearGradient></linearGradient><path d="M0 0"></path><foreignObject><p>x</p></foreignObject></svg><b>y</b>|>)
+    kids := root.children.first.children
+    verifyEq(kids.map |Elem x->Uri| { x.ns }, [Svg.ns, Svg.ns, Svg.ns])
+    verifyEq(kids[2].children.first.ns, `http://www.w3.org/1999/xhtml`)
+    verifyEq(root.children.last.ns, `http://www.w3.org/1999/xhtml`)
+
+    // assigned to an svg element, the children are svg
+    icon := Elem("svg", Svg.ns)
+    icon.html = Str<|<path d='M20 6 9 17l-5-5' /><circle cx='4' cy='20' r='2' />|>
+    verifyEq(icon.html, Str<|<path d="M20 6 9 17l-5-5"></path><circle cx="4" cy="20" r="2"></circle>|>)
+    verifyEq(icon.children.map |Elem x->Uri| { x.ns }, [Svg.ns, Svg.ns])
+
+    // fromHtml
+    verifyEq(Elem.fromHtml("<em class='a b'>x</em>").attr("class"), "a b")
+  }
+
   Void testStyleBasics()
   {
     elem := Elem {}

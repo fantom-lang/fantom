@@ -70,7 +70,11 @@ public class ElemPeer extends DomNodePeer
     return s.toString();
   }
 
-  public void html(Elem self, String html) { throw err(); }
+  public void html(Elem self, String html)
+  {
+    self.removeAll();
+    HtmlParser.parse(self, html);
+  }
 
   // serialize a node as a browser does for innerHTML: a void element
   // has no end tag, every other element has one
@@ -91,7 +95,7 @@ public class ElemPeer extends DomNodePeer
       s.append('"');
     }
     s.append('>');
-    if (!peer.isSvg && voidTags.contains(peer.tagName)) return;
+    if (!peer.isSvg && HtmlParser.voidTags.contains(peer.tagName)) return;
     for (int i=0; i<peer.kids.size(); i++) writeHtml(s, (DomNode)peer.kids.get(i));
     s.append("</").append(peer.tagName).append('>');
   }
@@ -107,13 +111,6 @@ public class ElemPeer extends DomNodePeer
       else if (c == '"' && isAttr) s.append("&quot;");
       else s.append(c);
     }
-  }
-
-  private static final HashSet voidTags = new HashSet();
-  static
-  {
-    String[] tags = { "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr" };
-    for (int i=0; i<tags.length; i++) voidTags.add(tags[i]);
   }
 
   public Boolean enabled(Elem self) { return enabled; }
