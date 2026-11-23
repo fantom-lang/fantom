@@ -67,7 +67,8 @@ if [ -z "$FAN_JAVA" ] ; then
 fi
 
 FAN_CONFIG_PROPS="$FAN_HOME/etc/sys/config.props"
-FAN_CLASSPATH="$FAN_CP":"$CLASSPATH"
+FAN_CLASSPATH="$FAN_CP"
+if [ -n "$CLASSPATH" ]; then FAN_CLASSPATH="$FAN_CP":"$CLASSPATH"; fi
 
 # On Cygwin, convert paths to Windows-style (as expected by a JVM running on Windows)
 if $cygwin; then

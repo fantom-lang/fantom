@@ -39,7 +39,8 @@ call:getProp FAN_JAVA_OPTS
 
 REM Set FAN_CP classpath if not already set
 IF "%FAN_CP%" == "" SET FAN_CP="%FAN_HOME%\lib\java\sys.jar";"%FAN_HOME%\lib\java\jline.jar"
-SET FAN_CLASSPATH="%FAN_CP%";"%CLASSPATH%"
+SET FAN_CLASSPATH="%FAN_CP%"
+IF NOT "%CLASSPATH%" == "" SET FAN_CLASSPATH="%FAN_CP%";"%CLASSPATH%"
 
 IF "%FAN_LAUNCHER_DEBUG%" == "true" (
   ECHO -- LAUNCHER DEBUG ON
