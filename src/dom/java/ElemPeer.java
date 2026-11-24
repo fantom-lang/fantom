@@ -299,14 +299,7 @@ public class ElemPeer extends DomNodePeer
       // TODO: match on tag name and/or class name
 
       // check attrs
-      Map attrs = elem.attrs();
-      for (int j=0; j<attrs.keys().size(); j++)
-      {
-        String key = (String)attrs.keys().get(j);
-        String val = (String)attrs.get(key);
-        if (q.attrs.contains(key)) matches.add(elem);
-        // TODO: match on value
-      }
+      if (q.matches(elem.attrs())) matches.add(elem);
 
       // recurse children
       matchQuerySelector(elem, q, matches);

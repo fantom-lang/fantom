@@ -22,13 +22,50 @@ public class QuerySelector
     {
       String x = r[i];
       int len  = x.length();
-      if (x.charAt(0) == '[' && x.charAt(len-1) == ']')
+      if (len > 0 && x.charAt(0) == '[' && x.charAt(len-1) == ']')
       {
-        q.attrs.add(x.substring(1,len-1));
+        // one or more attribute selectors which must all match:
+        // [name] or [name=value], where the value may be quoted
+        String[] parts = x.substring(1,len-1).split("\\]\\[");
+        ArrayList attrs = new ArrayList();
+        for (int j=0; j<parts.length; j++)
+        {
+          String part = parts[j];
+          int eq = part.indexOf('=');
+          String name = eq < 0 ? part : part.substring(0, eq);
+          String val  = eq < 0 ? null : unquote(part.substring(eq+1));
+          attrs.add(new String[] { name, val });
+        }
+        q.attrs.add(attrs);
       }
     }
 
     return q;
+  }
+
+  private static String unquote(String s)
+  {
+    int len = s.length();
+    if (len >= 2 && (s.charAt(0) == '"' || s.charAt(0) == '\'') && s.charAt(len-1) == s.charAt(0)) return s.substring(1, len-1);
+    return s;
+  }
+
+  /* Does any of the attribute selectors match the attributes */
+  public boolean matches(fan.sys.Map elemAttrs)
+  {
+    for (int i=0; i<attrs.size(); i++)
+    {
+      ArrayList all = (ArrayList)attrs.get(i);
+      boolean ok = true;
+      for (int j=0; ok && j<all.size(); j++)
+      {
+        String[] a = (String[])all.get(j);
+        String val = (String)elemAttrs.get(a[0]);
+        ok = val != null && (a[1] == null || a[1].equals(val));
+      }
+      if (ok) return true;
+    }
+    return false;
   }
 
   public ArrayList classes = new ArrayList();

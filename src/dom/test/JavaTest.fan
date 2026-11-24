@@ -250,6 +250,18 @@ class JavaTest : Test
     verifySame(m[1], b)
 
     verifySame(root.querySelector("[foo]"), a)
+
+    // match on value, and on every attribute of the selector
+    b.setAttr("foo", "baz")
+    b.setAttr("x", "y z")
+    verifySame(root.querySelector("[foo=baz]"), b)
+    verifySame(root.querySelector("[foo=\"bar\"]"), a)
+    verifySame(root.querySelector("[foo='bar']"), a)
+    verifyEq(root.querySelectorAll("[foo=nope]").size, 0)
+    verifySame(root.querySelector("[foo][x]"), b)
+    verifySame(root.querySelector("[foo=baz][x]"), b)
+    verifyEq(root.querySelectorAll("[foo=bar][x]").size, 0)
+    verifyEq(root.querySelectorAll("[x]").size, 1)
   }
 
   Void testSvg()
