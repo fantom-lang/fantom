@@ -264,6 +264,133 @@ class JavaTest : Test
     verifyEq(root.querySelectorAll("[x]").size, 1)
   }
 
+  Void testSelectors()
+  {
+    root := Elem {}
+    root.html =
+      Str<|<ul id="list" class="menu big">
+             <li class="item first" data-k="a b">A</li>
+             <li class="item" data-k="en-US" disabled>B<span class="hover:x">s</span></li>
+             <li class="item last" title="Say Hi">C<input type="checkbox" checked></li>
+           </ul>
+           <p></p><p id="p2">t</p>|>
+    ul := root.firstChild
+    li := ul.children
+    span := li[1].firstChild
+    input := li[2].firstChild
+    p := root.children[1..2]
+
+    //        scope selector                   matches
+    verifySel(root, "ul",                      [ul])
+    verifySel(root, "UL",                      [ul])
+    verifySel(root, "*",                       [ul, li[0], li[1], span, li[2], input, p[0], p[1]])
+    verifySel(root, "#list",                   [ul])
+    verifySel(root, "ul#list.menu.big",        [ul])
+    verifySel(root, ".menu.nope",              Elem[,])
+    verifySel(root, ".item",                   li)
+    verifySel(root, "li.first, li.last",       [li[0], li[2]])
+    verifySel(root, "p, ul",                   [ul, p[0], p[1]])
+    verifySel(root, "ul li",                   li)
+    verifySel(root, "ul span",                 [span])
+    verifySel(root, "ul > span",               Elem[,])
+    verifySel(root, "ul > li > span",          [span])
+    verifySel(root, "ul>li>span",              [span])
+    verifySel(root, ".first + li",             [li[1]])
+    verifySel(root, ".first ~ li",             [li[1], li[2]])
+    verifySel(root, "ul + p",                  [p[0]])
+    verifySel(root, "ul ~ p",                  p)
+    verifySel(root, ":scope > p",              p)
+    verifySel(ul,   ":scope > li.last",        [li[2]])
+    verifySel(ul,   "div li",                  li)   // an ancestor outside the scope counts
+
+    // attributes
+    verifySel(root, "[data-k]",                [li[0], li[1]])
+    verifySel(root, "[data-k='a b']",          [li[0]])
+    verifySel(root, Str<|[ data-k = "a b" ]|>, [li[0]])
+    verifySel(root, "[data-k~=b]",             [li[0]])
+    verifySel(root, "[data-k|=en]",            [li[1]])
+    verifySel(root, "[data-k^=en]",            [li[1]])
+    verifySel(root, "[data-k\$=US]",           [li[1]])
+    verifySel(root, "[data-k*=n-U]",           [li[1]])
+    verifySel(root, "[title='say hi']",        Elem[,])
+    verifySel(root, "[title='say hi' i]",      [li[2]])
+    verifySel(root, "li[class~=item][title]",  [li[2]])
+    verifySel(root, "[class='item first']",    [li[0]])
+    verifySel(root, Str<|.hover\:x|>,          [span])
+
+    // pseudo-classes
+    verifySel(root, "li:first-child",          [li[0]])
+    verifySel(root, "li:last-child",           [li[2]])
+    verifySel(root, "span:only-child",         [span])
+    verifySel(root, "li:nth-child(2)",         [li[1]])
+    verifySel(root, "li:nth-child(odd)",       [li[0], li[2]])
+    verifySel(root, "li:nth-child(even)",      [li[1]])
+    verifySel(root, "li:nth-child(n+2)",       [li[1], li[2]])
+    verifySel(root, "li:nth-child(-n + 2)",    [li[0], li[1]])
+    verifySel(root, "li:nth-last-child(1)",    [li[2]])
+    verifySel(root, "li:not(.first)",          [li[1], li[2]])
+    verifySel(root, "li:not(.first, .last)",   [li[1]])
+    verifySel(root, "li:is(.first, .last)",    [li[0], li[2]])
+    verifySel(root, "p:empty",                 [p[0]])
+    verifySel(root, ":disabled",               [li[1]])
+    verifySel(root, "li:enabled",              [li[0], li[2]])
+    verifySel(root, ":checked",                [input])
+    input.setProp("checked", false)
+    verifySel(root, ":checked",                Elem[,])
+
+    // closest
+    verifySame(span.closest("span"), span)
+    verifySame(span.closest("li"), li[1])
+    verifySame(span.closest(".menu"), ul)
+    verifySame(span.closest("ul > li"), li[1])
+    verifySame(span.closest(":not(span):not(li)"), ul)
+    verifyEq(span.closest("p"), null)
+
+    // what is not handled is an error
+    ["", "ul >", "> li", "li,", "[x", "[x=]", "[x!=y]", "li:hover", "li::before", "li:nth-child(x)", "a b)", ".", "#"].each |s|
+    {
+      verifyErr(ArgErr#) { root.querySelector(s) }
+    }
+  }
+
+  private Void verifySel(Elem scope, Str selector, Elem[] expected)
+  {
+    actual := scope.querySelectorAll(selector)
+    verifyEq(actual.size, expected.size, selector)
+    actual.each |e, i| { verifySame(e, expected[i], selector) }
+    verifySame(scope.querySelector(selector), expected.first, selector)
+  }
+
+  Void testClone()
+  {
+    a := Elem("section")
+    a.html = Str<|<p id="x" class="a b">hi <b>there</b></p>|>
+    a.style->color = "red"
+    a.setProp("foo", "bar")
+    hits := 0
+    a.onEvent("click", false) |e| { hits++ }
+
+    deep := a.clone
+    verifyNotSame(deep, a)
+    verifyEq(deep.parent, null)
+    verifyEq(deep.tagName, "section")
+    verifyEq(deep.html, a.html)
+    verifyNotSame(deep.firstChild, a.firstChild)
+    verifyEq(deep.style->color, "red")
+    verifyEq(deep.prop("foo"), null)
+    deep.dispatchEvent(Event.makeCustom("click"))
+    verifyEq(hits, 0)
+
+    shallow := a.clone(false)
+    verifyEq(shallow.tagName, "section")
+    verifyEq(shallow.html, "")
+
+    text := a.firstChild.firstNode.clone
+    verifyEq(text.typeof, DomText#)
+    verifyEq(text.text, "hi ")
+    verifyEq(text.parentNode, null)
+  }
+
   Void testSvg()
   {
     a := Svg.line(0, 0, 10, 10)

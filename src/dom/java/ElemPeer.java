@@ -278,32 +278,24 @@ public class ElemPeer extends DomNodePeer
 
   public Elem querySelector(Elem self, String selectors)
   {
-    return (Elem)querySelectorAll(self, selectors).first();
+    ArrayList matches = new ArrayList();
+    QuerySelector.parse(selectors).findAll(self, self, matches, 1);
+    return matches.size() == 0 ? null : (Elem)matches.get(0);
   }
 
   public List querySelectorAll(Elem self, String selectors)
   {
-    QuerySelector q = QuerySelector.parse(selectors);
     ArrayList matches = new ArrayList();
-    matchQuerySelector(self, q, matches);
+    QuerySelector.parse(selectors).findAll(self, self, matches, Integer.MAX_VALUE);
     return Interop.toFan(matches, Type.find("dom::Elem"));
   }
 
-  private void matchQuerySelector(Elem parent, QuerySelector q, ArrayList matches)
+  public Elem closest(Elem self, String selectors)
   {
-    List kids = parent.children();
-    for (int i=0; i<kids.size(); i++)
-    {
-      Elem elem = (Elem)kids.get(i);
-
-      // TODO: match on tag name and/or class name
-
-      // check attrs
-      if (q.matches(elem.attrs())) matches.add(elem);
-
-      // recurse children
-      matchQuerySelector(elem, q, matches);
-    }
+    QuerySelector q = QuerySelector.parse(selectors);
+    for (Elem e = self; e != null; e = e.parent())
+      if (q.matches(e, self)) return e;
+    return null;
   }
 
 //////////////////////////////////////////////////////////////////////////

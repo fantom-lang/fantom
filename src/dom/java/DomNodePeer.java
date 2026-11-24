@@ -73,7 +73,29 @@ public class DomNodePeer
     return false;
   }
 
-  public DomNode clone(DomNode self, boolean deep) { throw UnsupportedErr.make(); }
+  // Copy as the DOM does: an element with its attributes, classes
+  // and inline styles, but none of its listeners or properties
+  public DomNode clone(DomNode self, boolean deep)
+  {
+    DomNode copy = cloneSelf(self);
+    if (deep)
+      for (int i=0; i<kids.size(); i++) copy.peer.addChild(copy, ((DomNode)kids.get(i)).clone(true));
+    return copy;
+  }
+
+  private static DomNode cloneSelf(DomNode self)
+  {
+    if (self instanceof DomText) return DomText.make(self.text());
+    if (self instanceof DomFrag) return DomFrag.make();
+    if (!(self instanceof Elem)) throw UnsupportedErr.make("clone " + self.typeof());
+    Elem elem = (Elem)self;
+    Elem copy = Elem.make(elem.tagName(), elem.ns());
+    Map attrs = elem.attrs();
+    List names = attrs.keys();
+    for (int i=0; i<names.sz(); i++) copy.setAttr((String)names.get(i), (String)attrs.get(names.get(i)));
+    copy.style().peer.props.putAll(elem.style().peer.props);
+    return copy;
+  }
 
   public void addChild(DomNode self, DomNode child)
   {

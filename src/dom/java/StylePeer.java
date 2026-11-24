@@ -87,5 +87,5 @@ public class StylePeer
 //////////////////////////////////////////////////////////////////////////
 
   private ArrayList classList = new ArrayList();
-  private HashMap props = new HashMap();
+  HashMap props = new HashMap();
 }
