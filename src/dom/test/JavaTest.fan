@@ -380,7 +380,8 @@ class JavaTest : Test
     verifyEq(e.meta, false)
     verifyEq(e.button, null)
     verifyEq(e.targetNode, null)
-    verifyEq(e->detail, "foo")
+    verifyEq(e.detail, "foo")
+    verifyEq(Event.makeCustom("click").detail, null)
     verifyEq(e.get("notFound"), null)
     verifyEq(e.get("notFound", "def"), "def")
     e["foo"] = 3

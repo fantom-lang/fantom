@@ -121,6 +121,8 @@ class EventPeer extends sys.Obj {
     return this.#delta;
   }
 
+  detail(self) { return this.event.detail ?? null; }
+
   #err;
   err(self)
   {

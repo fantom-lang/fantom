@@ -51,6 +51,7 @@ public class EventPeer
   public boolean      meta        (Event self)                          { return flag("metaKey"); }
   public Long         button      (Event self)                          { return (Long)attrs.get("button"); }
   public String       keyChar     (Event self)                          { return (String)attrs.get("key"); }
+  public Object       detail      (Event self)                          { return attrs.get("detail"); }
   public Err          err         (Event self)                          { return (Err)attrs.get("error"); }
   public void         preventDefault(Event self)                        { defaultPrevented = true; }
   public void         stop        (Event self)                          { defaultPrevented = true; stopped = true; }

@@ -134,7 +134,7 @@ class Event
   **   - "bubbles": Bool
   **   - "cancelable": Bool
   **   - "composed": Bool
-  **   - "detail": value available as `event->detail`
+  **   - "detail": value available as `detail`
   static native Event makeCustom(Str type, [Str:Obj?]? init := null)
 
   ** Create an [Event] instance from a native JavaScript Event object.
@@ -200,6 +200,9 @@ class Event
   ** Character string for key event that represents text typed.
   ** For example Shift + Key.b would return "B".
   native Str? keyChar()
+
+  ** Value a custom event was made with by `makeCustom`, or null.
+  native Obj? detail()
 
   ** Err instance if available for `window.onerror`.
   native Err? err()
