@@ -53,6 +53,11 @@ public class DomPeerFactory
     return new ElemPeer();
   }
 
+  public ResizeObserverPeer makeResizeObserver(ResizeObserver fan)
+  {
+    return new ResizeObserverPeer();
+  }
+
   public EventPeer makeEvent(Event fan)
   {
     return new EventPeer();
