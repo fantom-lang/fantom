@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import fan.sys.*;
 
 /**
- * QuerySelector is a CSS selector list which is parsed once and
- * matched against elements.  It handles compound selectors of a tag,
- * id, classes, attributes and the pseudo-classes of the tree, joined
- * by the descendant, child and sibling combinators.  A selector it
- * does not handle is an error, never a silent miss.
+ * QuerySelector parses a CSS selector list and matches it against
+ * elements.  It supports tag, id, class and attribute selectors, the
+ * structural pseudo-classes, and the descendant, child and sibling
+ * combinators.  An unsupported selector raises ArgErr instead of
+ * silently matching nothing.
  */
 public class QuerySelector
 {
@@ -32,8 +32,9 @@ public class QuerySelector
     return new Parser(selectors).parseList(false);
   }
 
-  /** Does any selector of the list match the element.  The scope is
-      the element a query was made on, which is what :scope matches */
+  /** Return if any selector in the list matches the element.  The
+      scope is the element the query was called on, which is what
+      :scope matches */
   public boolean matches(Elem elem, Elem scope)
   {
     for (int i=0; i<list.size(); i++)
@@ -41,8 +42,8 @@ public class QuerySelector
     return false;
   }
 
-  /** Add the descendants of the scope which match, in document
-      order, until the limit is reached */
+  /** Find the matching descendants of parent in document order and
+      add them to acc, stopping once acc reaches the limit */
   public void findAll(DomNode parent, Elem scope, ArrayList acc, int limit)
   {
     ArrayList kids = parent.peer.kids;
@@ -61,13 +62,14 @@ public class QuerySelector
 // Complex
 //////////////////////////////////////////////////////////////////////////
 
-  /** Compound selectors joined by combinators, such as "ul > li a" */
+  /** A list of compound selectors joined by combinators, such as
+      "ul > li a" */
   static class Complex
   {
     boolean matches(Elem e, Elem scope) { return matchAt(e, scope, parts.size()-1); }
 
-    // match right to left: the element is the last compound, and
-    // what is before a combinator is found from there
+    // Match right to left.  The element must match the last compound;
+    // then each combinator says where to look for the one before it
     private boolean matchAt(Elem e, Elem scope, int i)
     {
       if (!((Compound)parts.get(i)).matches(e, scope)) return false;
@@ -99,8 +101,8 @@ public class QuerySelector
 // Compound
 //////////////////////////////////////////////////////////////////////////
 
-  /** Simple selectors of one element which must all match, such as
-      "li.item[x]:first-child" */
+  /** A list of simple selectors which must all match one element,
+      such as "li.item[x]:first-child" */
   static class Compound
   {
     boolean matches(Elem e, Elem scope)
@@ -122,7 +124,7 @@ public class QuerySelector
     abstract boolean matches(Elem e, Elem scope);
   }
 
-  /** Tag name, which ignores case as HTML does */
+  /** Match a tag name, ignoring case like HTML does */
   static class Tag extends Simple
   {
     Tag(String name) { this.name = name; }
@@ -168,7 +170,7 @@ public class QuerySelector
     final boolean ignoreCase;
   }
 
-  /** :not(list), :is(list) and :where(list) */
+  /** Match :not(list), :is(list) or :where(list) */
   static class Nested extends Simple
   {
     Nested(QuerySelector q, boolean negate) { this.q = q; this.negate = negate; }
@@ -177,8 +179,8 @@ public class QuerySelector
     final boolean negate;
   }
 
-  /** :nth-child(an+b) and :nth-last-child(an+b), which :first-child
-      and :last-child are cases of */
+  /** Match :nth-child(an+b) or :nth-last-child(an+b).  Also used
+      for :first-child and :last-child */
   static class Nth extends Simple
   {
     Nth(int a, int b, boolean fromEnd) { this.a = a; this.b = b; this.fromEnd = fromEnd; }
@@ -198,7 +200,7 @@ public class QuerySelector
     final boolean fromEnd;
   }
 
-  /** A pseudo-class which takes no argument */
+  /** Match a pseudo-class which has no argument, such as :checked */
   static class Pseudo extends Simple
   {
     Pseudo(String name) { this.name = name; }
@@ -218,7 +220,7 @@ public class QuerySelector
       return doc != null && doc.active != null && e.containsChild(doc.active);
     }
 
-    // the property once it is set, else the attribute
+    // use the checked property if it has been set, else the attribute
     private static boolean isChecked(Elem e)
     {
       Object v = e.prop("checked");
@@ -255,8 +257,9 @@ public class QuerySelector
   {
     Parser(String src) { this.src = src; }
 
-    // complex (',' complex)*, which ends at the end of the source or
-    // at the ')' of the pseudo-class it is the argument of
+    // Parse: complex (',' complex)*
+    // A nested list is the argument of a pseudo-class and ends at
+    // its ')'; otherwise the list ends at the end of the source
     QuerySelector parseList(boolean nested)
     {
       QuerySelector q = new QuerySelector();
@@ -306,7 +309,7 @@ public class QuerySelector
       return c;
     }
 
-    // name, or name op value with an optional 'i' or 's' flag
+    // Parse: name | name op value ('i' | 's')?
     private Attr attr()
     {
       skipSpace();
@@ -374,7 +377,7 @@ public class QuerySelector
       return new Nested(q, false);
     }
 
-    // odd, even, a number, or an+b
+    // Parse the argument of nth-child: odd, even, a number, or an+b
     private Nth nth(boolean fromEnd)
     {
       int start = pos;
@@ -394,8 +397,8 @@ public class QuerySelector
       catch (NumberFormatException e) { throw err("invalid nth '" + s + "'"); }
     }
 
-    // a name, in which a backslash escapes the next char as it does
-    // the colon of a class such as "hover\:underline"
+    // Parse a name.  A backslash escapes the next char, for example
+    // the colon in the class "hover\:underline"
     private String ident()
     {
       StringBuilder s = new StringBuilder();

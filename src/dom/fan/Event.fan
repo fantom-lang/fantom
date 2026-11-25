@@ -135,8 +135,9 @@ class Event
   **   - "cancelable": Bool
   **   - "composed": Bool
   **   - "detail": value available as `detail`
-  ** Every other entry is an attribute of the event such as "keyCode",
-  ** "key", "shiftKey", "button", "pointerType" or "relatedTarget".
+  ** Any other entry is set as a field on the event, for example
+  ** "keyCode", "key", "shiftKey", "button", "pointerType" or
+  ** "relatedTarget".
   static native Event makeCustom(Str type, [Str:Obj?]? init := null)
 
   ** Create an [Event] instance from a native JavaScript Event object.
@@ -203,7 +204,7 @@ class Event
   ** For example Shift + Key.b would return "B".
   native Str? keyChar()
 
-  ** Value a custom event was made with by `makeCustom`, or null.
+  ** The "detail" value passed to `makeCustom`, or null.
   native Obj? detail()
 
   ** Err instance if available for `window.onerror`.

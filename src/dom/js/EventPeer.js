@@ -32,7 +32,7 @@ class EventPeer extends sys.Obj {
       detail:     get("detail"),
     });
 
-    // every other entry is an attribute of the event such as
+    // any other entry is set as a field on the event, for example
     // "keyCode", "key", "shiftKey", "button" or "pointerType"
     if (init != null)
     {

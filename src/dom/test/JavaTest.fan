@@ -301,7 +301,7 @@ class JavaTest : Test
     verifySel(root, "ul ~ p",                  p)
     verifySel(root, ":scope > p",              p)
     verifySel(ul,   ":scope > li.last",        [li[2]])
-    verifySel(ul,   "div li",                  li)   // an ancestor outside the scope counts
+    verifySel(ul,   "div li",                  li)   // ancestors outside the scope still match
 
     // attributes
     verifySel(root, "[data-k]",                [li[0], li[1]])
@@ -346,7 +346,7 @@ class JavaTest : Test
     verifySame(span.closest(":not(span):not(li)"), ul)
     verifyEq(span.closest("p"), null)
 
-    // what is not handled is an error
+    // unsupported or invalid selectors raise ArgErr
     ["", "ul >", "> li", "li,", "[x", "[x=]", "[x!=y]", "li:hover", "li::before", "li:nth-child(x)", "a b)", ".", "#"].each |s|
     {
       verifyErr(ArgErr#) { root.querySelector(s) }
@@ -395,7 +395,7 @@ class JavaTest : Test
 // Document
 //////////////////////////////////////////////////////////////////////////
 
-  ** Body of the window's document with nothing in it
+  ** Get the document body after removing all its children
   private Elem body()
   {
     doc := Win.cur.doc
@@ -436,12 +436,12 @@ class JavaTest : Test
     verifyEq(e.attr("type"), "text")
     verifyEq(e.parent, null)
 
-    // another thread has a window of its own
+    // each thread has its own window
     other := concurrent::Actor(concurrent::ActorPool()) |msg| { Unsafe(Win.cur) }.send(null).get(5sec)->val
     verifyNotSame(other, win)
   }
 
-  ** An event of a node in the document goes thru the window
+  ** Events on a node in the document also reach the window's listeners
   Void testWinEvents()
   {
     body := body
@@ -461,7 +461,7 @@ class JavaTest : Test
     kid.dispatchEvent(Event.makeCustom("ping"))
     verifyEq(acc, ["win-capture", "kid"])
 
-    // not in the document
+    // a node outside the document does not reach the window
     acc.clear
     body.remove(kid)
     kid.dispatchEvent(Event.makeCustom("ping", ["bubbles":true]))
@@ -505,18 +505,18 @@ class JavaTest : Test
     verifyEq(body.querySelectorAll(":focus-within").size, 1)
     verifySame(doc.querySelector("body:focus-within"), body)
 
-    // again does nothing
+    // doing it again has no effect
     acc.clear
     a.focus
     verifyEq(acc, Str[,])
 
-    // to another: blur, focusout, focus, focusin
+    // moving focus fires blur, focusout, focus, focusin in that order
     b.focus
     verifySame(doc.activeElem, b)
     verifyEq(acc, ["a blur from:b", "a focusout from:b", "body focusout a",
                    "b focus from:a", "b focusin from:a", "body focusin b"])
 
-    // one which does not take the focus is left alone
+    // focusing an element which is not focusable does nothing
     acc.clear
     [c, doc.elemById("e"), doc.elemById("g"), doc.elemById("h")].each |x|
     {
@@ -525,13 +525,13 @@ class JavaTest : Test
     }
     verifyEq(acc, Str[,])
 
-    // a tabindex or an href makes one which does
+    // a tabindex or an href makes an element focusable
     d.focus
     verifySame(doc.activeElem, d)
     doc.elemById("f").focus
     verifySame(doc.activeElem, doc.elemById("f"))
 
-    // blur of the one with the focus, and of one without
+    // blur only does something on the focused element
     d.focus
     acc.clear
     a.blur
@@ -540,14 +540,14 @@ class JavaTest : Test
     verifySame(doc.activeElem, body)
     verifyEq(acc, ["d blur from:null", "d focusout from:null", "body focusout d"])
 
-    // by name
+    // focus and blur also work thru invoke
     a.invoke("focus")
     verifySame(doc.activeElem, a)
     a.invoke("blur")
     verifySame(doc.activeElem, body)
 
-    // out of the document: it loses the focus with no event, and
-    // does not take it
+    // an element removed from the document loses focus without
+    // firing events, and cannot be focused
     a.focus
     acc.clear
     body.remove(a)
@@ -567,14 +567,14 @@ class JavaTest : Test
     win := Win.cur
     acc := Str[,]
 
-    // nothing runs until the clock is moved
+    // nothing runs until runTimers is called
     win.setTimeout(10ms) |w| { verifySame(w, win); acc.add("10ms") }
     win.setTimeout(0ms) { acc.add("0ms") }
     win.reqAnimationFrame |w| { verifySame(w, win); acc.add("frame") }
     gone := win.setTimeout(5ms) { acc.add("gone") }
     verifyEq(acc, Str[,])
 
-    // frames first, then each timer which is due
+    // animation frames run first, then the timers which are due
     win.clearTimeout(gone)
     win.runTimers
     verifyEq(acc, ["frame", "0ms"])
@@ -585,7 +585,7 @@ class JavaTest : Test
     win.runTimers(1hr)
     verifyEq(acc, ["frame", "0ms", "10ms"])
 
-    // in order of the time each is due, the oldest of a tie first
+    // timers run in order of due time; ties run in the order queued
     acc.clear
     win.setTimeout(30ms) { acc.add("c") }
     win.setTimeout(10ms) { acc.add("a1") }
@@ -594,8 +594,8 @@ class JavaTest : Test
     win.runTimers(1sec)
     verifyEq(acc, ["a1", "a2", "b", "c"])
 
-    // a timer set by a timer runs if it is due in time; a frame asked
-    // for in a frame waits for the next
+    // a timer queued by a timer runs if it comes due in time, but a
+    // frame requested inside a frame waits for the next call
     acc.clear
     win.setTimeout(10ms) { acc.add("outer"); win.setTimeout(10ms) { acc.add("inner") }; win.setTimeout(1sec) { acc.add("late") } }
     win.reqAnimationFrame { acc.add("f1"); win.reqAnimationFrame { acc.add("f2") } }
@@ -604,7 +604,7 @@ class JavaTest : Test
     win.runTimers(1sec)
     verifyEq(acc, ["f1", "outer", "inner", "f2", "late"])
 
-    // an interval, until it is cleared
+    // an interval repeats until it is cleared
     acc.clear
     n := 0
     id := win.setInterval(10ms) { n++ }
@@ -616,7 +616,7 @@ class JavaTest : Test
     win.runTimers(1sec)
     verifyEq(n, 4)
 
-    // timers which never settle
+    // timers which requeue themselves forever raise an error
     spinning = true
     win.setTimeout(0ms) |w| { spin(w) }
     verifyErr(Err#) { win.runTimers }
@@ -658,7 +658,7 @@ class JavaTest : Test
     verifyEq(a.invoke("toggleAttribute", ["hidden", false]), false)
     verifyEq(a.invoke("scrollIntoView"), null)
 
-    // a click bubbles and may be refused
+    // click fires a click event which bubbles
     clicks := 0
     body.onEvent("click", false) |e| { clicks++ }
     span.invoke("click")
@@ -691,13 +691,13 @@ class JavaTest : Test
       x.onEvent("toggle", false) |e| { acc.add("$x.id toggle " + e["newState"]); if (x === q) verifyEq(e["oldState"], "closed") }
     }
 
-    // what is inside a closed popover is not drawn
+    // content inside a closed popover is not rendered or focusable
     verifyEq(in.invoke("checkVisibility"), false)
     in.focus
     verifySame(doc.activeElem, body)
 
-    // show: beforetoggle now, the focus to what asks for it, toggle
-    // as a task of its own
+    // show fires beforetoggle immediately, moves focus to the
+    // autofocus element, and fires toggle asynchronously
     t.focus
     p.invoke("showPopover")
     verifyEq(acc, ["p before closed>open"])
@@ -706,14 +706,15 @@ class JavaTest : Test
     win.runTimers
     verifyEq(acc, ["p before closed>open", "p toggle open"])
 
-    // again does nothing
+    // doing it again has no effect
     acc.clear
     p.invoke("showPopover")
     win.runTimers
     verifyEq(acc, Str[,])
 
-    // one inside it leaves it open; one outside hides both, the
-    // innermost first.  A manual popover is left alone
+    // showing a nested popover keeps its parent open; showing an
+    // unrelated one hides both, innermost first.  Manual popovers
+    // are not affected
     q.invoke("showPopover")
     m.invoke("showPopover")
     verifyEq(body.querySelectorAll(":popover-open"), Elem[p, q, m])
@@ -721,13 +722,13 @@ class JavaTest : Test
     r.invoke("showPopover")
     verifyEq(body.querySelectorAll(":popover-open"), Elem[r, m])
     verifyEq(acc, ["r before closed>open", "q before open>closed", "p before open>closed"])
-    verifySame(doc.activeElem, t)   // given back by the one which took it
+    verifySame(doc.activeElem, t)   // focus returns to where it was
 
-    // one toggle each, from the state it was first in to its last
+    // each popover fires one toggle event, from its first state to its last
     win.runTimers
     verifyEq(acc[3..-1], ["q toggle closed", "m toggle open", "p toggle closed", "r toggle open"])
 
-    // hide, and toggle
+    // hidePopover and togglePopover
     acc.clear
     r.invoke("hidePopover")
     r.invoke("hidePopover")
@@ -739,13 +740,13 @@ class JavaTest : Test
     verifyEq(body.querySelectorAll(":popover-open"), Elem[m])
     m.invoke("hidePopover")
 
-    // a show may be refused
+    // a handler can cancel the show
     no := r.onEvent("beforetoggle", false) |e| { e.preventDefault }
     r.invoke("showPopover")
     verifyEq(body.querySelectorAll(":popover-open").size, 0)
     r.removeEvent("beforetoggle", false, no)
 
-    // not a popover, and not in a document
+    // errors: not a popover, and not in a document
     verifyErr(Err#) { doc.elemById("x").invoke("showPopover") }
     body.remove(r)
     verifyErr(Err#) { r.invoke("showPopover") }
@@ -784,7 +785,7 @@ class JavaTest : Test
     win.runTimers
     verifyEq(acc, ["close"])
 
-    // a request to close may be refused
+    // a handler can cancel requestClose
     acc.clear
     d.invoke("show")
     verifyEq(body.querySelector(":modal"), null)
@@ -818,12 +819,12 @@ class JavaTest : Test
     verifyEq(a.invoke("hasPointerCapture", [2]), false)
     verifyEq(acc, ["a gotpointercapture 1"])
 
-    // taken by another
+    // capturing on another element takes it from the first
     b.invoke("setPointerCapture", [1])
     verifyEq(a.invoke("hasPointerCapture", [1]), false)
     verifyEq(acc, ["a gotpointercapture 1", "a lostpointercapture 1", "b gotpointercapture 1"])
 
-    // released only by the one which has it
+    // only the capturing element can release
     acc.clear
     a.invoke("releasePointerCapture", [1])
     verifyEq(acc, Str[,])
@@ -850,7 +851,7 @@ class JavaTest : Test
     verifyErr(ArgErr#) { mo.observe(root, ["subtree":true]) }
     mo.observe(root, ["childList":true, "attrs":true, "charData":true, "subtree":true, "attrOldVal":true, "charDataOldVal":true])
 
-    // the records wait for the script to end
+    // records are queued until runTimers
     i := Elem("i")
     root.insertBefore(i, b)
     p.setAttr("title", "t")
@@ -880,11 +881,11 @@ class JavaTest : Test
     verifyRec(recs[7], "attrs",     p,    DomNode[,], DomNode[,], "title", "u")
     verifyEq(recs.size, 8)
 
-    // nothing waiting, no call
+    // no callback when there are no records
     win.runTimers
     verifyEq(calls.size, 1)
 
-    // taken by hand
+    // takeRecs returns the queued records without a callback
     root.removeAll
     taken := mo.takeRecs
     verifyEq(taken.size, 1)
@@ -892,7 +893,7 @@ class JavaTest : Test
     win.runTimers
     verifyEq(calls.size, 1)
 
-    // only what it asked for: no subtree, a filter, no old value
+    // options are respected: no subtree, an attr filter, no old value
     mo.disconnect
     mo.observe(root, ["attrs":true, "attrFilter":["a"]])
     root.add(p)
@@ -904,7 +905,7 @@ class JavaTest : Test
     verifyEq(taken.size, 2)
     verifyRec(taken[1], "attrs", root, DomNode[,], DomNode[,], "a", null)
 
-    // disconnected
+    // nothing is recorded after disconnect
     mo.disconnect
     root.setAttr("a", "3")
     verifyEq(mo.takeRecs.size, 0)
@@ -964,7 +965,7 @@ class JavaTest : Test
     win.hisReplaceState("B", `/b2`, ["n":22])
     verifyEq(win.uri, `/b2`)
 
-    // back and forward fire popstate as a task of its own
+    // back and forward fire popstate asynchronously
     win.hisBack
     verifyEq(win.uri, `/a`)
     verifyEq(pops, Obj?[,])
@@ -976,7 +977,7 @@ class JavaTest : Test
     verifyEq(win.uri, `/b2`)
     verifyEq(pops, Obj?[1, 22])
 
-    // a push drops what was ahead
+    // pushing a new entry drops the forward history
     win.hisBack
     win.hyperlink(`/c`)
     win.hisForward
@@ -1014,7 +1015,7 @@ class JavaTest : Test
     m[a] = 3
     verifyEq(m[a], 3)
 
-    // a key is the object itself
+    // keys are compared by identity
     verifyEq(m.has(Elem {}), false)
     verifyEq(m.delete(a), true)
     verifyEq(m.delete(a), false)
@@ -1039,7 +1040,7 @@ class JavaTest : Test
     verifyEq(dt.files.size, 0)
   }
 
-  ** With no stylesheets the style of an element is its inline style
+  ** There are no stylesheets on the JVM, so computed style is the inline style
   Void testStyleComputed()
   {
     e := Elem {}

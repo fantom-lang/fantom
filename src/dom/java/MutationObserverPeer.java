@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import fan.sys.*;
 
 /**
- * MutationObserverPeer records the changes to the nodes it observes.
- * A browser calls back with the records after the script which made
- * them; here they wait for `Win.runTimers` or `takeRecs`.
+ * MutationObserverPeer is the JVM implementation of MutationObserver.
+ * It records changes to the nodes it observes.  A browser delivers the
+ * records asynchronously; here they are delivered by `Win.runTimers`
+ * or returned by `takeRecs`.
  */
 public class MutationObserverPeer
 {
@@ -34,7 +35,7 @@ public class MutationObserverPeer
     if (!reg.childList && !reg.attrs && !reg.charData)
       throw ArgErr.make("Must observe one of childList, attrs or charData");
 
-    // observing a node again replaces the options
+    // observing the same node again replaces its options
     unobserve(self, target);
     target.peer.observers.add(reg);
     targets.add(target);
@@ -74,11 +75,12 @@ public class MutationObserverPeer
 // Record
 //////////////////////////////////////////////////////////////////////////
 
-  // Is any node observed: a mutation works out what to record only then
+  // Return if any observer is registered.  Mutations use this to skip
+  // the work of building a record when nobody is observing
   static boolean isActive() { return active.get() > 0; }
 
-  // Children were added to or removed from a node, between the
-  // siblings given
+  // Record that a child was added to or removed from a node.  The
+  // prev and next nodes are the siblings on either side of the change
   static void childList(DomNode target, DomNode added, DomNode removed, DomNode prev, DomNode next)
   {
     if (!isActive()) return;
@@ -87,7 +89,7 @@ public class MutationObserverPeer
     record(target, "childList", null, null, a, r, prev, next);
   }
 
-  // Every child of a node was removed
+  // Record that all children of a node were removed
   static void childrenRemoved(DomNode target, Object[] removed)
   {
     if (!isActive() || removed.length == 0) return;
@@ -96,22 +98,22 @@ public class MutationObserverPeer
     record(target, "childList", null, null, new DomNode[0], r, null, null);
   }
 
-  // An attribute of an element was set or removed
+  // Record that an attribute was set or removed
   static void attr(DomNode target, String name, String oldVal)
   {
     if (!isActive()) return;
     record(target, "attrs", name, oldVal, new DomNode[0], new DomNode[0], null, null);
   }
 
-  // The text of a text node was set
+  // Record that the text of a text node changed
   static void charData(DomNode target, String oldVal)
   {
     if (!isActive()) return;
     record(target, "charData", null, oldVal, new DomNode[0], new DomNode[0], null, null);
   }
 
-  // Queue a record with each observer of the target, and of a node
-  // above it which observes its subtree
+  // Queue a record for every observer of the target, and for every
+  // observer of an ancestor which is observing its subtree
   private static void record(DomNode target, String type, String attr, String oldVal,
                              DomNode[] added, DomNode[] removed, DomNode prev, DomNode next)
   {
@@ -142,7 +144,7 @@ public class MutationObserverPeer
     }
   }
 
-  // Call back each observer which has records waiting
+  // Invoke the callback of every observer which has queued records
   static void deliver(WinPeer win)
   {
     while (win.pendingObservers.size() > 0)
@@ -157,7 +159,7 @@ public class MutationObserverPeer
 // Reg
 //////////////////////////////////////////////////////////////////////////
 
-  // An observer of one node with the options it gave
+  // Registration of an observer on one node with its options
   static class Reg
   {
     Reg(MutationObserver observer, Map opts)

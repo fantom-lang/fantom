@@ -15,10 +15,10 @@ import fan.sys.*;
 import fanx.interop.*;
 
 /**
- * DocPeer is the document of a window: the root of the nodes which
- * are connected, with an html, head and body element.  It holds what
- * a document has one of: the element with the focus, the popovers
- * which are open and the pointers which are captured.
+ * DocPeer is the JVM implementation of a window's document.  It is
+ * the root of the node tree and has html, head and body elements.
+ * It also tracks document-wide state: the focused element, the open
+ * popovers and the captured pointers.
  */
 public class DocPeer extends DomNodePeer
 {
@@ -45,7 +45,8 @@ public class DocPeer extends DomNodePeer
     html.add(body);
   }
 
-  // Peer of the document a node is connected to, or null
+  // Get the peer of the document a node is attached to, or null if
+  // the node is not in a document
   static DocPeer of(DomNode node)
   {
     DomNode root = node;
@@ -68,8 +69,8 @@ public class DocPeer extends DomNodePeer
 
   public boolean isHidden(Doc self) { return false; }
 
-  // The element with the focus, which is the body when no other has
-  // it.  One which is taken out of the document loses it with no event
+  // Get the focused element, or the body if nothing has focus.  An
+  // element removed from the document silently loses focus
   public Elem activeElem(Doc self)
   {
     if (active != null && of(active) != this) active = null;

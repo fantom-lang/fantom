@@ -83,7 +83,7 @@ public class DomPeerFactory
     return new WinPeer();
   }
 
-  // A thread has one window, as a page has one thread
+  // Each thread gets its own window, created on first use
   public Win winCur()
   {
     Win win = (Win)curWin.get();

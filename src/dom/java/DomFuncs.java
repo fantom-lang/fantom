@@ -18,12 +18,14 @@ import java.util.ArrayList;
 import fan.sys.*;
 
 /**
- * DomFuncs is the functions of a DOM element which `Elem.invoke`
- * calls by name: each is a method marked as a DomFunc, and a name
- * with none is an error.  It also has the focus they share with
- * `Elem.focus`.  Each does what a browser does to the tree and fires
- * its events; what a browser fires as a task of its own is queued for
- * `Win.runTimers`.
+ * DomFuncs implements the DOM element functions which can be called
+ * by name using `Elem.invoke`.  Each one is a method annotated with
+ * @DomFunc; invoking any other name raises UnsupportedErr.  This class
+ * also implements focus, which `Elem.focus` shares with these functions.
+ *
+ * The functions behave like a browser: they update the tree and fire
+ * the same events.  Events which a browser fires asynchronously are
+ * queued and fired by `Win.runTimers`.
  */
 class DomFuncs
 {
@@ -32,15 +34,14 @@ class DomFuncs
 // Invoke
 //////////////////////////////////////////////////////////////////////////
 
-  // Marks a method as a function `Elem.invoke` calls by its name.
-  // It takes the element and the arguments:
+  // Annotation for a method which `Elem.invoke` can call by name.
+  // The method must have this signature:
   //   static Object name(Elem self, List args)
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.METHOD)
   @interface DomFunc {}
 
-  // Call the method of this class with the name which is marked
-  // as a DomFunc
+  // Find the @DomFunc method with the given name and call it
   static Object invoke(Elem self, String name, List args)
   {
     Method m;
@@ -69,7 +70,8 @@ class DomFuncs
 
   @DomFunc static Object blur(Elem self, List args) { self.blur(); return null; }
 
-  // A click bubbles and may be refused; it has no default action
+  // Fire a click event which bubbles and can be canceled.  Unlike a
+  // browser, there is no default action such as checking a checkbox
   @DomFunc static Object click(Elem self, List args) { fire(self, "click", true, true, null); return null; }
 
   @DomFunc static Object remove(Elem self, List args)
@@ -99,8 +101,8 @@ class DomFuncs
 
   @DomFunc static Object removeAttribute(Elem self, List args) { self.removeAttr((String)arg(args, 0)); return null; }
 
-  // Add the attribute if it is not there, else remove it, or do as
-  // the second argument says
+  // Toggle an attribute on or off.  An optional second argument
+  // forces it on (true) or off (false).  Return if it is now on
   @DomFunc static Object toggleAttribute(Elem self, List args)
   {
     String name = (String)arg(args, 0);
@@ -113,7 +115,7 @@ class DomFuncs
 
   @DomFunc static Object checkVisibility(Elem self, List args) { return Boolean.valueOf(isRendered(self)); }
 
-  // Nothing is laid out, so there is nothing to scroll or select
+  // These are no-ops because there is no layout to scroll or select
   @DomFunc static Object scrollIntoView(Elem self, List args) { return null; }
   @DomFunc static Object scrollTo(Elem self, List args) { return null; }
   @DomFunc static Object scrollBy(Elem self, List args) { return null; }
@@ -123,8 +125,8 @@ class DomFuncs
 // Events
 //////////////////////////////////////////////////////////////////////////
 
-  // Dispatch an event with the attributes given as name and value
-  // pairs; return false if it was cancelable and a handler refused it
+  // Dispatch an event.  The attrs array is name/value pairs to set
+  // on the event.  Return false if a handler canceled the event
   static boolean fire(DomNode target, String type, boolean bubbles, boolean cancelable, Object[] attrs)
   {
     Map init = Map.make(Sys.StrType, Sys.ObjType.toNullable());
@@ -150,9 +152,9 @@ class DomFuncs
     return doc != null && doc.active == self;
   }
 
-  // Give the focus to an element which may take it: it loses it
-  // from the one which has it, with the events of each in the order
-  // a browser fires them.  Any other element is left alone
+  // Move focus to an element.  This does nothing if the element is
+  // not focusable.  Events fire in browser order: blur and focusout
+  // on the old element, then focus and focusin on the new one
   static void focus(Elem self)
   {
     DocPeer doc = DocPeer.of(self);
@@ -179,8 +181,8 @@ class DomFuncs
     fire(old, "focusout", true,  false, new Object[] { "relatedTarget", to });
   }
 
-  // An element takes the focus if it is a control or has a tabindex,
-  // and it is drawn and not disabled
+  // Return if an element can take focus.  It must be a form control,
+  // a link, or have a tabindex, and it must be rendered and enabled
   static boolean isFocusable(Elem e)
   {
     if (e.attr("disabled") != null || !isRendered(e)) return false;
@@ -200,8 +202,9 @@ class DomFuncs
     return false;
   }
 
-  // An element is drawn if it is in a document and neither it nor
-  // one above it is hidden, a closed popover or a closed dialog
+  // Return if an element is rendered.  It must be in a document, and
+  // neither it nor any ancestor can be hidden, a closed popover or a
+  // closed dialog
   static boolean isRendered(Elem e)
   {
     if (DocPeer.of(e) == null) return false;
@@ -214,17 +217,18 @@ class DomFuncs
     return true;
   }
 
-  // Give the focus to what asks for it as a popover or dialog is
-  // shown: the element itself if it has autofocus, else the first
-  // inside it which has
+  // When a popover or dialog is shown, focus the element with the
+  // autofocus attribute: either the element itself or the first
+  // descendant
   private static void autofocus(Elem self)
   {
     Elem control = self.attr("autofocus") != null ? self : self.querySelector("[autofocus]");
     if (control != null) control.focus();
   }
 
-  // Give the focus back to what had it when a popover or dialog was
-  // shown, if the focus is still inside what is now hidden
+  // When a popover or dialog is hidden, return focus to the element
+  // which had it before, but only if focus is still inside the
+  // element being hidden
   private static void restoreFocus(Elem self, DocPeer doc)
   {
     Elem prev = self.peer.prevFocus;
@@ -240,8 +244,8 @@ class DomFuncs
 // Popover
 //////////////////////////////////////////////////////////////////////////
 
-  // Document of a popover, which is an element with the popover
-  // attribute that is in a document
+  // Get the document of a popover.  Raise an error if the element
+  // has no popover attribute or is not in a document
   private static DocPeer popoverDoc(Elem self)
   {
     if (self.attr("popover") == null) throw Err.make("NotSupportedError: element is not a popover: " + self);
@@ -256,9 +260,9 @@ class DomFuncs
     return kind.equals("") || kind.equals("auto");
   }
 
-  // Show a popover.  An auto popover hides every other auto popover
-  // but those it is inside.  The beforetoggle event may refuse it,
-  // and the toggle event follows as a task of its own
+  // Show a popover.  Showing an auto popover hides every other auto
+  // popover except its ancestors.  A handler can cancel the show via
+  // the beforetoggle event.  The toggle event fires asynchronously
   @DomFunc static Object showPopover(Elem self, List args)
   {
     DocPeer doc = popoverDoc(self);
@@ -284,7 +288,7 @@ class DomFuncs
     return null;
   }
 
-  // Hide a popover and the auto popovers which are inside it
+  // Hide a popover and any auto popovers nested inside it
   @DomFunc static Object hidePopover(Elem self, List args)
   {
     DocPeer doc = popoverDoc(self);
@@ -306,9 +310,9 @@ class DomFuncs
     return null;
   }
 
-  // Fire the toggle event as a task of its own.  A popover which is
-  // shown and hidden again before the task runs fires one event, from
-  // the state it was first in to the state it is last in
+  // Queue the toggle event to fire asynchronously.  If the popover is
+  // shown and hidden again before the event fires, only one event is
+  // fired with the original old state and the final new state
   private static void toggleLater(final Elem self, String oldState, String newState)
   {
     if (self.peer.toggle != null) { self.peer.toggle[3] = newState; return; }
@@ -321,8 +325,8 @@ class DomFuncs
     }});
   }
 
-  // Show the popover if it is hidden, else hide it, or do as the
-  // argument says; return if it is now shown
+  // Toggle a popover open or closed.  An optional argument forces
+  // it open (true) or closed (false).  Return if it is now open
   @DomFunc static Object togglePopover(Elem self, List args)
   {
     popoverDoc(self);
@@ -362,8 +366,8 @@ class DomFuncs
     autofocus(self);
   }
 
-  // Close a dialog with an optional return value; the close event
-  // follows as a task of its own
+  // Close a dialog with an optional return value.  The close event
+  // fires asynchronously
   @DomFunc static Object close(Elem self, List args)
   {
     checkDialog(self);
@@ -377,7 +381,8 @@ class DomFuncs
     return null;
   }
 
-  // Ask a dialog to close, which a handler of its cancel event may refuse
+  // Request that a dialog close.  A handler can prevent the close
+  // by canceling the cancel event
   @DomFunc static Object requestClose(Elem self, List args)
   {
     checkDialog(self);
@@ -389,8 +394,9 @@ class DomFuncs
 // Pointer Capture
 //////////////////////////////////////////////////////////////////////////
 
-  // Captures by pointer id of the document of this thread, which an
-  // element need not be in: any id is taken as a pointer which is down
+  // Get the map of pointer id to capturing element for this thread's
+  // document.  Any pointer id is accepted, and the element does not
+  // need to be in the document
   private static java.util.HashMap captures(Elem self)
   {
     Win win = WinPeer.cur();

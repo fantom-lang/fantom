@@ -14,7 +14,8 @@ import java.util.LinkedHashMap;
 import fan.sys.*;
 
 /**
- * StoragePeer keeps its values in memory for as long as its window.
+ * StoragePeer is the JVM implementation of Storage.  Values are
+ * kept in memory and last as long as the window.
  */
 public class StoragePeer
 {

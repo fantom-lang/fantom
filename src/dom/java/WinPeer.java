@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import fan.sys.*;
 
 /**
- * WinPeer is a window with no browser behind it: it has a document,
- * listeners, history and storage, and a queue of timers on a clock
- * which only moves when `Win.runTimers` is called.  Nothing is laid
- * out, so it has no size or scroll position.
+ * WinPeer is the JVM implementation of a window, used for testing
+ * without a browser.  It has a document, event listeners, history and
+ * storage.  Timers are queued on a virtual clock which only advances
+ * when `Win.runTimers` is called.  There is no layout, so the window
+ * has no size or scroll position.
  */
 public class WinPeer
 {
@@ -45,7 +46,7 @@ public class WinPeer
     return DomPeerFactory.factory().winEvalToFunc(params, js);
   }
 
-  // Peer of the window of this thread
+  // Get the peer of the current thread's window
   static WinPeer curPeer() { return cur().peer; }
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,8 +120,9 @@ public class WinPeer
       if (((DomNodePeer.Listener)listeners.get(i)).matches(type, useCapture, fn)) { listeners.remove(i); return; }
   }
 
-  // Fire the listeners of the window, which is above the document
-  // in the path of an event: null fires both phases
+  // Fire the window's listeners for an event.  The window sits above
+  // the document in the event path.  Pass true for the capture phase,
+  // false for the bubble phase, or null for both
   void fire(Event event, Boolean capture) { DomNodePeer.fire(listeners, event, capture); }
 
 //////////////////////////////////////////////////////////////////////////
@@ -148,8 +150,9 @@ public class WinPeer
     add(t);
   }
 
-  // Queue what a browser does as a task of its own after the script
-  // which caused it, such as firing the toggle event of a popover
+  // Queue a task to run on the next call to runTimers.  Used for
+  // events which a browser fires asynchronously, such as the toggle
+  // event of a popover
   void queueTask(Runnable r) { add(new Task(null, null, r, 0, 0)); }
 
   private long add(Task t)
@@ -166,11 +169,13 @@ public class WinPeer
       if (((Task)tasks.get(i)).id == id) { tasks.remove(i); return; }
   }
 
-  // Move the clock on by the time given and run what comes due, in
-  // the order a browser does: the mutation records which are waiting,
-  // the animation frames asked for before this call, then each timer
-  // by the time it is due.  What a task queues is run too if it comes
-  // due within the time
+  // Advance the clock by the given time and run everything which
+  // comes due.  The order matches a browser:
+  //   1. deliver pending mutation records
+  //   2. run animation frames requested before this call
+  //   3. run timers in order of their due time
+  // Timers queued by a task also run if they come due within the
+  // elapsed time
   public void runTimers(Win self, Duration elapsed)
   {
     long end = now + elapsed.ticks();
@@ -201,7 +206,8 @@ public class WinPeer
     MutationObserverPeer.deliver(this);
   }
 
-  // Timer which is due first by the end time, the oldest of a tie
+  // Find the next timer due at or before the end time.  If two are
+  // due at the same time, the one queued first wins
   private Task nextDue(long end)
   {
     Task best = null;
@@ -235,7 +241,7 @@ public class WinPeer
 
   public Uri uri(Win self) { return entry().uri; }
 
-  // A browser unloads the page; here the uri is all there is to change
+  // A browser would load a new page.  Here we only update the uri
   public void hyperlink(Win self, Uri uri) { push(uri, emptyState()); }
 
   public void reload(Win self, boolean force) {}
@@ -260,8 +266,8 @@ public class WinPeer
     hisIndex++;
   }
 
-  // Move thru the history, then fire popstate as a task of its own
-  // with the state in the stash of the event
+  // Move back or forward in the history, then fire popstate
+  // asynchronously with the state copied into the event's stash
   private void go(final Win self, int delta)
   {
     int i = hisIndex + delta;

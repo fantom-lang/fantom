@@ -72,7 +72,8 @@ public class StylePeer
     return self;
   }
 
-  // The class attribute, which this holds for its element
+  // Get the class attribute value for mutation records, or null if
+  // nobody is observing or there are no classes
   private String classAttr()
   {
     return !MutationObserverPeer.isActive() || classList.size() == 0 ? null : String.join(" ", classList);
@@ -88,8 +89,8 @@ public class StylePeer
   // Clear the inline styles
   public Style clear(Style self) { props.clear(); return self; }
 
-  // There are no stylesheets and nothing is laid out, so the only
-  // style an element has is its inline style
+  // There are no stylesheets and no layout on the JVM, so the
+  // computed style is just the inline style
   public Object computed(Style self, String name) { return props.get(name); }
 
   public Object effective(Style self, String name) { return props.get(name); }

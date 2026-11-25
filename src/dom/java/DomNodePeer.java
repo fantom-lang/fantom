@@ -78,8 +78,8 @@ public class DomNodePeer
     return false;
   }
 
-  // Copy as the DOM does: an element with its attributes, classes
-  // and inline styles, but none of its listeners or properties
+  // Clone a node like the DOM does.  An element keeps its attributes,
+  // classes and inline styles, but not its listeners or properties
   public DomNode clone(DomNode self, boolean deep)
   {
     DomNode copy = cloneSelf(self);
@@ -165,9 +165,10 @@ public class DomNodePeer
       if (((Listener)listeners.get(i)).matches(type, useCapture, handler)) { listeners.remove(i); return; }
   }
 
-  // Dispatch as the DOM does: capture down from the root, the
-  // target's own listeners, then bubble back up if the event bubbles.
-  // The window is above the document of a node which is in one
+  // Dispatch an event like the DOM does: capture from the root down
+  // to the target, fire the target's listeners, then bubble back up
+  // if the event bubbles.  If the node is in a document then the
+  // window is at the top of the path
   public boolean dispatchEvent(DomNode self, Event event)
   {
     EventPeer e = event.peer;

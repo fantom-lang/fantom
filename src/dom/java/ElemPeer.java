@@ -334,9 +334,9 @@ public class ElemPeer extends DomNodePeer
   private LinkedHashMap attrs = new LinkedHashMap();  // Str:Str
   private HashMap props = new HashMap();      // Str:Obj
 
-  boolean popoverOpen;                        // is shown as a popover
-  boolean modal;                              // is shown as a modal dialog
-  Object[] toggle;                            // states of the toggle event which is queued
-  Elem prevFocus;                             // focus when shown as a popover or dialog
+  boolean popoverOpen;                        // true if open as a popover
+  boolean modal;                              // true if open as a modal dialog
+  Object[] toggle;                            // old/new states of a queued toggle event
+  Elem prevFocus;                             // focused elem before this popover or dialog opened
 }
 

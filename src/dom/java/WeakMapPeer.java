@@ -13,9 +13,9 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
- * WeakMapPeer maps a key to a value for as long as the key is
- * reachable.  A key is the object itself, as in JavaScript, whatever
- * its equals says.
+ * WeakMapPeer is the JVM implementation of WeakMap.  An entry is
+ * dropped once its key is garbage collected.  Keys are compared by
+ * identity like JavaScript, not by equals.
  */
 public class WeakMapPeer
 {
@@ -41,14 +41,14 @@ public class WeakMapPeer
     return had;
   }
 
-  // drop the entries whose key was collected
+  // remove entries whose key has been garbage collected
   private void purge()
   {
     for (Object k = queue.poll(); k != null; k = queue.poll()) map.remove(k);
   }
 
-  // A key by identity, which still equals itself once its object is
-  // collected so that it can be dropped
+  // Weak reference to a key, compared by identity.  It still equals
+  // itself after the key is collected so the entry can be removed
   static class Key extends WeakReference
   {
     Key(Object key, ReferenceQueue queue) { super(key, queue); this.hash = System.identityHashCode(key); }

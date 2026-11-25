@@ -13,8 +13,9 @@ import java.util.LinkedHashMap;
 import fan.sys.*;
 
 /**
- * DataTransferPeer keeps the data of a drag in memory.  It has no
- * files and no drag image.
+ * DataTransferPeer is the JVM implementation of DataTransfer.  The
+ * drag data is kept in memory.  Files and drag images are not
+ * supported.
  */
 public class DataTransferPeer
 {

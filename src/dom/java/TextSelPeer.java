@@ -9,7 +9,8 @@
 package fan.dom;
 
 /**
- * TextSelPeer has nothing to clear: no text is ever selected.
+ * TextSelPeer is the JVM implementation of TextSel.  Text is never
+ * selected on the JVM, so clear does nothing.
  */
 public class TextSelPeer
 {
