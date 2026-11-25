@@ -49,7 +49,7 @@ using web
   internal new make(|This|? f := null) { if (f != null) f(this) }
 
   ** Elem that has been resized.
-  Elem target { private set }
+  Elem target { internal set }
 
   ** New size of [target] element.
   const Size size

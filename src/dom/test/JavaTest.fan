@@ -746,6 +746,19 @@ class JavaTest : Test
     verifyEq(body.querySelectorAll(":popover-open").size, 0)
     r.removeEvent("beforetoggle", false, no)
 
+    // a popover removed from the document is closed without events
+    r.invoke("showPopover")
+    win.runTimers
+    acc.clear
+    body.remove(r)
+    verifyEq(r.invoke("matches", [":popover-open"]), false)
+    body.add(r)
+    verifyEq(r.invoke("matches", [":popover-open"]), false)
+    m.invoke("showPopover")
+    m.invoke("hidePopover")
+    win.runTimers
+    verifyEq(acc.findAll |s| { s.startsWith("r ") }, Str[,])
+
     // errors: not a popover, and not in a document
     verifyErr(Err#) { doc.elemById("x").invoke("showPopover") }
     body.remove(r)

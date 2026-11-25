@@ -214,7 +214,7 @@ public class QuerySelector
       if (name.equals("disabled")) return e.attr("disabled") != null;
       if (name.equals("enabled"))  return e.attr("disabled") == null;
       if (name.equals("focus"))    return DomFuncs.hasFocus(e);
-      if (name.equals("popover-open")) return e.peer.popoverOpen;
+      if (name.equals("popover-open")) return e.peer.popoverOpen && DocPeer.of(e) != null;
       if (name.equals("modal"))    return e.peer.modal;
       DocPeer doc = DocPeer.of(e);   // focus-within
       return doc != null && doc.active != null && e.containsChild(doc.active);

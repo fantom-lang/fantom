@@ -70,11 +70,11 @@ public class DomNodePeer
     return acc;
   }
 
+  // Walk up from the node instead of searching every descendant
   public boolean containsChild(DomNode self, DomNode node)
   {
-    if (self == node) return true;
-    for (int i=0; i<kids.size(); i++)
-      if (((DomNode)kids.get(i)).containsChild(node)) return true;
+    for (DomNode n = node; n != null; n = n.peer.parentNode)
+      if (n == self) return true;
     return false;
   }
 
@@ -129,6 +129,7 @@ public class DomNodePeer
     oldChild.peer.parentNode = null;
     newChild.peer.parentNode = self;
     kids.set(i, newChild);
+    removed(self);
     MutationObserverPeer.childList(self, newChild, oldChild, newChild.prevNode(), newChild.nextNode());
   }
 
@@ -138,7 +139,16 @@ public class DomNodePeer
     if (i < 0) return;
     child.peer.parentNode = null;
     kids.remove(i);
+    removed(self);
     MutationObserverPeer.childList(self, null, child, i == 0 ? null : (DomNode)kids.get(i-1), i < kids.size() ? (DomNode)kids.get(i) : null);
+  }
+
+  // Nodes were removed from under a node.  If that took an open
+  // popover out of the document, close it as a browser does
+  private static void removed(DomNode parent)
+  {
+    DocPeer doc = DocPeer.of(parent);
+    if (doc != null && doc.popovers.size() > 0) DomFuncs.closeRemoved(doc);
   }
 
   public void removeAllChildren(DomNode self)
@@ -146,6 +156,7 @@ public class DomNodePeer
     Object[] removed = kids.toArray();
     for (int i=0; i<removed.length; i++) ((DomNode)removed[i]).peer.parentNode = null;
     kids.clear();
+    removed(self);
     MutationObserverPeer.childrenRemoved(self, removed);
   }
 

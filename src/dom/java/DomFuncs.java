@@ -251,7 +251,24 @@ class DomFuncs
     if (self.attr("popover") == null) throw Err.make("NotSupportedError: element is not a popover: " + self);
     DocPeer doc = DocPeer.of(self);
     if (doc == null) throw Err.make("InvalidStateError: popover is not in a document: " + self);
+    closeRemoved(doc);
     return doc;
+  }
+
+  // A browser closes a popover when it is removed from the document,
+  // without firing events.  Do the same for the open popovers which
+  // are no longer in the document
+  static void closeRemoved(DocPeer doc)
+  {
+    Object[] open = doc.popovers.toArray();
+    for (int i=0; i<open.length; i++)
+    {
+      Elem x = (Elem)open[i];
+      if (DocPeer.of(x) == doc) continue;
+      x.peer.popoverOpen = false;
+      x.peer.prevFocus = null;
+      doc.popovers.remove(x);
+    }
   }
 
   private static boolean isAuto(Elem self)
