@@ -210,6 +210,12 @@ class Win
   ** Cancels a repeated action which was set up using [setInterval].
   native Void clearInterval(Int intervalId)
 
+  ** Move the clock on by the time given and run the timers and
+  ** animation frames which come due, for a test on the JVM where a
+  ** window has no event loop.  A browser runs its own and raises
+  ** UnsupportedErr.
+  @NoDoc native Void runTimers(Duration elapsed := 0ms)
+
 //////////////////////////////////////////////////////////////////////////
 // Geolocation
 //////////////////////////////////////////////////////////////////////////

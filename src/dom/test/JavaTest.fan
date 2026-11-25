@@ -391,6 +391,670 @@ class JavaTest : Test
     verifyEq(text.parentNode, null)
   }
 
+//////////////////////////////////////////////////////////////////////////
+// Document
+//////////////////////////////////////////////////////////////////////////
+
+  ** Body of the window's document with nothing in it
+  private Elem body()
+  {
+    doc := Win.cur.doc
+    doc.body.removeAll
+    return doc.body
+  }
+
+  Void testDoc()
+  {
+    win := Win.cur
+    doc := win.doc
+    verifySame(Win.cur, win)
+    verifySame(win.doc, doc)
+    verifySame(win.top, win)
+    verifyEq(win.parent, null)
+    verifyEq(doc.body.tagName, "body")
+    verifyEq(doc.head.tagName, "head")
+    verifySame(doc.body.parent, doc.head.parent)
+    verifyEq(doc.body.parent.tagName, "html")
+    verifySame(doc.body.parent.parentNode, doc)
+
+    doc.title = "Hi"
+    verifyEq(doc.title, "Hi")
+
+    body := body
+    body.html = Str<|<div id="a" class="x"><span id="b">s</span></div><p id="c"></p>|>
+    a := body.firstChild
+    verifySame(doc.elemById("a"), a)
+    verifySame(doc.elemById("b"), a.firstChild)
+    verifyEq(doc.elemById("nope"), null)
+    verifySame(doc.querySelector("body > .x"), a)
+    verifySame(doc.querySelector("html"), body.parent)
+    verifyEq(doc.querySelectorAll("#a, #c").size, 2)
+    verifySame(a.firstChild.closest("body"), body)
+
+    e := doc.createElem("input", ["type":"text"])
+    verifyEq(e.tagName, "input")
+    verifyEq(e.attr("type"), "text")
+    verifyEq(e.parent, null)
+
+    // another thread has a window of its own
+    other := concurrent::Actor(concurrent::ActorPool()) |msg| { Unsafe(Win.cur) }.send(null).get(5sec)->val
+    verifyNotSame(other, win)
+  }
+
+  ** An event of a node in the document goes thru the window
+  Void testWinEvents()
+  {
+    body := body
+    kid := Elem {}
+    body.add(kid)
+    acc := Str[,]
+    win := Win.cur
+    cap := win.onEvent("ping", true)  |e| { acc.add("win-capture") }
+    bub := win.onEvent("ping", false) |e| { acc.add("win-bubble") }
+    body.onEvent("ping", false) |e| { acc.add("body") }
+    kid.onEvent("ping", false) |e| { acc.add("kid") }
+
+    kid.dispatchEvent(Event.makeCustom("ping", ["bubbles":true]))
+    verifyEq(acc, ["win-capture", "kid", "body", "win-bubble"])
+
+    acc.clear
+    kid.dispatchEvent(Event.makeCustom("ping"))
+    verifyEq(acc, ["win-capture", "kid"])
+
+    // not in the document
+    acc.clear
+    body.remove(kid)
+    kid.dispatchEvent(Event.makeCustom("ping", ["bubbles":true]))
+    verifyEq(acc, ["kid"])
+
+    win.removeEvent("ping", true, cap)
+    win.removeEvent("ping", false, bub)
+    body.add(kid)
+    acc.clear
+    kid.dispatchEvent(Event.makeCustom("ping", ["bubbles":true]))
+    verifyEq(acc, ["kid", "body"])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Focus
+//////////////////////////////////////////////////////////////////////////
+
+  Void testFocus()
+  {
+    doc := Win.cur.doc
+    body := body
+    body.html = Str<|<input id="a"><button id="b">B</button><div id="c">C</div><div id="d" tabindex="-1">D</div>
+                     <a id="e">E</a><a id="f" href="#">F</a><button id="g" disabled>G</button>
+                     <div hidden><input id="h"></div>|>
+    a := doc.elemById("a"); b := doc.elemById("b"); c := doc.elemById("c"); d := doc.elemById("d")
+    acc := Str[,]
+    ["focus", "blur", "focusin", "focusout"].each |type|
+    {
+      body.onEvent(type, false) |e| { acc.add("body $type $e.target.id") }
+      [a, b, d].each |x| { x.onEvent(type, false) |e| { acc.add("$x.id $type from:" + e.relatedTarget?.id) } }
+    }
+
+    verifySame(doc.activeElem, body)
+    verifyEq(a.hasFocus, false)
+
+    a.focus
+    verifySame(doc.activeElem, a)
+    verifyEq(a.hasFocus, true)
+    verifyEq(acc, ["a focus from:null", "a focusin from:null", "body focusin a"])
+    verifySame(body.querySelector(":focus"), a)
+    verifyEq(body.querySelectorAll(":focus-within").size, 1)
+    verifySame(doc.querySelector("body:focus-within"), body)
+
+    // again does nothing
+    acc.clear
+    a.focus
+    verifyEq(acc, Str[,])
+
+    // to another: blur, focusout, focus, focusin
+    b.focus
+    verifySame(doc.activeElem, b)
+    verifyEq(acc, ["a blur from:b", "a focusout from:b", "body focusout a",
+                   "b focus from:a", "b focusin from:a", "body focusin b"])
+
+    // one which does not take the focus is left alone
+    acc.clear
+    [c, doc.elemById("e"), doc.elemById("g"), doc.elemById("h")].each |x|
+    {
+      x.focus
+      verifySame(doc.activeElem, b, x.id)
+    }
+    verifyEq(acc, Str[,])
+
+    // a tabindex or an href makes one which does
+    d.focus
+    verifySame(doc.activeElem, d)
+    doc.elemById("f").focus
+    verifySame(doc.activeElem, doc.elemById("f"))
+
+    // blur of the one with the focus, and of one without
+    d.focus
+    acc.clear
+    a.blur
+    verifyEq(acc, Str[,])
+    d.blur
+    verifySame(doc.activeElem, body)
+    verifyEq(acc, ["d blur from:null", "d focusout from:null", "body focusout d"])
+
+    // by name
+    a.invoke("focus")
+    verifySame(doc.activeElem, a)
+    a.invoke("blur")
+    verifySame(doc.activeElem, body)
+
+    // out of the document: it loses the focus with no event, and
+    // does not take it
+    a.focus
+    acc.clear
+    body.remove(a)
+    verifySame(doc.activeElem, body)
+    verifyEq(a.hasFocus, false)
+    a.focus
+    verifyEq(a.hasFocus, false)
+    verifyEq(acc, Str[,])
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Timers
+//////////////////////////////////////////////////////////////////////////
+
+  Void testTimers()
+  {
+    win := Win.cur
+    acc := Str[,]
+
+    // nothing runs until the clock is moved
+    win.setTimeout(10ms) |w| { verifySame(w, win); acc.add("10ms") }
+    win.setTimeout(0ms) { acc.add("0ms") }
+    win.reqAnimationFrame |w| { verifySame(w, win); acc.add("frame") }
+    gone := win.setTimeout(5ms) { acc.add("gone") }
+    verifyEq(acc, Str[,])
+
+    // frames first, then each timer which is due
+    win.clearTimeout(gone)
+    win.runTimers
+    verifyEq(acc, ["frame", "0ms"])
+    win.runTimers(9ms)
+    verifyEq(acc, ["frame", "0ms"])
+    win.runTimers(1ms)
+    verifyEq(acc, ["frame", "0ms", "10ms"])
+    win.runTimers(1hr)
+    verifyEq(acc, ["frame", "0ms", "10ms"])
+
+    // in order of the time each is due, the oldest of a tie first
+    acc.clear
+    win.setTimeout(30ms) { acc.add("c") }
+    win.setTimeout(10ms) { acc.add("a1") }
+    win.setTimeout(20ms) { acc.add("b") }
+    win.setTimeout(10ms) { acc.add("a2") }
+    win.runTimers(1sec)
+    verifyEq(acc, ["a1", "a2", "b", "c"])
+
+    // a timer set by a timer runs if it is due in time; a frame asked
+    // for in a frame waits for the next
+    acc.clear
+    win.setTimeout(10ms) { acc.add("outer"); win.setTimeout(10ms) { acc.add("inner") }; win.setTimeout(1sec) { acc.add("late") } }
+    win.reqAnimationFrame { acc.add("f1"); win.reqAnimationFrame { acc.add("f2") } }
+    win.runTimers(100ms)
+    verifyEq(acc, ["f1", "outer", "inner"])
+    win.runTimers(1sec)
+    verifyEq(acc, ["f1", "outer", "inner", "f2", "late"])
+
+    // an interval, until it is cleared
+    acc.clear
+    n := 0
+    id := win.setInterval(10ms) { n++ }
+    win.runTimers(35ms)
+    verifyEq(n, 3)
+    win.runTimers(5ms)
+    verifyEq(n, 4)
+    win.clearInterval(id)
+    win.runTimers(1sec)
+    verifyEq(n, 4)
+
+    // timers which never settle
+    spinning = true
+    win.setTimeout(0ms) |w| { spin(w) }
+    verifyErr(Err#) { win.runTimers }
+    spinning = false
+    win.runTimers
+  }
+
+  private Void spin(Win w) { if (spinning) w.setTimeout(0ms) |x| { spin(x) } }
+
+  private Bool spinning
+
+//////////////////////////////////////////////////////////////////////////
+// Invoke
+//////////////////////////////////////////////////////////////////////////
+
+  Void testInvoke()
+  {
+    body := body
+    body.html = Str<|<div id="a" class="x"><span>s</span></div>|>
+    a := body.firstChild
+    span := a.firstChild
+
+    verifyEq(a.invoke("matches", [".x"]), true)
+    verifyEq(a.invoke("matches", ["span"]), false)
+    verifySame(span.invoke("closest", ["div"]), a)
+    verifyEq(a.invoke("contains", [span]), true)
+    verifyEq(span.invoke("contains", [a]), false)
+    verifyEq(a.invoke("hasAttribute", ["id"]), true)
+    verifyEq(a.invoke("getAttribute", ["id"]), "a")
+    a.invoke("setAttribute", ["title", "t"])
+    verifyEq(a.attr("title"), "t")
+    a.invoke("removeAttribute", ["title"])
+    verifyEq(a.attr("title"), null)
+    verifyEq(a.invoke("toggleAttribute", ["hidden"]), true)
+    verifyEq(a.attr("hidden"), "")
+    verifyEq(a.invoke("checkVisibility"), false)
+    verifyEq(a.invoke("toggleAttribute", ["hidden"]), false)
+    verifyEq(a.invoke("checkVisibility"), true)
+    verifyEq(a.invoke("toggleAttribute", ["hidden", false]), false)
+    verifyEq(a.invoke("scrollIntoView"), null)
+
+    // a click bubbles and may be refused
+    clicks := 0
+    body.onEvent("click", false) |e| { clicks++ }
+    span.invoke("click")
+    verifyEq(clicks, 1)
+
+    span.invoke("remove")
+    verifyEq(span.parent, null)
+    verifyEq(a.hasChildren, false)
+
+    verifyErr(UnsupportedErr#) { a.invoke("getBoundingClientRect") }
+    verifyErr(ArgErr#) { a.invoke("matches") }
+  }
+
+  Void testPopover()
+  {
+    win := Win.cur
+    doc := win.doc
+    body := body
+    body.html = Str<|<button id="t">T</button>
+                     <div id="p" popover><input id="in" autofocus><div id="q" popover>Q</div></div>
+                     <div id="r" popover>R</div>
+                     <div id="m" popover="manual">M</div>
+                     <div id="x">X</div>|>
+    t := doc.elemById("t"); p := doc.elemById("p"); q := doc.elemById("q"); r := doc.elemById("r"); m := doc.elemById("m")
+    in := doc.elemById("in")
+    acc := Str[,]
+    [p, q, r, m].each |x|
+    {
+      x.onEvent("beforetoggle", false) |e| { acc.add("$x.id before " + e["oldState"] + ">" + e["newState"]) }
+      x.onEvent("toggle", false) |e| { acc.add("$x.id toggle " + e["newState"]); if (x === q) verifyEq(e["oldState"], "closed") }
+    }
+
+    // what is inside a closed popover is not drawn
+    verifyEq(in.invoke("checkVisibility"), false)
+    in.focus
+    verifySame(doc.activeElem, body)
+
+    // show: beforetoggle now, the focus to what asks for it, toggle
+    // as a task of its own
+    t.focus
+    p.invoke("showPopover")
+    verifyEq(acc, ["p before closed>open"])
+    verifySame(body.querySelector(":popover-open"), p)
+    verifySame(doc.activeElem, in)
+    win.runTimers
+    verifyEq(acc, ["p before closed>open", "p toggle open"])
+
+    // again does nothing
+    acc.clear
+    p.invoke("showPopover")
+    win.runTimers
+    verifyEq(acc, Str[,])
+
+    // one inside it leaves it open; one outside hides both, the
+    // innermost first.  A manual popover is left alone
+    q.invoke("showPopover")
+    m.invoke("showPopover")
+    verifyEq(body.querySelectorAll(":popover-open"), Elem[p, q, m])
+    acc.clear
+    r.invoke("showPopover")
+    verifyEq(body.querySelectorAll(":popover-open"), Elem[r, m])
+    verifyEq(acc, ["r before closed>open", "q before open>closed", "p before open>closed"])
+    verifySame(doc.activeElem, t)   // given back by the one which took it
+
+    // one toggle each, from the state it was first in to its last
+    win.runTimers
+    verifyEq(acc[3..-1], ["q toggle closed", "m toggle open", "p toggle closed", "r toggle open"])
+
+    // hide, and toggle
+    acc.clear
+    r.invoke("hidePopover")
+    r.invoke("hidePopover")
+    verifyEq(r.invoke("togglePopover"), true)
+    verifyEq(r.invoke("togglePopover"), false)
+    verifyEq(r.invoke("togglePopover", [false]), false)
+    win.runTimers
+    verifyEq(acc.findAll |s| { s.contains("before") }, ["r before open>closed", "r before closed>open", "r before open>closed"])
+    verifyEq(body.querySelectorAll(":popover-open"), Elem[m])
+    m.invoke("hidePopover")
+
+    // a show may be refused
+    no := r.onEvent("beforetoggle", false) |e| { e.preventDefault }
+    r.invoke("showPopover")
+    verifyEq(body.querySelectorAll(":popover-open").size, 0)
+    r.removeEvent("beforetoggle", false, no)
+
+    // not a popover, and not in a document
+    verifyErr(Err#) { doc.elemById("x").invoke("showPopover") }
+    body.remove(r)
+    verifyErr(Err#) { r.invoke("showPopover") }
+    win.runTimers
+  }
+
+  Void testDialog()
+  {
+    win := Win.cur
+    doc := win.doc
+    body := body
+    body.html = Str<|<button id="t">T</button><dialog id="d"><button id="ok" autofocus>OK</button></dialog>|>
+    t := doc.elemById("t"); d := doc.elemById("d"); ok := doc.elemById("ok")
+    acc := Str[,]
+    d.onEvent("close", false) |e| { acc.add("close") }
+    d.onEvent("cancel", false) |e| { acc.add("cancel") }
+
+    ok.focus
+    verifySame(doc.activeElem, body)
+
+    t.focus
+    d.invoke("showModal")
+    verifyEq(d.attr("open"), "")
+    verifySame(body.querySelector(":modal"), d)
+    verifySame(doc.activeElem, ok)
+    verifyErr(Err#) { d.invoke("show") }
+
+    d.invoke("close", ["yes"])
+    verifyEq(d.attr("open"), null)
+    verifyEq(d.prop("returnValue"), "yes")
+    verifySame(doc.activeElem, t)
+    verifyEq(acc, Str[,])
+    win.runTimers
+    verifyEq(acc, ["close"])
+    d.invoke("close")
+    win.runTimers
+    verifyEq(acc, ["close"])
+
+    // a request to close may be refused
+    acc.clear
+    d.invoke("show")
+    verifyEq(body.querySelector(":modal"), null)
+    no := d.onEvent("cancel", false) |e| { e.preventDefault }
+    d.invoke("requestClose")
+    verifyEq(d.attr("open"), "")
+    d.removeEvent("cancel", false, no)
+    d.invoke("requestClose")
+    win.runTimers
+    verifyEq(d.attr("open"), null)
+    verifyEq(acc, ["cancel", "cancel", "close"])
+
+    verifyErr(UnsupportedErr#) { t.invoke("showModal") }
+  }
+
+  Void testPointerCapture()
+  {
+    body := body
+    body.html = "<div id='a'></div><div id='b'></div>"
+    a := body.children[0]; b := body.children[1]
+    acc := Str[,]
+    ["gotpointercapture", "lostpointercapture"].each |type|
+    {
+      body.onEvent(type, false) |e| { acc.add("$e.target.id $type " + e["pointerId"]) }
+    }
+
+    verifyEq(a.invoke("hasPointerCapture", [1]), false)
+    a.invoke("setPointerCapture", [1])
+    a.invoke("setPointerCapture", [1])
+    verifyEq(a.invoke("hasPointerCapture", [1]), true)
+    verifyEq(a.invoke("hasPointerCapture", [2]), false)
+    verifyEq(acc, ["a gotpointercapture 1"])
+
+    // taken by another
+    b.invoke("setPointerCapture", [1])
+    verifyEq(a.invoke("hasPointerCapture", [1]), false)
+    verifyEq(acc, ["a gotpointercapture 1", "a lostpointercapture 1", "b gotpointercapture 1"])
+
+    // released only by the one which has it
+    acc.clear
+    a.invoke("releasePointerCapture", [1])
+    verifyEq(acc, Str[,])
+    b.invoke("releasePointerCapture", [1])
+    verifyEq(acc, ["b lostpointercapture 1"])
+    verifyEq(b.invoke("hasPointerCapture", [1]), false)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// MutationObserver
+//////////////////////////////////////////////////////////////////////////
+
+  Void testMutationObserver()
+  {
+    win := Win.cur
+    root := Elem {}
+    root.html = "<p id='p'>one</p><b>two</b>"
+    p := root.firstChild
+    b := root.lastChild
+    text := p.firstNode
+
+    calls := MutationRec[][,]
+    mo := MutationObserver(|MutationRec[] recs| { calls.add(recs) })
+    verifyErr(ArgErr#) { mo.observe(root, ["subtree":true]) }
+    mo.observe(root, ["childList":true, "attrs":true, "charData":true, "subtree":true, "attrOldVal":true, "charDataOldVal":true])
+
+    // the records wait for the script to end
+    i := Elem("i")
+    root.insertBefore(i, b)
+    p.setAttr("title", "t")
+    p.setAttr("title", "u")
+    p.style.addClass("x y")
+    p.style.addClass("x")
+    p.style.removeClass("y")
+    text.text = "uno"
+    root.remove(i)
+    p.removeAttr("title")
+    p.removeAttr("nope")
+    verifyEq(calls.size, 0)
+    win.runTimers
+    verifyEq(calls.size, 1)
+    recs := calls[0]
+    verifyRec(recs[0], "childList", root, DomNode[i], DomNode[,], null, null)
+    verifySame(recs[0].prevSibling, p)
+    verifySame(recs[0].nextSibling, b)
+    verifyRec(recs[1], "attrs",     p,    DomNode[,], DomNode[,], "title", null)
+    verifyRec(recs[2], "attrs",     p,    DomNode[,], DomNode[,], "title", "t")
+    verifyRec(recs[3], "attrs",     p,    DomNode[,], DomNode[,], "class", null)
+    verifyRec(recs[4], "attrs",     p,    DomNode[,], DomNode[,], "class", "x y")
+    verifyRec(recs[5], "charData",  text, DomNode[,], DomNode[,], null, "one")
+    verifyRec(recs[6], "childList", root, DomNode[,], DomNode[i], null, null)
+    verifySame(recs[6].prevSibling, p)
+    verifySame(recs[6].nextSibling, b)
+    verifyRec(recs[7], "attrs",     p,    DomNode[,], DomNode[,], "title", "u")
+    verifyEq(recs.size, 8)
+
+    // nothing waiting, no call
+    win.runTimers
+    verifyEq(calls.size, 1)
+
+    // taken by hand
+    root.removeAll
+    taken := mo.takeRecs
+    verifyEq(taken.size, 1)
+    verifyRec(taken[0], "childList", root, DomNode[,], DomNode[p, b], null, null)
+    win.runTimers
+    verifyEq(calls.size, 1)
+
+    // only what it asked for: no subtree, a filter, no old value
+    mo.disconnect
+    mo.observe(root, ["attrs":true, "attrFilter":["a"]])
+    root.add(p)
+    p.setAttr("a", "1")
+    root.setAttr("b", "1")
+    root.setAttr("a", "1")
+    root.setAttr("a", "2")
+    taken = mo.takeRecs
+    verifyEq(taken.size, 2)
+    verifyRec(taken[1], "attrs", root, DomNode[,], DomNode[,], "a", null)
+
+    // disconnected
+    mo.disconnect
+    root.setAttr("a", "3")
+    verifyEq(mo.takeRecs.size, 0)
+    win.runTimers
+    verifyEq(calls.size, 1)
+  }
+
+  private Void verifyRec(MutationRec r, Str type, DomNode target, DomNode[] added, DomNode[] removed, Str? attr, Str? oldVal)
+  {
+    verifyEq(r.type, type)
+    verifySame(r.target, target)
+    verifyEq(r.added, added)
+    verifyEq(r.removed, removed)
+    verifyEq(r.attr, attr)
+    verifyEq(r.oldVal, oldVal)
+  }
+
+//////////////////////////////////////////////////////////////////////////
+// Window State
+//////////////////////////////////////////////////////////////////////////
+
+  Void testStorage()
+  {
+    win := Win.cur
+    s := win.sessionStorage
+    s.clear
+    verifySame(win.sessionStorage, s)
+    verifyNotSame(win.localStorage, s)
+    verifyEq(s.size, 0)
+    verifyEq(s["a"], null)
+    s["a"] = "x"
+    s["b"] = 3
+    verifyEq(s.size, 2)
+    verifyEq(s["a"], "x")
+    verifyEq(s["b"], 3)
+    verifyEq(s.keys, ["a", "b"])
+    verifyEq(s.key(1), "b")
+    verifyEq(s.key(2), null)
+    s.remove("a")
+    verifyEq(s.keys, ["b"])
+    s.clear
+    verifyEq(s.size, 0)
+    verifyEq(win.localStorage.size, 0)
+  }
+
+  Void testHistory()
+  {
+    win := Win.cur
+    pops := Obj?[,]
+    f := win.onEvent("popstate", false) |e| { pops.add(e.stash["n"]) }
+    start := win.uri
+
+    win.hisPushState("A", `/a`, ["n":1])
+    win.hisPushState("B", `/b`, ["n":2])
+    verifyEq(win.uri, `/b`)
+    verifyEq(win.hisState["n"], 2)
+    win.hisReplaceState("B", `/b2`, ["n":22])
+    verifyEq(win.uri, `/b2`)
+
+    // back and forward fire popstate as a task of its own
+    win.hisBack
+    verifyEq(win.uri, `/a`)
+    verifyEq(pops, Obj?[,])
+    win.runTimers
+    verifyEq(pops, Obj?[1])
+    win.hisForward
+    win.hisForward
+    win.runTimers
+    verifyEq(win.uri, `/b2`)
+    verifyEq(pops, Obj?[1, 22])
+
+    // a push drops what was ahead
+    win.hisBack
+    win.hyperlink(`/c`)
+    win.hisForward
+    win.runTimers
+    verifyEq(win.uri, `/c`)
+    win.hisBack; win.hisBack; win.hisBack; win.hisBack
+    verifyEq(win.uri, start)
+    win.runTimers
+    win.removeEvent("popstate", false, f)
+  }
+
+  Void testClipboard()
+  {
+    win := Win.cur
+    Str? got
+    win.clipboardWriteText("hi")
+    win.clipboardReadText |s| { got = s }
+    verifyEq(got, null)
+    win.runTimers
+    verifyEq(got, "hi")
+  }
+
+  Void testWeakMap()
+  {
+    m := WeakMap()
+    a := Elem {}
+    b := "b"
+    verifyEq(m.has(a), false)
+    verifyEq(m[a], null)
+    m[a] = 1
+    m[b] = 2
+    verifyEq(m.has(a), true)
+    verifyEq(m[a], 1)
+    verifyEq(m[b], 2)
+    m[a] = 3
+    verifyEq(m[a], 3)
+
+    // a key is the object itself
+    verifyEq(m.has(Elem {}), false)
+    verifyEq(m.delete(a), true)
+    verifyEq(m.delete(a), false)
+    verifyEq(m.has(a), false)
+    verifyEq(m[b], 2)
+  }
+
+  Void testDataTransfer()
+  {
+    e := Event.makeCustom("dragstart")
+    dt := e.dataTransfer
+    verifySame(e.dataTransfer, dt)
+    verifyEq(dt.types, Str[,])
+    verifyEq(dt.getData("text/plain"), "")
+    dt.setData("text/plain", "hi").setData("text/uri-list", "x")
+    verifyEq(dt.types, ["text/plain", "text/uri-list"])
+    verifyEq(dt.getData("text/plain"), "hi")
+    dt.dropEffect = "copy"
+    dt.effectAllowed = "all"
+    verifyEq(dt.dropEffect, "copy")
+    verifyEq(dt.effectAllowed, "all")
+    verifyEq(dt.files.size, 0)
+  }
+
+  ** With no stylesheets the style of an element is its inline style
+  Void testStyleComputed()
+  {
+    e := Elem {}
+    verifyEq(e.style.computed("overflow-y"), null)
+    e.style->overflowY = "auto"
+    e.style->color = "red"
+    verifyEq(e.style.computed("overflow-y"), "auto")
+    verifyEq(e.style.effective("color"), "red")
+    e.style.addClass("x")
+    e.style.clear
+    verifyEq(e.style.computed("overflow-y"), null)
+    verifyEq(e.style->color, null)
+    verifyEq(e.style.classes, ["x"])
+  }
+
   Void testSvg()
   {
     a := Svg.line(0, 0, 10, 10)

@@ -1,15 +1,21 @@
 //
-// Copyright (c) 2023, Brian Frank and Andy Frank
+// Copyright (c) 2017, Brian Frank and Andy Frank
 // Licensed under the Academic Free License version 3.0
 //
 // History:
-//   8 Feb 2023  Brian Frank  Creation
+//   15 May 2017  Andy Frank   Creation
+//   24 Nov 2026  Brian Frank  Keep the data in memory
 //
 
 package fan.dom;
 
+import java.util.LinkedHashMap;
 import fan.sys.*;
 
+/**
+ * DataTransferPeer keeps the data of a drag in memory.  It has no
+ * files and no drag image.
+ */
 public class DataTransferPeer
 {
   public static DataTransferPeer make(DataTransfer fan)
@@ -17,15 +23,31 @@ public class DataTransferPeer
     return DomPeerFactory.factory().makeDataTransfer(fan);
   }
 
-  public String       dropEffect   (DataTransfer self)                             { throw err(); }
-  public void         dropEffect   (DataTransfer self, String dropEffect)          { throw err(); }
-  public String       effectAllowed(DataTransfer self)                             { throw err(); }
-  public void         effectAllowed(DataTransfer self, String effectAllowed)       { throw err(); }
-  public List         types        (DataTransfer self)                             { throw err(); }
-  public String       getData      (DataTransfer self, String type)                { throw err(); }
-  public DataTransfer setData      (DataTransfer self, String type, String val)    { throw err(); }
-  public DataTransfer setDragImage (DataTransfer self, Elem image, long x, long y) { throw err(); }
-  public List         files        (DataTransfer self)                             { throw err(); }
+  public String dropEffect(DataTransfer self) { return dropEffect; }
+  public void dropEffect(DataTransfer self, String dropEffect) { this.dropEffect = dropEffect; }
 
-  private static Err err() { return UnsupportedErr.make(); }
+  public String effectAllowed(DataTransfer self) { return effectAllowed; }
+  public void effectAllowed(DataTransfer self, String effectAllowed) { this.effectAllowed = effectAllowed; }
+
+  public List types(DataTransfer self) { return List.make(Sys.StrType, data.keySet()); }
+
+  public String getData(DataTransfer self, String type)
+  {
+    String val = (String)data.get(type);
+    return val == null ? "" : val;
+  }
+
+  public DataTransfer setData(DataTransfer self, String type, String val)
+  {
+    data.put(type, val);
+    return self;
+  }
+
+  public DataTransfer setDragImage(DataTransfer self, Elem image, long x, long y) { return self; }
+
+  public List files(DataTransfer self) { return List.make(Type.find("dom::DomFile"), 0); }
+
+  private String dropEffect = "none";
+  private String effectAllowed = "uninitialized";
+  private final LinkedHashMap data = new LinkedHashMap();   // Str:Str
 }

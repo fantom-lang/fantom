@@ -83,10 +83,15 @@ public class DomPeerFactory
     return new WinPeer();
   }
 
+  // A thread has one window, as a page has one thread
   public Win winCur()
   {
-    throw UnsupportedErr.make("Win.cur");
+    Win win = (Win)curWin.get();
+    if (win == null) curWin.set(win = Win.make());
+    return win;
   }
+
+  private static final ThreadLocal curWin = new ThreadLocal();
 
   public Object winEval(String js)
   {

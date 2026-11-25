@@ -25,13 +25,27 @@ class EventPeer extends sys.Obj {
   static makeCustom(type, init)
   {
     const get = (n) => init == null ? null : init.get(n);
-    return EventPeer.make(new CustomEvent(type, {
+    const event = new CustomEvent(type, {
       bubbles:    get("bubbles") == true,
       cancelable: get("cancelable") == true,
       composed:   get("composed") == true,
       detail:     get("detail"),
-    }));
+    });
+
+    // every other entry is an attribute of the event such as
+    // "keyCode", "key", "shiftKey", "button" or "pointerType"
+    if (init != null)
+    {
+      init.each((val, name) =>
+      {
+        if (EventPeer.#initOpts.includes(name)) return;
+        Object.defineProperty(event, name, { value: name == "relatedTarget" && val != null ? val.peer.node : val });
+      });
+    }
+    return EventPeer.make(event);
   }
+
+  static #initOpts = ["bubbles", "cancelable", "composed", "detail"];
 
   static fromNative(obj)
   {
@@ -97,10 +111,10 @@ class EventPeer extends sys.Obj {
     return this.#pagePos;
   }
 
-  alt(self)   { return this.event.altKey; }
-  ctrl(self)  { return this.event.ctrlKey; }
-  shift(self) { return this.event.shiftKey; }
-  meta (self) { return this.event.metaKey; }
+  alt(self)   { return this.event.altKey == true; }
+  ctrl(self)  { return this.event.ctrlKey == true; }
+  shift(self) { return this.event.shiftKey == true; }
+  meta (self) { return this.event.metaKey == true; }
   button(self) { return this.event.button; }
 
   $key;

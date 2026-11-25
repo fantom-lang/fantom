@@ -29,7 +29,7 @@ public class StylePeer
 // Methods
 //////////////////////////////////////////////////////////////////////////
 
-  public List classes(Style self) { return Interop.toFan(classList); }
+  public List classes(Style self) { return List.make(Sys.StrType, classList); }
 
   public boolean hasClass(Style self, String name)
   {
@@ -40,10 +40,10 @@ public class StylePeer
   public void _setClass(Style self, String name)
   {
     classList.clear();
-    addClass(self, name);
+    doAddClass(name);
   }
 
-  public Style addClass(Style self, String name)
+  private void doAddClass(String name)
   {
     // for compatibility with js (pass multiple space separated classes)
     String[] list = name.split("\\s+");
@@ -53,21 +53,46 @@ public class StylePeer
       if (n.length() == 0) continue;
       if (!classList.contains(n)) classList.add(n);
     }
+  }
+
+  public Style addClass(Style self, String name)
+  {
+    String old = classAttr();
+    doAddClass(name);
+    classChanged(old);
     return self;
   }
 
   public Style removeClass(Style self, String name)
   {
+    String old = classAttr();
     int i = classList.indexOf(name);
     if (i >= 0) classList.remove(i);
+    classChanged(old);
     return self;
   }
 
-  Style clear(Style self) { throw err(); }
+  // The class attribute, which this holds for its element
+  private String classAttr()
+  {
+    return !MutationObserverPeer.isActive() || classList.size() == 0 ? null : String.join(" ", classList);
+  }
 
-  Object computed(Style self, String name) { throw err(); }
+  private void classChanged(String old)
+  {
+    if (elem == null || !MutationObserverPeer.isActive()) return;
+    String cur = classAttr();
+    if (cur == null ? old != null : !cur.equals(old)) MutationObserverPeer.attr(elem, "class", old);
+  }
 
-  Object effective(Style self, String name) { throw err(); }
+  // Clear the inline styles
+  public Style clear(Style self) { props.clear(); return self; }
+
+  // There are no stylesheets and nothing is laid out, so the only
+  // style an element has is its inline style
+  public Object computed(Style self, String name) { return props.get(name); }
+
+  public Object effective(Style self, String name) { return props.get(name); }
 
   public Object get(Style self, String name)
   {
@@ -80,12 +105,12 @@ public class StylePeer
     else props.put(name, val);
   }
 
-  private static Err err() { return UnsupportedErr.make(); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
 //////////////////////////////////////////////////////////////////////////
 
-  private ArrayList classList = new ArrayList();
+  Elem elem;   // element this is the style of
+  private ArrayList<String> classList = new ArrayList<String>();
   HashMap props = new HashMap();
 }

@@ -29,7 +29,12 @@ public class DomNodePeer
 //////////////////////////////////////////////////////////////////////////
 
   public String text(DomNode self) { return this.text; }
-  public void text(DomNode self, String text) { this.text = text; }
+  public void text(DomNode self, String text)
+  {
+    String old = this.text;
+    this.text = text;
+    if (self instanceof DomText) MutationObserverPeer.charData(self, old);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 // Tree
@@ -102,6 +107,7 @@ public class DomNodePeer
     if (child.parentNode() != null) throw new RuntimeException("child already parented");
     child.peer.parentNode = self;
     kids.add(child);
+    MutationObserverPeer.childList(self, child, null, child.prevNode(), null);
   }
 
   public void insertChildBefore(DomNode self, DomNode child, DomNode ref)
@@ -111,6 +117,7 @@ public class DomNodePeer
     if (i < 0) throw new RuntimeException("ref not a child of this node");
     child.peer.parentNode = self;
     kids.add(i, child);
+    MutationObserverPeer.childList(self, child, null, child.prevNode(), ref);
   }
 
   public void replaceChild(DomNode self, DomNode oldChild, DomNode newChild)
@@ -122,18 +129,24 @@ public class DomNodePeer
     oldChild.peer.parentNode = null;
     newChild.peer.parentNode = self;
     kids.set(i, newChild);
+    MutationObserverPeer.childList(self, newChild, oldChild, newChild.prevNode(), newChild.nextNode());
   }
 
   public void removeChild(DomNode self, DomNode child)
   {
+    int i = kids.indexOf(child);
+    if (i < 0) return;
     child.peer.parentNode = null;
-    kids.remove(child);
+    kids.remove(i);
+    MutationObserverPeer.childList(self, null, child, i == 0 ? null : (DomNode)kids.get(i-1), i < kids.size() ? (DomNode)kids.get(i) : null);
   }
 
   public void removeAllChildren(DomNode self)
   {
-    for (int i=0; i<kids.size(); i++) ((DomNode)kids.get(i)).peer.parentNode = null;
+    Object[] removed = kids.toArray();
+    for (int i=0; i<removed.length; i++) ((DomNode)removed[i]).peer.parentNode = null;
     kids.clear();
+    MutationObserverPeer.childrenRemoved(self, removed);
   }
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,7 +166,8 @@ public class DomNodePeer
   }
 
   // Dispatch as the DOM does: capture down from the root, the
-  // target's own listeners, then bubble back up if the event bubbles
+  // target's own listeners, then bubble back up if the event bubbles.
+  // The window is above the document of a node which is in one
   public boolean dispatchEvent(DomNode self, Event event)
   {
     EventPeer e = event.peer;
@@ -161,18 +175,26 @@ public class DomNodePeer
 
     ArrayList path = new ArrayList();
     for (DomNode p = parentNode; p != null; p = p.peer.parentNode) path.add(p);
+    DocPeer doc = DocPeer.of(self);
+    WinPeer win = doc == null ? null : doc.win.peer;
 
+    if (win != null) win.fire(event, Boolean.TRUE);
     for (int i=path.size()-1; i>=0; i--) ((DomNode)path.get(i)).peer.fire(event, Boolean.TRUE);
     fire(event, null);
     if (e.bubbles)
+    {
       for (int i=0; i<path.size(); i++) ((DomNode)path.get(i)).peer.fire(event, Boolean.FALSE);
+      if (win != null) win.fire(event, Boolean.FALSE);
+    }
 
     return !(e.cancelable && e.defaultPrevented);
   }
 
   // Fire the listeners of this node for the phase: capture, bubble,
   // or null for both at the target
-  private void fire(Event event, Boolean capture)
+  private void fire(Event event, Boolean capture) { fire(listeners, event, capture); }
+
+  static void fire(ArrayList listeners, Event event, Boolean capture)
   {
     if (event.peer.stopped) return;
     Object[] snapshot = listeners.toArray();
@@ -201,5 +223,6 @@ public class DomNodePeer
   DomNode parentNode;                 // null
   ArrayList kids = new ArrayList();   // DomNode
   ArrayList listeners = new ArrayList();  // Listener
+  ArrayList observers = new ArrayList();  // MutationObserverPeer.Reg
   String text = "";                   // non-null
 }

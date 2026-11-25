@@ -43,7 +43,7 @@ public class QuerySelector
 
   /** Add the descendants of the scope which match, in document
       order, until the limit is reached */
-  public void findAll(Elem parent, Elem scope, ArrayList acc, int limit)
+  public void findAll(DomNode parent, Elem scope, ArrayList acc, int limit)
   {
     ArrayList kids = parent.peer.kids;
     for (int i=0; i<kids.size() && acc.size() < limit; i++)
@@ -210,7 +210,12 @@ public class QuerySelector
       if (name.equals("empty"))    return isEmpty(e);
       if (name.equals("checked"))  return isChecked(e);
       if (name.equals("disabled")) return e.attr("disabled") != null;
-      return e.attr("disabled") == null;   // enabled
+      if (name.equals("enabled"))  return e.attr("disabled") == null;
+      if (name.equals("focus"))    return DomFuncs.hasFocus(e);
+      if (name.equals("popover-open")) return e.peer.popoverOpen;
+      if (name.equals("modal"))    return e.peer.modal;
+      DocPeer doc = DocPeer.of(e);   // focus-within
+      return doc != null && doc.active != null && e.containsChild(doc.active);
     }
 
     // the property once it is set, else the attribute
@@ -234,7 +239,9 @@ public class QuerySelector
     static boolean isKnown(String name)
     {
       return name.equals("scope") || name.equals("root") || name.equals("empty") ||
-             name.equals("checked") || name.equals("disabled") || name.equals("enabled");
+             name.equals("checked") || name.equals("disabled") || name.equals("enabled") ||
+             name.equals("focus") || name.equals("focus-within") || name.equals("popover-open") ||
+             name.equals("modal");
     }
 
     final String name;

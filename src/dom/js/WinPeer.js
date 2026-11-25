@@ -374,6 +374,11 @@ class WinPeer extends sys.Obj {
     this.win.clearInterval(id);
   }
 
+  runTimers(self, elapsed)
+  {
+    throw sys.UnsupportedErr.make("Win.runTimers: a browser runs its own timers");
+  }
+
 //////////////////////////////////////////////////////////////////////////
 // Geolocation
 //////////////////////////////////////////////////////////////////////////

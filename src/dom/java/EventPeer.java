@@ -56,8 +56,13 @@ public class EventPeer
   public void         preventDefault(Event self)                        { defaultPrevented = true; }
   public void         stop        (Event self)                          { defaultPrevented = true; stopped = true; }
   public void         set         (Event self, String name, Object val) { attrs.put(name, val); }
-  public Object       data        (Event self)                          { throw err(); }
-  public DataTransfer dataTransfer(Event self)                          { throw err(); }
+  public Object       data        (Event self)                          { return attrs.get("data"); }
+
+  public DataTransfer dataTransfer(Event self)
+  {
+    if (dataTransfer == null) dataTransfer = DataTransfer.make();
+    return dataTransfer;
+  }
 
   // a text node target maps to its parent element
   public Elem target(Event self)
@@ -91,6 +96,7 @@ public class EventPeer
   boolean cancelable;
   boolean defaultPrevented;
   boolean stopped;
+  private DataTransfer dataTransfer;
   private java.util.HashMap attrs = new java.util.HashMap();   // Str:Obj
 }
 

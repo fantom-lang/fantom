@@ -59,7 +59,11 @@ public class ElemPeer extends DomNodePeer
 
   public Style style(Elem self)
   {
-    if (style == null) style = new Style();
+    if (style == null)
+    {
+      style = new Style();
+      style.peer.elem = self;
+    }
     return style;
   }
 
@@ -157,20 +161,26 @@ public class ElemPeer extends DomNodePeer
   {
     // TODO: ns?
     if (val == null) return removeAttr(self, name);
+    String old = MutationObserverPeer.isActive() ? attr(self, name) : null;
 
     // delegate to Style for class
     if (name.equals("class")) style(self).peer._setClass(style, val);
 
     attrs.put(name, val);
+    MutationObserverPeer.attr(self, name, old);
     return self;
   }
 
   public Elem removeAttr(Elem self, String name)
   {
+    String old = attr(self, name);
+    if (old == null && !attrs.containsKey(name)) return self;
+
     // delegate to Style for class
     if (name.equals("class")) style(self).peer._setClass(style, "");
 
     attrs.remove(name);
+    MutationObserverPeer.attr(self, name, old);
     return self;
   }
 
@@ -219,7 +229,10 @@ public class ElemPeer extends DomNodePeer
     return null;
   }
 
-  public Object invoke(String name, List args) { throw err(); }
+  public Object invoke(Elem self, String name, List args)
+  {
+    return DomFuncs.invoke(self, name, args);
+  }
 
 //////////////////////////////////////////////////////////////////////////
 //Layout
@@ -232,7 +245,7 @@ public class ElemPeer extends DomNodePeer
 // public Point scrollPos (Elem self) { throw err(); }
 // public Size  scrollSize(Elem self) { throw err(); }
 
-  public Elem scrollIntoView(Elem self, boolean alignToTop) { throw err(); }
+  public Elem scrollIntoView(Elem self, boolean alignToTop) { return self; }
 
 //////////////////////////////////////////////////////////////////////////
 // Tree
@@ -302,9 +315,9 @@ public class ElemPeer extends DomNodePeer
 // Events
 //////////////////////////////////////////////////////////////////////////
 
-  public boolean hasFocus(Elem self) { throw err(); }
-  public void    focus   (Elem self) { throw err(); }
-  public void    blur    (Elem self) { throw err(); }
+  public boolean hasFocus(Elem self) { return DomFuncs.hasFocus(self); }
+  public void    focus   (Elem self) { DomFuncs.focus(self); }
+  public void    blur    (Elem self) { DomFuncs.blur(self); }
 
 //////////////////////////////////////////////////////////////////////////
 // Fields
@@ -321,6 +334,9 @@ public class ElemPeer extends DomNodePeer
   private LinkedHashMap attrs = new LinkedHashMap();  // Str:Str
   private HashMap props = new HashMap();      // Str:Obj
 
-  private static Err err() { return UnsupportedErr.make(); }
+  boolean popoverOpen;                        // is shown as a popover
+  boolean modal;                              // is shown as a modal dialog
+  Object[] toggle;                            // states of the toggle event which is queued
+  Elem prevFocus;                             // focus when shown as a popover or dialog
 }
 
