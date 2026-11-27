@@ -1206,6 +1206,10 @@ class ListTest : Test
     verifyEq(["a", null, "b", "c", "a"].unique, ["a", null, "b", "c"])
     verifyEq(["a", null, "b", "b", "c", "a", null, "c", "a", "a"].unique, ["a", null, "b", "c"])
 
+    // equal values which are not the same instance
+    verifyEq([Version("1.0"), Version("2.0"), Version("1.0")].unique, [Version("1.0"), Version("2.0")])
+    verifyEq([`a`, `b`, "a".toUri].unique, [`a`, `b`])
+
     // test for mutable entries
     m1 := StrBuf().add("1")
     m2 := StrBuf().add("2")

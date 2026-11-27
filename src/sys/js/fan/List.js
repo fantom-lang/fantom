@@ -603,15 +603,27 @@ class List extends Obj {
   }
 
   unique() {
-    const dups = new js.Map();
+    // immutable values compare by equals; a mutable value cannot be a
+    // map key, so it compares by identity as its equals does
+    const dups = Map.make(Obj.type$, Obj.type$);
+    const refs = new js.Map();
+    let hasNull = false;
     const acc = List.make(this.#of);
     for (let i=0; i<this.#size; ++i) {
       const v = this.#values[i];
-      const key = v;
-      if (dups.get(key) === undefined) {
-        dups.set(key, this);
-        acc.add(v);
+      if (v == null) {
+        if (hasNull) continue;
+        hasNull = true;
       }
+      else if (ObjUtil.isImmutable(v)) {
+        if (dups.get(v) != null) continue;
+        dups.set(v, this);
+      }
+      else {
+        if (refs.has(v)) continue;
+        refs.set(v, this);
+      }
+      acc.add(v);
     }
     return acc;
   }
