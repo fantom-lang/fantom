@@ -38,6 +38,7 @@ jsonld=application/ld+json
 map=application/json
 md=text/markdown; charset=utf-8
 markdown=text/markdown; charset=utf-8
+mov=video/quicktime
 mp3=audio/mpeg3
 mp4=video/mp4
 mpeg=video/mpeg
@@ -66,6 +67,7 @@ ttl=text/turtle
 tsv=text/tab-separated-values
 wasm=application/wasm
 wav=audio/wav
+webm=video/webm
 webp=image/webp
 woff=font/woff
 woff2=font/woff2
