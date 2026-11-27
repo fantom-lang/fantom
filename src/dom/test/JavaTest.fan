@@ -134,13 +134,36 @@ class JavaTest : Test
     verifyEq(Elem("div").add(svg).html, Str<|<svg><rect width="20"></rect><g></g></svg>|>)
   }
 
+  Void testComment()
+  {
+    // a comment is a node which is not drawn: html shows it, and an
+    // element with only comments is empty
+    root := Elem("div")
+    c := DomComment("mark")
+    root.add(Elem("p") { DomComment(), }).add(c)
+    verifyEq(c.typeof, DomComment#)
+    verifyEq(c.text, "mark")
+    verifySame(c.parentNode, root)
+    verifyEq(root.html, "<p><!----></p><!--mark-->")
+    verifyEq(root.querySelectorAll("p:empty").size, 1)
+    verifyEq(root.children.size, 1)
+
+    // a clone is a comment with the same text
+    copy := c.clone
+    verifyEq(copy.typeof, DomComment#)
+    verifyEq(copy.text, "mark")
+    verifyNull(copy.parentNode)
+  }
+
   Void testHtmlSet()
   {
     // markup is parsed into the children, replacing what was there
     root := Elem("div") { Elem("i"), }
-    root.html = Str<|a &lt; b<P Title='x &amp; "y"' hidden data-n=3>one<br>two<b>three</b></p><!-- gone -->tail &#65;&#x42;&nope;|>
-    verifyEq(root.html, Str<|a &lt; b<p title="x &amp; &quot;y&quot;" hidden="" data-n="3">one<br>two<b>three</b></p>tail AB&amp;nope;|>)
-    verifyEq(root.childNodes.size, 3)
+    root.html = Str<|a &lt; b<P Title='x &amp; "y"' hidden data-n=3>one<br>two<b>three</b></p><!-- kept -->tail &#65;&#x42;&nope;|>
+    verifyEq(root.html, Str<|a &lt; b<p title="x &amp; &quot;y&quot;" hidden="" data-n="3">one<br>two<b>three</b></p><!-- kept -->tail AB&amp;nope;|>)
+    verifyEq(root.childNodes.size, 4)
+    verifyEq(root.childNodes[2].typeof, DomComment#)
+    verifyEq(root.childNodes[2].text, " kept ")
     p := root.children.first
     verifyEq(p.tagName, "p")
     verifyEq(p.ns, `http://www.w3.org/1999/xhtml`)

@@ -51,6 +51,7 @@ class DomNodePeer extends sys.Obj {
     {
       case 1:  return new Elem();
       case 3:  return new DomText();
+      case 8:  return new DomComment();
       case 9:  return new Doc();
       case 11: return new DomFrag();
       default: return new DomNode();

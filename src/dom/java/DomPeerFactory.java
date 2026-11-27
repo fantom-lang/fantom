@@ -48,6 +48,11 @@ public class DomPeerFactory
     return new DomTextPeer();
   }
 
+  public DomCommentPeer makeDomComment(DomComment fan)
+  {
+    return new DomCommentPeer();
+  }
+
   public ElemPeer makeElem(Elem fan)
   {
     return new ElemPeer();

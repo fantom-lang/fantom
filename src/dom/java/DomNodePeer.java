@@ -91,6 +91,7 @@ public class DomNodePeer
   private static DomNode cloneSelf(DomNode self)
   {
     if (self instanceof DomText) return DomText.make(self.text());
+    if (self instanceof DomComment) return DomComment.make(self.text());
     if (self instanceof DomFrag) return DomFrag.make();
     if (!(self instanceof Elem)) throw UnsupportedErr.make("clone " + self.typeof());
     Elem elem = (Elem)self;

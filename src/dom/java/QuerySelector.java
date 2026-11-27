@@ -233,7 +233,7 @@ public class QuerySelector
       for (int i=0; i<kids.size(); i++)
       {
         DomNode kid = (DomNode)kids.get(i);
-        if (kid instanceof Elem || kid.text().length() > 0) return false;
+        if (kid instanceof Elem || (!(kid instanceof DomComment) && kid.text().length() > 0)) return false;
       }
       return true;
     }

@@ -55,7 +55,9 @@ class HtmlParser
   private void comment()
   {
     int end = src.indexOf("-->", pos+4);
-    pos = end < 0 ? src.length() : end+3;
+    if (end < 0) end = src.length();
+    cur().add(DomComment.make(src.substring(pos+4, end)));
+    pos = Math.min(end+3, src.length());
   }
 
   private void text()

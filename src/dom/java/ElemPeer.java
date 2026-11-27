@@ -84,6 +84,7 @@ public class ElemPeer extends DomNodePeer
   // has no end tag, every other element has one
   private static void writeHtml(StringBuilder s, DomNode node)
   {
+    if (node instanceof DomComment) { s.append("<!--").append(node.text()).append("-->"); return; }
     if (!(node instanceof Elem)) { escHtml(s, node.text(), false); return; }
 
     Elem elem = (Elem)node;
